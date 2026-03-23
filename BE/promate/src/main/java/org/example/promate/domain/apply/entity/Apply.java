@@ -2,6 +2,7 @@ package org.example.promate.domain.apply.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.example.promate.domain.apply.enums.Status;
 import org.example.promate.domain.recruit.entity.Recruit;
 import org.example.promate.domain.user.entity.User;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Builder
+@SuperBuilder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="apply")

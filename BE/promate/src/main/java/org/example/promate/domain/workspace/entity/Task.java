@@ -2,6 +2,7 @@ package org.example.promate.domain.workspace.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.example.promate.domain.project.entity.Project;
 import org.example.promate.domain.workspace.enums.TaskStatus;
 import org.example.promate.global.entity.BaseTimeEntity;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Builder
+@SuperBuilder
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

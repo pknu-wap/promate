@@ -2,31 +2,20 @@ package org.example.promate.domain.workspace.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.example.promate.domain.project.entity.Member;
 import org.example.promate.domain.project.entity.Project;
-import org.example.promate.domain.workspace.enums.PostType;
-import org.example.promate.global.entity.BaseEntity;
 
 @Entity
-@Builder
 @Getter
+@SuperBuilder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name="post")
-public class Post extends BaseEntity {
+@Table(name="meeting_log")
+public class MeetingLog extends BaseBoard{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name="type", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private PostType type;
-
-    @Column(name="title", nullable = false)
-    private String title;
-
-    @Column(name="content", nullable = false)
-    private String content;
 
     //mapping
     @ManyToOne(fetch = FetchType.LAZY)

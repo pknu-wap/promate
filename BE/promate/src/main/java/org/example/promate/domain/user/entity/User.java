@@ -2,6 +2,7 @@ package org.example.promate.domain.user.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.example.promate.domain.apply.entity.Apply;
 import org.example.promate.domain.project.entity.Member;
 import org.example.promate.domain.project.entity.Project;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @Entity
 @Getter
-@Builder
+@SuperBuilder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="users")

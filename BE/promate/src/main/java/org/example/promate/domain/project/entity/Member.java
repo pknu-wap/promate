@@ -3,6 +3,7 @@ package org.example.promate.domain.project.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.promate.domain.project.enums.Position;
 import org.example.promate.domain.user.entity.User;
 import org.example.promate.domain.workspace.entity.Post;
 import org.example.promate.domain.workspace.entity.TaskAssignee;
@@ -25,6 +26,10 @@ public class Member {
 
     @Column(name="role", nullable = false)
     private String role;
+
+    @Column(name="position", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Position position;
 
     @CreatedDate
     @Column(name="created_at", nullable = false)

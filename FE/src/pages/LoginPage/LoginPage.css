@@ -1,0 +1,130 @@
+.logo-section {
+  width: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.logo-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.logo-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo-wrapper img,
+.logo-wrapper svg {
+  width: 110px;
+  height: 34px;
+}
+
+.service-subtitle {
+  width: 150px;
+  font-size: 12px;
+  line-height: 19px;
+  text-align: center;
+  letter-spacing: -0.025em;
+  color: #909090;
+  white-space: nowrap;
+}
+
+.login-form {
+  width: 360px;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 13px;
+  padding-bottom: 20px;
+}
+
+.kakao-login-btn {
+  width: 100%;
+  min-width: 270px;
+  height: 38px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 5px;
+  background: #fee500;
+  cursor: pointer;
+}
+
+.kakao-login-btn:hover {
+  filter: brightness(0.98);
+}
+
+.kakao-login-btn:active {
+  filter: brightness(0.96);
+}
+
+.kakao-login-content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+}
+
+.kakao-icon {
+  display: block;
+  width: auto;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.kakao-login-text {
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1;
+  color: #371d1e;
+  white-space: nowrap;
+}
+
+.keep-login {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+  white-space: nowrap;
+  margin-bottom: 24px;
+}
+
+.keep-login input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border: 1px solid #909090;
+  border-radius: 50%;
+  background: #d9d9d9;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.keep-login input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #909090;
+}
+
+.keep-login span {
+  font-size: 11px;
+  line-height: 17px;
+  letter-spacing: -0.025em;
+  color: #909090;
+  white-space: nowrap;
+}

@@ -3,8 +3,12 @@ package org.example.promate.domain.project.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.example.promate.domain.project.enums.Position;
 import org.example.promate.domain.user.entity.User;
-import org.example.promate.domain.workspace.entity.Post;
+import org.example.promate.domain.workspace.entity.BaseBoard;
+import org.example.promate.domain.workspace.entity.MeetingLog;
+import org.example.promate.domain.workspace.entity.Notice;
 import org.example.promate.domain.workspace.entity.TaskAssignee;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -13,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Builder
+@SuperBuilder
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -25,6 +29,10 @@ public class Member {
 
     @Column(name="role", nullable = false)
     private String role;
+
+    @Column(name="position", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Position position;
 
     @CreatedDate
     @Column(name="created_at", nullable = false)
@@ -45,5 +53,9 @@ public class Member {
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     @Builder.Default
-    private List<Post> posts = new ArrayList<>();
+    private List<MeetingLog> meetingLogs = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<Notice> notices = new ArrayList<>();
 }

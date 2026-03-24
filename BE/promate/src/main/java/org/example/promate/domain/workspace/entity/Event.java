@@ -2,13 +2,14 @@ package org.example.promate.domain.workspace.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.example.promate.domain.project.entity.Project;
 import org.example.promate.global.entity.BaseEntity;
 
 import java.time.LocalDate;
 
 @Entity
-@Builder
+@SuperBuilder
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

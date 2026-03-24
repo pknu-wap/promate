@@ -2,12 +2,11 @@ package org.example.promate.domain.project.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.example.promate.domain.project.enums.ProjectStatus;
 import org.example.promate.domain.recruit.entity.Recruit;
 import org.example.promate.domain.user.entity.User;
-import org.example.promate.domain.workspace.entity.Event;
-import org.example.promate.domain.workspace.entity.Post;
-import org.example.promate.domain.workspace.entity.Task;
+import org.example.promate.domain.workspace.entity.*;
 import org.example.promate.global.entity.BaseTimeEntity;
 
 import java.time.LocalDate;
@@ -15,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Builder
+@SuperBuilder
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -64,5 +63,9 @@ public class Project extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     @Builder.Default
-    private List<Post> posts = new ArrayList<>();
+    private List<MeetingLog> meetingLogs = new ArrayList<>();
+
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<Notice> notices = new ArrayList<>();
 }

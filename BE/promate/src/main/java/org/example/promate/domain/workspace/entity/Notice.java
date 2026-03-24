@@ -4,14 +4,15 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.example.promate.domain.project.entity.Member;
+import org.example.promate.domain.project.entity.Project;
 
 @Entity
-@SuperBuilder
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name="task_assignee")
-public class TaskAssignee {
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Table(name="notice")
+public class Notice extends BaseBoard{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,6 +23,6 @@ public class TaskAssignee {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="task_id")
-    private Task task;
+    @JoinColumn(name="project_id")
+    private Project project;
 }

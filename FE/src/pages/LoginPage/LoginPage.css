@@ -74,7 +74,7 @@ body,
 }
 
 .login-form {
-  width: 360px;
+  width: 100%;
   max-width: 100%;
   display: flex;
   flex-direction: column;
@@ -165,4 +165,11 @@ body,
   letter-spacing: -0.025em;
   color: #909090;
   white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .login-card {
+    padding: 32px 20px 96px;
+    gap: 56px;
+  }
 }

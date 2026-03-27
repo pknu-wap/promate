@@ -80,7 +80,6 @@ body,
   flex-direction: column;
   align-items: center;
   gap: 13px;
-  padding-bottom: 20px;
 }
 
 .kakao-login-btn {
@@ -97,11 +96,11 @@ body,
 }
 
 .kakao-login-btn:hover {
-  filter: brightness(0.98);
+  filter: brightness(0.97);
 }
 
 .kakao-login-btn:active {
-  filter: brightness(0.96);
+  filter: brightness(0.95);
 }
 
 .kakao-login-content {
@@ -151,12 +150,13 @@ body,
 .keep-login input[type="checkbox"]:checked::after {
   content: "";
   position: absolute;
-  top: 3px;
-  left: 3px;
+  top: 50%;
+  left: 50%;
   width: 6px;
   height: 6px;
   border-radius: 50%;
   background: #909090;
+  transform: translate(-50%, -50%);
 }
 
 .keep-login span {

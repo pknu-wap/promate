@@ -1,9 +1,9 @@
 import { useState } from "react";
-import DomainSelector from "../components/Teammaking/DomainSelector.jsx";
-import FormActions from "../components/Teammaking/FormActions.jsx";
-import ImageUploadField from "../components/Teammaking/ImageUploadField.jsx";
-import ProjectDescriptionField from "../components/Teammaking/ProjectDescriptionField.jsx";
-import ProjectNameField from "../components/Teammaking/ProjectNameField.jsx";
+import DomainSelector from "./components/DomainSelector.jsx";
+import FormActions from "./components/FormActions.jsx";
+import ImageUploadField from "./components/ImageUploadField.jsx";
+import ProjectDescriptionField from "./components/ProjectDescriptionField.jsx";
+import ProjectNameField from "./components/ProjectNameField.jsx";
 import "./TeammakingPage.css";
 
 const domainOptions = [

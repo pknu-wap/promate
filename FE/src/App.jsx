@@ -1,8 +1,8 @@
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SelfPRPage from "./pages/SelfPRPage.jsx";
-import LoginPage from "./pages/LoginPage.jsx";
-import TeammakingPage from "./pages/TeammakingPage.jsx";
+import LoginPage from "./pages/LoginPage/LoginPage.jsx";
+import TeammakingPage from "./pages/Teammaking/TeammakingPage.jsx";
 
 function App() {
   return (

@@ -50,11 +50,7 @@ function ImageUploadField({ imageSrc, onImageChange }) {
         tabIndex={0}
       >
         {imageSrc ? (
-          <img
-            src={imageSrc}
-            alt="프로젝트 이미지"
-            className="image-preview"
-          />
+          <img src={imageSrc} alt="프로젝트 이미지" className="image-preview" />
         ) : (
           <ImageIcon />
         )}

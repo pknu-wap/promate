@@ -1,4 +1,4 @@
-import kakao_logo from '../../../assets/kakao_logo.svg';
+import kakaoLogo from '../../../assets/kakao_logo.svg';
 
 function LoginForm({ onLogin }) {
   const handleSubmit = (e) => {
@@ -11,7 +11,7 @@ function LoginForm({ onLogin }) {
       <button type="submit" className="kakao-login-btn">
         <span className="kakao-login-content">
           <img
-            src={kakao_logo}
+            src={kakaoLogo}
             alt="카카오 로고"
             className="kakao-icon"
           />

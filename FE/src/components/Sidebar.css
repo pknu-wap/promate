@@ -1,0 +1,178 @@
+.sidebar {
+  width: 240px;
+  min-height: 100vh;
+  background-color: #FFFFFF; 
+  border-right: 1px solid #D9D9D9;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 1. 메인 메뉴 영역 */
+.menu-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.menu-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 6px 12px; 
+  gap: 20px; 
+  
+  width: 100%; 
+  height: 36px; 
+  box-sizing: border-box; 
+
+  text-decoration: none;
+  color: #000000; 
+  font-family: 'Pretendard', sans-serif; /* 피그마 폰트 적용 */
+  font-weight: 600; 
+  font-size: 16px; 
+  border-radius: 8px;
+}
+
+/* 피그마 아이콘 크기 적용 */
+.menu-item .icon {
+  width: 24px; 
+  height: 24px; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.menu-item:hover {
+  background-color: #F8F9FA;
+}
+
+/* ★ 현재 보고 있는 페이지일 때  */
+.menu-item.active {
+  color: #FF6600; 
+  background-color: #FFF1E7;
+}
+
+/* 구분선 */
+.divider {
+  border: none;
+  border-top: 1px solid #D9D9D9;
+  margin: 24px 0;
+}
+
+/* 2. 즐겨찾기 영역 */
+.favorite-title {
+  font-size: 12px; 
+  color: #ABABAB;
+  margin-bottom: 16px;
+  font-weight: 700;
+}
+
+.favorite-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.favorite-list li {
+  font-size: 16px;
+  color: #000000;
+  font-weight: 600;
+  line-height: 1.4;
+  display: flex;
+  flex-direction: column; /* 제목과 날짜를 위아래로 배치 */
+}
+
+/* 즐겨찾기 제목 (동그라미 포함) */
+.favorite-item-header {
+  display: flex;
+  align-items: center;
+}
+
+.favorite-list .date {
+  font-size: 12px; 
+  color: #909090;
+  font-weight: 400;
+  margin-left: 16px; 
+  margin-top: 4px;
+}
+
+/* 색깔 동그라미들 */
+.dot {
+  display: inline-block;
+  width: 10px; 
+  height: 10px; 
+  border-radius: 50%;
+  margin-right: 6px;
+}
+.dot.red { background-color: #FF7B7B; } 
+.dot.yellow { background-color: #FFD748; } 
+.dot.green { background-color: #80D366; }
+
+/* 3. 하단 새 프로젝트 버튼 */
+.new-project-btn {
+  margin-top: auto; 
+  background-color: #FE9A57; 
+  color: #FFFFFF;
+  border: none;
+  padding: 14px;
+  border-radius: 5px;
+  font-size: 18px; 
+  font-weight: 700; 
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.new-project-btn:active {
+  transform: scale(0.98);
+}
+
+
+
+@media (max-width: 768px) {
+ .sidebar {
+    width: 100%; 
+    min-height: auto; 
+    height: auto;
+    padding: 20px;
+    border-right: none;
+    border-bottom: 1px solid #D9D9D9
+  }
+
+ 
+ .menu-item {
+    height: 44px; 
+    font-size: 15px;
+    gap: 12px;
+  }
+
+  .favorite-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    gap: 10px;
+  }
+
+  .favorite-list .date {
+    margin-left: 0;
+    display: block;
+  }
+
+  .new-project-btn {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 414px) {
+  .favorite-list {
+    grid-template-columns: 1fr;
+  }
+}

@@ -9,6 +9,7 @@ import org.example.promate.domain.recruit.enums.Category;
 import org.example.promate.domain.recruit.enums.RecruitStatus;
 import org.example.promate.domain.user.entity.User;
 import org.example.promate.global.entity.BaseEntity;
+import tools.jackson.core.ObjectReadContext;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -65,4 +66,14 @@ public class Recruit extends BaseEntity {
     @OneToMany(mappedBy = "recruit", fetch = FetchType.LAZY)
     @Builder.Default
     private List<Apply> applies = new ArrayList<>();
+
+    public void update(String title, String description, RecruitStatus status) {
+        this.title = title;
+        this.description = description;
+        this.status = status;
+    }
+
+    public void delete(){
+        super.performDelete();
+    }
 }

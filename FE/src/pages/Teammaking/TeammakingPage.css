@@ -219,3 +219,87 @@ body {
 .btn-submit:active {
   transform: scale(0.98);
 }
+
+@media (max-width: 480px) {
+  .page-wrapper {
+    padding: 24px 16px;
+  }
+
+  .page-title {
+    font-size: 28px;
+    margin-bottom: 20px;
+    padding-left: 0;
+  }
+
+  .card {
+    border-radius: 20px;
+    padding: 24px 16px 24px;
+    max-width: 100%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  }
+
+  .image-upload-wrapper {
+    margin-bottom: 28px;
+  }
+
+  .image-upload-circle {
+    width: 84px;
+    height: 84px;
+  }
+
+  .form-field {
+    margin-bottom: 28px;
+  }
+
+  .form-label {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  .text-input,
+  .textarea-input {
+    max-width: none;
+    width: 100%;
+  }
+
+  .text-input {
+    height: 52px;
+    font-size: 15px;
+  }
+
+  .textarea-input {
+    min-height: 132px;
+    height: 132px;
+    font-size: 15px;
+  }
+
+  .domain-tags {
+    gap: 8px;
+  }
+
+  .domain-tag {
+    padding: 10px 16px;
+    font-size: 13px;
+    flex: 0 0 auto;
+  }
+
+  .bottom-bar {
+    position: static;
+    padding: 0;
+    margin-top: 12px;
+    border-top: none;
+  }
+
+  .action-buttons {
+    width: 100%;
+    gap: 10px;
+  }
+
+  .btn-cancel,
+  .btn-submit {
+    flex: 1 1 0;
+    height: 52px;
+    padding: 0 16px;
+    font-size: 16px;
+  }
+}

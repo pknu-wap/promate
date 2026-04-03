@@ -1,0 +1,44 @@
+.main-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  height: 42px;
+  padding: 10px 25px;
+
+  border: none;
+  border-radius: 10px;
+
+  background-color: #FE9A57;
+  color: #ffffff;
+
+  font-size: 18px;
+  font-weight: 600;
+
+  cursor: pointer;
+  white-space: nowrap;
+
+  transition: background-color 0.2s ease;
+}
+
+/* hover */
+.main-btn:hover {
+  background-color: #e8894c;
+}
+
+/* active */
+.main-btn:active {
+  background-color: #d87c42;
+}
+
+/* disabled */
+.main-btn:disabled {
+  background-color: #d9d9d9;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.main-btn.full-width {
+  width: 100%;
+}

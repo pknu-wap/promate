@@ -28,23 +28,20 @@ public class User extends BaseEntity {
     @Column(name="kakao_id", nullable = false)
     private Long kakaoId;
 
-    @Column(name="email", nullable = false)
-    private String email;
-
-    @Column(name="phone_number", nullable = false)
-    private String phoneNumber;
-
-    @Column(name="name", nullable = false)
+    @Column(name="name", nullable = true)
     private String name;
 
-    @Column(name="profile_image_url", nullable = false)
+    @Column(name="profile_image_url", nullable = true)
     private String profileImageUrl;
 
-    @Column(name="manner_temp", nullable = false)
+    @Column(name="manner_temp", nullable = true)
     private BigDecimal mannerTemp;
 
-    @Column(name="diligence_temp", nullable = false)
+    @Column(name="diligence_temp", nullable = true)
     private BigDecimal diligenceTemp;
+
+    @Column(name="is_profile_completed", nullable = false)
+    private boolean isProfileCompleted;
 
     //mapping
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
@@ -66,4 +63,10 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @Builder.Default
     private List<Apply> applies = new ArrayList<>();
+
+    public void updateProfile(String name, String profileImageUrl) {
+        this.name = name;
+        this.profileImageUrl = profileImageUrl;
+        this.isProfileCompleted = true;
+    }
 }

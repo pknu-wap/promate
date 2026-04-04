@@ -7,5 +7,7 @@ import lombok.Getter;
 @Builder
 public class KakaoAuthResponseDTO {
     private Long id; // DB PK
-    // private boolean isProfileCompleted; // 추가 정보 입력 완료 여부
+    private boolean isProfileCompleted; // 추가 정보 입력 완료 여부
+    private String accessToken;
+    private String refreshToken;
 }

@@ -1,14 +1,19 @@
 package org.example.promate.domain.auth.service;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.example.promate.domain.auth.dto.KakaoAuthResponseDTO;
 import org.example.promate.domain.auth.dto.KakaoTokenResponseDTO;
 import org.example.promate.domain.auth.dto.KakaoUserResponseDTO;
+import org.example.promate.domain.auth.entity.RefreshToken;
+import org.example.promate.domain.auth.repository.RefreshTokenRepository;
 import org.example.promate.domain.user.dto.UserResponseDTO;
 import org.example.promate.domain.user.entity.User;
 import org.example.promate.domain.user.repository.UserRepository;
+import org.example.promate.global.jwt.JwtProvider;
+import org.example.promate.global.jwt.JwtTokenDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -26,6 +31,9 @@ public class KakaoAuthService {
 
     private final RestTemplate restTemplate;
     private final UserRepository userRepository;
+    private final JwtProvider jwtProvider;
+    private final RefreshTokenRepository refreshTokenRepository;
+
 
     @Value("${KAKAO_REST_API_KEY}")
     private String kakaoClientId;
@@ -122,13 +130,90 @@ public class KakaoAuthService {
                 .orElseGet(() -> userRepository.save(
                         User.builder()
                                 .kakaoId(kakaoId)
-                                .email(null)
+                                .isProfileCompleted(false)
                                 .build()
                 ));
 
+        JwtTokenDto jwtTokenDto = jwtProvider.generateToken(user);
+
+        refreshTokenRepository.findByUser(user)
+                .ifPresentOrElse(
+                        refreshToken -> refreshToken.updateToken(
+                                jwtTokenDto.refreshToken(),
+                                jwtProvider.getRefreshTokenExpiredAt()
+                        ),
+                        () -> refreshTokenRepository.save(
+                                RefreshToken.builder()
+                                        .user(user)
+                                        .refreshToken(jwtTokenDto.refreshToken())
+                                        .expiredAt(jwtProvider.getRefreshTokenExpiredAt())
+                                        .build()
+                        )
+                );
+
+
         return KakaoAuthResponseDTO.builder()
                 .id(user.getId())
+                .accessToken(jwtTokenDto.accessToken())
+                .refreshToken(jwtTokenDto.refreshToken())
                 .build();
 
+
+
+    }
+
+    @Transactional
+    public JwtTokenDto reissueToken(String refreshToken) {
+        if (refreshToken == null || refreshToken.isBlank()) {
+            throw new IllegalArgumentException("refresh token이 없습니다.");
+        }
+
+        if (!jwtProvider.validateToken(refreshToken)) {
+            throw new IllegalArgumentException("유효하지 않은 refresh token입니다.");
+        }
+
+        if (!jwtProvider.isRefreshToken(refreshToken)) {
+            throw new IllegalArgumentException("refresh token 타입이 아닙니다.");
+        }
+
+        Long userId = jwtProvider.getUserId(refreshToken);
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+
+        RefreshToken savedRefreshToken = refreshTokenRepository.findByUser(user)
+                .orElseThrow(() -> new IllegalArgumentException("저장된 refresh token이 없습니다."));
+
+        if (!savedRefreshToken.getRefreshToken().equals(refreshToken)) {
+            throw new IllegalArgumentException("저장된 refresh token과 일치하지 않습니다.");
+        }
+
+        String newAccessToken = jwtProvider.generateAccessToken(user);
+        String newRefreshToken = jwtProvider.generateRefreshToken(user);
+
+        savedRefreshToken.updateToken(
+                newRefreshToken,
+                jwtProvider.getRefreshTokenExpiredAt()
+        );
+
+        return new JwtTokenDto(newAccessToken, newRefreshToken);
+    }
+
+    @Transactional
+    public void logout(String refreshToken) {
+        if (refreshToken == null || refreshToken.isBlank()) {
+            throw new IllegalArgumentException("refresh token이 없습니다.");
+        }
+
+        if (!jwtProvider.validateToken(refreshToken)) {
+            throw new IllegalArgumentException("유효하지 않은 refresh token입니다.");
+        }
+
+        Long userId = jwtProvider.getUserId(refreshToken);
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+
+        refreshTokenRepository.deleteByUser(user);
     }
 }

@@ -41,6 +41,7 @@ public class RecruitRepositoryImpl implements RecruitRepositoryCustom {
                 ))
                 .from(recruit)
                 .where(
+                        recruit.isDeleted.isFalse(),
                         containsSearch(condition.search()),
                         eqCategory(condition.category())
                 )

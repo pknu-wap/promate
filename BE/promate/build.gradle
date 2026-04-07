@@ -36,7 +36,30 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     // Swagger
-    implementation 'org.springdoc:springdoc-openapi-starter-web-ui:2.8.13'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.14'
+
+    // 1. Querydsl 라이브러리 (Jakarta 대응 버전)
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    // 2. Querydsl QClass 생성을 위한 APT 설정
+    annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+
+    // 3. Spring Boot 4.0+ 필수 Jakarta API
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+}
+
+def querydslDir = layout.buildDirectory.dir("generated/querydsl").get().asFile
+
+sourceSets {
+    main.java.srcDirs += [ querydslDir ]
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.getGeneratedSourceOutputDirectory().set(querydslDir)
+}
+
+clean {
+    delete querydslDir
 }
 
 tasks.named('test') {

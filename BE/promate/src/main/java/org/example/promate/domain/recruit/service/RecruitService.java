@@ -2,11 +2,16 @@ package org.example.promate.domain.recruit.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.promate.domain.recruit.dto.request.RecruitCreateRequest;
+import org.example.promate.domain.recruit.dto.request.RecruitSearchCondition;
 import org.example.promate.domain.recruit.dto.request.RecruitUpdateRequest;
 import org.example.promate.domain.recruit.dto.response.RecruitCreateResponse;
 import org.example.promate.domain.recruit.dto.response.RecruitDetailResponse;
+import org.example.promate.domain.recruit.dto.response.RecruitPageResponse;
+import org.example.promate.domain.recruit.dto.response.RecruitResponse;
 import org.example.promate.domain.recruit.entity.Recruit;
 import org.example.promate.domain.recruit.repository.RecruitRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +27,7 @@ public class RecruitService {
     public RecruitCreateResponse createRecruitment(
             RecruitCreateRequest request, Long userId)
     {
-        // User writer = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("유저를 찾을 수 없습니다."));
+        //User writer = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("유저를 찾을 수 없습니다."));
         Recruit recruit = Recruit.builder()
                 .title(request.title())
                 .description(request.description())
@@ -94,5 +99,12 @@ public class RecruitService {
         }
 
         recruit.delete();
+    }
+
+    public RecruitPageResponse<RecruitResponse> getRecruitments(RecruitSearchCondition condition, Pageable pageable) {
+
+        Page<RecruitResponse> resultPage = recruitRepository.searchRecruits(condition, pageable);
+
+        return RecruitPageResponse.of(resultPage);
     }
 }

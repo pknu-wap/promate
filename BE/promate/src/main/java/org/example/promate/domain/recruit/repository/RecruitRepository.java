@@ -10,8 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface RecruitRepository extends JpaRepository<Recruit, Long> {
-
+public interface RecruitRepository extends JpaRepository<Recruit, Long>, RecruitRepositoryCustom {
     /*
      1. 삭제되지 않은 특정 모집글 상세 조회
      Optional을 반환하여 Service 계층에서 .orElseThrow() 처리를 강제합니다.

@@ -3,13 +3,18 @@ package org.example.promate.domain.recruit.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.promate.domain.recruit.dto.request.RecruitCreateRequest;
+import org.example.promate.domain.recruit.dto.request.RecruitSearchCondition;
 import org.example.promate.domain.recruit.dto.request.RecruitUpdateRequest;
 import org.example.promate.domain.recruit.dto.response.RecruitCreateResponse;
 import org.example.promate.domain.recruit.dto.response.RecruitDetailResponse;
+import org.example.promate.domain.recruit.dto.response.RecruitPageResponse;
+import org.example.promate.domain.recruit.dto.response.RecruitResponse;
 import org.example.promate.domain.recruit.service.RecruitService;
 import org.example.promate.global.ApiPayload.ApiResponse;
-import org.example.promate.global.ApiPayload.code.GeneralSuccessCode;
 import org.example.promate.global.ApiPayload.code.RecruitSuccessCode;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -72,5 +77,17 @@ public class RecruitController {
         return ResponseEntity
                 .status(RecruitSuccessCode.RECRUITMENT_DELETED.getStatus())
                 .body(ApiResponse.onSuccess(RecruitSuccessCode.RECRUITMENT_DELETED,null));
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<RecruitPageResponse<RecruitResponse>>> getRecruitList(
+            @ModelAttribute RecruitSearchCondition condition,
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        RecruitPageResponse<RecruitResponse> response = recruitService.getRecruitments(condition, pageable);
+
+        return ResponseEntity
+                .status(RecruitSuccessCode.RECRUITMENT_FILTERED.getStatus())
+                .body(ApiResponse.onSuccess(RecruitSuccessCode.RECRUITMENT_FILTERED,response));
     }
 }

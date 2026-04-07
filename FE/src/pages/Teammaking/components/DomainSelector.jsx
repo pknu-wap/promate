@@ -1,17 +1,18 @@
+﻿import Badge from "../../../components/Badge/Badge.jsx";
+
 function DomainSelector({ domainOptions, selectedDomain, onDomainChange }) {
   return (
     <div className="form-field">
-      <label className="form-label">도메인 설정</label>
+      <label className="form-label">분야 설정</label>
       <div className="domain-tags">
         {domainOptions.map((option) => (
-          <button
+          <Badge
             key={option.id}
-            type="button"
-            className={`domain-tag ${selectedDomain === option.id ? "active" : "inactive"}`}
+            selected={selectedDomain === option.id}
             onClick={() => onDomainChange(option.id)}
           >
             {option.label}
-          </button>
+          </Badge>
         ))}
       </div>
     </div>

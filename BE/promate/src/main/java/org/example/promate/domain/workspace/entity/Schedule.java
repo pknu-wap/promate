@@ -13,8 +13,8 @@ import java.time.LocalDate;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name="event")
-public class Event extends BaseEntity {    //캘린더 등록
+@Table(name="schedule")
+public class Schedule extends BaseEntity {    //캘린더 등록
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,4 +35,12 @@ public class Event extends BaseEntity {    //캘린더 등록
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="project_id")
     private Project project;
+
+    // 팀 일정 수정 메서드
+    public void modify(String title, String content, LocalDate startAt, LocalDate endAt){
+        this.title = title;
+        this.content = content;
+        this.startAt = startAt;
+        this.endAt = endAt;
+    }
 }

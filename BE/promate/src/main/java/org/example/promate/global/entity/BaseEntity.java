@@ -28,4 +28,10 @@ public class BaseEntity extends BaseTimeEntity{
 
     @Column(name="deleted_at")
     private LocalDateTime deletedAt;
+
+    // 삭제 메서드
+    public void delete() {
+        this.isDeleted = true;
+        this.deletedAt = LocalDateTime.now();
+    }
 }

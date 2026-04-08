@@ -118,7 +118,7 @@ public interface ScheduleControllerDocs {
             )
     })
     @DeleteMapping("/projects/{projectId}/schedules/{scheduleId}")
-    ApiResponse<ScheduleResDto.DeletedScheduleInfoDto> modifySchedule(
+    ApiResponse<ScheduleResDto.DeletedScheduleInfoDto> deleteSchedule(
 //            @AuthenticationPrincipal CustomPrincipal customPrincipal,
             @PathVariable Long projectId,
             @PathVariable Long scheduleId

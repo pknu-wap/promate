@@ -73,7 +73,7 @@ public class ScheduleController implements ScheduleControllerDocs {
 
     // 팀 일정 삭제하기
     @DeleteMapping("/{scheduleId}")
-    public ApiResponse<ScheduleResDto.DeletedScheduleInfoDto> modifySchedule(
+    public ApiResponse<ScheduleResDto.DeletedScheduleInfoDto> deleteSchedule(
 //            @AuthenticationPrincipal CustomPrincipal customPrincipal,
             @PathVariable Long projectId,
             @PathVariable Long scheduleId

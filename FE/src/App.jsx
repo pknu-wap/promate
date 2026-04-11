@@ -1,25 +1,37 @@
+import React, { useState } from "react"; 
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Sidebar from "./components/Sidebar.jsx";
+import Sidebar from "./components/SideBar/Sidebar";
+import Header from "./components/Header/Header";
 import SelfPRPage from "./pages/SelfPRPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 
 function App() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
     <BrowserRouter>
-    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#F8F9FA' }}>
-        
-        {/* 1. 왼쪽: 항상 고정되어 있는 사이드바 */}
-        <Sidebar />
-
-        {/* 2. 오른쪽: 주소에 따라 내용이 바뀌는 메인 화면 */}
-        <div style={{ flex: 1 }}>
-      <Routes>
-        <Route path="/" element={<SelfPRPage />} />
-        <Route path="/self-pr" element={<SelfPRPage />} />
-        <Route path="/login" element={<LoginPage />} />
-      </Routes>
-      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+        <Header onMenuClick={toggleMenu} />
+        <div style={{ display: 'flex', flex: 1, backgroundColor: '#F8F9FA' }}>
+          <Sidebar isOpen={isMenuOpen} onClose={closeMenu} />
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+            <main style={{ flex: 1, padding: '20px', boxSizing: 'border-box' }}>
+              <Routes>
+                <Route path="/" element={<SelfPRPage />} />
+                <Route path="/self-pr" element={<SelfPRPage />} />
+                <Route path="/login" element={<LoginPage />} />
+              </Routes>
+            </main>
+          </div>
+        </div>
 
       </div>
     </BrowserRouter>

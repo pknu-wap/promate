@@ -8,7 +8,6 @@
   flex-direction: column;
 }
 
-/* 1. 메인 메뉴 영역 */
 .menu-section {
   display: flex;
   flex-direction: column;
@@ -28,13 +27,12 @@
 
   text-decoration: none;
   color: #000000; 
-  font-family: 'Pretendard', sans-serif; /* 피그마 폰트 적용 */
+  font-family: 'Pretendard', sans-serif; 
   font-weight: 600; 
   font-size: 16px; 
   border-radius: 8px;
 }
 
-/* 피그마 아이콘 크기 적용 */
 .menu-item .icon {
   width: 24px; 
   height: 24px; 
@@ -47,20 +45,17 @@
   background-color: #F8F9FA;
 }
 
-/* ★ 현재 보고 있는 페이지일 때  */
 .menu-item.active {
   color: #FF6600; 
   background-color: #FFF1E7;
 }
 
-/* 구분선 */
 .divider {
   border: none;
   border-top: 1px solid #D9D9D9;
   margin: 24px 0;
 }
 
-/* 2. 즐겨찾기 영역 */
 .favorite-title {
   font-size: 12px; 
   color: #ABABAB;
@@ -83,10 +78,9 @@
   font-weight: 600;
   line-height: 1.4;
   display: flex;
-  flex-direction: column; /* 제목과 날짜를 위아래로 배치 */
+  flex-direction: column;
 }
 
-/* 즐겨찾기 제목 (동그라미 포함) */
 .favorite-item-header {
   display: flex;
   align-items: center;
@@ -100,7 +94,6 @@
   margin-top: 4px;
 }
 
-/* 색깔 동그라미들 */
 .dot {
   display: inline-block;
   width: 10px; 
@@ -112,7 +105,6 @@
 .dot.yellow { background-color: #FFD748; } 
 .dot.green { background-color: #80D366; }
 
-/* 3. 하단 새 프로젝트 버튼 */
 .new-project-btn {
   margin-top: auto; 
   background-color: #FE9A57; 
@@ -171,8 +163,50 @@
   }
 }
 
-@media (max-width: 414px) {
-  .favorite-list {
-    grid-template-columns: 1fr;
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    min-height: 100vh;
+    width: 260px;
+    z-index: 200;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    box-shadow: none;
+    padding: 40px 20px;
+    border-right: 1px solid #D9D9D9;
+  }
+ 
+  .sidebar--open {
+    transform: translateX(0);
+    box-shadow: 4px 0 16px rgba(0, 0, 0, 0.12);
+  }
+ 
+  .sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 199;
+  }
+ 
+  .menu-item {
+    height: 44px;
+    font-size: 15px;
+    gap: 12px;
+  }
+ 
+  .new-project-btn {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
   }
 }
+ 
+@media (max-width: 414px) {
+  .sidebar {
+    width: 240px;
+  }
+} 

@@ -1,4 +1,3 @@
-// FE/src/components/SidebarItem.jsx
 import { NavLink } from "react-router-dom";
 
 function SidebarItem({ to, label, icon }) {

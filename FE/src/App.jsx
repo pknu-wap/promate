@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Sidebar from "./components/SideBar/Sidebar";
 import Header from "./components/Header/Header";
 import SelfPRPage from "./pages/SelfPRPage.jsx";
-import LoginPage from "./pages/LoginPage.jsx";
+import LoginPage from "./pages/LoginPage/LoginPage.jsx";
 import TeammakingPage from "./pages/Teammaking/TeammakingPage.jsx";
 
 function App() {

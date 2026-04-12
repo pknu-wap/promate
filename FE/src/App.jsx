@@ -5,6 +5,7 @@ import Sidebar from "./components/SideBar/Sidebar";
 import Header from "./components/Header/Header";
 import SelfPRPage from "./pages/SelfPRPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
+import TeammakingPage from "./pages/Teammaking/TeammakingPage.jsx";
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -28,6 +29,7 @@ function App() {
                 <Route path="/" element={<SelfPRPage />} />
                 <Route path="/self-pr" element={<SelfPRPage />} />
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/teammaking" element={<TeammakingPage />} />
               </Routes>
             </main>
           </div>

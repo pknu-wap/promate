@@ -1,4 +1,4 @@
-package org.example.promate.domain.auth.dto;
+package org.example.promate.global.auth.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package org.example.promate.domain.auth.entity;
+package org.example.promate.global.auth.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

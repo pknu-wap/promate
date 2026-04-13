@@ -1,4 +1,4 @@
-package org.example.promate.domain.auth.exception;
+package org.example.promate.global.auth.exception;
 
 import lombok.Getter;
 

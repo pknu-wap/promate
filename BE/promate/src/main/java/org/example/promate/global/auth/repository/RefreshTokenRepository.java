@@ -1,6 +1,6 @@
-package org.example.promate.domain.auth.repository;
+package org.example.promate.global.auth.repository;
 
-import org.example.promate.domain.auth.entity.RefreshToken;
+import org.example.promate.global.auth.entity.RefreshToken;
 import org.example.promate.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 

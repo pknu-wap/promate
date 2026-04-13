@@ -1,9 +1,11 @@
-package org.example.promate.domain.auth.exception;
+package org.example.promate.global.auth.exception;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
+@AllArgsConstructor
 public enum AuthErrorCode {
 
     STATE_NOT_FOUND(HttpStatus.BAD_REQUEST, "AUTH_001", "state 값이 없습니다."),
@@ -22,9 +24,4 @@ public enum AuthErrorCode {
     private final String code;
     private final String message;
 
-    AuthErrorCode(HttpStatus status, String code, String message) {
-        this.status = status;
-        this.code = code;
-        this.message = message;
-    }
 }

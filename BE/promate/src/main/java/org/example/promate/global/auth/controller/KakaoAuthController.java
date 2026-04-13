@@ -1,11 +1,11 @@
-package org.example.promate.domain.auth.controller;
+package org.example.promate.global.auth.controller;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.example.promate.domain.auth.dto.KakaoAuthResponseDTO;
-import org.example.promate.domain.auth.dto.LogoutRequestDTO;
-import org.example.promate.domain.auth.dto.TokenReissueRequestDTO;
-import org.example.promate.domain.auth.service.KakaoAuthService;
+import org.example.promate.global.auth.dto.KakaoAuthResponseDTO;
+import org.example.promate.global.auth.dto.LogoutRequestDTO;
+import org.example.promate.global.auth.dto.TokenReissueRequestDTO;
+import org.example.promate.global.auth.service.KakaoAuthService;
 import org.example.promate.global.jwt.JwtTokenDto;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;

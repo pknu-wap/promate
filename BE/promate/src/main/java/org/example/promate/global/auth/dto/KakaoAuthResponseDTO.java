@@ -1,4 +1,4 @@
-package org.example.promate.domain.auth.dto;
+package org.example.promate.global.auth.dto;
 
 import lombok.Builder;
 import lombok.Getter;

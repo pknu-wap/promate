@@ -1,16 +1,16 @@
-package org.example.promate.domain.auth.service;
+package org.example.promate.global.auth.service;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.example.promate.domain.auth.dto.KakaoAuthResponseDTO;
-import org.example.promate.domain.auth.dto.KakaoTokenResponseDTO;
-import org.example.promate.domain.auth.dto.KakaoUserResponseDTO;
-import org.example.promate.domain.auth.entity.RefreshToken;
-import org.example.promate.domain.auth.exception.AuthErrorCode;
-import org.example.promate.domain.auth.exception.AuthException;
-import org.example.promate.domain.auth.repository.RefreshTokenRepository;
+import org.example.promate.global.auth.dto.KakaoAuthResponseDTO;
+import org.example.promate.global.auth.dto.KakaoTokenResponseDTO;
+import org.example.promate.global.auth.dto.KakaoUserResponseDTO;
+import org.example.promate.global.auth.entity.RefreshToken;
+import org.example.promate.global.auth.exception.AuthErrorCode;
+import org.example.promate.global.auth.exception.AuthException;
+import org.example.promate.global.auth.repository.RefreshTokenRepository;
 import org.example.promate.domain.user.entity.User;
 import org.example.promate.domain.user.repository.UserRepository;
 import org.example.promate.global.jwt.JwtProvider;

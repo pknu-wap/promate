@@ -53,6 +53,7 @@ public class ScheduleCommandServiceImpl implements ScheduleCommandService{
         Schedule schedule = scheduleRepository.findByIdAndIsDeletedFalse(scheduleId).orElseThrow(() -> new ScheduleException(ScheduleErrorCode.ID_NOT_FOUND));
 
         schedule.modify(dto.getTitle(), dto.getContent(), dto.getStartDate(), dto.getEndDate());
+        scheduleRepository.saveAndFlush(schedule);
 
         return ScheduleConverter.toModifiedScheduleInfoDto(schedule);
     }

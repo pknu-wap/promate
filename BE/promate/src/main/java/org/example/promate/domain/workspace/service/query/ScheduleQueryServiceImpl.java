@@ -22,6 +22,7 @@ public class ScheduleQueryServiceImpl implements ScheduleQueryService{
     private final ScheduleRepository scheduleRepository;
     private final MemberRepository memberRepository;
 
+    // 월간 스케줄 조회
     @Override
     public ScheduleResDto.MonthlyScheduleListInfoDto getMonthlySchedules(Long userId, Long projectId, Integer year, Integer month) {
         //사용자가 해당 프로젝트의 팀원인지 확인
@@ -35,11 +36,12 @@ public class ScheduleQueryServiceImpl implements ScheduleQueryService{
         LocalDate searchStart = target.atDay(1);
         LocalDate searchEnd = target.atEndOfMonth();
 
-        List<Schedule> monthlySchedule = scheduleRepository.findSchedulesByProjectAndMonth(projectId, searchStart, searchEnd);
+        List<Schedule> monthlySchedule = scheduleRepository.findSchedulesByProjectAndMonthAndIsDeletedFalse(projectId, searchStart, searchEnd);
 
         return ScheduleConverter.toMonthlyScheduleListInfoDto(monthlySchedule);
     }
 
+    // 단건 스케줄 조회
     @Override
     public ScheduleResDto.ProjectScheduleDetailInfoDto getScheduleDetails(Long userId, Long projectId, Long scheduleId) {
         //사용자가 해당 프로젝트의 팀원인지 확인
@@ -47,7 +49,7 @@ public class ScheduleQueryServiceImpl implements ScheduleQueryService{
             throw new MemberException(MemberErrorCode.SCHEDULE_FORBIDDEN_NOT_PROJECT_MEMBER);
         }
 
-        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new ScheduleException(ScheduleErrorCode.ID_NOT_FOUND));
+        Schedule schedule = scheduleRepository.findByIdAndIsDeletedFalse(scheduleId).orElseThrow(() -> new ScheduleException(ScheduleErrorCode.ID_NOT_FOUND));
 
         return ScheduleConverter.toScheduleDetailInfoDto(schedule);
     }

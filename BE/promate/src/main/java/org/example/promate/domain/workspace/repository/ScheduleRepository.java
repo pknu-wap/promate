@@ -15,13 +15,14 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 
     @Query("SELECT s FROM Schedule s " +
             "WHERE s.project.id = :projectId " + // 프로젝트 필터링 추가
+            "AND s.isDeleted = false " +
 
             // 03/25~04/02 의 일정인 경우 03/01~03/31 기간 조회 시 검색 안 됨
             // 따라서 시작일이 검색하고자 하는 월의 마지막 날 이전이고, 마감일이 검색하고자 하는 월의 시작일 이후면 검색
             "AND s.startAt <= :searchEnd " +     // 기간 조건 1
             "AND s.endAt >= :searchStart")
         // 기간 조건 2
-    List<Schedule> findSchedulesByProjectAndMonth(
+    List<Schedule> findSchedulesByProjectAndMonthAndIsDeletedFalse(
             @Param("projectId") Long projectId,
             @Param("searchStart") LocalDate searchStart,
             @Param("searchEnd") LocalDate searchEnd

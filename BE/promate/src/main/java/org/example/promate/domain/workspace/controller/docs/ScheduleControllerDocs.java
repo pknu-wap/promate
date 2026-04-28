@@ -9,8 +9,7 @@ import jakarta.validation.Valid;
 import org.example.promate.domain.workspace.dto.req.ScheduleReqDto;
 import org.example.promate.domain.workspace.dto.res.ScheduleResDto;
 import org.example.promate.global.ApiPayload.ApiResponse;
-import org.example.promate.global.security.CustomPrincipal;
-//import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -32,7 +31,7 @@ public interface ScheduleControllerDocs {
     })
     @PostMapping("/projects/{projectId}/schedules")
     ApiResponse<ScheduleResDto.AddedScheduleInfoDto> addSchedule(
-//            @AuthenticationPrincipal CustomPrincipal customPrincipal,
+            @AuthenticationPrincipal Long userId,
             @PathVariable Long projectId,
             @Valid @RequestBody ScheduleReqDto.AddScheduleDto dto
     );
@@ -53,7 +52,7 @@ public interface ScheduleControllerDocs {
     })
     @GetMapping("/projects/{projectId}/schedules")
     ApiResponse<ScheduleResDto.MonthlyScheduleListInfoDto> getMonthlySchedules(
-//            @AuthenticationPrincipal CustomPrincipal customPrincipal,
+            @AuthenticationPrincipal Long userId,
             @PathVariable Long projectId,
             @RequestParam(name = "year") Integer year,
             @RequestParam(name = "month") Integer month
@@ -76,7 +75,7 @@ public interface ScheduleControllerDocs {
     })
     @GetMapping("/projects/{projectId}/schedules/{scheduleId}")
     ApiResponse<ScheduleResDto.ProjectScheduleDetailInfoDto> getScheduleDetails(
-//            @AuthenticationPrincipal CustomPrincipal customPrincipal,
+            @AuthenticationPrincipal Long userId,
             @PathVariable Long projectId,
             @PathVariable Long scheduleId
     );
@@ -97,7 +96,7 @@ public interface ScheduleControllerDocs {
     })
     @PutMapping("/projects/{projectId}/schedules/{scheduleId}")
     ApiResponse<ScheduleResDto.ModifiedScheduleInfoDto> modifySchedule(
-//            @AuthenticationPrincipal CustomPrincipal customPrincipal,
+            @AuthenticationPrincipal Long userId,
             @PathVariable Long projectId,
             @PathVariable Long scheduleId,
             @Valid @RequestBody ScheduleReqDto.ModifyScheduleDto dto
@@ -119,7 +118,7 @@ public interface ScheduleControllerDocs {
     })
     @DeleteMapping("/projects/{projectId}/schedules/{scheduleId}")
     ApiResponse<ScheduleResDto.DeletedScheduleInfoDto> deleteSchedule(
-//            @AuthenticationPrincipal CustomPrincipal customPrincipal,
+            @AuthenticationPrincipal Long userId,
             @PathVariable Long projectId,
             @PathVariable Long scheduleId
     );

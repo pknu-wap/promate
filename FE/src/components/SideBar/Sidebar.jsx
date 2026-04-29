@@ -4,6 +4,17 @@ import SidebarItem from "./SidebarItem";
 import FavoriteItem from "./FavoriteItem";
 import { getMyProjectList } from '../../api/DashboardApi';
 
+import dashboardIcon from "../../assets/icons/dashboardIcon.svg";
+import teamFindIcon from "../../assets/icons/teamFindIcon.svg";
+import applicantReviewIcon from "../../assets/icons/applicantReviewIcon.svg";
+import projectIcon from "../../assets/icons/projectIcon.svg";
+import profileIcon from "../../assets/icons/profileIcon.svg";
+import dashboardOrangeIcon from "../../assets/icons/dashboardOrangeIcon.svg";
+import teamFindOrangeIcon from "../../assets/icons/teamFindOrangeIcon.svg";
+import applicantReviewOrangeIcon from "../../assets/icons/applicantReviewOrangeIcon.svg";
+import projectOrangeIcon from "../../assets/icons/projectOrangeIcon.svg";
+import profileOrangeIcon from "../../assets/icons/profileOrangeIcon.svg";
+
 function Sidebar({ isOpen, onClose }) {
   const [favoriteList, setFavoriteList] = useState([]); 
   const [isLoading, setIsLoading] = useState(true);
@@ -28,11 +39,36 @@ function Sidebar({ isOpen, onClose }) {
 
       <aside className={`sidebar ${isOpen ? 'sidebar--open' : ''}`}>
         <nav className="menu-section">
-          <SidebarItem to="/" label="대시보드" />
-          <SidebarItem to="/team" label="팀 찾기" />
-          <SidebarItem to="/applicants" label="지원자 검토" />
-          <SidebarItem to="/projects" label="프로젝트" />
-          <SidebarItem to="/self-pr" label="프로필" />
+          <SidebarItem
+            to="/"
+            label="대시보드"
+            icon={dashboardIcon}
+            activeIcon={dashboardOrangeIcon}
+          />
+          <SidebarItem
+            to="/team"
+            label="팀 찾기"
+            icon={teamFindIcon}
+            activeIcon={teamFindOrangeIcon}
+          />
+          <SidebarItem
+            to="/applicants"
+            label="지원자 검토"
+            icon={applicantReviewIcon}
+            activeIcon={applicantReviewOrangeIcon}
+          />
+          <SidebarItem
+            to="/projects"
+            label="프로젝트"
+            icon={projectIcon}
+            activeIcon={projectOrangeIcon}
+          />
+          <SidebarItem
+            to="/self-pr"
+            label="프로필"
+            icon={profileIcon}
+            activeIcon={profileOrangeIcon}
+          />
         </nav>
 
         <hr className="divider" />
@@ -53,6 +89,7 @@ function Sidebar({ isOpen, onClose }) {
             )}
           </ul>
         </div>
+        <hr className="divider" />
 
         <button className="new-project-btn">
           + 새 프로젝트 생성

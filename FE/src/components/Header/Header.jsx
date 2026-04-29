@@ -37,7 +37,7 @@ function Header({ onMenuClick }) {
 
       <div className="header-right">
         <span className="header-greeting">
-          <strong>{userData.userName}</strong> 님 안녕하세요:
+          <strong>{userData.userName}</strong> 님 안녕하세요 :)
         </span>
         <div className="header-avatar">{userData.userInitial}</div>
       </div>

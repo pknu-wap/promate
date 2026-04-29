@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 
-function SidebarItem({ to, label, icon }) {
+function SidebarItem({ to, label, icon, activeIcon }) {
   return (
     <NavLink
       to={to}
@@ -8,8 +8,17 @@ function SidebarItem({ to, label, icon }) {
         isActive ? "menu-item active" : "menu-item"
       }
     >
-      {icon && <span className="icon">{icon}</span>}
-      <span className="label">{label}</span>
+      {({ isActive }) => (
+        <>
+          {icon && (
+            <span className="icon">
+              <img src={isActive ? activeIcon : icon} alt="" />
+            </span>
+          )}
+
+          <span className="label">{label}</span>
+        </>
+      )}
     </NavLink>
   );
 }

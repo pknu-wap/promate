@@ -47,9 +47,8 @@
   gap: 6px;
 }
 
-.logo-icon {
-  font-size: 20px;
-  line-height: 1;
+.logo-image {
+  width: 130px;
 }
 
 .logo-text {
@@ -64,6 +63,8 @@
   font-size: 13px;
   font-weight: 400;
   color: #ABABAB;
+  margin-top: 7px;
+  margin-left: 2px;
 }
 
 .header-right {
@@ -80,6 +81,7 @@
 
 .header-greeting strong {
   font-weight: 700;
+  font-size: 16px;
 }
 
 .header-avatar {

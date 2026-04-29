@@ -1,6 +1,7 @@
 package org.example.promate.domain.recruit.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.promate.domain.apply.repository.ApplyRepository;
 import org.example.promate.domain.recruit.dto.request.RecruitCreateRequest;
 import org.example.promate.domain.recruit.dto.request.RecruitSearchCondition;
 import org.example.promate.domain.recruit.dto.request.RecruitUpdateRequest;
@@ -19,9 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class RecruitService {
+
     private final RecruitRepository recruitRepository;
     //private final UserRepository userRepository;
-    //private final ApplicationRepository applicationRepository; // 지원 내역 확인용
+    private final ApplyRepository applyRepository; // 지원 내역 확인용
 
     @Transactional
     public RecruitCreateResponse createRecruitment(
@@ -47,13 +49,9 @@ public class RecruitService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
 
         boolean isAuthor = recruit.getUser().getId().equals(currentUserId);
-        //지원 여부 및 지원자 수 계산 (Application 만들고 도입)
-        // boolean hasApplied = applicationRepository.existsByRecruitIdAndUserId(recruitmentId, currentUserId);
-        // int applicantCount = applicationRepository.countByRecruitId(recruitmentId);
 
-        // 임시 하드코딩 (아직 Application 도메인이 없으므로)
-        boolean hasApplied = false;
-        int applicantCount = 5;
+        boolean hasApplied = applyRepository.existsByRecruitIdAndUserId(recruitmentId, currentUserId);
+        int applicantCount = applyRepository.countByRecruitId(recruitmentId);
 
         return new RecruitDetailResponse(
                 recruit.getId(),

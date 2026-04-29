@@ -25,10 +25,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class BaseTimeEntity {
     @CreatedDate
-    @Column(name="created_at", nullable = false, updatable = false)
+    @Column(name="created_at", nullable = false, updatable = false, columnDefinition = "datetime(6) DEFAULT NOW(6)")
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column(name="updated_at", nullable = false)
+    @Column(name="updated_at", nullable = false, columnDefinition = "datetime(6) DEFAULT NOW(6)")
     private LocalDateTime updatedAt;
 }

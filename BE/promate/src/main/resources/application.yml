@@ -20,3 +20,9 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+springdoc:
+  querydsl:
+    enabled: false
+  api-docs:
+    enabled: true

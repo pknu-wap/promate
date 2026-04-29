@@ -9,7 +9,6 @@ import org.example.promate.domain.recruit.enums.Category;
 import org.example.promate.domain.recruit.enums.RecruitStatus;
 import org.example.promate.domain.user.entity.User;
 import org.example.promate.global.entity.BaseEntity;
-import tools.jackson.core.ObjectReadContext;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

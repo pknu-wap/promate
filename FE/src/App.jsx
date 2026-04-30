@@ -2,6 +2,7 @@ import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SelfPRPage from "./pages/SelfPRPage.jsx";
 import LoginPage from "./pages/LoginPage/LoginPage.jsx";
+import AuthCallback from "./pages/AuthCallback/AuthCallback.jsx";
 import TeammakingPage from "./pages/Teammaking/TeammakingPage.jsx";
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
         <Route path="/" element={<SelfPRPage />} />
         <Route path="/self-pr" element={<SelfPRPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/auth/kakao/callback" element={<AuthCallback />} />
         <Route path="/teammaking" element={<TeammakingPage />} />
       </Routes>
     </BrowserRouter>

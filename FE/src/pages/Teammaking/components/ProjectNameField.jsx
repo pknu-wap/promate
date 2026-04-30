@@ -1,4 +1,4 @@
-function ProjectNameField({ projectName, onProjectNameChange }) {
+﻿function ProjectNameField({ projectName, onProjectNameChange }) {
   return (
     <div className="form-field">
       <label className="form-label">프로젝트 이름</label>
@@ -7,7 +7,7 @@ function ProjectNameField({ projectName, onProjectNameChange }) {
         className="text-input"
         value={projectName}
         onChange={(event) => onProjectNameChange(event.target.value)}
-        placeholder="프로젝트 이름을 입력하세요"
+        placeholder="프로젝트 이름을 입력해주세요"
       />
     </div>
   );

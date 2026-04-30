@@ -19,7 +19,6 @@ export default function AuthCallback() {
     }
 
     const handleLogin = async () => {
-      // React 18 Strict Mode로 인한 중복 호출을 방지합니다.
       if (isRequesting.current) {
         return;
       }

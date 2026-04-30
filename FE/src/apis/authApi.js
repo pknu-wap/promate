@@ -27,9 +27,7 @@ export async function requestKakaoLogin(code, state) {
     try {
       const errorResult = await response.json();
       message = errorResult.message || message;
-    } catch (e) {
-      // 서버 응답이 JSON 형식이 아닐 수 있습니다. 백엔드 로그를 확인해주세요.
-    }
+    } catch (e) {}
     throw new Error(message);
   }
   const result = await response.json();

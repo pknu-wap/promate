@@ -14,7 +14,7 @@ function LoginPage() {
     return Array.from(array, (number) => number.toString(36)).join("");
   };
 
-  const kakaoHandleLogin = async (keepLogin) => {
+  const kakaoHandleLogin = async () => {
     setIsLoading(true);
 
     try {
@@ -23,7 +23,6 @@ function LoginPage() {
 
       const state = createOAuthState();
       localStorage.setItem("oauth_state", state);
-      localStorage.setItem("keep_login", keepLogin);
       url.searchParams.append("state", state);
 
       window.location.href = url.toString();

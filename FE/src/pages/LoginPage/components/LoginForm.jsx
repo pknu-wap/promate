@@ -6,7 +6,7 @@ function LoginForm({ onLogin, isLoading }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    onLogin(keepLogin);
+    onLogin();
   };
 
   return (

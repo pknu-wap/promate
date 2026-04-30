@@ -54,6 +54,8 @@ function ApplyModal({
               className="apply-modal-input"
               value={job}
               onChange={(e) => setJob(e.target.value)}
+              required
+              maxLength={50}
             />
           </div>
 
@@ -69,6 +71,9 @@ function ApplyModal({
               className="apply-modal-textarea"
               value={motivation}
               onChange={(e) => setMotivation(e.target.value)}
+              required
+              minLength={10}
+              maxLength={500}
             />
           </div>
 

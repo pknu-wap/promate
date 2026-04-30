@@ -3,11 +3,11 @@
   align-items: center;
   justify-content: center;
   min-width: 74px;
-  height: 34px;
+  height: 32px;
   padding: 0 18px;
-  border: 1px solid #c9c9c9;
+  border: 1px solid #ababab;
   border-radius: 999px;
-  background: linear-gradient(180deg, #f2f2f2 0%, #d9d9d9 100%);
+  background: #d9d9d9;
   color: #ffffff;
   font-size: 18px;
   font-weight: 600;
@@ -27,7 +27,7 @@
 
 .badge--selected {
   border-color: #ef8d4d;
-  background: linear-gradient(180deg, #ffab6a 0%, #fe9a57 100%);
+  background: #fe9a57;
 }
 
 .badge:focus-visible {

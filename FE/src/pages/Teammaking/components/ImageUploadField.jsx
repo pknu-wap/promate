@@ -1,15 +1,17 @@
-import { useRef } from "react";
+﻿import { useRef } from "react";
+import Avatar from "../../../components/Avatar/Avatar.jsx";
 
-const ImageIcon = () => (
+const imageIcon = (
   <svg
-    width="36"
-    height="36"
+    width="28"
+    height="28"
     viewBox="0 0 24 24"
     fill="none"
-    stroke="#aaaaaa"
+    stroke="currentColor"
     strokeWidth="1.6"
     strokeLinecap="round"
     strokeLinejoin="round"
+    aria-hidden="true"
   >
     <rect x="3" y="3" width="18" height="18" rx="3" />
     <circle cx="8.5" cy="8.5" r="1.5" />
@@ -38,7 +40,7 @@ function ImageUploadField({ imageSrc, onImageChange }) {
   return (
     <div className="image-upload-wrapper">
       <div
-        className="image-upload-circle"
+        className="image-upload-trigger"
         onClick={handleImageClick}
         onKeyDown={(event) => {
           if (event.key === "Enter" || event.key === " ") {
@@ -48,12 +50,15 @@ function ImageUploadField({ imageSrc, onImageChange }) {
         }}
         role="button"
         tabIndex={0}
+        aria-label="프로젝트 이미지 업로드"
       >
-        {imageSrc ? (
-          <img src={imageSrc} alt="프로젝트 이미지" className="image-preview" />
-        ) : (
-          <ImageIcon />
-        )}
+        <Avatar
+          src={imageSrc}
+          alt="프로젝트 이미지"
+          size="lg"
+          icon={imageIcon}
+          className="image-upload-avatar"
+        />
       </div>
       <input
         type="file"

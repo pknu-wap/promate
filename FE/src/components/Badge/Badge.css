@@ -1,0 +1,36 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 74px;
+  height: 32px;
+  padding: 0 18px;
+  border: 1px solid #ababab;
+  border-radius: 999px;
+  background: #d9d9d9;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.2s ease;
+}
+
+.badge:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.badge--selected {
+  border-color: #ef8d4d;
+  background: #fe9a57;
+}
+
+.badge:focus-visible {
+  outline: 2px solid #fe9a57;
+  outline-offset: 2px;
+}

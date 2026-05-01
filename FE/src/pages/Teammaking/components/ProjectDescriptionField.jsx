@@ -1,4 +1,4 @@
-function ProjectDescriptionField({ description, onDescriptionChange }) {
+﻿function ProjectDescriptionField({ description, onDescriptionChange }) {
   return (
     <div className="form-field">
       <label className="form-label">프로젝트 설명</label>
@@ -6,7 +6,7 @@ function ProjectDescriptionField({ description, onDescriptionChange }) {
         className="textarea-input"
         value={description}
         onChange={(event) => onDescriptionChange(event.target.value)}
-        placeholder="프로젝트를 간단하게 소개해 주세요"
+        placeholder="프로젝트를 간단하게 소개해주세요"
       />
     </div>
   );

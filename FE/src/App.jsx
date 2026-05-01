@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SelfPRPage from "./pages/SelfPRPage.jsx";
 import LoginPage from "./pages/LoginPage/LoginPage.jsx";
 import TeammakingPage from "./pages/Teammaking/TeammakingPage.jsx";
+import ProfilePage from "./pages/ProfilePage/ProfilePage.jsx";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/self-pr" element={<SelfPRPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/teammaking" element={<TeammakingPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </BrowserRouter>
   );

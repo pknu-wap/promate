@@ -50,6 +50,10 @@
   color: #FFFFFF;
 }
 
+.status-tag.urgent {
+  background: #FF7B7B;
+}
+
 .status-progress-row {
   display: flex;
   align-items: baseline;

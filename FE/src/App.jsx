@@ -6,6 +6,7 @@ import Header from "./components/Header/Header";
 import SelfPRPage from "./pages/SelfPRPage.jsx";
 import LoginPage from "./pages/LoginPage/LoginPage.jsx";
 import TeammakingPage from "./pages/Teammaking/TeammakingPage.jsx";
+import DashboardPage from "./pages/DashboardPage/DashboardPage.jsx";
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,9 +25,10 @@ function App() {
         <div style={{ display: 'flex', flex: 1, backgroundColor: '#F8F9FA' }}>
           <Sidebar isOpen={isMenuOpen} onClose={closeMenu} />
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-            <main style={{ flex: 1, padding: '20px', boxSizing: 'border-box' }}>
+            <main style={{ flex: 1, padding: '0px', boxSizing: 'border-box' }}>
               <Routes>
-                <Route path="/" element={<SelfPRPage />} />
+                <Route path="/" element={<DashboardPage />} />
+                <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/self-pr" element={<SelfPRPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/teammaking" element={<TeammakingPage />} />

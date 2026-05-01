@@ -24,7 +24,7 @@ function App() {
         <div style={{ display: 'flex', flex: 1, backgroundColor: '#F8F9FA' }}>
           <Sidebar isOpen={isMenuOpen} onClose={closeMenu} />
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-            <main style={{ flex: 1, padding: '20px', boxSizing: 'border-box' }}>
+            <main style={{ flex: 1, padding: '0px', boxSizing: 'border-box' }}>
               <Routes>
                 <Route path="/" element={<SelfPRPage />} />
                 <Route path="/self-pr" element={<SelfPRPage />} />

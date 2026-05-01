@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { requestKakaoLogin } from "../../apis/authApi";
+import { requestKakaoLogin } from "../../api/authApi";
 
 export default function AuthCallback() {
   const navigate = useNavigate();

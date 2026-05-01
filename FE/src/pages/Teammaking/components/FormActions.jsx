@@ -1,4 +1,4 @@
-function FormActions({ onCancel, onSubmit }) {
+﻿function FormActions({ onCancel, onSubmit }) {
   return (
     <div className="bottom-bar">
       <div className="action-buttons">

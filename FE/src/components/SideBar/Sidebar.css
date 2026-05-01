@@ -1,5 +1,5 @@
 .sidebar {
-  width: 240px;
+  width: 220px;
   background-color: #FFFFFF; 
   border-right: 1px solid #D9D9D9;
   padding: 20px 20px;
@@ -125,49 +125,13 @@
 
 
 @media (max-width: 768px) {
- .sidebar {
-    width: 100%; 
-    min-height: auto; 
-    height: auto;
-    padding: 20px;
-    border-right: none;
-    border-bottom: 1px solid #D9D9D9
-  }
-
- 
- .menu-item {
-    height: 44px; 
-    font-size: 15px;
-    gap: 12px;
-  }
-
-  .favorite-list {
-    display: grid;
-    grid-template-columns: 1fr 1fr; 
-    gap: 10px;
-  }
-
-  .favorite-list .date {
-    margin-left: 0;
-    display: block;
-  }
-
-  .new-project-btn {
-    margin-top: 20px;
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-  }
-}
-
-@media (max-width: 768px) {
   .sidebar {
     position: fixed;
     top: 0;
     left: 0;
     height: 100vh;
     min-height: 100vh;
-    width: 260px;
+    width: 200px;
     z-index: 200;
     transform: translateX(-100%);
     transition: transform 0.3s ease;
@@ -193,6 +157,17 @@
     font-size: 15px;
     gap: 12px;
   }
+
+  .favorite-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    gap: 10px;
+  }
+
+  .favorite-list .date {
+    margin-left: 0;
+    display: block;
+  }
  
   .new-project-btn {
     margin-top: 20px;
@@ -201,9 +176,3 @@
     font-size: 16px;
   }
 }
- 
-@media (max-width: 414px) {
-  .sidebar {
-    width: 240px;
-  }
-} 

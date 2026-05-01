@@ -158,17 +158,6 @@
     gap: 12px;
   }
 
-  .favorite-list {
-    display: grid;
-    grid-template-columns: 1fr 1fr; 
-    gap: 10px;
-  }
-
-  .favorite-list .date {
-    margin-left: 0;
-    display: block;
-  }
- 
   .new-project-btn {
     margin-top: 20px;
     width: 100%;

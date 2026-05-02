@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/auth/kakao")
+@RequestMapping("/api/auth/kakao")
 public class KakaoAuthController {
     private final KakaoAuthService kakaoAuthService;
 
@@ -26,6 +26,7 @@ public class KakaoAuthController {
             @RequestParam("code") String code,
             @RequestParam(value = "state", required = false) String state,
             HttpSession httpSession) {
+
         return kakaoAuthService.kakaoLogin(code, state, httpSession);
     }
 

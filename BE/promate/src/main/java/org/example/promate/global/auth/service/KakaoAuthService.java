@@ -22,6 +22,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 @Getter
@@ -46,16 +48,20 @@ public class KakaoAuthService {
     private String kakaoClientSecret;
 
     public String setKakaoAuthUrl(HttpSession httpSession) {
-        httpSession.setAttribute("state", UUID.randomUUID().toString());
+        String state = UUID.randomUUID().toString();
+        httpSession.setAttribute("state", state);
+
+        String encodedRedirectUri = URLEncoder.encode(kakaoRedirectUri, StandardCharsets.UTF_8);
+
         return "https://kauth.kakao.com/oauth/authorize?client_id="
                 + kakaoClientId
                 + "&redirect_uri="
-                + kakaoRedirectUri
+                + encodedRedirectUri
                 + "&response_type=code"
                 + "&state="
-                + httpSession.getAttribute("state");
+                + state;
     }
-
+    @Transactional
     public KakaoAuthResponseDTO kakaoLogin(String code, String state, HttpSession httpSession) {
 
         String sessionState = (String) httpSession.getAttribute("state");
@@ -94,6 +100,10 @@ public class KakaoAuthService {
             );
             tokenResult = tokenResponse.getBody();
         } catch (Exception e) {
+
+            System.out.println("🔥 카카오 토큰 요청 실패");
+            e.printStackTrace();   // ⭐ 이거 꼭 넣어
+
             throw new AuthException(AuthErrorCode.KAKAO_TOKEN_REQUEST_FAILED);
         }
 

@@ -39,6 +39,7 @@
 
 .dashboard-detail-row {
   display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
   gap: 20px;
   width: 100%;
@@ -52,9 +53,6 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-}
-
-.status-section {
   flex: 1;
   min-width: 350px;
 }
@@ -79,4 +77,23 @@
   gap: 25px;
   border-top: 1px solid #D9D9D9;
   padding-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 20px 16px;
+  }
+  .dashboard-content {
+    gap: 24px;
+  }
+  .dashboard-summary-row,
+  .dashboard-detail-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .status-section {
+    padding: 20px 16px;
+    min-width: 0;
+    width: 100%;
+  }
 }

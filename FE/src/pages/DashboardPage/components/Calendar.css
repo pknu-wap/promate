@@ -133,3 +133,11 @@
   font-size: 14px;
   color: #000000;
 }
+
+@media (max-width: 768px) {
+  .calendar-section {
+    padding: 20px 16px;
+    flex: 1;
+    width: 100%;
+  }
+}

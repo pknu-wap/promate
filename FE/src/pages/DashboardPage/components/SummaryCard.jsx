@@ -6,6 +6,7 @@ function SummaryCard({ title, count, items = [], showDot }) {
   const [isExpanded, setIsExpanded] = useState(true);
   const [visibleCount, setVisibleCount] = useState(3);
 
+  //카드 헤더 클릭 시 리스트를 접거나 펼쳐짐, 접을 때 표시 개수를 초기값으로 리셋
   const toggleExpand = () => {
     setIsExpanded((prevIsExpanded) => {
       if (prevIsExpanded) {

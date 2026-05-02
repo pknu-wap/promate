@@ -3,7 +3,7 @@ import './StatusItem.css';
 import Avatar from '../../../components/Avatar/Avatar';
 import ProgressBar from '../../../components/ProgressBar/ProgressBar';
 
-function StatusItem({ title, date, tag = '여유', ratio }) {
+function StatusItem({ title, date = '', tag = '여유', ratio }) {
   let progressValue = 0;
   
   if (ratio && ratio.includes('/')) {
@@ -14,9 +14,13 @@ function StatusItem({ title, date, tag = '여유', ratio }) {
   }
 
   // 마감일과 현재 날짜 차이 계산 (일 단위)
-  const today = new Date();
-  const targetDate = new Date(date.replace(/\./g, '-'));
-  const diffDays = (targetDate - today) / (1000 * 60 * 60 * 24);
+  let diffDays = Infinity; // 기본값을 무한대로 설정
+  
+  if (date) {
+    const today = new Date();
+    const targetDate = new Date(date.replace(/\./g, '-'));
+    diffDays = (targetDate - today) / (1000 * 60 * 60 * 24);
+  }
 
   return (
     <div className="status-item">

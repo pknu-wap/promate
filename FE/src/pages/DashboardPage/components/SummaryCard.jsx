@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import moreIcon from '../../../assets/moreIcon.svg';
 import './SummaryCard.css';
 
-function SummaryCard({ title, count, items, showDot }) {
+function SummaryCard({ title, count, items = [], showDot }) {
   const [isExpanded, setIsExpanded] = useState(true);
 
   const toggleExpand = () => {

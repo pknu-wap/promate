@@ -81,6 +81,7 @@ function Sidebar({ isOpen, onClose }) {
               favoriteList.map((item) => (
                 <FavoriteItem 
                   key={item.id} 
+                  id={item.id}
                   name={item.projectName} 
                   dueDate={item.deadLine} 
                   dotColor={item.colorTag || 'red'} 

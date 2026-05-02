@@ -6,10 +6,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.example.promate.domain.project.enums.Position;
 import org.example.promate.domain.user.entity.User;
-import org.example.promate.domain.workspace.entity.BaseBoard;
-import org.example.promate.domain.workspace.entity.MeetingLog;
-import org.example.promate.domain.workspace.entity.Notice;
-import org.example.promate.domain.workspace.entity.TaskAssignee;
+import org.example.promate.domain.workspace.entity.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
@@ -49,7 +46,7 @@ public class Member {
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     @Builder.Default
-    private List<TaskAssignee> taskAssignees = new ArrayList<>();
+    private List<Task> Task = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     @Builder.Default

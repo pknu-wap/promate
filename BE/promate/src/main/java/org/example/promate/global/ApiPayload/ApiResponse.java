@@ -12,7 +12,7 @@ import org.example.promate.global.ApiPayload.code.BaseSuccessCode;
 @JsonPropertyOrder({"isSuccess", "code", "message", "data"})
 public class ApiResponse<T> {
     @JsonProperty("isSuccess")
-    private final boolean isSuccess;
+    private final boolean success;  // response에 success 여부가 두 번 나오는 거 방지
 
     @JsonProperty("code")
     private final String code;

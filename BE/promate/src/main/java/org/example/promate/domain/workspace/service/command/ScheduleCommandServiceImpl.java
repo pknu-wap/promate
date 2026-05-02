@@ -7,8 +7,8 @@ import org.example.promate.domain.project.code.ProjectErrorCode;
 import org.example.promate.domain.project.entity.Project;
 import org.example.promate.domain.project.exception.MemberException;
 import org.example.promate.domain.project.exception.ProjectException;
-import org.example.promate.domain.project.respository.MemberRepository;
-import org.example.promate.domain.project.respository.ProjectRepository;
+import org.example.promate.domain.project.repository.MemberRepository;
+import org.example.promate.domain.project.repository.ProjectRepository;
 import org.example.promate.domain.workspace.code.ScheduleErrorCode;
 import org.example.promate.domain.workspace.converter.ScheduleConverter;
 import org.example.promate.domain.workspace.dto.req.ScheduleReqDto;
@@ -30,7 +30,7 @@ public class ScheduleCommandServiceImpl implements ScheduleCommandService{
     @Override
     public ScheduleResDto.AddedScheduleInfoDto addSchedule(Long userId, Long projectId, ScheduleReqDto.AddScheduleDto dto) {
         //사용자가 해당 프로젝트의 팀원인지 확인
-        if(!memberRepository.existsByUser_IdAndProject_Id(userId, projectId)){
+        if(!memberRepository.existsByUserIdAndProjectId(userId, projectId)){
             throw new MemberException(MemberErrorCode.SCHEDULE_FORBIDDEN_NOT_PROJECT_MEMBER);
         }
 
@@ -46,7 +46,7 @@ public class ScheduleCommandServiceImpl implements ScheduleCommandService{
     @Override
     public ScheduleResDto.ModifiedScheduleInfoDto modifySchedule(Long userId, Long projectId, Long scheduleId, ScheduleReqDto.ModifyScheduleDto dto) {
         //사용자가 해당 프로젝트의 팀원인지 확인
-        if(!memberRepository.existsByUser_IdAndProject_Id(userId, projectId)){
+        if(!memberRepository.existsByUserIdAndProjectId(userId, projectId)){
             throw new MemberException(MemberErrorCode.SCHEDULE_FORBIDDEN_NOT_PROJECT_MEMBER);
         }
 
@@ -62,7 +62,7 @@ public class ScheduleCommandServiceImpl implements ScheduleCommandService{
     @Override
     public ScheduleResDto.DeletedScheduleInfoDto deleteSchedule(Long userId, Long projectId, Long scheduleId) {
         //사용자가 해당 프로젝트의 팀원인지 확인
-        if(!memberRepository.existsByUser_IdAndProject_Id(userId, projectId)){
+        if(!memberRepository.existsByUserIdAndProjectId(userId, projectId)){
             throw new MemberException(MemberErrorCode.SCHEDULE_FORBIDDEN_NOT_PROJECT_MEMBER);
         }
 

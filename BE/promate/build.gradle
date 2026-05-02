@@ -39,10 +39,13 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
     //Webflux
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
     //thymeleaf
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
     // Swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13'
 

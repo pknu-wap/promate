@@ -22,7 +22,7 @@ function App() {
     <BrowserRouter>
       <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <Header onMenuClick={toggleMenu} />
-        <div style={{ display: 'flex', flex: 1, backgroundColor: '#F8F9FA' }}>
+        <div style={{ display: 'flex', flex: 1, background: 'linear-gradient(180deg, #f0f0f0 0%, #ffffff 100%)' }}>
           <Sidebar isOpen={isMenuOpen} onClose={closeMenu} />
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
             <main style={{ flex: 1, padding: '20px', boxSizing: 'border-box' }}>

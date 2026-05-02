@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './Calendar.css';
-import calendarIcon from '../../../assets/CalendarIcon.svg';
+import calendarIcon from '../../assets/calendarIcon.svg';
 
 const WEEKDAYS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 

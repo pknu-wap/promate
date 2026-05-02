@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import './DashboardPage.css';
-import Calendar from './components/Calendar';
+import Calendar from '../../components/Calrendar/Calendar';
 import projectMenuIcon from '../../assets/projectMenuIcon.svg';
 import SummaryCard from './components/SummaryCard';
 import StatusItem from './components/StatusItem';

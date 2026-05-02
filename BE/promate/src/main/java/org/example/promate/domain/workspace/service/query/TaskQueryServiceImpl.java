@@ -26,7 +26,7 @@ public class TaskQueryServiceImpl implements TaskQueryService {
     public TaskResDto.TaskPreviewInfoListDto getTaskPreviewList(Long userId, Long projectId) {
         // 검증: 로그인 사용자가 프로젝트 멤버인가
         if (!memberRepository.existsByUserIdAndProjectId(userId, projectId)) {
-            throw new MemberException(MemberErrorCode.NOT_PROJECT_MEMBER);
+            throw new MemberException(MemberErrorCode.SCHEDULE_FORBIDDEN_NOT_PROJECT_MEMBER);
         }
 
         List<Task> taskList = taskRepository.findByProjectIdAndIsDeletedFalse(projectId);
@@ -40,7 +40,7 @@ public class TaskQueryServiceImpl implements TaskQueryService {
     public TaskResDto.TaskInfoDto getTask(Long userId, Long projectId, Long taskId) {
         // 검증: 로그인 사용자가 프로젝트 멤버인가
         if (!memberRepository.existsByUserIdAndProjectId(userId, projectId)) {
-            throw new MemberException(MemberErrorCode.NOT_PROJECT_MEMBER);
+            throw new MemberException(MemberErrorCode.SCHEDULE_FORBIDDEN_NOT_PROJECT_MEMBER);
         }
 
         Task task = taskRepository.findByIdAndIsDeletedFalse(taskId)

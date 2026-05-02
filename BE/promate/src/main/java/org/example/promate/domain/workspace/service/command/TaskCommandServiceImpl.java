@@ -33,11 +33,12 @@ public class TaskCommandServiceImpl implements TaskCommandService{
 
     //TODO: 로그인 사용자 검증 부분 리팩토링 -> 중복 코드 많음
 
+    // 태스크 추가하기
     @Override
     public TaskResDto.TaskInfoDto addTask(Long userId, Long projectId, TaskReqDto.AddTaskDto dto) {
         // 검증1: 로그인 사용자가 프로젝트 멤버인지
         if(!memberRepository.existsByUserIdAndProjectId(userId, projectId)){
-            throw new MemberException(MemberErrorCode.NOT_PROJECT_MEMBER);
+            throw new MemberException(MemberErrorCode.SCHEDULE_FORBIDDEN_NOT_PROJECT_MEMBER);
         }
 
         // 프로젝트 찾기
@@ -46,7 +47,8 @@ public class TaskCommandServiceImpl implements TaskCommandService{
 
         // 검증2: 담당자 ID가 프로젝트 멤버가 맞는지
         Member member = memberRepository.findByIdAndProjectId(dto.getManagerId(), projectId)
-                .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_PROJECT_MEMBER));
+                .orElseThrow(() -> new MemberException(MemberErrorCode.SCHEDULE_FORBIDDEN_NOT_PROJECT_MEMBER));
+
 
         // 태스크 엔티티 추가
         Task task = TaskConverter.toEntity(dto, project, member);
@@ -55,6 +57,7 @@ public class TaskCommandServiceImpl implements TaskCommandService{
         return TaskConverter.toTaskInfoDto(task);
     }
 
+    // 태스크 수정하기
     @Override
     public TaskResDto.ModifiedTaskInfoDto modifyTask(Long userId, Long projectId, Long taskId, TaskReqDto.ModifyTaskDto dto) {
         Task task = taskRepository.findByIdAndIsDeletedFalse(taskId)
@@ -62,7 +65,7 @@ public class TaskCommandServiceImpl implements TaskCommandService{
 
         // 로그인 사용자의 멤버 정보
         Member member = memberRepository.findByUserIdAndProjectId(userId, projectId)
-                .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_PROJECT_MEMBER));
+                .orElseThrow(() -> new MemberException(MemberErrorCode.SCHEDULE_FORBIDDEN_NOT_PROJECT_MEMBER));
 
         Member currentTaskManager = task.getMember();
 
@@ -85,13 +88,15 @@ public class TaskCommandServiceImpl implements TaskCommandService{
         if(!currentTaskManager.getId().equals(dto.getManagerId())){
             // 검증3: 변경할 태스크 담당자가 프로젝트의 멤버가 맞는가
             Member newTaskManager = memberRepository.findByIdAndProjectId(dto.getManagerId(), projectId)
-                    .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_PROJECT_MEMBER));
+                    .orElseThrow(() -> new MemberException(MemberErrorCode.SCHEDULE_FORBIDDEN_NOT_PROJECT_MEMBER));
             task.modify(newTaskManager);
         }
+        taskRepository.saveAndFlush(task);
 
         return TaskConverter.toModifiedTaskInfoDto(task);
     }
 
+    // 태스크 상태 변경 : TODO, IN_PROGRESS, DONE
     @Override
     public TaskResDto.UpdatedStatusTaskInfoDto updateTaskStatus(Long userId, Long projectId, Long taskId, TaskReqDto.UpdateTaskStatusDto dto) {
         Task task = taskRepository.findByIdAndIsDeletedFalse(taskId)
@@ -115,6 +120,7 @@ public class TaskCommandServiceImpl implements TaskCommandService{
         return TaskConverter.toUpdatedStatusTaskInfoDto(task, projectProgress, isProjectCompleted);
     }
 
+    // 태스크 삭제하기
     @Override
     public TaskResDto.DeletedTaskInfoDto deleteTask(Long userId, Long projectId, Long taskId) {
         Task task = taskRepository.findByIdAndIsDeletedFalse(taskId)
@@ -123,7 +129,7 @@ public class TaskCommandServiceImpl implements TaskCommandService{
 
         // 로그인 사용자의 프로젝트 멤버 정보
         Member member = memberRepository.findByUserIdAndProjectId(userId, projectId)
-                .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_PROJECT_MEMBER));
+                .orElseThrow(() -> new MemberException(MemberErrorCode.SCHEDULE_FORBIDDEN_NOT_PROJECT_MEMBER));
 
         // 검증: 태스크 삭제는 태스크 담당자 본인과 프로젝트 팀장만
         boolean isAssignee = currentTaskManager.equals(member);

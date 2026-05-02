@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.example.promate.domain.workspace.dto.req.TaskReqDto;
 import org.example.promate.domain.workspace.dto.res.TaskResDto;
 import org.example.promate.global.ApiPayload.ApiResponse;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "WORKSPACE_TASK", description = "WORKSPACE 도메인 내 태스크 API")
@@ -29,6 +30,7 @@ public interface TaskControllerDocs {
     })
     @GetMapping("/projects/{projectId}/tasks")
     ApiResponse<TaskResDto.TaskPreviewInfoListDto> getTaskPreviewList(
+            @AuthenticationPrincipal Long userId,
             @PathVariable Long projectId
     );
 
@@ -47,6 +49,7 @@ public interface TaskControllerDocs {
     })
     @GetMapping("/projects/{projectId}/tasks/{taskId}")
     ApiResponse<TaskResDto.TaskInfoDto> getTask(
+            @AuthenticationPrincipal Long userId,
             @PathVariable Long projectId,
             @PathVariable Long taskId
     );
@@ -66,6 +69,7 @@ public interface TaskControllerDocs {
     })
     @PostMapping("/projects/{projectId}/tasks")
     ApiResponse<TaskResDto.TaskInfoDto> addTask(
+            @AuthenticationPrincipal Long userId,
             @PathVariable Long projectId,
             @Valid @RequestBody TaskReqDto.AddTaskDto dto
     );
@@ -85,6 +89,7 @@ public interface TaskControllerDocs {
     })
     @PutMapping("/projects/{projectId}/tasks/{taskId}")
     ApiResponse<TaskResDto.ModifiedTaskInfoDto> modifyTask(
+            @AuthenticationPrincipal Long userId,
             @PathVariable Long projectId,
             @PathVariable Long taskId,
             @Valid @RequestBody TaskReqDto.ModifyTaskDto dto
@@ -105,6 +110,7 @@ public interface TaskControllerDocs {
     })
     @PatchMapping("/projects/{projectId}/tasks/{taskId}/status")
     ApiResponse<TaskResDto.UpdatedStatusTaskInfoDto> updateTaskStatus(
+            @AuthenticationPrincipal Long userId,
             @PathVariable Long projectId,
             @PathVariable Long taskId,
             @Valid @RequestBody TaskReqDto.UpdateTaskStatusDto dto
@@ -125,6 +131,7 @@ public interface TaskControllerDocs {
     })
     @DeleteMapping("/projects/{projectId}/tasks/{taskId}")
     ApiResponse<TaskResDto.DeletedTaskInfoDto> deleteTask(
+            @AuthenticationPrincipal Long userId,
             @PathVariable Long projectId,
             @PathVariable Long taskId
     );

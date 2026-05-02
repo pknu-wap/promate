@@ -10,11 +10,21 @@
   box-sizing: border-box;
 }
 
+.summary-card.collapsed {
+  padding-bottom: 13px;
+  align-self: flex-start;
+}
+
 .summary-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.summary-card.collapsed .summary-header {
+  margin-bottom: 0;
 }
 
 .summary-title {

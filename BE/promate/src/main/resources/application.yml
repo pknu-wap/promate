@@ -1,4 +1,5 @@
 server:
+  address: 0.0.0.0
   port: 8082
 
 spring:
@@ -26,3 +27,16 @@ springdoc:
     enabled: false
   api-docs:
     enabled: true
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: ${KAKAO_REST_API_KEY}
+            client-secret: ${KAKAO_CLIENT_SECRET}
+            redirect-uri: ${KAKAO_REDIRECT_URI}
+
+jwt:
+  secret: ${JWT_SECRET}
+  access-token-expiration: 3600000
+  refresh-token-expiration: 1209600000

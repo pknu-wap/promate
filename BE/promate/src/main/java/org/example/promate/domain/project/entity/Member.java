@@ -11,6 +11,7 @@ import org.example.promate.domain.workspace.entity.MeetingLog;
 import org.example.promate.domain.workspace.entity.Notice;
 import org.example.promate.domain.workspace.entity.TaskAssignee;
 import org.example.promate.global.entity.BaseTimeEntity;
+import org.example.promate.domain.workspace.entity.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -48,7 +49,7 @@ public class Member extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     @Builder.Default
-    private List<TaskAssignee> taskAssignees = new ArrayList<>();
+    private List<Task> Task = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     @Builder.Default

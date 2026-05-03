@@ -1,0 +1,84 @@
+.applicant-list-container {
+  padding: 40px;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+.applicant-list-container h2 {
+  font-size: 24px;
+  margin-bottom: 30px;
+  font-weight: bold;
+}
+
+.project-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.project-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 20px 30px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.card-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.project-icon {
+  width: 50px;
+  height: 50px;
+  background: #eee;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #bbb;
+}
+
+.project-info h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.project-info p {
+  margin: 5px 0 0;
+  font-size: 14px;
+  color: #888;
+}
+
+.card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.member-count {
+  font-size: 13px;
+  color: #999;
+}
+
+.review-btn {
+  background-color: #ffb800; /* 프로메이트 메인 오렌지색 */
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.review-btn:hover {
+  background-color: #e5a600;
+}

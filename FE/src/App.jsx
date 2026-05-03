@@ -33,6 +33,7 @@ function App() {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/teammaking" element={<TeammakingPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/applicant" element={<ApplicantList/>} />
               </Routes>
             </main>
           </div>

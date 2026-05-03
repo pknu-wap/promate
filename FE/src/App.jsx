@@ -5,6 +5,7 @@ import Sidebar from "./components/SideBar/Sidebar";
 import Header from "./components/Header/Header";
 import SelfPRPage from "./pages/SelfPRPage.jsx";
 import LoginPage from "./pages/LoginPage/LoginPage.jsx";
+import AuthCallback from "./pages/AuthCallback/AuthCallback.jsx";
 import TeammakingPage from "./pages/Teammaking/TeammakingPage.jsx";
 import DashboardPage from "./pages/DashboardPage/DashboardPage.jsx";
 
@@ -22,6 +23,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/auth/kakao/callback" element={<AuthCallback />} />
         
         <Route
           element={

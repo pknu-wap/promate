@@ -4,4 +4,11 @@ import org.example.promate.domain.project.entity.Project;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProjectRepository extends JpaRepository<Project, Long>, ProjectRepositoryCustom {
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface ProjectRepository extends JpaRepository<Project, Long> {
+    Optional<Project> findById(Long id);
 }

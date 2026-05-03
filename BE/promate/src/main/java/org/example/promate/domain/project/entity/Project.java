@@ -59,7 +59,7 @@ public class Project extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     @Builder.Default
-    private List<Event> events = new ArrayList<>();
+    private List<Schedule> events = new ArrayList<>();
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     @Builder.Default

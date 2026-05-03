@@ -58,7 +58,7 @@ function Sidebar({ isOpen, onClose }) {
             activeIcon={applicantReviewOrangeIcon}
           />
           <SidebarItem
-            to="/projects"
+            to="/project"
             label="프로젝트"
             icon={projectIcon}
             activeIcon={projectOrangeIcon}

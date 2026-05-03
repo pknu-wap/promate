@@ -45,8 +45,9 @@
 }
 
 .count-number {
-  font-weight: 500;
-  font-size: 28px;
+  font-family: 'YSpotlightOTF';
+  font-weight: 100;
+  font-size: 24px;
   color: #FF6600;
   margin-right: 4px;
 }
@@ -65,10 +66,6 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  &:hover {
-    background-color: #f8f9fa;
-    border-radius: 8px;
-  }
 }
 
 .item-dot {

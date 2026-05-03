@@ -126,6 +126,7 @@ function DashboardPage() {
               {dashboardData.projectStatuses.map((project) => (
                 <StatusItem
                   key={project.id}
+                  id={project.id}
                   title={project.title}
                   date={project.date}
                   ratio={project.ratio}

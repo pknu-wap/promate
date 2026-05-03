@@ -4,7 +4,7 @@ import './SummaryCard.css';
 import { getDiffDays } from '../components/DateUtils';
 
 function SummaryCard({ title, count, items = [], showDot }) {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(() => window.innerWidth > 768);
   const [visibleCount, setVisibleCount] = useState(3);
 
   //카드 헤더 클릭 시 리스트를 접거나 펼쳐짐, 접을 때 표시 개수를 초기값으로 리셋

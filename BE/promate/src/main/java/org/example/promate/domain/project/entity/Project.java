@@ -45,11 +45,11 @@ public class Project extends BaseTimeEntity {
     @JoinColumn(name="leader_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="recruit_id")
     private Recruit recruit;
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<Member> members = new ArrayList<>();
 
@@ -68,4 +68,18 @@ public class Project extends BaseTimeEntity {
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     @Builder.Default
     private List<Notice> notices = new ArrayList<>();
+
+    public void updateStatus(ProjectStatus status){
+        this.status = status;
+    }
+
+    public void disconnectRecruit() {
+        if (this.recruit != null) {
+            // 1. 반대편(Recruit) 객체의 참조를 먼저 제거
+            this.recruit.disconnectProject();
+
+            // 2. 본인(Project)의 참조 제거
+            this.recruit = null;
+        }
+    }
 }

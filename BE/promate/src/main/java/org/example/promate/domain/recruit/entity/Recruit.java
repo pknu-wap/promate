@@ -8,6 +8,8 @@ import org.example.promate.domain.project.entity.Project;
 import org.example.promate.domain.recruit.enums.Category;
 import org.example.promate.domain.recruit.enums.RecruitStatus;
 import org.example.promate.domain.user.entity.User;
+import org.example.promate.global.ApiPayload.code.RecruitErrorCode;
+import org.example.promate.global.ApiPayload.exception.GeneralException;
 import org.example.promate.global.entity.BaseEntity;
 
 import java.time.LocalDateTime;
@@ -58,11 +60,12 @@ public class Recruit extends BaseEntity {
     @JoinColumn(name="user_id")
     private User user;
 
-    @OneToMany(mappedBy = "recruit", fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<Project> projects = new ArrayList<>();
+    //모집글 1개당 1개의 프로젝트로 수정했습니다
+    //모집글 삭제 -> 지원서 다수 삭제 , 임시 프로젝트 1개 삭제 -> 프로젝트의 멤버 다수 삭제
+    @OneToOne(mappedBy = "recruit", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Project project;
 
-    @OneToMany(mappedBy = "recruit", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "recruit", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<Apply> applies = new ArrayList<>();
 
@@ -74,5 +77,24 @@ public class Recruit extends BaseEntity {
 
     public void delete(){
         super.performDelete();
+    }
+
+    public void increaseJoinedCount() {
+        if (this.joinedCount >= this.totalSlots) {
+            throw new GeneralException(RecruitErrorCode.RECRUITMENT_FULL);
+        }
+        this.joinedCount++;
+    }
+
+    public void decreaseJoinedCount(){
+        this.joinedCount--;
+    }
+
+    public void updateStatus(RecruitStatus status){
+        this.status = status;
+    }
+
+    public void disconnectProject(){
+        this.project = null;
     }
 }

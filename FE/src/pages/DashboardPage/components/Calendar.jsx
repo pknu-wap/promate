@@ -43,7 +43,7 @@ const initialEvents = [
     start: new Date(currentYear, currentMonth, 16),
     end: new Date(currentYear, currentMonth, 16),
     checked: false,
-  }
+  },
 ];
 
 function Calendar() {
@@ -185,6 +185,7 @@ function Calendar() {
                         style={
                           isSegmentStart
                             ? {
+                                // 이어지는 일정은 시작 칸에서만 너비를 확장
                                 width: `calc(${eventSpan * 100}% + ${
                                   eventSpan - 1
                                 }px)`,
@@ -264,6 +265,7 @@ function getCalendarDays(year, month) {
     return days;
   }
 
+  // 마지막 주도 7칸 구조를 유지하도록 빈 칸을 추가
   return [...days, ...Array(7 - remainder).fill(null)];
 }
 
@@ -280,6 +282,7 @@ function getEventsByDay(events, year, month, day) {
       const aDuration = a.end.getTime() - a.start.getTime();
       const bDuration = b.end.getTime() - b.start.getTime();
 
+      // 긴 일정이 위에 오도록 정렬
       if (aDuration !== bDuration) {
         return bDuration - aDuration;
       }
@@ -297,6 +300,7 @@ function getEventsByDay(events, year, month, day) {
 function isEventSegmentStart(event, year, month, day, index) {
   const currentDate = new Date(year, month, day).getTime();
 
+  // 일정 시작일이 아니어도 월 첫날이나 주 첫날이면 새 구간으로 다시 표시
   return (
     currentDate === event.start.getTime() ||
     day === 1 ||
@@ -325,6 +329,7 @@ function getEventSpan(event, year, month, day, index) {
 
   const remainingEventDays = eventEndDay - day + 1;
 
+  // 일정이 현재 주 안에서 차지할 칸 수만 계산
   return Math.min(daysUntilWeekEnd, remainingEventDays);
 }
 

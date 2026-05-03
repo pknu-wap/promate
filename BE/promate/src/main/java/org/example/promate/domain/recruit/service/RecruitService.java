@@ -1,0 +1,108 @@
+package org.example.promate.domain.recruit.service;
+
+import lombok.RequiredArgsConstructor;
+import org.example.promate.domain.apply.repository.ApplyRepository;
+import org.example.promate.domain.recruit.dto.request.RecruitCreateRequest;
+import org.example.promate.domain.recruit.dto.request.RecruitSearchCondition;
+import org.example.promate.domain.recruit.dto.request.RecruitUpdateRequest;
+import org.example.promate.domain.recruit.dto.response.RecruitCreateResponse;
+import org.example.promate.domain.recruit.dto.response.RecruitDetailResponse;
+import org.example.promate.domain.recruit.dto.response.RecruitPageResponse;
+import org.example.promate.domain.recruit.dto.response.RecruitResponse;
+import org.example.promate.domain.recruit.entity.Recruit;
+import org.example.promate.domain.recruit.repository.RecruitRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class RecruitService {
+
+    private final RecruitRepository recruitRepository;
+    //private final UserRepository userRepository;
+    private final ApplyRepository applyRepository; // 지원 내역 확인용
+
+    @Transactional
+    public RecruitCreateResponse createRecruitment(
+            RecruitCreateRequest request, Long userId)
+    {
+        //User writer = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("유저를 찾을 수 없습니다."));
+        Recruit recruit = Recruit.builder()
+                .title(request.title())
+                .description(request.description())
+                .category(request.category())
+                .totalSlots(request.totalSlots())
+                .deadline(request.deadline())
+                //.user(writer)
+                .build();
+
+        Recruit savedRecruit = recruitRepository.save(recruit);
+
+        return new RecruitCreateResponse(savedRecruit.getId());
+    }
+
+    public RecruitDetailResponse getRecruitmentDetail(Long recruitmentId, Long currentUserId) {
+        Recruit recruit = recruitRepository.findByIdAndIsDeletedFalse(recruitmentId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+
+        boolean isAuthor = recruit.getUser().getId().equals(currentUserId);
+
+        boolean hasApplied = applyRepository.existsByRecruitIdAndUserId(recruitmentId, currentUserId);
+        int applicantCount = applyRepository.countByRecruitId(recruitmentId);
+
+        return new RecruitDetailResponse(
+                recruit.getId(),
+                recruit.getTitle(),
+                recruit.getDescription(),
+                recruit.getCategory(),
+                "RECRUITING", // 임시 상태값
+                recruit.getCreatedAt(),
+                recruit.getUpdatedAt(),
+                recruit.getDeadline(),
+                new RecruitDetailResponse.AuthorDto(
+                        recruit.getUser().getId(),
+                        recruit.getUser().getName(),
+                        recruit.getUser().getProfileImageUrl()
+                ),
+                isAuthor,
+                hasApplied,
+                applicantCount
+        );
+    }
+
+    @Transactional
+    public void updateRecruitment(Long recruitmentId, RecruitUpdateRequest request, Long userId) {
+
+        Recruit recruit = recruitRepository.findByIdAndIsDeletedFalse(recruitmentId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+
+        if (!recruit.getUser().getId().equals(userId)) {
+            throw new SecurityException("수정 권한이 없습니다.");
+        }
+
+        recruit.update(request.title(), request.content(), request.status());
+    }
+
+    @Transactional
+    public void deleteRecruitment(Long recruitmentId, Long userId) {
+
+        Recruit recruit = recruitRepository.findByIdAndIsDeletedFalse(recruitmentId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+
+        if (!recruit.getUser().getId().equals(userId)) {
+            throw new SecurityException("삭제 권한이 없습니다.");
+        }
+
+        recruit.delete();
+    }
+
+    public RecruitPageResponse<RecruitResponse> getRecruitments(RecruitSearchCondition condition, Pageable pageable) {
+
+        Page<RecruitResponse> resultPage = recruitRepository.searchRecruits(condition, pageable);
+
+        return RecruitPageResponse.of(resultPage);
+    }
+}

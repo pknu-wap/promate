@@ -29,6 +29,8 @@ public class BaseEntity extends BaseTimeEntity{
     @Column(name="deleted_at")
     private LocalDateTime deletedAt;
 
+    //자식 엔티티에서만 이 함수에 접근 가능하도록
+    protected void performDelete() {
     // 삭제 메서드
     public void delete() {
         this.isDeleted = true;

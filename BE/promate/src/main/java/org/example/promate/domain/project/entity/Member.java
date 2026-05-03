@@ -6,8 +6,14 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.example.promate.domain.project.enums.Position;
 import org.example.promate.domain.user.entity.User;
+import org.example.promate.domain.workspace.entity.BaseBoard;
+import org.example.promate.domain.workspace.entity.MeetingLog;
+import org.example.promate.domain.workspace.entity.Notice;
+import org.example.promate.domain.workspace.entity.TaskAssignee;
+import org.example.promate.global.entity.BaseTimeEntity;
 import org.example.promate.domain.workspace.entity.*;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,8 +24,9 @@ import java.util.List;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+
 @Table(name="member")
-public class Member {
+public class Member extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,13 +34,9 @@ public class Member {
     @Column(name="role", nullable = false)
     private String role;
 
-    @Column(name="position", nullable = false)
+    @Column(name="member_position", nullable = false) //MySQL 예약어랑 겹쳐서 수정
     @Enumerated(EnumType.STRING)
     private Position position;
-
-    @CreatedDate
-    @Column(name="created_at", nullable = false)
-    private LocalDateTime createdAt;
 
     //mapping
     @ManyToOne(fetch = FetchType.LAZY)

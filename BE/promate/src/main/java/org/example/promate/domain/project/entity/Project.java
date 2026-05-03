@@ -22,7 +22,7 @@ import java.util.List;
 public class Project extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name="title", nullable = false)
     private String title;

@@ -22,6 +22,11 @@ spring:
       hibernate:
         format_sql: true
 
+springdoc:
+  querydsl:
+    enabled: false
+  api-docs:
+    enabled: true
   security:
     oauth2:
       client:

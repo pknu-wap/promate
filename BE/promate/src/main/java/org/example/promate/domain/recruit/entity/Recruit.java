@@ -65,4 +65,14 @@ public class Recruit extends BaseEntity {
     @OneToMany(mappedBy = "recruit", fetch = FetchType.LAZY)
     @Builder.Default
     private List<Apply> applies = new ArrayList<>();
+
+    public void update(String title, String description, RecruitStatus status) {
+        this.title = title;
+        this.description = description;
+        this.status = status;
+    }
+
+    public void delete(){
+        super.performDelete();
+    }
 }

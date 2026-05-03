@@ -58,7 +58,7 @@ function Sidebar({ isOpen, onClose }) {
             activeIcon={applicantReviewOrangeIcon}
           />
           <SidebarItem
-            to="/projects"
+            to="/project"
             label="프로젝트"
             icon={projectIcon}
             activeIcon={projectOrangeIcon}
@@ -81,6 +81,7 @@ function Sidebar({ isOpen, onClose }) {
               favoriteList.map((item) => (
                 <FavoriteItem 
                   key={item.id} 
+                  id={item.id}
                   name={item.projectName} 
                   dueDate={item.deadLine} 
                   dotColor={item.colorTag || 'red'} 

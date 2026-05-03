@@ -68,4 +68,7 @@ public class Project extends BaseTimeEntity {
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     @Builder.Default
     private List<Notice> notices = new ArrayList<>();
+
+
 }
+

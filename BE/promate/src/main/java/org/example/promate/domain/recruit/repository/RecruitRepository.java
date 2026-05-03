@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -27,4 +28,11 @@ public interface RecruitRepository extends JpaRepository<Recruit, Long>, Recruit
      3.특정 작성자가 올린 삭제되지 않은 글 목록
      */
     Page<Recruit> findAllByUserIdAndIsDeletedFalse(Long userId, Pageable pageable);
+
+    /*
+     4. 특정 작성자가 올린 삭제되지 않은 글 목록(리스트)
+     */
+    List<Recruit> findByUserIdAndIsDeletedFalse(Long userId);
+
+
 }

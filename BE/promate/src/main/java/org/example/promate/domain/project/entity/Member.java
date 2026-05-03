@@ -9,7 +9,7 @@ import org.example.promate.domain.user.entity.User;
 import org.example.promate.domain.workspace.entity.BaseBoard;
 import org.example.promate.domain.workspace.entity.MeetingLog;
 import org.example.promate.domain.workspace.entity.Notice;
-import org.example.promate.domain.workspace.entity.TaskAssignee;
+//import org.example.promate.domain.workspace.entity.TaskAssignee;
 import org.example.promate.global.entity.BaseTimeEntity;
 import org.example.promate.domain.workspace.entity.*;
 import org.springframework.data.annotation.CreatedDate;

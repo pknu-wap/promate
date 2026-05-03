@@ -21,19 +21,18 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class BaseEntity extends BaseTimeEntity{
+public class BaseEntity extends BaseTimeEntity {
 
-    @Column(name="is_deleted", nullable = false)
+    @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted = false;
 
-    @Column(name="deleted_at")
+    @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
     //자식 엔티티에서만 이 함수에 접근 가능하도록
     protected void performDelete() {
-    // 삭제 메서드
-    public void delete() {
-        this.isDeleted = true;
-        this.deletedAt = LocalDateTime.now();
+            this.isDeleted = true;
+            this.deletedAt = LocalDateTime.now();
     }
+
 }

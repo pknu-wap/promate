@@ -1,8 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import Avatar from '../../components/Avatar/Avatar';
 import './Applicant.css';
 
 const ApplicantList = () => {
-  // 시안에 있는 데이터 예시입니다. 나중에 서버에서 받아오면 됩니다!
+  const navigate = useNavigate();
+
   const projects = [
     { id: 1, title: '캡스톤 디자인', description: '안녕하세요. WAP 파이팅', members: 4 },
     { id: 2, title: '캡스톤 디자인', description: '안녕하세요. WAP 파이팅', members: 4 },
@@ -11,6 +14,11 @@ const ApplicantList = () => {
     { id: 5, title: '캡스톤 디자인', description: '안녕하세요. WAP 파이팅', members: 4 },
   ];
 
+  const handleReviewClick = (id) => {
+    navigate(`/applicant/detail`);
+    // 나중에 서버 연결하면 navigate(`/applicant/detail/${id}`) 로 바꿀 거예요!
+  };
+
   return (
     <div className="applicant-list-container">
       <h2>지원자 검토</h2>
@@ -18,7 +26,7 @@ const ApplicantList = () => {
         {projects.map((project) => (
           <div key={project.id} className="project-card">
             <div className="card-left">
-              <div className="project-icon">D</div>
+              <Avatar size="md" />
               <div className="project-info">
                 <h3>{project.title}</h3>
                 <p>{project.description}</p>
@@ -26,7 +34,9 @@ const ApplicantList = () => {
             </div>
             <div className="card-right">
               <span className="member-count">모집인원: {project.members}명</span>
-              <button className="review-btn">지원자 검토</button>
+              <button className="review-btn" onClick={() => handleReviewClick(project.id)}>
+                지원자 검토
+              </button>
             </div>
           </div>
         ))}

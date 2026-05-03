@@ -8,6 +8,9 @@ import LoginPage from "./pages/LoginPage/LoginPage.jsx";
 import AuthCallback from "./pages/AuthCallback/AuthCallback.jsx";
 import TeammakingPage from "./pages/Teammaking/TeammakingPage.jsx";
 import DashboardPage from "./pages/DashboardPage/DashboardPage.jsx";
+import ApplicantPage from "./pages/Applicant/ApplicantList.jsx";
+import ApplicantDetail from "./pages/Applicant/ApplicantDetail.jsx";
+
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -44,7 +47,8 @@ function App() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/self-pr" element={<SelfPRPage />} />
           <Route path="/teammaking" element={<TeammakingPage />} />
-          <Route path="/applicant" element={<ApplicantList/>} />
+          <Route path="/applicant" element={<ApplicantPage/>} />
+          <Route path="/applicant/detail" element={<ApplicantDetail />} />
         </Route>
       </Routes>
     </BrowserRouter>

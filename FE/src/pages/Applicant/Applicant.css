@@ -1,84 +1,196 @@
-.applicant-list-container {
-  padding: 40px;
-  background-color: #f9f9f9;
-  min-height: 100vh;
+/* ===== Applicant.css ===== */
+
+/* ── 공통 래퍼 ── */
+.applicant-list-container,
+.detail-container {
+  padding: 32px 36px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.applicant-list-container h2 {
-  font-size: 24px;
-  margin-bottom: 30px;
-  font-weight: bold;
+/* ── 페이지 제목 ── */
+.applicant-list-container h2,
+.detail-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 24px 0;
 }
 
+/* ════════════════════════════════
+   ApplicantList — 프로젝트 카드 목록
+════════════════════════════════ */
 .project-cards {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 0;
+  border-top: 1px solid #e8e8e8;
 }
 
 .project-card {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: white;
-  padding: 20px 30px;
-  border-radius: 8px;
-  border: 1px solid #eee;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  padding: 20px 16px;
+  border-bottom: 1px solid #e8e8e8;
+  background: #fff;
+  transition: background 0.15s;
+}
+
+.project-card:hover {
+  background: #fafafa;
 }
 
 .card-left {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 14px;
 }
 
-.project-icon {
-  width: 50px;
-  height: 50px;
-  background: #eee;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  color: #bbb;
-}
 
 .project-info h3 {
-  margin: 0;
-  font-size: 18px;
-  color: #333;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 4px 0;
 }
 
 .project-info p {
-  margin: 5px 0 0;
-  font-size: 14px;
+  font-size: 13px;
   color: #888;
+  margin: 0;
 }
 
 .card-right {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 10px;
+  gap: 8px;
 }
 
 .member-count {
   font-size: 13px;
-  color: #999;
+  color: #555;
 }
 
 .review-btn {
-  background-color: #ffb800; /* 프로메이트 메인 오렌지색 */
-  color: white;
+  background: #FE9A57;
+  color: #fff;
   border: none;
-  padding: 8px 20px;
-  border-radius: 5px;
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
-  font-weight: bold;
+  transition: background 0.15s;
+  white-space: nowrap;
 }
 
 .review-btn:hover {
-  background-color: #e5a600;
+  background: #f08040;
+}
+
+/* ════════════════════════════════
+   ApplicantDetail — 탭 + 테이블
+════════════════════════════════ */
+
+/* 탭 메뉴 */
+.tab-menu {
+  display: flex;
+  gap: 0;
+  margin-bottom: 24px;
+  border-bottom: 2px solid #eee;
+}
+
+.tab-btn {
+  padding: 10px 28px;
+  border: none;
+  border-bottom: 3px solid transparent;
+  background: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #999;
+  margin-bottom: -2px;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.tab-btn:hover {
+  color: #FE9A57;
+}
+
+.tab-btn.active {
+  color: #FE9A57;
+  border-bottom-color: #FE9A57;
+  font-weight: 700;
+  background: #fff4ee;
+  border-radius: 6px 6px 0 0;
+}
+
+/* 테이블 */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.applicant-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.applicant-table thead tr {
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.applicant-table th {
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 600;
+  color: #999;
+  background: none;
+  border: none;
+}
+
+.applicant-table td {
+  padding: 16px 16px;
+  border: none;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 14px;
+  color: #1a1a1a;
+  vertical-align: middle;
+}
+
+.applicant-table tbody tr:hover {
+  background: #fafafa;
+}
+
+/* 이름 + 아바타 셀 */
+.user-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 온도 */
+.temp-text {
+  color: #FE9A57;
+  font-weight: 600;
+}
+
+.profile-view-btn {
+  background: #FE9A57;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.profile-view-btn:hover {
+  background: #f08040;
 }

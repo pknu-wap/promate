@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './StatusItem.css';
 import Avatar from '../../../components/Avatar/Avatar';
@@ -7,16 +7,19 @@ import { getDiffDays } from '../components/DateUtils';
 
 function StatusItem({ id, title, date = '', tag = '여유', ratio }) {
   const navigate = useNavigate();
-  let progressValue = 0;
-  
-  if (ratio && ratio.includes('/')) {
-    const [current, total] = ratio.split('/').map(Number);
-    if (total > 0 && !isNaN(current)) {
-      progressValue = Math.round((current / total) * 100);
-    }
-  }
 
-  const diffDays = getDiffDays(date);
+  const progressValue = useMemo(() => {
+    if (ratio && ratio.includes('/')) {
+      const [current, total] = ratio.split('/').map(Number);
+      if (total > 0 && !isNaN(current)) {
+        return Math.round((current / total) * 100);
+      }
+    }
+    return 0;
+  }, [ratio]);
+
+  const diffDays = useMemo(() => getDiffDays(date), [date]);
+  const isUrgent = diffDays < 7;
 
   return (
     <div 
@@ -35,8 +38,8 @@ function StatusItem({ id, title, date = '', tag = '여유', ratio }) {
           </div>
         </div>
 
-        <div className={`status-tag ${diffDays < 7 ? 'urgent' : ''}`}>
-          {diffDays < 7 ? '긴급' : tag}
+        <div className={`status-tag ${isUrgent ? 'urgent' : ''}`}>
+          {isUrgent ? '긴급' : tag}
         </div>
       </div>
 

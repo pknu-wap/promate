@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import moreIcon from '../../../assets/moreIcon.svg';
 import './SummaryCard.css';
+import { getDiffDays } from '../components/DateUtils';
 
 function SummaryCard({ title, count, items = [], showDot }) {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -24,13 +25,7 @@ function SummaryCard({ title, count, items = [], showDot }) {
   const getDotColor = (date) => {
     if (!date) return '#80D366';
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const targetDate = new Date(date.replace(/\./g, '-'));
-    targetDate.setHours(0, 0, 0, 0);
-
-    const diffDays = Math.round((targetDate - today) / (1000 * 60 * 60 * 24));
+    const diffDays = getDiffDays(date);
 
     if (diffDays < 7) return '#FF7B7B';
     if (diffDays === 7) return '#FFD748';

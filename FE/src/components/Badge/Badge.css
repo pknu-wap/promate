@@ -2,15 +2,15 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 74px;
-  height: 32px;
-  padding: 0 18px;
+  min-width: 86px;
+  height: 36px;
+  padding: 0 16px;
   border: 1px solid #ababab;
   border-radius: 999px;
   background: #d9d9d9;
   color: #ffffff;
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 800;
   line-height: 1;
   white-space: nowrap;
   cursor: pointer;
@@ -26,7 +26,7 @@
 }
 
 .badge--selected {
-  border-color: #ef8d4d;
+  border-color: #ff732f;
   background: #fe9a57;
 }
 

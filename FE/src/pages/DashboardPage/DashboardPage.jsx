@@ -4,6 +4,7 @@ import Calendar from './components/Calendar';
 import projectMenuIcon from '../../assets/projectMenuIcon.svg';
 import SummaryCard from './components/SummaryCard';
 import StatusItem from './components/StatusItem';
+import moreIcon from '../../assets/moreIcon.svg';
 
 // 임시 데이터
 const dummyDashboardData = {
@@ -11,6 +12,7 @@ const dummyDashboardData = {
     { id: 1, title: '캡스톤 디자인', date: '2026.05.08', ratio: '12/18' },
     { id: 2, title: '팀플 과제', date: '2026.06.01', ratio: '5/10' },
     { id: 3, title: 'WAP 프로젝트', date: '2026.06.05', ratio: '7/18' },
+    { id: 4, title: '스터디', date: '2026.07.05', ratio: '3/18' },
   ],
   urgentTasks: [
     { id: 1, title: '캡스톤 디자인 - 자료 조사하기', date: '2026.05.05' },
@@ -32,6 +34,7 @@ function DashboardPage() {
   });
 
   const [isLoading, setIsLoading] = useState(true);
+  const [visibleStatusCount, setVisibleStatusCount] = useState(3);
 
   useEffect(() => {
     // 백엔드 API 연결 시 이 부분 수정
@@ -71,6 +74,10 @@ function DashboardPage() {
     [dashboardData]
   );
 
+  const handleShowMoreStatus = () => {
+    setVisibleStatusCount((prevCount) => prevCount + 3);
+  };
+
   if (isLoading) {
     return (
       <div className="dashboard-container">
@@ -107,8 +114,7 @@ function DashboardPage() {
             </div>
 
             <div className="status-list">
-              {dashboardData.projectStatuses.map((project) => (
-              {dashboardData.activeProjects.map((project) => (
+              {dashboardData.activeProjects.slice(0, visibleStatusCount).map((project) => (
                 <StatusItem
                   key={project.id}
                   id={project.id}
@@ -118,6 +124,25 @@ function DashboardPage() {
                 />
               ))}
             </div>
+
+            {visibleStatusCount < dashboardData.activeProjects.length ? (
+              <button 
+                className="more-btn" 
+                onClick={handleShowMoreStatus} 
+                style={{ alignSelf: 'center', marginTop: '16px' }}
+              >
+                더보기
+                <img src={moreIcon} alt="moreIcon" />
+              </button>
+            ) : dashboardData.activeProjects.length > 3 ? (
+              <button 
+                className="more-btn" 
+                onClick={() => setVisibleStatusCount(3)} 
+                style={{ alignSelf: 'center', marginTop: '16px' }}
+              >
+                접기
+                <img src={moreIcon} alt="moreIcon" style={{ transform: 'rotate(180deg)' }} />
+              </button>
             ) : null}
           </div>
         </div>

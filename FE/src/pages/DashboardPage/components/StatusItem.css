@@ -81,8 +81,7 @@
 }
 
 .progress-percent {
-  font-family: 'YSpotlightOTF';
-  font-weight: 100;
-  font-size: 25px;
+  font-weight: 500;
+  font-size: 26px;
   color: #FF6600;
 }

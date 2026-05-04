@@ -10,19 +10,18 @@ import moreIcon from '../../assets/moreIcon.svg';
 const dummyDashboardData = {
   projects: [
     { id: 1, title: '캡스톤 디자인', date: '2026.05.08', ratio: '12/18' },
-    { id: 2, title: '팀플 과제', date: '2026.06.01', ratio: '5/10' },
-    { id: 3, title: 'WAP 프로젝트', date: '2026.06.05', ratio: '3/18' },
-    { id: 4, title: '토이 프로젝트', date: '2026.07.12', ratio: '2/8' },
+    { id: 2, title: 'WAP 프로젝트', date: '2026.06.05', ratio: '3/18' },
   ],
   urgentTasks: [
     { id: 1, title: '캡스톤 디자인 - 자료 조사하기', date: '2026.05.05' },
     { id: 2, title: 'WAP 프로젝트 - 중간 발표', date: '2026.05.06' },
-    { id: 3, title: '팀플 과제 - PPT 제작', date: '2026.05.17' },
-    { id: 4, title: '팀플 과제 - PPT 제작', date: '2026.05.19' },
+    
   ],
   completedTasks: [
-    { id: 1, title: 'WAP 프로젝트', date: '2025.11.28' },
-    { id: 2, title: '팀플 과제', date: '2026.04.01' },
+    { id: 1, title: 'WAP 프로젝트 - 대시보드 개발', date: '2025.11.28' },
+    { id: 2, title: '프로그래밍 팀플 - 오류 수정', date: '2026.04.01' },
+    { id: 3, title: '프로그래밍 팀플 - PPT 제작', date: '2026.04.17' },
+    { id: 4, title: '캡스톤 디자인 - 프로젝트 계획서 작성', date: '2026.05.01' },
   ],
 };
 

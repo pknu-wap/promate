@@ -8,10 +8,9 @@ import StatusItem from './components/StatusItem';
 // 임시 데이터
 const dummyDashboardData = {
   activeProjects: [
-    { id: 1, title: '캡스톤 디자인', date: '2026.05.08' },
-    { id: 2, title: '팀플 과제', date: '2026.06.01' },
-    { id: 3, title: 'WAP 프로젝트', date: '2026.06.05' },
-
+    { id: 1, title: '캡스톤 디자인', date: '2026.05.08', ratio: '12/18' },
+    { id: 2, title: '팀플 과제', date: '2026.06.01', ratio: '5/10' },
+    { id: 3, title: 'WAP 프로젝트', date: '2026.06.05', ratio: '7/18' },
   ],
   urgentTasks: [
     { id: 1, title: '캡스톤 디자인 - 자료 조사하기', date: '2026.05.05' },
@@ -23,20 +22,6 @@ const dummyDashboardData = {
     { id: 1, title: 'WAP 프로젝트', date: '2025.11.28' },
     { id: 2, title: '팀플 과제', date: '2026.04.01' },
   ],
-  projectStatuses: [
-    {
-      id: 1,
-      title: '캡스톤 디자인',
-      date: '2026.05.08',
-      ratio: '12/18',
-    },
-    {
-      id: 2,
-      title: 'WAP 프로젝트',
-      date: '2027.06.05',
-      ratio: '3/18',
-    },
-  ],
 };
 
 function DashboardPage() {
@@ -44,7 +29,6 @@ function DashboardPage() {
     activeProjects: [],
     urgentTasks: [],
     completedTasks: [],
-    projectStatuses: [],
   });
 
   const [isLoading, setIsLoading] = useState(true);
@@ -124,6 +108,7 @@ function DashboardPage() {
 
             <div className="status-list">
               {dashboardData.projectStatuses.map((project) => (
+              {dashboardData.activeProjects.map((project) => (
                 <StatusItem
                   key={project.id}
                   id={project.id}
@@ -133,6 +118,7 @@ function DashboardPage() {
                 />
               ))}
             </div>
+            ) : null}
           </div>
         </div>
       </div>

@@ -8,7 +8,7 @@ import org.example.promate.domain.project.entity.Project;
 import org.example.promate.domain.recruit.enums.Category;
 import org.example.promate.domain.recruit.enums.RecruitStatus;
 import org.example.promate.domain.user.entity.User;
-import org.example.promate.global.ApiPayload.code.RecruitErrorCode;
+import org.example.promate.domain.recruit.code.RecruitErrorCode;
 import org.example.promate.global.ApiPayload.exception.GeneralException;
 import org.example.promate.global.entity.BaseEntity;
 

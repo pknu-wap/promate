@@ -61,7 +61,7 @@ public class Task extends BaseEntity {
         this.status = status;
     }
 
-    // BaseEntity의 performDelete()가 protected이므로 외부 호출을 위해 추가
+
     public void delete() {
         super.performDelete();
     }

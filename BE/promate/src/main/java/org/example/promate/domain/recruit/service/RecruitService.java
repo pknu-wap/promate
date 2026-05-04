@@ -19,7 +19,7 @@ import org.example.promate.domain.recruit.repository.RecruitRepository;
 import org.example.promate.domain.user.entity.User;
 import org.example.promate.domain.user.exception.UserErrorCode;
 import org.example.promate.domain.user.repository.UserRepository;
-import org.example.promate.global.ApiPayload.code.RecruitErrorCode;
+import org.example.promate.domain.recruit.code.RecruitErrorCode;
 import org.example.promate.global.ApiPayload.exception.GeneralException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

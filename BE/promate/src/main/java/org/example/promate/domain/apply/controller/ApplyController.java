@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.promate.domain.apply.dto.*;
 import org.example.promate.domain.apply.service.ApplyService;
 import org.example.promate.global.ApiPayload.ApiResponse;
-import org.example.promate.global.ApiPayload.code.RecruitSuccessCode;
+import org.example.promate.domain.recruit.code.RecruitSuccessCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;

@@ -13,7 +13,6 @@ import static org.example.promate.domain.project.entity.QProject.project;
 import static org.example.promate.domain.recruit.entity.QRecruit.recruit;
 
 @RequiredArgsConstructor
-
 public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
@@ -27,11 +26,13 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
                         project.recruit.category
                 ))
                 .from(project)
+                .distinct()
                 .join(project.recruit, recruit)
                 .join(project.members, member)
                 .where(
                         member.user.id.eq(userId),
-                        project.status.eq(ProjectStatus.COMPLETED)
+                        project.status.eq(ProjectStatus.COMPLETED),
+                        member.isDeleted.isFalse()
                 )
                 .fetch();
     }

@@ -1,12 +1,13 @@
-package org.example.promate.global.ApiPayload.code;
+package org.example.promate.domain.recruit.code;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.example.promate.global.ApiPayload.code.BaseSuccessCode;
 import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
-public enum RecruitSuccessCode implements BaseSuccessCode{
+public enum RecruitSuccessCode implements BaseSuccessCode {
 
     RECRUITMENT_CREATED(HttpStatus.CREATED, "RECRUIT_S001", "팀 모집 게시글 발행을 성공했습니다."),
     RECRUITMENT_FOUND(HttpStatus.OK, "RECRUIT_S002", "팀 모집글 상세 조회를 성공했습니다."),

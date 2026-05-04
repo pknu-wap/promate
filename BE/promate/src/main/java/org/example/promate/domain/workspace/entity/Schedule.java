@@ -43,4 +43,8 @@ public class Schedule extends BaseEntity {    //캘린더 등록
         this.startAt = startAt;
         this.endAt = endAt;
     }
+
+    public void delete() {
+        super.performDelete();
+    }
 }

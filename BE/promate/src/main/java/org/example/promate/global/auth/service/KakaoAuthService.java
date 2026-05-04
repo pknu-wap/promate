@@ -101,8 +101,6 @@ public class KakaoAuthService {
             tokenResult = tokenResponse.getBody();
         } catch (Exception e) {
 
-            System.out.println("🔥 카카오 토큰 요청 실패");
-            e.printStackTrace();   // ⭐ 이거 꼭 넣어
 
             throw new AuthException(AuthErrorCode.KAKAO_TOKEN_REQUEST_FAILED);
         }

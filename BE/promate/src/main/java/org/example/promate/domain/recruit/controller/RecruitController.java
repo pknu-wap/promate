@@ -9,7 +9,7 @@ import org.example.promate.domain.recruit.dto.request.RecruitUpdateRequest;
 import org.example.promate.domain.recruit.dto.response.*;
 import org.example.promate.domain.recruit.service.RecruitService;
 import org.example.promate.global.ApiPayload.ApiResponse;
-import org.example.promate.global.ApiPayload.code.RecruitSuccessCode;
+import org.example.promate.domain.recruit.code.RecruitSuccessCode;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;

@@ -6,16 +6,12 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.example.promate.domain.project.enums.Position;
 import org.example.promate.domain.user.entity.User;
-import org.example.promate.domain.workspace.entity.BaseBoard;
+
 import org.example.promate.domain.workspace.entity.MeetingLog;
 import org.example.promate.domain.workspace.entity.Notice;
-//import org.example.promate.domain.workspace.entity.TaskAssignee;
-import org.example.promate.global.entity.BaseTimeEntity;
-import org.example.promate.domain.workspace.entity.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.example.promate.domain.workspace.entity.TaskAssignee;
+import org.example.promate.global.entity.BaseEntity;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +22,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 
 @Table(name="member")
-public class Member extends BaseTimeEntity {
+public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -49,7 +45,7 @@ public class Member extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     @Builder.Default
-    private List<Task> Task = new ArrayList<>();
+    private List<TaskAssignee> taskAssignees = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     @Builder.Default
@@ -58,4 +54,8 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     @Builder.Default
     private List<Notice> notices = new ArrayList<>();
+
+    public void delete(){
+        super.performDelete();
+    }
 }

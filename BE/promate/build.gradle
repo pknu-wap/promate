@@ -40,6 +40,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     //Webflux
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
@@ -70,9 +71,6 @@ tasks.withType(JavaCompile).configureEach {
     options.getGeneratedSourceOutputDirectory().set(querydslDir)
 }
 
-
-    // validation
-//    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
 
 clean {

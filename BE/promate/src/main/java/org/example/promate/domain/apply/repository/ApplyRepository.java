@@ -32,4 +32,6 @@ public interface ApplyRepository extends JpaRepository<Apply, Long> {
 
 
     void deleteAllByRecruitId(Long id);
+
+    List<Apply> findByUserId(Long userId);
 }

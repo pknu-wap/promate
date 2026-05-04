@@ -27,8 +27,10 @@
   margin-left: 0;
   margin-right: auto;
   filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.05));
-  flex: 1;
-  padding-bottom: 30px;
+
+  flex: initial;
+  overflow: visible;
+  padding-bottom: 0;
 }
 
 .dashboard-summary-row {
@@ -45,6 +47,7 @@
   flex-wrap: wrap;
   gap: 20px;
   width: 100%;
+  margin-bottom: 0;
 }
 
 .status-section {
@@ -85,14 +88,17 @@
   .dashboard-container {
     padding: 20px 16px;
   }
+
   .dashboard-content {
     gap: 24px;
   }
+
   .dashboard-summary-row,
   .dashboard-detail-row {
     flex-direction: column;
     gap: 16px;
   }
+
   .status-section {
     padding: 20px 16px;
     min-width: 0;

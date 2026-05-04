@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'; 
+import { useNavigate } from 'react-router-dom';
 import './Sidebar.css'; 
 import SidebarItem from "./SidebarItem";
 import FavoriteItem from "./FavoriteItem";
@@ -18,6 +19,7 @@ import profileOrangeIcon from "../../assets/icons/profileOrangeIcon.svg";
 function Sidebar({ isOpen, onClose }) {
   const [favoriteList, setFavoriteList] = useState([]); 
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
   
   useEffect(() => {
     const fetchProjects = async () => {
@@ -58,7 +60,7 @@ function Sidebar({ isOpen, onClose }) {
             activeIcon={applicantReviewOrangeIcon}
           />
           <SidebarItem
-            to="/projects"
+            to="/project"
             label="프로젝트"
             icon={projectIcon}
             activeIcon={projectOrangeIcon}
@@ -81,6 +83,7 @@ function Sidebar({ isOpen, onClose }) {
               favoriteList.map((item) => (
                 <FavoriteItem 
                   key={item.id} 
+                  id={item.id}
                   name={item.projectName} 
                   dueDate={item.deadLine} 
                   dotColor={item.colorTag || 'red'} 
@@ -91,7 +94,7 @@ function Sidebar({ isOpen, onClose }) {
         </div>
         <hr className="divider" />
 
-        <button className="new-project-btn">
+        <button className="new-project-btn" onClick={() => navigate('/teammaking')}>
           + 새 프로젝트 생성
         </button>
 

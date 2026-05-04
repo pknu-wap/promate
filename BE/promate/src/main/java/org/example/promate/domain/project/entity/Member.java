@@ -9,7 +9,6 @@ import org.example.promate.domain.user.entity.User;
 
 import org.example.promate.domain.workspace.entity.MeetingLog;
 import org.example.promate.domain.workspace.entity.Notice;
-import org.example.promate.domain.workspace.entity.TaskAssignee;
 import org.example.promate.global.entity.BaseEntity;
 
 import java.util.ArrayList;
@@ -42,10 +41,6 @@ public class Member extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="project_id")
     private Project project;
-
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<TaskAssignee> taskAssignees = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     @Builder.Default

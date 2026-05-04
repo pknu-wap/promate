@@ -1,7 +1,8 @@
-package org.example.promate.global.ApiPayload.code;
+package org.example.promate.domain.recruit.code;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.example.promate.global.ApiPayload.code.BaseErrorCode;
 import org.springframework.http.HttpStatus;
 
 @Getter

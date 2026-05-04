@@ -60,4 +60,8 @@ public class Task extends BaseEntity {
     public void updateStatus(TaskStatus status){
         this.status = status;
     }
+
+    public void delete() {
+        super.performDelete();
+    }
 }

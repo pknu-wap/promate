@@ -5,26 +5,25 @@ import Badge from '../../components/Badge/Badge';
 import './ProfilePage.css';
 import '../Teammaking/TeammakingPage.css';
 
-const ROLE_OPTIONS = ['PM', 'FE', 'BE', 'Design', 'AI/ML', '기획'];
+const MAX_DESC_LENGTH = 50;
 
 const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   const [userInfo, setUserInfo] = useState({
     name: '김아무개',
-    role: 'UIUX 디자이너',
-    temp: 75,
-    phone: '010.0000.0000',
-    email: 'WAP1234@WAP.com',
+    taskStats: { completed: 3, total: 5 },
   });
 
   const [projects, setProjects] = useState([
-    { id: 1, title: '동아리 프로젝트', role: 'PM', startDate: '2025-03-20', endDate: null, score: 4.6 },
+    { id: 1, title: '동아리 프로젝트', role: 'PM', startDate: '2025-03-20', endDate: null, score: null },
     { id: 2, title: 'WAP 해커톤', role: 'FE', startDate: '2025-03-20', endDate: '2025-07-20', score: 4.7 },
   ]);
 
+  const [manualProjects, setManualProjects] = useState([]);
   const [editInfo, setEditInfo] = useState({});
   const [editProjects, setEditProjects] = useState([]);
+  const [editManualProjects, setEditManualProjects] = useState([]);
 
   const formatDate = (dateStr) => {
     if (!dateStr) return '';
@@ -33,35 +32,43 @@ const ProfilePage = () => {
   };
 
   const handleEditStart = () => {
-    setEditInfo({ ...userInfo });
+    setEditInfo({ name: userInfo.name });
     setEditProjects(projects.map((p) => ({ ...p })));
+    setEditManualProjects(manualProjects.map((p) => ({ ...p })));
     setIsEditing(true);
   };
 
   const handleSave = () => {
     // TODO: API 연동
-    setUserInfo((prev) => ({ ...prev, ...editInfo }));
+    setUserInfo((prev) => ({ ...prev, name: editInfo.name }));
     setProjects(editProjects.map((p) => ({ ...p })));
+    setManualProjects(editManualProjects.map((p) => ({ ...p })));
     setIsEditing(false);
   };
 
   const handleCancel = () => setIsEditing(false);
 
-  const updateProject = (id, field, value) => {
+  const updateProjectRole = (id, value) => {
     setEditProjects((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, [field]: value === '' ? null : value } : p))
+      prev.map((p) => (p.id === id ? { ...p, role: value } : p))
     );
   };
 
-  const addProject = () => {
-    setEditProjects((prev) => [
+  const updateManual = (id, field, value) => {
+    setEditManualProjects((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, [field]: value } : p))
+    );
+  };
+
+  const addManual = () => {
+    setEditManualProjects((prev) => [
       ...prev,
-      { id: Date.now(), title: '', role: 'FE', startDate: '', endDate: null, score: null },
+      { id: Date.now(), title: '', role: '', startDate: '', endDate: '', description: '' },
     ]);
   };
 
-  const removeProject = (id) => {
-    setEditProjects((prev) => prev.filter((p) => p.id !== id));
+  const removeManual = (id) => {
+    setEditManualProjects((prev) => prev.filter((p) => p.id !== id));
   };
 
   if (isEditing) {
@@ -84,76 +91,92 @@ const ProfilePage = () => {
                   placeholder="이름"
                 />
               </div>
-              <div className="form-field">
-                <label className="form-label">역할</label>
-                <input
-                  className="text-input"
-                  value={editInfo.role || ''}
-                  onChange={(e) => setEditInfo((prev) => ({ ...prev, role: e.target.value }))}
-                  placeholder="예) UIUX 디자이너"
-                />
-              </div>
             </div>
           </div>
 
           <hr className="profile-divider" />
 
           <div className="form-field">
-            <label className="form-label">연락처</label>
-            <div className="contact-edit-fields">
-              <input
-                className="text-input"
-                value={editInfo.phone || ''}
-                onChange={(e) => setEditInfo((prev) => ({ ...prev, phone: e.target.value }))}
-                placeholder="전화번호"
-              />
-              <input
-                className="text-input"
-                value={editInfo.email || ''}
-                onChange={(e) => setEditInfo((prev) => ({ ...prev, email: e.target.value }))}
-                placeholder="이메일"
-              />
+            <label className="form-label">
+              프로젝트 경험
+              <span className="form-label-sub"> (직무 수정 가능)</span>
+            </label>
+            <div className="project-edit-list">
+              {editProjects.map((proj) => (
+                <div key={proj.id} className="promate-edit-row">
+                  <div className="promate-edit-info">
+                    <span className="proj-title">{proj.title}</span>
+                    <span className="proj-period">
+                      {formatDate(proj.startDate)}{proj.endDate ? ` ~ ${formatDate(proj.endDate)}` : ' ~'}
+                    </span>
+                  </div>
+                  <input
+                    className="text-input manual-role-input"
+                    value={proj.role}
+                    onChange={(e) => updateProjectRole(proj.id, e.target.value)}
+                    placeholder="직무"
+                  />
+                </div>
+              ))}
             </div>
           </div>
 
+          <hr className="profile-divider" />
+
           <div className="form-field">
-            <label className="form-label">프로젝트 경험</label>
+            <label className="form-label">
+              과거 프로젝트 이력
+              <span className="form-label-sub"> (프로메이트 외부)</span>
+            </label>
             <div className="project-edit-list">
-              {editProjects.map((proj) => (
-                <div key={proj.id} className="project-edit-row">
-                  <input
-                    className="text-input proj-edit-title"
-                    value={proj.title}
-                    onChange={(e) => updateProject(proj.id, 'title', e.target.value)}
-                    placeholder="프로젝트명"
-                  />
-                  <select
-                    className="text-input proj-edit-role"
-                    value={proj.role}
-                    onChange={(e) => updateProject(proj.id, 'role', e.target.value)}
-                  >
-                    {ROLE_OPTIONS.map((r) => (
-                      <option key={r} value={r}>{r}</option>
-                    ))}
-                  </select>
-                  <input
-                    type="date"
-                    className="text-input proj-edit-date"
-                    value={proj.startDate || ''}
-                    onChange={(e) => updateProject(proj.id, 'startDate', e.target.value)}
-                  />
-                  <span className="proj-edit-sep">~</span>
-                  <input
-                    type="date"
-                    className="text-input proj-edit-date"
-                    value={proj.endDate || ''}
-                    onChange={(e) => updateProject(proj.id, 'endDate', e.target.value)}
-                    title="비워두면 진행중으로 표시됩니다"
-                  />
-                  <button className="proj-remove-btn" onClick={() => removeProject(proj.id)}>×</button>
+              {editManualProjects.map((proj) => (
+                <div key={proj.id} className="manual-edit-card">
+                  <div className="manual-edit-row">
+                    <input
+                      className="text-input manual-title-input"
+                      value={proj.title}
+                      onChange={(e) => updateManual(proj.id, 'title', e.target.value)}
+                      placeholder="프로젝트 이름 *"
+                    />
+                    <input
+                      className="text-input manual-role-input"
+                      value={proj.role}
+                      onChange={(e) => updateManual(proj.id, 'role', e.target.value)}
+                      placeholder="직무 (선택)"
+                    />
+                    <button className="proj-remove-btn" onClick={() => removeManual(proj.id)}>×</button>
+                  </div>
+                  <div className="manual-edit-row">
+                    <input
+                      type="date"
+                      className="text-input proj-edit-date"
+                      value={proj.startDate}
+                      onChange={(e) => updateManual(proj.id, 'startDate', e.target.value)}
+                    />
+                    <span className="proj-edit-sep">~</span>
+                    <input
+                      type="date"
+                      className="text-input proj-edit-date"
+                      value={proj.endDate}
+                      onChange={(e) => updateManual(proj.id, 'endDate', e.target.value)}
+                    />
+                  </div>
+                  <div className="manual-desc-wrap">
+                    <textarea
+                      className="textarea-input manual-desc-input"
+                      value={proj.description}
+                      maxLength={MAX_DESC_LENGTH}
+                      onChange={(e) => updateManual(proj.id, 'description', e.target.value)}
+                      placeholder="프로젝트 내용을 간략히 입력하세요"
+                      rows={2}
+                    />
+                    <span className="char-count">
+                      {proj.description.length}/{MAX_DESC_LENGTH}
+                    </span>
+                  </div>
                 </div>
               ))}
-              <button className="proj-add-btn" onClick={addProject}>+ 프로젝트 추가</button>
+              <button className="proj-add-btn" onClick={addManual}>+ 과거 프로젝트 추가</button>
             </div>
           </div>
 
@@ -178,21 +201,17 @@ const ProfilePage = () => {
             <Avatar src="/default-profile.png" alt="프로필" size="lg" />
             <div className="profile-name-block">
               <h2 className="user-name-text">{userInfo.name}</h2>
-              <p className="user-role-text">{userInfo.role}</p>
             </div>
           </div>
-          <div className="user-temp-display">{userInfo.temp}°C</div>
+          <div className="user-task-display">
+            <span className="task-stats-num">
+              {userInfo.taskStats.completed}/{userInfo.taskStats.total}
+            </span>
+            <span className="task-stats-label">완료</span>
+          </div>
         </div>
 
         <hr className="profile-divider" />
-
-        <div className="form-field">
-          <label className="form-label">연락처</label>
-          <div className="contact-details">
-            <p>📞 {userInfo.phone}</p>
-            <p>✉️ {userInfo.email}</p>
-          </div>
-        </div>
 
         <div className="form-field">
           <label className="form-label">프로젝트 경험</label>
@@ -209,9 +228,23 @@ const ProfilePage = () => {
                 <Badge selected={!proj.endDate}>
                   {proj.endDate ? '완료' : '진행중'}
                 </Badge>
-                <span className="proj-score">
-                  {proj.score != null ? `${proj.score.toFixed(1)} 점` : '-'}
+                {proj.endDate && proj.score != null && (
+                  <span className="proj-score">{proj.score.toFixed(1)} 점</span>
+                )}
+              </div>
+            ))}
+            {manualProjects.map((proj) => (
+              <div key={proj.id} className="project-experience-row">
+                <div className="proj-name-group">
+                  <span className="proj-title">{proj.title}</span>
+                  {proj.role && <span className="proj-role">{proj.role}</span>}
+                </div>
+                <span className="proj-period">
+                  {formatDate(proj.startDate)}{proj.endDate ? ` ~ ${formatDate(proj.endDate)}` : ''}
                 </span>
+                {proj.description && (
+                  <span className="proj-description">{proj.description}</span>
+                )}
               </div>
             ))}
           </div>
@@ -226,3 +259,4 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
+ㄴ

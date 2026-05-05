@@ -1,75 +1,152 @@
 .find-team-page {
-  min-height: 100vh;
-  padding: 42px 0 28px;
-  background-color: #f5f5f5;
+  min-height: 100%;
+  padding: 24px 0 40px 26px;
+  background-color: #FFFFFF;
   color: #111111;
   font-family: "Pretendard", "Noto Sans KR", sans-serif;
 }
 
+.find-team-title {
+  margin: 0 0 16px;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.find-team-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: min(864px, calc(100vw - 260px));
+  margin-bottom: 12px;
+}
+
 .find-team-filter {
   display: flex;
-  justify-content: center;
-  gap: 22px;
-  max-width: 1024px;
-  margin: 0 auto 26px;
-  padding: 0 16px;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .find-team-filter .find-team-category {
-  width: 172px;
-  height: 40px;
-  border: 1px solid var(--category-border);
+  min-width: 58px;
+  width: auto;
+  height: 24px;
+  padding: 0 12px;
+  border: 1px solid #D9D9D9;
   border-radius: 999px;
-  background-color: var(--category-bg);
-  color: var(--category-text);
-  font-size: 14px;
+  background-color: #D9D9D9;
+  color: #ffffff;
+  font-size: 12px;
   font-weight: 800;
   box-shadow: none;
 }
 
 .find-team-filter .find-team-category.badge--selected {
-  border-color: var(--category-active-border);
-  background-color: var(--category-active-bg);
-  color: var(--category-active-text);
+  border-color: #FE9A57;
+  background-color: #FE9A57;
+  color: #ffffff;
+}
+
+.find-team-search {
+  position: relative;
+  display: block;
+  width: 108px;
+  height: 22px;
+  border-bottom: 1px solid #8e8e8e;
+}
+
+.find-team-search input {
+  width: 100%;
+  height: 100%;
+  padding: 0 20px 0 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font: inherit;
+}
+
+.find-team-search::before {
+  content: "";
+  position: absolute;
+  right: 1px;
+  top: 4px;
+  width: 9px;
+  height: 9px;
+  border: 1.5px solid #8e8e8e;
+  border-radius: 50%;
+}
+
+.find-team-search::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 14px;
+  width: 6px;
+  height: 1.5px;
+  border-radius: 999px;
+  background-color: #8e8e8e;
+  transform: rotate(45deg);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .find-team-list {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  max-width: 1010px;
-  margin: 0 auto;
-  padding: 0 16px;
+  gap: 6px;
+  width: min(864px, calc(100vw - 260px));
 }
 
 .find-team-empty {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 150px;
-  border-radius: 44px;
+  min-height: 78px;
+  border-radius: 8px;
   background-color: #ffffff;
   color: #8a8a8a;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 600;
 }
 
 .find-team-card {
   display: grid;
-  grid-template-columns: 82px minmax(0, 1fr) 112px;
-  align-items: start;
-  column-gap: 26px;
-  min-height: 194px;
-  padding: 32px 60px 30px 64px;
-  border: 1px solid #e6e6e6;
-  border-radius: 44px;
+  grid-template-columns: 36px minmax(0, 1fr) 114px;
+  align-items: center;
+  column-gap: 12px;
+  min-height: 78px;
+  padding: 14px 20px 14px 18px;
+  border-left: 2px solid #fe9a57;
+  border-radius: 0 8px 8px 0;
   background-color: #ffffff;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.03);
 }
 
-.find-team-thumbnail {
-  width: 82px;
-  height: 72px;
-  background-color: #d9d9d9;
+.find-team-logo-box {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background-color: #f0f0f0;
+}
+
+.find-team-logo-box img {
+  width: 28px;
+  height: 28px;
+  filter: grayscale(1);
+  opacity: 0.24;
 }
 
 .find-team-content {
@@ -77,53 +154,78 @@
 }
 
 .find-team-heading {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  margin: 1px 0 12px;
+  margin-bottom: 4px;
 }
 
 .find-team-heading h2 {
   margin: 0;
   color: #050505;
-  font-size: 24px;
-  font-weight: 500;
-  letter-spacing: 0;
-}
-
-.find-team-heading span {
-  color: #5c8c61;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 800;
-}
-
-.find-team-capacity {
-  margin: 0 0 16px;
-  color: #9a9a9a;
-  font-size: 22px;
-  font-weight: 400;
   letter-spacing: 0;
 }
 
-.find-team-description {
+.find-team-content p {
   margin: 0;
-  color: #9a9a9a;
-  font-size: 22px;
+  color: #8f8f8f;
+  font-size: 12px;
   font-weight: 400;
-  line-height: 1.25;
   letter-spacing: 0;
-  white-space: pre-line;
+}
+
+.find-team-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.find-team-actions > span {
+  color: #8e8e8e;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.find-team-action-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.find-team-bookmark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 5px;
+  background-color: #eeeeee;
+  cursor: pointer;
+}
+
+.find-team-bookmark span {
+  width: 10px;
+  height: 15px;
+  background-color: #9c9c9c;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 72%, 0 100%);
+}
+
+.find-team-bookmark.is-active {
+  background-color: #ffd9c5;
+}
+
+.find-team-bookmark.is-active span {
+  background-color: #fe9a57;
 }
 
 .main-btn.find-team-apply-button {
-  align-self: start;
-  width: 112px;
-  height: 38px;
-  margin-top: 10px;
+  width: 68px;
+  height: 28px;
   padding: 0;
-  border-radius: 999px;
-  background-color: #fe9149;
-  font-size: 16px;
+  border-radius: 4px;
+  background-color: #fe9a57;
+  font-size: 12px;
   font-weight: 800;
 }
 
@@ -131,70 +233,47 @@
   background-color: #ee8846;
 }
 
+.main-btn.find-team-apply-button.is-applied {
+  background-color: #ffd9c5;
+  color: #fe9a57;
+}
+
+.main-btn.find-team-apply-button.is-applied:hover {
+  background-color: #ffd9c5;
+}
+
 @media (max-width: 480px) {
   .find-team-page {
-    padding-top: 24px;
+    padding: 20px 14px 32px;
+  }
+
+  .find-team-toolbar,
+  .find-team-list {
+    width: 100%;
+  }
+
+  .find-team-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
   }
 
   .find-team-filter {
-    justify-content: flex-start;
-    gap: 8px;
-    overflow-x: auto;
-    margin-bottom: 18px;
-    padding: 0 14px 4px;
+    gap: 6px;
   }
 
-  .find-team-filter .find-team-category {
-    width: auto;
-    min-width: 92px;
-    height: 34px;
-    padding: 0 14px;
-    font-size: 13px;
-  }
-
-  .find-team-list {
-    gap: 12px;
-    padding: 0 14px;
+  .find-team-search {
+    align-self: flex-end;
   }
 
   .find-team-card {
-    grid-template-columns: 58px minmax(0, 1fr);
-    column-gap: 14px;
-    row-gap: 16px;
-    min-height: auto;
-    padding: 22px 20px;
-    border-radius: 28px;
+    grid-template-columns: 36px minmax(0, 1fr);
+    row-gap: 10px;
+    padding: 14px 12px;
   }
 
-  .find-team-thumbnail {
-    width: 58px;
-    height: 58px;
-  }
-
-  .find-team-heading {
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 8px;
-  }
-
-  .find-team-heading h2 {
-    font-size: 20px;
-  }
-
-  .find-team-capacity,
-  .find-team-description {
-    font-size: 16px;
-  }
-
-  .find-team-description {
-    line-height: 1.35;
-  }
-
-  .main-btn.find-team-apply-button {
+  .find-team-actions {
     grid-column: 2;
-    width: 104px;
-    height: 36px;
-    margin-top: 0;
-    font-size: 15px;
+    align-items: flex-start;
   }
 }

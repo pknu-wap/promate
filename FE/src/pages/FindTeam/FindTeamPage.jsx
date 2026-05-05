@@ -1,69 +1,37 @@
 import { useMemo, useState } from "react";
+import logoIcon from "../../assets/logoIcon.svg";
 import Badge from "../../components/Badge/Badge.jsx";
 import MainButton from "../../components/MainButton/MainButton.jsx";
 import "./FindTeamPage.css";
 
+const KOREAN_INITIALS = [
+  "ㄱ",
+  "ㄲ",
+  "ㄴ",
+  "ㄷ",
+  "ㄸ",
+  "ㄹ",
+  "ㅁ",
+  "ㅂ",
+  "ㅃ",
+  "ㅅ",
+  "ㅆ",
+  "ㅇ",
+  "ㅈ",
+  "ㅉ",
+  "ㅊ",
+  "ㅋ",
+  "ㅌ",
+  "ㅍ",
+  "ㅎ",
+];
+
 const categories = [
-  {
-    id: "assignment",
-    label: "조별 과제",
-    colors: {
-      bg: "#C2DCBB",
-      border: "#5C8C61",
-      text: "#5C8C61",
-      activeBg: "#C2DCBB",
-      activeBorder: "#5C8C61",
-      activeText: "#5C8C61",
-    },
-  },
-  {
-    id: "study",
-    label: "스터디",
-    colors: {
-      bg: "#FFD1D1",
-      border: "#FF8F8F",
-      text: "#D65A5A",
-      activeBg: "#FFD1D1",
-      activeBorder: "#FF8F8F",
-      activeText: "#D65A5A",
-    },
-  },
-  {
-    id: "contest",
-    label: "공모전",
-    colors: {
-      bg: "#E8DDF8",
-      border: "#8A78A8",
-      text: "#777777",
-      activeBg: "#E8DDF8",
-      activeBorder: "#8A78A8",
-      activeText: "#777777",
-    },
-  },
-  {
-    id: "development",
-    label: "개발",
-    colors: {
-      bg: "#B9E1FA",
-      border: "#6EB7E5",
-      text: "#777777",
-      activeBg: "#B9E1FA",
-      activeBorder: "#6EB7E5",
-      activeText: "#777777",
-    },
-  },
-  {
-    id: "etc",
-    label: "기타",
-    colors: {
-      bg: "#D9D9D9",
-      border: "#666666",
-      text: "#777777",
-      activeBg: "#D9D9D9",
-      activeBorder: "#666666",
-      activeText: "#777777",
-    },
-  },
+  { id: "assignment", label: "조별과제" },
+  { id: "study", label: "스터디" },
+  { id: "contest", label: "공모전" },
+  { id: "development", label: "개발" },
+  { id: "etc", label: "기타" },
 ];
 
 const mockTeamPosts = [
@@ -71,88 +39,177 @@ const mockTeamPosts = [
     id: 1,
     category: "assignment",
     title: "캡스톤 디자인",
+    summary: "안녕하세요. WAP 화이팅",
     capacity: 4,
-    description: "컴퓨터 인공지능 공학부 캡스톤 디자인에 참여할 4분 구합니다.\nFE 2명, BE 2명 모집 받고 있습니다.",
+    bookmarked: false,
+    applied: false,
   },
   {
     id: 2,
     category: "assignment",
-    title: "캡스톤 디자인",
+    title: "인공지능 개발",
+    summary: "인공지능 프로젝트에 참여할 팀원을 모집합니다",
     capacity: 4,
-    description: "컴퓨터 인공지능 공학부 캡스톤 디자인에 참여할 4분 구합니다.\nFE 2명, BE 2명 모집 받고 있습니다.",
+    bookmarked: false,
+    applied: false,
   },
   {
     id: 3,
     category: "assignment",
     title: "캡스톤 디자인",
+    summary: "안녕하세요. WAP 화이팅",
     capacity: 4,
-    description: "컴퓨터 인공지능 공학부 캡스톤 디자인에 참여할 4분 구합니다.\nFE 2명, BE 2명 모집 받고 있습니다.",
+    bookmarked: false,
+    applied: false,
+  },
+  {
+    id: 4,
+    category: "assignment",
+    title: "캡스톤 디자인",
+    summary: "안녕하세요. WAP 화이팅",
+    capacity: 4,
+    bookmarked: false,
+    applied: false,
+  },
+  {
+    id: 5,
+    category: "assignment",
+    title: "캡스톤 디자인",
+    summary: "안녕하세요. WAP 화이팅",
+    capacity: 4,
+    bookmarked: false,
+    applied: false,
   },
 ];
 
-const getCategoryStyle = (colors) => ({
-  "--category-bg": colors.bg,
-  "--category-border": colors.border,
-  "--category-text": colors.text,
-  "--category-active-bg": colors.activeBg,
-  "--category-active-border": colors.activeBorder,
-  "--category-active-text": colors.activeText,
-});
+const getInitialConsonants = (text) =>
+  Array.from(text)
+    .map((char) => {
+      const code = char.charCodeAt(0);
 
-const getCategoryLabel = (categoryId) =>
-  categories.find((category) => category.id === categoryId)?.label ?? "";
+      if (code < 0xac00 || code > 0xd7a3) {
+        return char;
+      }
+
+      const initialIndex = Math.floor((code - 0xac00) / 588);
+      return KOREAN_INITIALS[initialIndex];
+    })
+    .join("");
+
+const normalizeSearchText = (text) => text.toLowerCase().replace(/\s+/g, "");
+
+const isMatchedTeam = (team, keyword) => {
+  if (keyword.length === 0) {
+    return true;
+  }
+
+  const searchableText = `${team.title} ${team.summary}`;
+  const normalizedKeyword = normalizeSearchText(keyword);
+  const normalizedSearchableText = normalizeSearchText(searchableText);
+  const initialSearchableText = normalizeSearchText(
+    getInitialConsonants(searchableText),
+  );
+
+  return (
+    normalizedSearchableText.includes(normalizedKeyword) ||
+    initialSearchableText.includes(normalizedKeyword)
+  );
+};
 
 function FindTeamPage() {
   const [selectedCategory, setSelectedCategory] = useState("assignment");
-  const [teamPosts] = useState(mockTeamPosts);
+  const [teamPosts, setTeamPosts] = useState(mockTeamPosts);
+  const [searchKeyword, setSearchKeyword] = useState("");
 
-  const filteredTeamPosts = useMemo(
-    () => teamPosts.filter((team) => team.category === selectedCategory),
-    [selectedCategory, teamPosts],
-  );
+  const filteredTeamPosts = useMemo(() => {
+    const keyword = searchKeyword.trim();
 
-  const handleApply = (teamTitle) => {
-    alert(`${teamTitle} 팀에 지원했습니다.`);
+    return teamPosts.filter(
+      (team) =>
+        team.category === selectedCategory && isMatchedTeam(team, keyword),
+    );
+  }, [selectedCategory, searchKeyword, teamPosts]);
+
+  const handleToggleBookmark = (teamId) => {
+    setTeamPosts((prevTeamPosts) =>
+      prevTeamPosts.map((team) =>
+        team.id === teamId ? { ...team, bookmarked: !team.bookmarked } : team,
+      ),
+    );
+  };
+
+  const handleApply = (teamId) => {
+    setTeamPosts((prevTeamPosts) =>
+      prevTeamPosts.map((team) =>
+        team.id === teamId ? { ...team, applied: true } : team,
+      ),
+    );
   };
 
   return (
     <main className="find-team-page">
-      <section className="find-team-filter" aria-label="팀 카테고리">
-        {categories.map((category) => (
-          <Badge
-            key={category.id}
-            selected={selectedCategory === category.id}
-            className="find-team-category"
-            style={getCategoryStyle(category.colors)}
-            onClick={() => setSelectedCategory(category.id)}
-          >
-            {category.label}
-          </Badge>
-        ))}
-      </section>
+      <h1 className="find-team-title">팀 찾기</h1>
+
+      <div className="find-team-toolbar">
+        <section className="find-team-filter" aria-label="팀 카테고리">
+          {categories.map((category) => (
+            <Badge
+              key={category.id}
+              selected={selectedCategory === category.id}
+              className="find-team-category"
+              onClick={() => setSelectedCategory(category.id)}
+            >
+              {category.label}
+            </Badge>
+          ))}
+        </section>
+
+        <label className="find-team-search">
+          <span className="sr-only">팀 검색</span>
+          <input
+            type="search"
+            value={searchKeyword}
+            onChange={(event) => setSearchKeyword(event.target.value)}
+          />
+        </label>
+      </div>
 
       <section className="find-team-list" aria-label="팀 목록">
         {filteredTeamPosts.length > 0 ? (
           filteredTeamPosts.map((team) => (
             <article className="find-team-card" key={team.id}>
-              <div className="find-team-thumbnail" aria-hidden="true" />
+              <div className="find-team-logo-box">
+                <img src={logoIcon} alt={`${team.title} 로고`} />
+              </div>
 
               <div className="find-team-content">
                 <div className="find-team-heading">
                   <h2>{team.title}</h2>
-                  <span>{getCategoryLabel(team.category)}</span>
                 </div>
-
-                <p className="find-team-capacity">모집 대상: {team.capacity}명</p>
-                <p className="find-team-description">{team.description}</p>
+                <p>{team.summary}</p>
               </div>
 
-              <MainButton
-                className="find-team-apply-button"
-                onClick={() => handleApply(team.title)}
-              >
-                지원하기
-              </MainButton>
+              <div className="find-team-actions">
+                <span>모집인원: {team.capacity}명</span>
+                <div className="find-team-action-row">
+                  <button
+                    type="button"
+                    className={`find-team-bookmark ${team.bookmarked ? "is-active" : ""}`}
+                    aria-label={team.bookmarked ? "즐겨찾기 해제" : "즐겨찾기 추가"}
+                    aria-pressed={team.bookmarked}
+                    onClick={() => handleToggleBookmark(team.id)}
+                  >
+                    <span aria-hidden="true" />
+                  </button>
+                  <MainButton
+                    className={`find-team-apply-button ${team.applied ? "is-applied" : ""}`}
+                    onClick={() => handleApply(team.id)}
+                    aria-pressed={team.applied}
+                  >
+                    {team.applied ? "지원 완료" : "지원하기"}
+                  </MainButton>
+                </div>
+              </div>
             </article>
           ))
         ) : (

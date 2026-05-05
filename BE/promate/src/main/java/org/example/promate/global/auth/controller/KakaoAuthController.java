@@ -2,6 +2,8 @@ package org.example.promate.global.auth.controller;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.example.promate.global.ApiPayload.ApiResponse;
+import org.example.promate.global.ApiPayload.code.GeneralSuccessCode;
 import org.example.promate.global.auth.dto.KakaoAuthResponseDTO;
 import org.example.promate.global.auth.dto.LogoutRequestDTO;
 import org.example.promate.global.auth.dto.TokenReissueRequestDTO;
@@ -20,14 +22,14 @@ public class KakaoAuthController {
     private final KakaoAuthService kakaoAuthService;
 
     @GetMapping("/login")
-    public ResponseEntity<Map<String, Object>> getKakaoUrl(HttpSession httpSession) {
+    public ApiResponse<Map<String, String>> getKakaoUrl(HttpSession httpSession) {
+
         String url = kakaoAuthService.setKakaoAuthUrl(httpSession);
-        return ResponseEntity.ok(Map.of(
-                "isSuccess", true,
-                "code", "AUTH_S001",
-                "message", "카카오 로그인 URL 생성 성공",
-                "data", Map.of("url", url)
-        ));
+
+        return ApiResponse.onSuccess(
+                GeneralSuccessCode.OK,   // 👈 이걸로 바꿔
+                Map.of("url", url)
+        );
     }
 
     @GetMapping("/callback")

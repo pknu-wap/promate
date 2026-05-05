@@ -44,18 +44,28 @@
 .header-logo {
   display: flex;
   align-items: center;
-  gap: 6px;
 }
 
 .logo-image {
-  width: 130px;
+  width: 25px;
 }
 
 .logo-text {
-  font-family: 'Pretendard', sans-serif;
-  font-size: 18px;
-  font-weight: 800;
-  color: #FF6600;
+  font-family: 'YSpotlightOTF', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 32px;
+  letter-spacing: -0.005em;
+  color: #000000;
+  margin-left: 5px;
+  margin-right: 8px;
+}
+
+.logo-link {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
 }
 
 .logo-sub {

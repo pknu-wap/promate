@@ -27,7 +27,7 @@ public class KakaoAuthController {
         String url = kakaoAuthService.setKakaoAuthUrl(httpSession);
 
         return ApiResponse.onSuccess(
-                GeneralSuccessCode.OK,   // 👈 이걸로 바꿔
+                GeneralSuccessCode.OK,
                 Map.of("url", url)
         );
     }

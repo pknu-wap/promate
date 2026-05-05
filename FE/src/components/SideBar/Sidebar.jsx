@@ -66,7 +66,7 @@ function Sidebar({ isOpen, onClose }) {
             activeIcon={projectOrangeIcon}
           />
           <SidebarItem
-            to="/self-pr"
+            to="/profile"
             label="프로필"
             icon={profileIcon}
             activeIcon={profileOrangeIcon}

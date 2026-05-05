@@ -3,7 +3,7 @@ import "./App.css";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import Sidebar from "./components/SideBar/Sidebar";
 import Header from "./components/Header/Header";
-import SelfPRPage from "./pages/SelfPRPage.jsx";
+import ComingSoonPage from "./pages/ComingSoonPage.jsx";
 import LoginPage from "./pages/LoginPage/LoginPage.jsx";
 import AuthCallback from "./pages/AuthCallback/AuthCallback.jsx";
 import TeammakingPage from "./pages/Teammaking/TeammakingPage.jsx";
@@ -54,10 +54,10 @@ function App() {
         >
           <Route path="/" element={<DashboardPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/self-pr" element={<SelfPRPage />} />
           <Route path="/teammaking" element={<TeammakingPage />} />
           <Route path="/find-team" element={<FindTeamPage />} />
           <Route path="/FindTeam" element={<FindTeamPage />} />
+          <Route path="*" element={<ComingSoonPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

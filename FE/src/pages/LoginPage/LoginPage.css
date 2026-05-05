@@ -30,7 +30,7 @@ body,
   flex-direction: column;
   align-items: center;
   padding: 35px 50px 140px;
-  gap: 60px;
+  gap: 55px;
   background: #ffffff;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.04);
   border-radius: 20px 20px 0 0;
@@ -38,12 +38,11 @@ body,
 
 .logo-section {
   width: 150px;
+  height: 65px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0px;
   gap: 8px;
-  height: 65px;
 }
 
 .logo-row {
@@ -53,13 +52,12 @@ body,
 }
 
 .logo-wrapper {
+  width: 150px;
+  height: 34px;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0px;
   gap: 5px;
-  width: 150px;
-  height: 34px;
   padding-top: 12px;
 }
 
@@ -69,8 +67,7 @@ body,
 }
 
 .logo-title {
-  font-family: 'YSpotlightOTF', sans-serif;
-  font-style: normal;
+  font-family: "YSpotlightOTF", sans-serif;
   font-weight: 400;
   font-size: 22px;
   letter-spacing: -0.005em;
@@ -80,8 +77,7 @@ body,
 .service-subtitle {
   width: 150px;
   height: 19px;
-  font-family: 'Pretendard', sans-serif;
-  font-style: normal;
+  font-family: "Pretendard", sans-serif;
   font-weight: 400;
   font-size: 13px;
   line-height: 19px;
@@ -104,7 +100,7 @@ body,
 .kakao-login-btn {
   width: 100%;
   min-width: 270px;
-  height: 38px;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -120,6 +116,11 @@ body,
 
 .kakao-login-btn:active {
   filter: brightness(0.95);
+}
+
+.kakao-login-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 
 .kakao-login-content {
@@ -144,53 +145,6 @@ body,
   white-space: nowrap;
 }
 
-.keep-login {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  cursor: pointer;
-  white-space: nowrap;
-  margin-bottom: 24px;
-}
-
-.keep-login input[type="checkbox"] {
-  appearance: none;
-  -webkit-appearance: none;
-  width: 12px;
-  height: 12px;
-  border: 1px solid #909090;
-  border-radius: 50%;
-  background: #d9d9d9;
-  cursor: pointer;
-  position: relative;
-  flex-shrink: 0;
-}
-
-.keep-login input[type="checkbox"]:checked::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #909090;
-  transform: translate(-50%, -50%);
-}
-
-.keep-login span {
-  font-size: 11px;
-  line-height: 17px;
-  letter-spacing: -0.025em;
-  color: #909090;
-  white-space: nowrap;
-}
-
-.kakao-login-btn:disabled {
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
 @media (max-width: 414px) {
   .login-page {
     align-items: stretch;
@@ -200,13 +154,8 @@ body,
   .login-card {
     width: 100%;
     min-height: 100vh;
-    padding: 60px 24px 60px;
+    padding: 60px 24px;
     gap: 40px;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
     border-radius: 0;
     box-shadow: none;
   }
@@ -216,6 +165,6 @@ body,
   }
 
   .kakao-login-btn {
-  margin-top: 50px;
+    margin-top: 50px;
   }
 }

@@ -26,8 +26,13 @@ spring:
 springdoc:
   querydsl:
     enabled: false
+
   api-docs:
     enabled: true
+
+  servers:
+    - url: https://promate.duckdns.org
+      description: Production
 
   security:
     oauth2:

@@ -259,4 +259,3 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
-ㄴ

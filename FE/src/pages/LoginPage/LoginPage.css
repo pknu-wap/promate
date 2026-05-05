@@ -30,7 +30,7 @@ body,
   flex-direction: column;
   align-items: center;
   padding: 35px 50px 140px;
-  gap: 50px;
+  gap: 60px;
   background: #ffffff;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.04);
   border-radius: 20px 20px 0 0;
@@ -41,31 +41,49 @@ body,
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
+  padding: 0px;
+  gap: 8px;
+  height: 65px;
 }
 
 .logo-row {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 5px;
 }
 
 .logo-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 0px;
+  gap: 5px;
+  width: 150px;
+  height: 34px;
+  padding-top: 12px;
 }
 
-.logo-wrapper img,
-.logo-wrapper svg {
-  width: 110px;
-  height: 34px;
+.logo-wrapper img {
+  width: 24px;
+  height: 24px;
+}
+
+.logo-title {
+  font-family: 'YSpotlightOTF', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 22px;
+  letter-spacing: -0.005em;
+  color: #000000;
 }
 
 .service-subtitle {
   width: 150px;
-  font-size: 12px;
+  height: 19px;
+  font-family: 'Pretendard', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
   line-height: 19px;
   text-align: center;
   letter-spacing: -0.025em;

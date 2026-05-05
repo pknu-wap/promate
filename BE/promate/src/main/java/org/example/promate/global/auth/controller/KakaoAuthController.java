@@ -20,9 +20,14 @@ public class KakaoAuthController {
     private final KakaoAuthService kakaoAuthService;
 
     @GetMapping("/login")
-    public ResponseEntity<Map<String, String>> getKakaoUrl(HttpSession httpSession) {
+    public ResponseEntity<Map<String, Object>> getKakaoUrl(HttpSession httpSession) {
         String url = kakaoAuthService.setKakaoAuthUrl(httpSession);
-        return ResponseEntity.ok(Map.of("loginUrl", url));
+        return ResponseEntity.ok(Map.of(
+                "isSuccess", true,
+                "code", "AUTH_S001",
+                "message", "카카오 로그인 URL 생성 성공",
+                "data", Map.of("url", url)
+        ));
     }
 
     @GetMapping("/callback")

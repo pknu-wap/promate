@@ -7,8 +7,11 @@ import org.example.promate.global.auth.dto.LogoutRequestDTO;
 import org.example.promate.global.auth.dto.TokenReissueRequestDTO;
 import org.example.promate.global.auth.service.KakaoAuthService;
 import org.example.promate.global.jwt.JwtTokenDto;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -17,8 +20,9 @@ public class KakaoAuthController {
     private final KakaoAuthService kakaoAuthService;
 
     @GetMapping("/login")
-    public String getKakaoUrl(HttpSession httpSession) {
-        return kakaoAuthService.setKakaoAuthUrl(httpSession);
+    public ResponseEntity<Map<String, String>> getKakaoUrl(HttpSession httpSession) {
+        String url = kakaoAuthService.setKakaoAuthUrl(httpSession);
+        return ResponseEntity.ok(Map.of("loginUrl", url));
     }
 
     @GetMapping("/callback")

@@ -19,7 +19,10 @@ export async function requestKakaoLogin(code, state) {
   }).toString();
 
   const response = await fetch(
-    `${baseUrl}/api/auth/kakao/callback?${queryString}`
+    `${baseUrl}/api/auth/kakao/callback?${queryString}`,
+    {
+      credentials: "include",
+    }
   );
 
   if (!response.ok) {

@@ -1,7 +1,6 @@
 // ApplyModal.jsx
 import { useEffect } from "react";
 import "./ApplyModal.css";
-import MainButton from "../MainButton/MainButton";
 
 function ApplyModal({
   isOpen,
@@ -46,7 +45,7 @@ function ApplyModal({
         <form className="apply-modal-form" onSubmit={handleSubmit}>
           <div className="apply-modal-group">
             <label htmlFor="apply-job" className="apply-modal-label">
-              직무
+              기여하고 싶은 분야 (선택)
             </label>
             <input
               id="apply-job"
@@ -54,8 +53,8 @@ function ApplyModal({
               className="apply-modal-input"
               value={job}
               onChange={(e) => setJob(e.target.value)}
-              required
               maxLength={50}
+              placeholder="기여하고 싶은 분야를 적어주세요."
             />
           </div>
 
@@ -72,15 +71,18 @@ function ApplyModal({
               value={motivation}
               onChange={(e) => setMotivation(e.target.value)}
               required
-              minLength={10}
               maxLength={500}
+              placeholder="지원 동기 및 자기 PR을 적어주세요."
             />
           </div>
 
           <div className="apply-modal-button-wrap">
-            <MainButton type="submit">
+            <button type="button" className="apply-modal-cancel-btn" onClick={onClose}>
+              취소
+            </button>
+            <button type="submit" className="apply-modal-submit-btn">
               지원하기
-            </MainButton>
+            </button>
           </div>
         </form>
       </div>

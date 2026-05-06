@@ -1,17 +1,21 @@
 package org.example.promate.global.auth.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.example.promate.global.ApiPayload.ApiResponse;
 import org.example.promate.global.ApiPayload.code.GeneralSuccessCode;
 import org.example.promate.global.auth.dto.KakaoAuthResponseDTO;
 import org.example.promate.global.auth.dto.LogoutRequestDTO;
-import org.example.promate.global.auth.dto.TokenReissueRequestDTO;
+import org.example.promate.global.auth.dto.TokenReissueResponseDTO;
 import org.example.promate.global.auth.service.KakaoAuthService;
 import org.example.promate.global.jwt.JwtTokenDto;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -32,26 +36,55 @@ public class KakaoAuthController {
     }
 
     @GetMapping("/callback")
-    public ApiResponse<KakaoAuthResponseDTO> kakaoCallBack(
+    public void kakaoCallBack(
             @RequestParam("code") String code,
             @RequestParam(value = "state", required = false) String state,
-            HttpSession httpSession) {
+            HttpSession httpSession,
+            HttpServletResponse response
+    ) throws IOException {
 
-        KakaoAuthResponseDTO response = kakaoAuthService.kakaoLogin(code, state, httpSession);
+        KakaoAuthResponseDTO authResponse =
+                kakaoAuthService.kakaoLogin(code, state, httpSession);
 
-        return ApiResponse.onSuccess(
-                GeneralSuccessCode.OK,
-                response
-        );
+        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", authResponse.getRefreshToken())
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .path("/")
+                .maxAge(60 * 60 * 24 * 14)
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+
+        response.sendRedirect("https://promate-kappa.vercel.app/api/auth/kakao/callback");
     }
 
     @PostMapping("/reissue")
-    public ApiResponse<JwtTokenDto> reissue(@RequestBody TokenReissueRequestDTO request) {
-        JwtTokenDto token = kakaoAuthService.reissueToken(request.getRefreshToken());
+    public ApiResponse<TokenReissueResponseDTO> reissue(
+            @CookieValue(value = "refreshToken", required = false)
+            String refreshToken,
+
+            HttpServletResponse response
+    ) {
+
+        JwtTokenDto token = kakaoAuthService.reissueToken(refreshToken);
+
+        ResponseCookie refreshCookie = ResponseCookie.from(
+                        "refreshToken",
+                        token.refreshToken()
+                )
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .path("/")
+                .maxAge(60 * 60 * 24 * 14)
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
         return ApiResponse.onSuccess(
                 GeneralSuccessCode.OK,
-                token
+                new TokenReissueResponseDTO(token.accessToken(), false)
         );
     }
 

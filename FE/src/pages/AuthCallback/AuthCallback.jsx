@@ -1,43 +1,53 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { requestKakaoLogin } from "../../api/authApi";
 import { useAuthStore } from "./authStore.js";
 
 export default function AuthCallback() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const isRequesting = useRef(false);
   const login = useAuthStore((state) => state.login);
 
   useEffect(() => {
-    const accessToken = searchParams.get("accessToken");
-    const profileCompleted = searchParams.get("profileCompleted");
+    const code = searchParams.get("code");
+    const state = searchParams.get("state");
 
-    if (!accessToken) {
-      console.error("accessToken이 없습니다.");
-      alert("로그인에 실패했습니다. 다시 시도해주세요.");
+    if (!code) {
+      console.error("인가 코드가 없습니다.");
       navigate("/login");
       return;
     }
 
-    login(accessToken);
+    const handleLogin = async () => {
+      if (isRequesting.current) {
+        return;
+      }
+      isRequesting.current = true;
 
-    if (profileCompleted === "false") {
-      navigate("/profile-setup");
-      return;
-    }
+      try {
+        const data = await requestKakaoLogin(code, state);
+        if (data) {
+          login(data.accessToken);
 
-    navigate("/dashboard");
-  }, [searchParams, navigate, login]);
+          if (data.profileCompleted === false) {
+            navigate("/profile-setup");
+            return;
+          }
+        }
+        navigate("/dashboard");
+      } catch (err) {
+        console.error("카카오 로그인 처리 실패:", err);
+        alert(err.message || "로그인 처리 중 오류가 발생했습니다.");
+        navigate("/login");
+      }
+    };
+
+    handleLogin();
+  }, [searchParams, navigate]);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-        backgroundColor: "#F8F9FA",
-      }}
-    >
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", backgroundColor: "#F8F9FA" }}>
       <h2>카카오 로그인 처리 중입니다...</h2>
     </div>
   );

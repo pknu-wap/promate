@@ -56,7 +56,7 @@ public class KakaoAuthController {
 
         response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
-        response.sendRedirect("https://promate-kappa.vercel.app/api/auth/kakao/callback");
+        response.sendRedirect("https://promate-kappa.vercel.app/dashboard");
     }
 
     @PostMapping("/reissue")

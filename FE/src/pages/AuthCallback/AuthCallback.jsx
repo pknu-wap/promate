@@ -12,17 +12,9 @@ export default function AuthCallback() {
   useEffect(() => {
     const code = searchParams.get("code");
     const state = searchParams.get("state");
-    const savedState = localStorage.getItem("oauth_state");
 
     if (!code) {
       console.error("인가 코드가 없습니다.");
-      navigate("/login");
-      return;
-    }
-
-    if (state !== savedState) {
-      console.error("비정상적인 접근입니다. (state 불일치)");
-      alert("로그인에 실패했습니다. 다시 시도해주세요.");
       navigate("/login");
       return;
     }
@@ -43,7 +35,6 @@ export default function AuthCallback() {
             return;
           }
         }
-        localStorage.removeItem("oauth_state");
         navigate("/dashboard");
       } catch (err) {
         console.error("카카오 로그인 처리 실패:", err);

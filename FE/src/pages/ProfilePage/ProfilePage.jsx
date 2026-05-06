@@ -207,7 +207,6 @@ const ProfilePage = () => {
             <span className="task-stats-num">
               {userInfo.taskStats.completed}/{userInfo.taskStats.total}
             </span>
-            <span className="task-stats-label">완료</span>
           </div>
         </div>
 

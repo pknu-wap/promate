@@ -19,6 +19,7 @@ function TeammakingPage() {
   const [selectedDomain, setSelectedDomain] = useState("assignment");
   const [description, setDescription] = useState("");
   const [imageSrc, setImageSrc] = useState(null);
+  const isSubmitEnabled = projectName.trim() !== "" && description.trim() !== "";
 
   const handleCancel = () => {
     setProjectName("");
@@ -28,6 +29,8 @@ function TeammakingPage() {
   };
 
   const handleSubmit = () => {
+    if (!isSubmitEnabled) return;
+
     const selectedDomainLabel =
       domainOptions.find((option) => option.id === selectedDomain)?.label ?? selectedDomain;
 
@@ -54,7 +57,11 @@ function TeammakingPage() {
           description={description}
           onDescriptionChange={setDescription}
         />
-        <FormActions onCancel={handleCancel} onSubmit={handleSubmit} />
+        <FormActions
+          onCancel={handleCancel}
+          onSubmit={handleSubmit}
+          isSubmitEnabled={isSubmitEnabled}
+        />
       </div>
     </div>
   );

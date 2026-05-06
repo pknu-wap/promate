@@ -1,4 +1,4 @@
-import React, { useState } from "react"; 
+import React, { useState } from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import Sidebar from "./components/SideBar/Sidebar";
@@ -8,7 +8,24 @@ import LoginPage from "./pages/LoginPage/LoginPage.jsx";
 import AuthCallback from "./pages/AuthCallback/AuthCallback.jsx";
 import TeammakingPage from "./pages/Teammaking/TeammakingPage.jsx";
 import ProfilePage from "./pages/ProfilePage/ProfilePage.jsx";
+import FindTeamPage from "./pages/FindTeam/FindTeamPage.jsx";
 import DashboardPage from "./pages/DashboardPage/DashboardPage.jsx";
+
+function AppLayout({ isMenuOpen, toggleMenu, closeMenu }) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+      <Header onMenuClick={toggleMenu} />
+      <div style={{ display: "flex", flex: 1, backgroundColor: "#F8F9FA" }}>
+        <Sidebar isOpen={isMenuOpen} onClose={closeMenu} />
+        <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+          <main style={{ flex: 1, padding: "0px", boxSizing: "border-box" }}>
+            <Outlet />
+          </main>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,6 +33,7 @@ function App() {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
   const closeMenu = () => {
     setIsMenuOpen(false);
   };
@@ -25,26 +43,22 @@ function App() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/auth/kakao/callback" element={<AuthCallback />} />
-        
+
         <Route
           element={
-            <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-              <Header onMenuClick={toggleMenu} />
-              <div style={{ display: 'flex', flex: 1, backgroundColor: '#F8F9FA' }}>
-                <Sidebar isOpen={isMenuOpen} onClose={closeMenu} />
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                  <main style={{ flex: 1, padding: '0px', boxSizing: 'border-box' }}>
-                    <Outlet />
-                  </main>
-                </div>
-              </div>
-            </div>
+            <AppLayout
+              isMenuOpen={isMenuOpen}
+              toggleMenu={toggleMenu}
+              closeMenu={closeMenu}
+            />
           }
         >
           <Route path="/" element={<DashboardPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/teammaking" element={<TeammakingPage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/find-team" element={<FindTeamPage />} />
+         
           <Route path="*" element={<ComingSoonPage />} />
         </Route>
       </Routes>

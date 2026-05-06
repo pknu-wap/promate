@@ -1,7 +1,9 @@
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 export async function getKakaoLoginUrl() {
-  const response = await fetch(`${baseUrl}/auth/kakao/login`);
+  const response = await fetch(`${baseUrl}/api/auth/kakao/login`, {
+    credentials: "include",
+  });
 
   const result = await response.json();
 
@@ -19,7 +21,10 @@ export async function requestKakaoLogin(code, state) {
   }).toString();
 
   const response = await fetch(
-    `${baseUrl}/auth/kakao/callback?${queryString}`
+    `${baseUrl}/api/auth/kakao/callback?${queryString}`,
+    {
+      credentials: "include",
+    }
   );
 
   if (!response.ok) {

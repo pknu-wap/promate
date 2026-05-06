@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import MainButton from '../../components/MainButton/MainButton';
 import Avatar from '../../components/Avatar/Avatar';
-import Badge from '../../components/Badge/Badge';
 import './ProfilePage.css';
 import '../Teammaking/TeammakingPage.css';
 
@@ -196,6 +195,7 @@ const ProfilePage = () => {
       </h1>
 
       <section className="card profile-main-card">
+        {/* 상단: 아바타+이름 / 온도 */}
         <div className="profile-header-row">
           <div className="profile-user-info">
             <Avatar src="/default-profile.png" alt="프로필" size="lg" />
@@ -213,38 +213,59 @@ const ProfilePage = () => {
 
         <hr className="profile-divider" />
 
+        {/* 프로젝트 경험 */}
         <div className="form-field">
           <label className="form-label">프로젝트 경험</label>
           <div className="project-experience-list">
-            {projects.map((proj) => (
-              <div key={proj.id} className="project-experience-row">
-                <div className="proj-name-group">
-                  <span className="proj-title">{proj.title}</span>
-                  <span className="proj-role">{proj.role}</span>
+            {[...projects]
+              .sort((a, b) => (a.endDate ? 1 : -1) - (b.endDate ? 1 : -1))
+              .map((proj) => (
+                <div key={proj.id} className="project-experience-row">
+                  <div className="proj-row-inner">
+                    {/* 왼쪽: 이름 + 역할 */}
+                    <div className="proj-name-group">
+                      <span className="proj-title">{proj.title}</span>
+                      <span className="proj-role">{proj.role}</span>
+                    </div>
+                    {/* 오른쪽: 기간 + 배지 + 점수 */}
+                    <div className="proj-right-group">
+                      <span className="proj-period">
+                        {formatDate(proj.startDate)}{proj.endDate ? ` ~ ${formatDate(proj.endDate)}` : ' ~'}
+                      </span>
+                      <span className={proj.endDate ? 'badge-completed' : 'badge-ongoing'}>
+                        <span>{proj.endDate ? '완료' : '진행중'}</span>
+                      </span>
+                      <div className="proj-score-container">
+                        {proj.score != null ? (
+                          <>
+                            <span className="proj-score-num">{proj.score.toFixed(1)}</span>
+                            <span className="proj-score-text">점</span>
+                          </>
+                        ) : (
+                          <span style={{ width: 47 }} />
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <span className="proj-period">
-                  {formatDate(proj.startDate)}{proj.endDate ? ` ~ ${formatDate(proj.endDate)}` : ' ~'}
-                </span>
-                <Badge selected={!proj.endDate}>
-                  {proj.endDate ? '완료' : '진행중'}
-                </Badge>
-                {proj.endDate && proj.score != null && (
-                  <span className="proj-score">{proj.score.toFixed(1)} 점</span>
-                )}
-              </div>
-            ))}
+              ))}
             {manualProjects.map((proj) => (
               <div key={proj.id} className="project-experience-row">
-                <div className="proj-name-group">
-                  <span className="proj-title">{proj.title}</span>
-                  {proj.role && <span className="proj-role">{proj.role}</span>}
+                <div className="proj-row-inner">
+                  <div className="proj-name-group">
+                    <span className="proj-title">{proj.title}</span>
+                    {proj.role && <span className="proj-role">{proj.role}</span>}
+                  </div>
+                  <div className="proj-right-group">
+                    <span className="proj-period">
+                      {formatDate(proj.startDate)}{proj.endDate ? ` ~ ${formatDate(proj.endDate)}` : ''}
+                    </span>
+                    {proj.description && (
+                      <span className="proj-description">{proj.description}</span>
+                    )}
+                    <div className="proj-score-container" style={{ width: 47 }} />
+                  </div>
                 </div>
-                <span className="proj-period">
-                  {formatDate(proj.startDate)}{proj.endDate ? ` ~ ${formatDate(proj.endDate)}` : ''}
-                </span>
-                {proj.description && (
-                  <span className="proj-description">{proj.description}</span>
-                )}
               </div>
             ))}
           </div>

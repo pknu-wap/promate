@@ -6,8 +6,8 @@ export const getUserInfo = async () => {
       resolve({
         data: {
           id: 1,
-          name: "사용자",
-          email: "nickname@example.com",
+          name: "Sumin", // 유저 별명 적용
+          email: "sumin@example.com",
           profileImageUrl: null
         }
       });

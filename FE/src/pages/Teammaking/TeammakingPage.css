@@ -41,31 +41,22 @@ body {
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.04);
 }
 
-.image-upload-wrapper {
+.teammaking-logo-box {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 18px;
+  border-radius: 4px;
+  background-color: #f0f0f0;
 }
 
-.image-upload-trigger {
-  display: inline-flex;
-  border-radius: 999px;
-  cursor: pointer;
-  transition: transform 0.18s ease;
-}
-
-.image-upload-trigger:hover {
-  transform: translateY(-1px);
-}
-
-.image-upload-trigger:focus-visible {
-  outline: 2px solid #fe9a57;
-  outline-offset: 3px;
-}
-
-.image-upload-avatar {
-  width: 66px;
-  height: 66px;
-  background-color: #efefef;
-  border-color: #d7d7d7;
+.teammaking-logo-box img {
+  width: 28px;
+  height: 28px;
+  filter: grayscale(1);
+  opacity: 0.24;
 }
 
 .form-field {
@@ -251,7 +242,7 @@ body {
     padding: 27px 18px;
   }
 
-  .image-upload-wrapper {
+  .teammaking-logo-box {
     margin-bottom: 18px;
   }
 

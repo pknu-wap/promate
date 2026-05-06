@@ -33,11 +33,16 @@ export default function AuthCallback() {
 
       try {
         const data = await requestKakaoLogin(code, state);
-        if (data && data.accessToken) {
-          localStorage.setItem("accessToken", data.accessToken);
+        if (data) {
+          if (data.accessToken) {
+            localStorage.setItem("accessToken", data.accessToken);
+          }
+          if (data.refreshToken) {
+            localStorage.setItem("refreshToken", data.refreshToken);
+          }
         }
         localStorage.removeItem("oauth_state");
-        navigate("/");
+        navigate("/dashboard");
       } catch (err) {
         console.error("카카오 로그인 처리 실패:", err);
         alert(err.message || "로그인 처리 중 오류가 발생했습니다.");

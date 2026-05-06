@@ -23,7 +23,7 @@ function LoginPage() {
 
       const state = createOAuthState();
       localStorage.setItem("oauth_state", state);
-      url.searchParams.append("state", state);
+      url.searchParams.set("state", state);
 
       window.location.href = url.toString();
     } catch (error) {

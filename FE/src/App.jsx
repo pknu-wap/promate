@@ -56,7 +56,7 @@ function App() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/teammaking" element={<TeammakingPage />} />
           <Route path="/find-team" element={<FindTeamPage />} />
-          <Route path="/FindTeam" element={<FindTeamPage />} />
+         
           <Route path="*" element={<ComingSoonPage />} />
         </Route>
       </Routes>

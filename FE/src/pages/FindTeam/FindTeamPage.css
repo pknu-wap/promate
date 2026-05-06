@@ -1,7 +1,7 @@
 .find-team-page {
   min-height: 100%;
   padding: 24px 0 40px 26px;
-  background-color: #FFFFFF;
+  background: linear-gradient(180deg, #F0F0F0 0%, #FFFFFF 100%);
   color: #111111;
   font-family: "Pretendard", "Noto Sans KR", sans-serif;
 }

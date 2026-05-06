@@ -57,7 +57,7 @@ function App() {
           <Route path="/self-pr" element={<SelfPRPage />} />
           <Route path="/teammaking" element={<TeammakingPage />} />
           <Route path="/find-team" element={<FindTeamPage />} />
-          <Route path="/FindTeam" element={<FindTeamPage />} />
+      
         </Route>
       </Routes>
     </BrowserRouter>

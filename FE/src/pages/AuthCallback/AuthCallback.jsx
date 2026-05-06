@@ -1,11 +1,13 @@
 import { useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { requestKakaoLogin } from "../../api/authApi";
+import { useAuthStore } from "../../store/authStore";
 
 export default function AuthCallback() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const isRequesting = useRef(false);
+  const login = useAuthStore((state) => state.login);
 
   useEffect(() => {
     const code = searchParams.get("code");
@@ -34,12 +36,7 @@ export default function AuthCallback() {
       try {
         const data = await requestKakaoLogin(code, state);
         if (data) {
-          if (data.accessToken) {
-            localStorage.setItem("accessToken", data.accessToken);
-          }
-          if (data.refreshToken) {
-            localStorage.setItem("refreshToken", data.refreshToken);
-          }
+          login(data.accessToken, data.refreshToken);
         }
         localStorage.removeItem("oauth_state");
         navigate("/dashboard");

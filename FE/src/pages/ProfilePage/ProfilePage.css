@@ -1,8 +1,7 @@
-
 .page-wrapper {
   overflow-x: hidden;
   min-height: unset;
-  padding: 0;
+  padding: 32px 36px;
   margin: 0;
   background: none;
   box-sizing: border-box;
@@ -479,4 +478,3 @@
   .profile-actions { flex-direction: column-reverse; gap: 8px; }
   .btn-cancel { width: 100%; height: 48px; }
 }
-

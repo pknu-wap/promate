@@ -56,6 +56,7 @@ function App() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/teammaking" element={<TeammakingPage />} />
           <Route path="/find-team" element={<FindTeamPage />} />
+          <Route path="/profile-setup" element={<DashboardPage />} /> {/* 임시 라우팅 */}
          
           <Route path="*" element={<ComingSoonPage />} />
         </Route>

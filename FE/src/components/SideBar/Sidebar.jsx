@@ -48,7 +48,7 @@ function Sidebar({ isOpen, onClose }) {
             activeIcon={dashboardOrangeIcon}
           />
           <SidebarItem
-            to="/find-team"
+            to="/team"
             label="팀 찾기"
             icon={teamFindIcon}
             activeIcon={teamFindOrangeIcon}

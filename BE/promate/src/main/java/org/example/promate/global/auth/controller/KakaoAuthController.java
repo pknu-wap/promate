@@ -9,7 +9,6 @@ import org.example.promate.global.auth.dto.LogoutRequestDTO;
 import org.example.promate.global.auth.dto.TokenReissueRequestDTO;
 import org.example.promate.global.auth.service.KakaoAuthService;
 import org.example.promate.global.jwt.JwtTokenDto;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,22 +32,37 @@ public class KakaoAuthController {
     }
 
     @GetMapping("/callback")
-    public KakaoAuthResponseDTO kakaoCallBack(
+    public ApiResponse<KakaoAuthResponseDTO> kakaoCallBack(
             @RequestParam("code") String code,
             @RequestParam(value = "state", required = false) String state,
             HttpSession httpSession) {
 
-        return kakaoAuthService.kakaoLogin(code, state, httpSession);
+        KakaoAuthResponseDTO response = kakaoAuthService.kakaoLogin(code, state, httpSession);
+
+        return ApiResponse.onSuccess(
+                GeneralSuccessCode.OK,
+                response
+        );
     }
 
     @PostMapping("/reissue")
-    public JwtTokenDto reissue(@RequestBody TokenReissueRequestDTO request) {
-        return kakaoAuthService.reissueToken(request.getRefreshToken());
+    public ApiResponse<JwtTokenDto> reissue(@RequestBody TokenReissueRequestDTO request) {
+        JwtTokenDto token = kakaoAuthService.reissueToken(request.getRefreshToken());
+
+        return ApiResponse.onSuccess(
+                GeneralSuccessCode.OK,
+                token
+        );
     }
 
     @PostMapping("/logout")
-    public void logout(@RequestBody LogoutRequestDTO request) {
+    public ApiResponse<Void> logout(@RequestBody LogoutRequestDTO request) {
         kakaoAuthService.logout(request.getRefreshToken());
+
+        return ApiResponse.onSuccess(
+                GeneralSuccessCode.OK,
+                null
+        );
     }
 }
 

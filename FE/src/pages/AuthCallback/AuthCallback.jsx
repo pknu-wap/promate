@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { requestKakaoLogin } from "../../api/authApi";
-import { useAuthStore } from "../../store/authStore";
+import { useAuthStore } from "./authStore.js";
 
 export default function AuthCallback() {
   const navigate = useNavigate();

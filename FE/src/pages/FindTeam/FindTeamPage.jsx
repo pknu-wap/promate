@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import logoIcon from "../../assets/logoIcon.svg";
+import ApplyModal from "../../components/ApplyModal/ApplyModal.jsx";
 import Badge from "../../components/Badge/Badge.jsx";
 import MainButton from "../../components/MainButton/MainButton.jsx";
 import "./FindTeamPage.css";
@@ -120,6 +121,9 @@ function FindTeamPage() {
   const [selectedCategory, setSelectedCategory] = useState("assignment");
   const [teamPosts, setTeamPosts] = useState(mockTeamPosts);
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [selectedTeamId, setSelectedTeamId] = useState(null);
+  const [job, setJob] = useState("");
+  const [motivation, setMotivation] = useState("");
 
   const filteredTeamPosts = useMemo(() => {
     const keyword = searchKeyword.trim();
@@ -130,6 +134,9 @@ function FindTeamPage() {
     );
   }, [selectedCategory, searchKeyword, teamPosts]);
 
+  const selectedTeam = teamPosts.find((team) => team.id === selectedTeamId);
+  const isApplyModalOpen = selectedTeamId !== null;
+
   const handleToggleBookmark = (teamId) => {
     setTeamPosts((prevTeamPosts) =>
       prevTeamPosts.map((team) =>
@@ -138,12 +145,27 @@ function FindTeamPage() {
     );
   };
 
-  const handleApply = (teamId) => {
+  const handleOpenApplyModal = (teamId) => {
+    setSelectedTeamId(teamId);
+    setJob("");
+    setMotivation("");
+  };
+
+  const handleCloseApplyModal = () => {
+    setSelectedTeamId(null);
+    setJob("");
+    setMotivation("");
+  };
+
+  const handleSubmitApply = () => {
+    if (selectedTeamId === null) return;
+
     setTeamPosts((prevTeamPosts) =>
       prevTeamPosts.map((team) =>
-        team.id === teamId ? { ...team, applied: true } : team,
+        team.id === selectedTeamId ? { ...team, applied: true } : team,
       ),
     );
+    handleCloseApplyModal();
   };
 
   return (
@@ -203,7 +225,7 @@ function FindTeamPage() {
                   </button>
                   <MainButton
                     className={`find-team-apply-button ${team.applied ? "is-applied" : ""}`}
-                    onClick={() => handleApply(team.id)}
+                    onClick={() => handleOpenApplyModal(team.id)}
                     aria-pressed={team.applied}
                   >
                     {team.applied ? "지원 완료" : "지원하기"}
@@ -216,6 +238,17 @@ function FindTeamPage() {
           <div className="find-team-empty">해당 카테고리에 모집 중인 팀이 없습니다.</div>
         )}
       </section>
+
+      <ApplyModal
+        isOpen={isApplyModalOpen}
+        onClose={handleCloseApplyModal}
+        onSubmit={handleSubmitApply}
+        projectName={selectedTeam?.title ?? ""}
+        job={job}
+        motivation={motivation}
+        setJob={setJob}
+        setMotivation={setMotivation}
+      />
     </main>
   );
 }

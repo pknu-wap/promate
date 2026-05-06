@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import './Calendar.css';
 import calendarIcon from '../../../assets/CalendarIcon.svg';
+import AddEventModal from '../../../components/AddEventModal/AddEventModal';
 
 const WEEKDAYS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
@@ -49,6 +50,7 @@ const initialEvents = [
 function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [events, setEvents] = useState(initialEvents);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -74,6 +76,23 @@ function Calendar() {
         event.id === id ? { ...event, checked: !event.checked } : event
       )
     );
+  };
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleAddEvent = (newEventData) => {
+    const newEvent = {
+      id: Date.now(),
+      ...newEventData,
+      checked: false,
+    };
+    setEvents((prevEvents) => [...prevEvents, newEvent]);
   };
 
   return (
@@ -241,11 +260,17 @@ function Calendar() {
             ))}
           </div>
 
-          <button className="add-event-btn" type="button">
+          <button className="add-event-btn" type="button" onClick={handleOpenModal}>
             + 일정 추가
           </button>
         </aside>
       </div>
+
+      <AddEventModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onAddEvent={handleAddEvent}
+      />
     </section>
   );
 }

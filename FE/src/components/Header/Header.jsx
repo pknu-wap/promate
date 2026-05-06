@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getUserInfo } from '../../api/UserApi';
-import logoImg from '../../assets/promate_logo.svg';
+import logoImg from '../../assets/logoOrange.svg';
 import './Header.css';
 
 function Header({ onMenuClick }) {
@@ -33,6 +33,7 @@ function Header({ onMenuClick }) {
         <div className="header-logo">
           <Link to="/" className="logo-link">
             <img src={logoImg} alt="ProMate 로고" className="logo-image" />
+            <span className="logo-text">PRO:MATE</span>
           </Link>
           <span className="logo-sub">최고의 팀과 협업하세요.</span>
         </div>

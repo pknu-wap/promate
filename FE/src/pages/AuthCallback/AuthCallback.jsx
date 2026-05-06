@@ -36,12 +36,7 @@ export default function AuthCallback() {
       try {
         const data = await requestKakaoLogin(code, state);
         if (data) {
-          login(data.accessToken);
-
-          if (data.profileCompleted === false) {
-            navigate("/profile-setup");
-            return;
-          }
+          login(data.accessToken, data.refreshToken);
         }
         localStorage.removeItem("oauth_state");
         navigate("/dashboard");

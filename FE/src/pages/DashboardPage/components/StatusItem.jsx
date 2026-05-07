@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './StatusItem.css';
-import Avatar from '../../../components/Avatar/Avatar';
+import ProjectAvatar from '../../../components/ProjectAvatar/ProjectAvatar';
 import ProgressBar from '../../../components/ProgressBar/ProgressBar';
 import { getDiffDays } from '../components/DateUtils';
 
@@ -26,7 +26,7 @@ function StatusItem({ id, title, date = '', tag = '여유', ratio }) {
       <div className="status-info-row">
         <div className="status-left">
           <div className="logo-placeholder">
-            <Avatar />
+            <ProjectAvatar />
           </div>
 
           <div className="status-text">

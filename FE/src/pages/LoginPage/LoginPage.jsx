@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./LoginPage.css";
 import LoginLogo from "./components/LoginLogo";
 import LoginForm from "./components/LoginForm";
-import { getKakaoLoginUrl } from "../../api/authApi";
+import { getKakaoLoginUrl } from "../../api/kakaoAuthApi.js";
 
 function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -23,7 +23,7 @@ function LoginPage() {
 
       const state = createOAuthState();
       localStorage.setItem("oauth_state", state);
-      url.searchParams.append("state", state);
+      url.searchParams.set("state", state);
 
       window.location.href = url.toString();
     } catch (error) {

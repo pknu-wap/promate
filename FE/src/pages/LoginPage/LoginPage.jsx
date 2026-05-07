@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./LoginPage.css";
 import LoginLogo from "./components/LoginLogo";
 import LoginForm from "./components/LoginForm";
-import { getKakaoLoginUrl } from "../../api/AuthApi";
+import { getKakaoLoginUrl } from "../../api/authApi.js";
 
 function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);

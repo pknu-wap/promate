@@ -140,11 +140,16 @@ public class KakaoAuthService {
 
         Long kakaoId = userInfo.getKakaoId();
 
+        String profileImageUrl = userInfo.getKakaoAccount()
+                .getProfile()
+                .getProfileImageUrl();
+
         User user = userRepository.findByKakaoId(kakaoId)
                 .orElseGet(() -> userRepository.save(
                         User.builder()
                                 .kakaoId(kakaoId)
                                 .isProfileCompleted(false)
+                                .profileImageUrl(profileImageUrl)
                                 .build()
                 ));
 

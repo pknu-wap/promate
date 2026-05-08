@@ -26,21 +26,22 @@ const ProfilePage = () => {
   return (
     <div className="page-wrapper">
       <h1 className="page-title">
-        <span style={{ color: '#FE9A57' }}>{userInfo.name}</span> 님 프로필
+        <span style={{ color: '#FF6600' }}>{userInfo.name}</span> 님 프로필
       </h1>
 
       <section className="card profile-main-card">
         {/* 상단: 아바타+이름 / 태스크 */}
         <div className="profile-header-row">
           <div className="profile-user-info">
-            <Avatar src="/default-profile.png" alt="프로필" size="lg" />
+            <Avatar alt="프로필" size="lg" />
             <div className="profile-name-block">
               <h2 className="user-name-text">{userInfo.name}</h2>
             </div>
           </div>
           <div className="user-task-display">
             <span className="task-stats-num">
-              {userInfo.taskStats.completed}/{userInfo.taskStats.total}
+              <span style={{ color: '#FF6600' }}>{userInfo.taskStats.completed}</span>
+              <span style={{ color: '#000000' }}>/{userInfo.taskStats.total}</span>
             </span>
           </div>
         </div>

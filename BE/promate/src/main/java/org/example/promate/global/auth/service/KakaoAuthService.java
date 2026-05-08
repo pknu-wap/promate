@@ -1,10 +1,9 @@
 package org.example.promate.global.auth.service;
 
 import jakarta.servlet.http.HttpSession;
-import org.springframework.transaction.annotation.Transactional;
+import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.example.promate.global.ApiPayload.exception.GeneralException;
 import org.example.promate.global.auth.dto.KakaoAuthResponseDTO;
 import org.example.promate.global.auth.dto.KakaoTokenResponseDTO;
 import org.example.promate.global.auth.dto.KakaoUserResponseDTO;
@@ -251,13 +250,5 @@ public class KakaoAuthService {
         }
 
         refreshTokenRepository.delete(savedRefreshToken);
-    }
-
-    @Transactional(readOnly = true)
-    public boolean getProfileCompletedByRefreshToken(String refreshToken) {
-        RefreshToken savedToken = refreshTokenRepository.findByRefreshToken(refreshToken)
-                .orElseThrow(() -> new GeneralException(AuthErrorCode.INVALID_REFRESH_TOKEN));
-
-        return savedToken.getUser().isProfileCompleted();
     }
 }

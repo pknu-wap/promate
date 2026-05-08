@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.promate.global.ApiPayload.ApiResponse;
 import org.example.promate.global.ApiPayload.code.GeneralSuccessCode;
 import org.example.promate.global.auth.dto.KakaoAuthResponseDTO;
+import org.example.promate.global.auth.dto.LogoutRequestDTO;
 import org.example.promate.global.auth.dto.TokenReissueResponseDTO;
 import org.example.promate.global.auth.service.KakaoAuthService;
 import org.example.promate.global.jwt.JwtTokenDto;
@@ -58,7 +59,6 @@ public class KakaoAuthController {
                 GeneralSuccessCode.OK,
                 authResponse
         );
-
     }
 
     @PostMapping("/reissue")
@@ -68,9 +68,6 @@ public class KakaoAuthController {
 
             HttpServletResponse response
     ) {
-
-        boolean profileCompleted =
-                kakaoAuthService.getProfileCompletedByRefreshToken(refreshToken);
 
         JwtTokenDto token = kakaoAuthService.reissueToken(refreshToken);
 
@@ -89,26 +86,13 @@ public class KakaoAuthController {
 
         return ApiResponse.onSuccess(
                 GeneralSuccessCode.OK,
-                new TokenReissueResponseDTO(token.accessToken(), profileCompleted)
+                new TokenReissueResponseDTO(token.accessToken(), false)
         );
     }
 
     @PostMapping("/logout")
-    public ApiResponse<Void> logout(
-            @CookieValue(value = "refreshToken", required = false) String refreshToken,
-            HttpServletResponse response
-    ) {
-        kakaoAuthService.logout(refreshToken);
-
-        ResponseCookie deleteCookie = ResponseCookie.from("refreshToken", "")
-                .httpOnly(true)
-                .secure(true)
-                .sameSite("None")
-                .path("/")
-                .maxAge(0)
-                .build();
-
-        response.addHeader(HttpHeaders.SET_COOKIE, deleteCookie.toString());
+    public ApiResponse<Void> logout(@RequestBody LogoutRequestDTO request) {
+        kakaoAuthService.logout(request.getRefreshToken());
 
         return ApiResponse.onSuccess(
                 GeneralSuccessCode.OK,

@@ -51,20 +51,10 @@ public class KakaoAuthService {
         String state = UUID.randomUUID().toString();
         httpSession.setAttribute("state", state);
 
+        System.out.println("LOGIN STATE = " + state);
+        System.out.println("LOGIN SESSION ID = " + httpSession.getId()); // 디버깅로그
+
         String encodedRedirectUri = URLEncoder.encode(kakaoRedirectUri, StandardCharsets.UTF_8);
-
-        String url = "https://kauth.kakao.com/oauth/authorize?client_id="
-                + kakaoClientId
-                + "&redirect_uri="
-                + encodedRedirectUri
-                + "&response_type=code"
-                + "&state="
-                + state;
-
-        System.out.println("KAKAO_REDIRECT_URI = " + kakaoRedirectUri);
-        System.out.println("ENCODED_REDIRECT_URI = " + encodedRedirectUri);
-        System.out.println("STATE = " + state);
-        System.out.println("KAKAO URL = " + url);
 
         return "https://kauth.kakao.com/oauth/authorize?client_id="
                 + kakaoClientId
@@ -78,6 +68,10 @@ public class KakaoAuthService {
     public KakaoAuthResponseDTO kakaoLogin(String code, String state, HttpSession httpSession) {
 
         String sessionState = (String) httpSession.getAttribute("state");
+
+        System.out.println("REQUEST state = " + state);
+        System.out.println("SESSION state = " + sessionState);
+        System.out.println("SESSION ID = " + httpSession.getId()); // 디버깅로그
 
         if (sessionState == null || state == null) {
             throw new AuthException(AuthErrorCode.STATE_NOT_FOUND);
@@ -114,6 +108,7 @@ public class KakaoAuthService {
             tokenResult = tokenResponse.getBody();
         } catch (Exception e) {
 
+            e.printStackTrace(); // 디버깅로그
 
             throw new AuthException(AuthErrorCode.KAKAO_TOKEN_REQUEST_FAILED);
         }
@@ -144,6 +139,8 @@ public class KakaoAuthService {
             );
             userInfo = userResponse.getBody();
         } catch (Exception e) {
+
+            e.printStackTrace(); // 디버깅로그
             throw new AuthException(AuthErrorCode.KAKAO_USER_INFO_FAILED);
         }
 

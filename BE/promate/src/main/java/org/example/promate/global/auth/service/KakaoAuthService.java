@@ -144,10 +144,15 @@ public class KakaoAuthService {
                 .getProfile()
                 .getProfileImageUrl();
 
+        String name = userInfo.getKakaoAccount() // 카카오에서 일단 카카오톡 닉네임을 받아오고, 나중에 프로필 수정에서 수정 가능
+                .getProfile()
+                .getNickname();
+
         User user = userRepository.findByKakaoId(kakaoId)
                 .orElseGet(() -> userRepository.save(
                         User.builder()
                                 .kakaoId(kakaoId)
+                                .name(name)
                                 .isProfileCompleted(false)
                                 .profileImageUrl(profileImageUrl)
                                 .build()

@@ -43,7 +43,7 @@ public class KakaoAuthController {
             HttpServletResponse response
     ) {
         KakaoAuthResponseDTO authResponse =
-                kakaoAuthService.kakaoLogin(code, state, httpSession);
+                kakaoAuthService.kakaoLogin(code, state);
 
         ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", authResponse.getRefreshToken())
                 .httpOnly(true)

@@ -53,6 +53,19 @@ public class KakaoAuthService {
 
         String encodedRedirectUri = URLEncoder.encode(kakaoRedirectUri, StandardCharsets.UTF_8);
 
+        String url = "https://kauth.kakao.com/oauth/authorize?client_id="
+                + kakaoClientId
+                + "&redirect_uri="
+                + encodedRedirectUri
+                + "&response_type=code"
+                + "&state="
+                + state;
+
+        System.out.println("KAKAO_REDIRECT_URI = " + kakaoRedirectUri);
+        System.out.println("ENCODED_REDIRECT_URI = " + encodedRedirectUri);
+        System.out.println("STATE = " + state);
+        System.out.println("KAKAO URL = " + url);
+
         return "https://kauth.kakao.com/oauth/authorize?client_id="
                 + kakaoClientId
                 + "&redirect_uri="

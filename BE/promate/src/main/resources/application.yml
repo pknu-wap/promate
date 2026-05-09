@@ -3,13 +3,6 @@ server:
   address: 0.0.0.0
   forward-headers-strategy: framework
 
-
-  servlet:
-    session:
-      cookie:
-        same-site: none
-        secure: true
-
 spring:
   application:
     name: "promate"

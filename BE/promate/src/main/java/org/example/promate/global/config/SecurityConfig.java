@@ -30,6 +30,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/",
+                                "/login",
                                 "/actuator/health",
                                 "/api/auth/kakao/login",
                                 "/api/auth/kakao/callback",
@@ -40,8 +41,8 @@ public class SecurityConfig {
                         ).permitAll()
                         .anyRequest().authenticated()
 
-                );
-                // .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                )
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

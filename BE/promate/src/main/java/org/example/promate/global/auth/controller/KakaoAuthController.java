@@ -23,7 +23,7 @@ import java.util.Map;
 @RequestMapping("/api/auth/kakao")
 public class KakaoAuthController {
     private final KakaoAuthService kakaoAuthService;
-    
+
     @GetMapping("/login")
     public void getKakaoUrl(
             HttpSession httpSession,
@@ -37,12 +37,12 @@ public class KakaoAuthController {
 
 
     @GetMapping("/callback")
-    public ApiResponse<KakaoAuthResponseDTO> kakaoCallBack(
+    public void kakaoCallBack(
             @RequestParam("code") String code,
             @RequestParam(value = "state", required = false) String state,
             HttpSession httpSession,
             HttpServletResponse response
-    ) {
+    ) throws IOException {
         KakaoAuthResponseDTO authResponse =
                 kakaoAuthService.kakaoLogin(code, state, httpSession);
 
@@ -56,10 +56,7 @@ public class KakaoAuthController {
 
         response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
-        return ApiResponse.onSuccess(
-                GeneralSuccessCode.OK,
-                authResponse
-        );
+        response.sendRedirect("https://promate-kappa.vercel.app/dashboard");
     }
 
     @PostMapping("/reissue")

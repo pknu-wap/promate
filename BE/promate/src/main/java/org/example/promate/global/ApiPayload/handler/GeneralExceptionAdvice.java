@@ -20,11 +20,11 @@ public class GeneralExceptionAdvice {
     }
 
     //예상치 못한 예외 처리
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<String>> handlerException(Exception ex){
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ApiResponse.onFailure(GeneralErrorCode.INTERNAL_SERVER_ERROR, ex.getMessage()));
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<ApiResponse<String>> handlerException(Exception ex){
+//        return ResponseEntity
+//                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                .body(ApiResponse.onFailure(GeneralErrorCode.INTERNAL_SERVER_ERROR, ex.getMessage()));
+//    }
 
 }

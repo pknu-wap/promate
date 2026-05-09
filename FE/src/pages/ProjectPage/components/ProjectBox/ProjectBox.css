@@ -1,0 +1,136 @@
+.project-box {
+  display: flex;
+  flex-direction: column;
+  padding: 14px 20px;
+  gap: 10px;
+  width: 100%;
+  height: 112px;
+  background: #FFFFFF;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.project-box-top {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 54px;
+}
+
+.project-box-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+}
+
+.project-box-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.project-title {
+  font-family: 'Pretendard', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 19px;
+  color: #000000;
+  margin: 0;
+}
+
+.project-due-date {
+  font-family: 'Pretendard', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  color: #909090;
+}
+
+.project-box-status {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.status-badge {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 26px;
+  height: 30px;
+  background: #D9D9D9;
+  border-radius: 20px;
+  font-family: 'Pretendard', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 19px;
+  color: #FFFFFF;
+  box-sizing: border-box;
+}
+
+.project-box-bottom {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 40px;
+}
+
+.progress-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 4px;
+}
+
+.progress-label,
+.progress-step {
+  font-family: 'Pretendard', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 14px;
+  color: #909090;
+}
+
+.progress-stats {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.progress-percent {
+  font-family: 'YSpotlightOTF', 'Pretendard', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+  color: #FF6600;
+  line-height: 26px;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 8px;
+  background: #F1F1F1;
+  border: 1px solid #D9D9D9;
+  border-radius: 90px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.progress-bar-fill {
+  height: 8px;
+  background: #FE9A57;
+  border-radius: 90px;
+  position: absolute;
+  left: -1px;
+  top: -1px;
+}

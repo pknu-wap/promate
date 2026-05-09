@@ -32,7 +32,6 @@ public class SecurityConfig {
                                 "/",
                                 "/actuator/health",
                                 "/api/auth/kakao/login",
-                                "/api/auth/kakao/callback",
                                 "/api/auth/kakao/reissue",
                                 "/api/auth/kakao/logout",
                                 "/swagger-ui/**",

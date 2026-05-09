@@ -46,8 +46,8 @@ public class KakaoAuthController {
                 kakaoAuthService.kakaoLogin(code, state, httpSession);
 
         ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", authResponse.getRefreshToken())
-//                .httpOnly(true)
-//                .secure(true)
+                .httpOnly(true)
+                .secure(true)
                 .sameSite("None")
                 .path("/")
                 .maxAge(60 * 60 * 24 * 14)

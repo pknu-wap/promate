@@ -23,17 +23,18 @@ import java.util.Map;
 @RequestMapping("/api/auth/kakao")
 public class KakaoAuthController {
     private final KakaoAuthService kakaoAuthService;
-
+    
     @GetMapping("/login")
-    public ApiResponse<Map<String, String>> getKakaoUrl(HttpSession httpSession) {
+    public void getKakaoUrl(
+            HttpSession httpSession,
+            HttpServletResponse response
+    ) throws IOException {
 
         String url = kakaoAuthService.setKakaoAuthUrl(httpSession);
 
-        return ApiResponse.onSuccess(
-                GeneralSuccessCode.OK,
-                Map.of("url", url)
-        );
+        response.sendRedirect(url);
     }
+
 
     @GetMapping("/callback")
     public ApiResponse<KakaoAuthResponseDTO> kakaoCallBack(

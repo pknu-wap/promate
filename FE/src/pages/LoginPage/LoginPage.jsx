@@ -4,6 +4,8 @@ import LoginLogo from "./components/LoginLogo";
 import LoginForm from "./components/LoginForm";
 import { getKakaoLoginUrl } from "../../api/kakaoAuthApi.js";
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -24,6 +26,7 @@ function LoginPage() {
     <main className="login-page">
       <section className="login-card">
         <LoginLogo />
+        <a href={`${baseUrl}/api/auth/kakao/login`}>카카오 로그인</a>
         <LoginForm onLogin={kakaoHandleLogin} isLoading={isLoading} />
       </section>
     </main>

@@ -4,12 +4,16 @@ import ProgressBar from '../../../../components/ProgressBar/ProgressBar';
 import { getDiffDays } from '../../../DashboardPage/components/DateUtils';
 import './ProjectBox.css';
 
-function ProjectBox({ title, dueDate, currentStep, totalStep, avatarSrc }) {
+function ProjectBox({ title, dueDate, currentStep, totalStep, avatarSrc, onClick }) {
   const calculatedProgress = totalStep > 0 ? Math.round((currentStep / totalStep) * 100) : 0;
   const diffDays = getDiffDays(dueDate);
 
   return (
-    <div className="project-box">
+    <div 
+      className="project-box" 
+      onClick={onClick} 
+      style={{ cursor: onClick ? 'pointer' : 'default' }}
+    >
       <div className="project-box-upper">
         <ProjectAvatar src={avatarSrc} size="54px" />
         <div className="project-box-content">

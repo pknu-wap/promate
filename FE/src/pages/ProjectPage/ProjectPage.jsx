@@ -4,10 +4,10 @@ import ProjectBox from './components/ProjectBox/ProjectBox';
 import './ProjectPage.css';
 
 function ProjectPage() {
-  const [activeTab, setActiveTab] = useState('전체');
+  const [activeTab, setActiveTab] = useState('진행중인 프로젝트');
   const navigate = useNavigate();
 
-  const tabs = ['전체', '진행중인 프로젝트', '내 지원 현황', '북마크', '완료된 프로젝트'];
+  const tabs = ['진행중인 프로젝트', '내 지원 현황', '북마크', '완료된 프로젝트'];
 
   // 임시 데이터
   const dummyProjects = [

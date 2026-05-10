@@ -46,6 +46,8 @@
   flex-direction: row;
   align-items: center;
   gap: 16px;
+  flex: 1;
+  min-width: 0;
 }
 
 .project-box-text {
@@ -53,6 +55,8 @@
   flex-direction: column;
   gap: 6px;
   margin-top: 6px;
+  flex: 1;
+  min-width: 0;
 }
 
 .project-box-title {
@@ -62,6 +66,9 @@
   line-height: 19px;
   color: #000000;
   margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .project-due-date {
@@ -79,6 +86,7 @@
   justify-content: center;
   align-items: center;
   align-self: flex-start;
+  flex-shrink: 0;
 }
 
 .status-tag {
@@ -131,6 +139,10 @@
   color: #909090;
 }
 
+.mobile-only {
+  display: none;
+}
+
 .progress-stats {
   display: flex;
   flex-direction: row;
@@ -165,4 +177,67 @@
   position: absolute;
   left: -1px;
   top: -1px;
+}
+
+@media (max-width: 768px) {
+  .project-box {
+    padding: 12px 14px;
+    gap: 5px;
+  }
+
+  .project-box-upper {
+    gap: 3px;
+    flex-wrap: wrap;
+  }
+
+  .project-box-text {
+    margin-left: 8px;
+  }
+
+  .project-box-info {
+    gap: 8px;
+  }
+
+  .project-box-content {
+    display: contents;
+  }
+
+  .project-box-top {
+    flex: 1;
+    min-width: 0;
+    gap: 8px;
+  }
+
+  .progress-stats {
+    width: 100%;
+  }
+
+  .project-box-title {
+    font-size: 16px;
+  }
+
+  .project-due-date {
+    font-size: 12px;
+  }
+
+  .status-tag {
+    width: auto;
+    height: auto;
+    padding: 4px 12px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .progress-percent {
+    font-size: 22px;
+  }
+
+  .mobile-only {
+    display: block;
+    margin-right: auto;
+  }
+
+  .pc-only {
+    display: none;
+  }
 }

@@ -31,6 +31,7 @@ function ProjectBox({ title, dueDate, currentStep, totalStep, avatarSrc, onClick
             </div>
           </div>
           <div className="progress-stats">
+            <span className="progress-label mobile-only">진행률</span>
             <span className="progress-step">{currentStep}/{totalStep}</span>
             <span className="progress-percent">{calculatedProgress}%</span>
           </div>
@@ -38,7 +39,7 @@ function ProjectBox({ title, dueDate, currentStep, totalStep, avatarSrc, onClick
       </div>
       
       <div className="progress-header">
-        <span className="progress-label">진행률</span>
+        <span className="progress-label pc-only">진행률</span>
         <ProgressBar percent={calculatedProgress} />
       </div>
     </div>

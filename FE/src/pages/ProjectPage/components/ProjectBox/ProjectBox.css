@@ -10,6 +10,11 @@
   background: #FFFFFF;
   border-radius: 10px;
   box-sizing: border-box;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.project-box:hover {
+  background-color: #f8f9fa;
 }
 
 .project-box-upper {

@@ -1,10 +1,12 @@
 import React from 'react';
 import ProjectAvatar from '../../../../components/ProjectAvatar/ProjectAvatar';
 import ProgressBar from '../../../../components/ProgressBar/ProgressBar';
+import { getDiffDays } from '../../../DashboardPage/components/DateUtils';
 import './ProjectBox.css';
 
-function ProjectBox({ title, dueDate, status, currentStep, totalStep, avatarSrc }) {
+function ProjectBox({ title, dueDate, currentStep, totalStep, avatarSrc }) {
   const calculatedProgress = totalStep > 0 ? Math.round((currentStep / totalStep) * 100) : 0;
+  const diffDays = getDiffDays(dueDate);
 
   return (
     <div className="project-box">
@@ -19,7 +21,9 @@ function ProjectBox({ title, dueDate, status, currentStep, totalStep, avatarSrc 
               </div>
             </div>
             <div className="project-box-status">
-              <span className="status-badge">{status}</span>
+              <div className={`status-tag ${diffDays < 7 ? 'urgent' : ''}`}>
+                {diffDays < 7 ? '긴급' : '여유'}
+              </div>
             </div>
           </div>
           <div className="progress-stats">

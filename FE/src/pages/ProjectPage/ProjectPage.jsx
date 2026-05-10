@@ -9,9 +9,9 @@ function ProjectPage() {
 
   // 임시 데이터
   const dummyProjects = [
-    { id: 1, title: 'WAP 프로젝트', dueDate: '2026.06.05', status: '여유', currentStep: 125, totalStep: 150 },
-    { id: 2, title: '프로그래밍 팀플', dueDate: '2026.06.17', status: '여유', currentStep: 12, totalStep: 18 },
-    { id: 3, title: '캡스톤 디자인', dueDate: '2026.06.24', status: '여유', currentStep: 71, totalStep: 100 }
+    { id: 1, title: 'WAP 프로젝트', dueDate: '2026.06.05', currentStep: 125, totalStep: 150 },
+    { id: 2, title: '프로그래밍 팀플', dueDate: '2026.06.17', currentStep: 12, totalStep: 18 },
+    { id: 3, title: '캡스톤 디자인', dueDate: '2026.06.24', currentStep: 71, totalStep: 100 }
   ];
 
   return (
@@ -37,7 +37,6 @@ function ProjectPage() {
               key={project.id}
               title={project.title}
               dueDate={project.dueDate}
-              status={project.status}
               currentStep={project.currentStep}
               totalStep={project.totalStep}
             />

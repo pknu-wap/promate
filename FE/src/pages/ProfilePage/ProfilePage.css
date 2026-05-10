@@ -1,9 +1,11 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css');
+
 .page-wrapper {
   overflow-x: hidden;
-  min-height: unset;
+  min-height: 100%;
   padding: 32px 36px;
   margin: 0;
-  background: none;
+  background: linear-gradient(180deg, #F0F0F0 0%, #FFFFFF 100%);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -11,7 +13,7 @@
 }
 
 .page-title {
-  font-family: 'YSpotlightOTF', 'Pretendard', sans-serif;
+  font-family: 'YSpotlightOTF', 'Pretendard Variable', 'Pretendard', sans-serif;
   font-size: 24px;
   font-weight: 400;
   color: #000;
@@ -25,6 +27,7 @@
   padding: 40px;
   background: #ffffff;
   border-radius: 12px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -181,7 +184,7 @@
 }
 
 .proj-title {
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
   font-weight: 400;
   font-size: 16px;
   line-height: 19px;
@@ -284,7 +287,7 @@
 }
 
 .proj-score-text {
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
   font-weight: 400;
   font-size: 14px;
   line-height: 17px;

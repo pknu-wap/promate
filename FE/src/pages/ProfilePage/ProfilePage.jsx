@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import MainButton from '../../components/MainButton/MainButton';
 import Avatar from '../../components/Avatar/Avatar';
 import './ProfilePage.css';
-import '../Teammaking/TeammakingPage.css';
 
 const ProfilePage = () => {
   const [userInfo] = useState({
@@ -29,7 +28,7 @@ const ProfilePage = () => {
         <span style={{ color: '#FF6600' }}>{userInfo.name}</span> 님 프로필
       </h1>
 
-      <section className="card profile-main-card">
+      <section className="profile-main-card">
         {/* 상단: 아바타+이름 / 태스크 */}
         <div className="profile-header-row">
           <div className="profile-user-info">

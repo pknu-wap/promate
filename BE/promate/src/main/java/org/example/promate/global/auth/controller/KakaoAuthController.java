@@ -25,25 +25,26 @@ public class KakaoAuthController {
     private final KakaoAuthService kakaoAuthService;
 
     @GetMapping("/login")
-    public ApiResponse<Map<String, String>> getKakaoUrl(HttpSession httpSession) {
+    public void getKakaoUrl(
+            HttpSession httpSession,
+            HttpServletResponse response
+    ) throws IOException {
 
         String url = kakaoAuthService.setKakaoAuthUrl(httpSession);
 
-        return ApiResponse.onSuccess(
-                GeneralSuccessCode.OK,
-                Map.of("url", url)
-        );
+        response.sendRedirect(url);
     }
 
+
     @GetMapping("/callback")
-    public ApiResponse<KakaoAuthResponseDTO> kakaoCallBack(
+    public void kakaoCallBack(
             @RequestParam("code") String code,
             @RequestParam(value = "state", required = false) String state,
             HttpSession httpSession,
             HttpServletResponse response
-    ) {
+    ) throws IOException {
         KakaoAuthResponseDTO authResponse =
-                kakaoAuthService.kakaoLogin(code, state);
+                kakaoAuthService.kakaoLogin(code, state, httpSession);
 
         ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", authResponse.getRefreshToken())
                 .httpOnly(true)
@@ -55,10 +56,7 @@ public class KakaoAuthController {
 
         response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
-        return ApiResponse.onSuccess(
-                GeneralSuccessCode.OK,
-                authResponse
-        );
+        response.sendRedirect("https://promate-kappa.vercel.app/dashboard");
     }
 
     @PostMapping("/reissue")

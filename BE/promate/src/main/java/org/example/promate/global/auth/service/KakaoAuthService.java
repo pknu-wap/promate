@@ -7,11 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.example.promate.global.auth.dto.KakaoAuthResponseDTO;
 import org.example.promate.global.auth.dto.KakaoTokenResponseDTO;
 import org.example.promate.global.auth.dto.KakaoUserResponseDTO;
-import org.example.promate.global.auth.entity.OAuthState;
 import org.example.promate.global.auth.entity.RefreshToken;
 import org.example.promate.global.auth.exception.AuthErrorCode;
 import org.example.promate.global.auth.exception.AuthException;
-import org.example.promate.global.auth.repository.OAuthStateRepository;
 import org.example.promate.global.auth.repository.RefreshTokenRepository;
 import org.example.promate.domain.user.entity.User;
 import org.example.promate.domain.user.repository.UserRepository;
@@ -26,7 +24,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -39,7 +36,6 @@ public class KakaoAuthService {
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
     private final RefreshTokenRepository refreshTokenRepository;
-    private final OAuthStateRepository oauthStateRepository;
 
 
     @Value("${KAKAO_REST_API_KEY}")
@@ -53,12 +49,7 @@ public class KakaoAuthService {
 
     public String setKakaoAuthUrl(HttpSession httpSession) {
         String state = UUID.randomUUID().toString();
-        oauthStateRepository.save(
-                OAuthState.builder()
-                        .state(state)
-                        .expiredAt(LocalDateTime.now().plusMinutes(5))
-                        .build()
-        );
+        httpSession.setAttribute("state", state);
 
         System.out.println("LOGIN STATE = " + state);
         System.out.println("LOGIN SESSION ID = " + httpSession.getId()); // 디버깅로그
@@ -74,19 +65,20 @@ public class KakaoAuthService {
                 + state;
     }
     @Transactional
-    public KakaoAuthResponseDTO kakaoLogin(String code, String state) {
+    public KakaoAuthResponseDTO kakaoLogin(String code, String state, HttpSession httpSession) {
 
-        OAuthState oauthState = oauthStateRepository.findById(state)
-                .orElseThrow(() -> new AuthException(AuthErrorCode.STATE_NOT_FOUND));
+        String sessionState = (String) httpSession.getAttribute("state");
 
-        if (oauthState.getExpiredAt().isBefore(LocalDateTime.now())) {
-            oauthStateRepository.delete(oauthState);
+        System.out.println("REQUEST state = " + state);
+        System.out.println("SESSION state = " + sessionState);
+        System.out.println("SESSION ID = " + httpSession.getId()); // 디버깅로그
+
+        if (sessionState == null || state == null) {
+            throw new AuthException(AuthErrorCode.STATE_NOT_FOUND);
+        }
+        if (!sessionState.equals(state)) {
             throw new AuthException(AuthErrorCode.STATE_MISMATCH);
         }
-
-        oauthStateRepository.delete(oauthState);
-
-
 
         // access token 요청
         String tokenUrl = "https://kauth.kakao.com/oauth/token";
@@ -115,6 +107,8 @@ public class KakaoAuthService {
             );
             tokenResult = tokenResponse.getBody();
         } catch (Exception e) {
+
+            e.printStackTrace(); // 디버깅로그
 
             throw new AuthException(AuthErrorCode.KAKAO_TOKEN_REQUEST_FAILED);
         }
@@ -146,6 +140,7 @@ public class KakaoAuthService {
             userInfo = userResponse.getBody();
         } catch (Exception e) {
 
+            e.printStackTrace(); // 디버깅로그
             throw new AuthException(AuthErrorCode.KAKAO_USER_INFO_FAILED);
         }
 

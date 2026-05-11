@@ -31,7 +31,7 @@ springdoc:
     enabled: true
 
   servers:
-    - url: https://promate.duckdns.org
+    - url: https://promate-server-2ryl7jsvhq-du.a.run.app
       description: Production
 
   security:

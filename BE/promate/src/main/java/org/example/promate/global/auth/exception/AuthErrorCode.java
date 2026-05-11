@@ -2,11 +2,12 @@ package org.example.promate.global.auth.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.example.promate.global.ApiPayload.code.BaseErrorCode;
 import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
-public enum AuthErrorCode {
+public enum AuthErrorCode implements BaseErrorCode {
 
     STATE_NOT_FOUND(HttpStatus.BAD_REQUEST, "AUTH_001", "state 값이 없습니다."),
     STATE_MISMATCH(HttpStatus.BAD_REQUEST, "AUTH_002", "state 값이 일치하지 않습니다."),

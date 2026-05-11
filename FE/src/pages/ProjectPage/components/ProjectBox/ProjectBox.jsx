@@ -25,8 +25,8 @@ function ProjectBox({ title, dueDate, currentStep, totalStep, avatarSrc, onClick
               </div>
             </div>
             <div className="project-box-status">
-              <div className={`status-tag ${diffDays < 7 ? 'urgent' : ''}`}>
-                {diffDays < 7 ? '긴급' : '여유'}
+              <div className={`status-tag ${diffDays < 0 ? 'closed' : diffDays < 7 ? 'urgent' : ''}`}>
+                {diffDays < 0 ? '완료' : diffDays < 7 ? '긴급' : '여유'}
               </div>
             </div>
           </div>

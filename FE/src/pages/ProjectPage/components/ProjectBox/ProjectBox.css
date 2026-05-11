@@ -110,6 +110,10 @@
   background: #FF7B7B;
 }
 
+.status-tag.closed {
+  background: #D9D9D9;
+}
+
 .project-box-bottom {
   display: flex;
   flex-direction: column;

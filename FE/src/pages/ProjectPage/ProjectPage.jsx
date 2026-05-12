@@ -13,14 +13,14 @@ const mockProjects = [
 ];
 
 const tabs = [
-  { key: 'active', label: '진행중인 프로젝트' },
-  { key: 'applied', label: '내 지원 현황' },
   { key: 'bookmarked', label: '북마크' },
+  { key: 'applied', label: '내 지원 현황' },
+  { key: 'active', label: '진행중인 프로젝트' },
   { key: 'completed', label: '완료된 프로젝트' }
 ];
 
 function ProjectPage() {
-  const [activeTab, setActiveTab] = useState('active');
+  const [activeTab, setActiveTab] = useState('bookmarked');
   const navigate = useNavigate();
 
   const filteredProjects = useMemo(() => {

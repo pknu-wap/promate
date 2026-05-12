@@ -2,14 +2,13 @@ import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProjectBox from './components/ProjectBox/ProjectBox';
 import './ProjectPage.css';
-import { getDiffDays } from '../DashboardPage/components/DateUtils';
 
 const mockProjects = [
-  { id: 1, title: '프로그래밍 팀플', dueDate: '2026.05.17', currentStep: 12, totalStep: 18, bookmarked: true, applied: true },
-  { id: 2, title: 'WAP 프로젝트', dueDate: '2026.06.05', currentStep: 125, totalStep: 150, bookmarked: true, applied: true },
-  { id: 3, title: '캡스톤 디자인', dueDate: '2026.07.07', currentStep: 51, totalStep: 100, bookmarked: false, applied: true },
-  { id: 4, title: '알고리즘 스터디', dueDate: '2023.05.10', currentStep: 93, totalStep: 100, bookmarked: false, applied: true },
-  { id: 5, title: '인공지능 개발', dueDate: '2026.12.05', currentStep: 0, totalStep: 0, bookmarked: true, applied: false }
+  { id: 1, title: '프로그래밍 팀플', dueDate: '2026.05.17', currentStep: 12, totalStep: 18, bookmarked: true, applied: true, status: 'active' },
+  { id: 2, title: 'WAP 프로젝트', dueDate: '2026.06.05', currentStep: 125, totalStep: 150, bookmarked: true, applied: true, status: 'active' },
+  { id: 3, title: '캡스톤 디자인', dueDate: '2026.07.07', currentStep: 51, totalStep: 100, bookmarked: false, applied: true, status: 'active' },
+  { id: 4, title: '알고리즘 스터디', dueDate: '2023.05.10', currentStep: 93, totalStep: 100, bookmarked: false, applied: true, status: 'completed' },
+  { id: 5, title: '인공지능 개발', dueDate: '2026.12.05', currentStep: 0, totalStep: 0, bookmarked: true, applied: false, status: 'active' }
 ];
 
 const tabs = [
@@ -25,17 +24,15 @@ function ProjectPage() {
 
   const filteredProjects = useMemo(() => {
     return mockProjects.filter((project) => {
-      const diffDays = getDiffDays(project.dueDate);
-
       switch (activeTab) {
         case 'active':
-          return project.applied && diffDays >= 0;
+          return project.applied && project.status === 'active';
         case 'applied':
           return project.applied;
         case 'bookmarked':
           return project.bookmarked;
         case 'completed':
-          return project.applied && diffDays < 0;
+          return project.applied && project.status === 'completed';
         default:
           return true;
       }

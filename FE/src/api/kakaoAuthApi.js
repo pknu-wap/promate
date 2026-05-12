@@ -42,3 +42,30 @@ export async function requestKakaoLogin(code, state) {
 
   return result.data;
 }
+
+export async function reissueKakaoToken(refreshToken, accessToken) {
+  const response = await fetch(`${baseUrl}/api/auth/kakao/reissue`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({ refreshToken }),
+  });
+
+  if (!response.ok) {
+    let message = `토큰 재발급에 실패했습니다. (Status: ${response.status})`;
+    try {
+      const errorResult = await response.json();
+      message = errorResult.message || message;
+    } catch (e) {}
+    throw new Error(message);
+  }
+
+  const result = await response.json();
+  if (!result.isSuccess) {
+    throw new Error(result.message || "토큰 재발급에 실패했습니다.");
+  }
+
+  return result.data;
+}

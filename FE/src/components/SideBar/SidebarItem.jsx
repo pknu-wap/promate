@@ -1,12 +1,13 @@
 import { NavLink } from "react-router-dom";
 
-function SidebarItem({ to, label, icon, activeIcon }) {
+function SidebarItem({ to, label, icon, activeIcon, onClick }) {
   return (
     <NavLink
       to={to}
       className={({ isActive }) =>
         isActive ? "menu-item active" : "menu-item"
       }
+      onClick={onClick}
     >
       {({ isActive }) => (
         <>

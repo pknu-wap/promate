@@ -1,4 +1,5 @@
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
+const rawBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
+const baseUrl = rawBaseUrl.replace(/\/$/, "");
 
 export async function getKakaoLoginUrl() {
   const response = await fetch(`${baseUrl}/api/auth/kakao/login`, {

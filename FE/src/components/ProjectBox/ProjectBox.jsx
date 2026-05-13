@@ -4,7 +4,7 @@ import ProgressBar from '../ProgressBar/ProgressBar';
 import { getDiffDays } from '../../pages/DashboardPage/components/DateUtils';
 import './ProjectBox.css';
 
-function ProjectBox({ title, dueDate, currentStep, totalStep, avatarSrc, onClick }) {
+function ProjectBox({ title, dueDate, currentStep, totalStep, avatarSrc, onClick, hidePcLabel = false }) {
   const calculatedProgress = totalStep > 0 ? Math.round((currentStep / totalStep) * 100) : 0;
   const diffDays = getDiffDays(dueDate);
 
@@ -39,7 +39,7 @@ function ProjectBox({ title, dueDate, currentStep, totalStep, avatarSrc, onClick
       </div>
       
       <div className="progress-header">
-        <span className="progress-label pc-only">진행률</span>
+        {!hidePcLabel && <span className="progress-label pc-only">진행률</span>}
         <ProgressBar percent={calculatedProgress} />
       </div>
     </div>

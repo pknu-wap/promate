@@ -59,13 +59,13 @@ function SummaryCard({ title, count, items = [], showDot }) {
                 {showDot && (
                   <span
                     className="item-dot"
-                    style={{ backgroundColor: getDotColor(item.date) }}
+                    style={{ backgroundColor: getDotColor(item.dueDate) }}
                   />
                 )}
 
                 <div className="item-text">
                   <span className="item-name">{item.title}</span>
-                  <span className="item-date">마감일: {item.date}</span>
+                  <span className="item-date">마감일: {item.dueDate}</span>
                 </div>
               </li>
             ))}

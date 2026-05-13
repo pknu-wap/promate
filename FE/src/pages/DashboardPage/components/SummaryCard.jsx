@@ -54,7 +54,6 @@ function SummaryCard({ title, count, items = [], showDot }) {
                 key={item.id} 
                 className="summary-item"
                 onClick={() => navigate(`/project/${item.id}`)}
-                style={{ cursor: 'pointer' }}
               >
                 {showDot && (
                   <span

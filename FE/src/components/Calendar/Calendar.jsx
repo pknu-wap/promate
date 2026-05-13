@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import './Calendar.css';
-import calendarIcon from '../../../assets/CalendarIcon.svg';
-import AddEventModal from '../../../components/AddEventModal/AddEventModal';
+import calendarIcon from '../../assets/calendarIcon.svg';
+import AddEventModal from '../AddEventModal/AddEventModal';
 
 const WEEKDAYS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 

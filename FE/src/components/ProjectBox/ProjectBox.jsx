@@ -1,7 +1,7 @@
 import React from 'react';
-import ProjectAvatar from '../../../../components/ProjectAvatar/ProjectAvatar';
-import ProgressBar from '../../../../components/ProgressBar/ProgressBar';
-import { getDiffDays } from '../../../DashboardPage/components/DateUtils';
+import ProjectAvatar from '../ProjectAvatar/ProjectAvatar';
+import ProgressBar from '../ProgressBar/ProgressBar';
+import { getDiffDays } from '../../pages/DashboardPage/components/DateUtils';
 import './ProjectBox.css';
 
 function ProjectBox({ title, dueDate, currentStep, totalStep, avatarSrc, onClick }) {

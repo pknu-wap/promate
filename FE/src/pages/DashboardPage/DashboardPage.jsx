@@ -121,6 +121,7 @@ function DashboardPage() {
                   dueDate={project.dueDate}
                   currentStep={project.currentStep}
                   totalStep={project.totalStep}
+                  avatarSize="52px"
                   onClick={() => navigate(`/project/${project.id}`)}
                   hidePcLabel
                 />

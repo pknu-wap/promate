@@ -3,8 +3,7 @@
 .page-wrapper {
   overflow-x: hidden;
   min-height: 100%;
-  padding: 32px 36px;
-  margin: 0;
+  padding: 19px 50px 20px 30px;
   background: linear-gradient(180deg, #F0F0F0 0%, #FFFFFF 100%);
   box-sizing: border-box;
   display: flex;
@@ -14,8 +13,8 @@
 
 .page-title {
   font-family: 'YSpotlightOTF', 'Pretendard Variable', 'Pretendard', sans-serif;
-  font-size: 24px;
-  font-weight: 400;
+  font-size: 22px;
+  font-weight: 500;
   color: #000;
   margin: 0 0 20px 0;
 }

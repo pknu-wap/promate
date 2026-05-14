@@ -46,30 +46,35 @@ function Sidebar({ isOpen, onClose }) {
             label="대시보드"
             icon={dashboardIcon}
             activeIcon={dashboardOrangeIcon}
+            onClick={onClose}
           />
           <SidebarItem
             to="/find-team"
             label="팀 찾기"
             icon={teamFindIcon}
             activeIcon={teamFindOrangeIcon}
+            onClick={onClose}
           />
           <SidebarItem
             to="/applicants"
             label="지원자 검토"
             icon={applicantReviewIcon}
             activeIcon={applicantReviewOrangeIcon}
+            onClick={onClose}
           />
           <SidebarItem
             to="/project"
             label="프로젝트"
             icon={projectIcon}
             activeIcon={projectOrangeIcon}
+            onClick={onClose}
           />
           <SidebarItem
             to="/profile"
             label="프로필"
             icon={profileIcon}
             activeIcon={profileOrangeIcon}
+            onClick={onClose}
           />
         </nav>
 
@@ -87,6 +92,7 @@ function Sidebar({ isOpen, onClose }) {
                   name={item.projectName} 
                   dueDate={item.deadLine} 
                   dotColor={item.colorTag || 'red'} 
+                  onClick={onClose}
                 />
               ))
             )}
@@ -94,7 +100,10 @@ function Sidebar({ isOpen, onClose }) {
         </div>
         <hr className="divider" />
 
-        <button className="new-project-btn" onClick={() => navigate('/teammaking')}>
+        <button className="new-project-btn" onClick={() => {
+          navigate('/teammaking');
+          if (onClose) onClose();
+        }}>
           + 새 프로젝트 생성
         </button>
 

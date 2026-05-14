@@ -180,6 +180,7 @@ body {
   cursor: pointer;
   transition: background-color 0.18s ease;
   font-family: inherit;
+  white-space: nowrap;
 }
 
 .btn-cancel:hover {

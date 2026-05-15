@@ -22,12 +22,13 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/auth/kakao")
 public class KakaoAuthController {
+
     private final KakaoAuthService kakaoAuthService;
 
     @GetMapping("/login")
-    public ApiResponse<Map<String, String>> getKakaoUrl(HttpSession httpSession) {
+    public ApiResponse<Map<String, String>> getKakaoUrl() {
 
-        String url = kakaoAuthService.setKakaoAuthUrl(httpSession);
+        String url = kakaoAuthService.setKakaoAuthUrl();
 
         return ApiResponse.onSuccess(
                 GeneralSuccessCode.OK,
@@ -38,22 +39,10 @@ public class KakaoAuthController {
     @GetMapping("/callback")
     public ApiResponse<KakaoAuthResponseDTO> kakaoCallBack(
             @RequestParam("code") String code,
-            @RequestParam(value = "state", required = false) String state,
-            HttpSession httpSession,
-            HttpServletResponse response
+            @RequestParam(value = "state", required = false) String state
     ) {
         KakaoAuthResponseDTO authResponse =
-                kakaoAuthService.kakaoLogin(code, state, httpSession);
-
-        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", authResponse.getRefreshToken())
-                .httpOnly(true)
-                .secure(true)
-                .sameSite("None")
-                .path("/")
-                .maxAge(60 * 60 * 24 * 14)
-                .build();
-
-        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+                kakaoAuthService.kakaoLogin(code, state);
 
         return ApiResponse.onSuccess(
                 GeneralSuccessCode.OK,
@@ -63,30 +52,16 @@ public class KakaoAuthController {
 
     @PostMapping("/reissue")
     public ApiResponse<TokenReissueResponseDTO> reissue(
-            @CookieValue(value = "refreshToken", required = false)
-            String refreshToken,
-
-            HttpServletResponse response
+            @RequestBody LogoutRequestDTO request
     ) {
-
-        JwtTokenDto token = kakaoAuthService.reissueToken(refreshToken);
-
-        ResponseCookie refreshCookie = ResponseCookie.from(
-                        "refreshToken",
-                        token.refreshToken()
-                )
-                .httpOnly(true)
-                .secure(true)
-                .sameSite("None")
-                .path("/")
-                .maxAge(60 * 60 * 24 * 14)
-                .build();
-
-        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+        JwtTokenDto token = kakaoAuthService.reissueToken(request.getRefreshToken());
 
         return ApiResponse.onSuccess(
                 GeneralSuccessCode.OK,
-                new TokenReissueResponseDTO(token.accessToken(), false)
+                TokenReissueResponseDTO.builder()
+                        .accessToken(token.accessToken())
+                        .refreshToken(token.refreshToken())
+                        .build()
         );
     }
 

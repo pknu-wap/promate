@@ -3,12 +3,6 @@ server:
   address: 0.0.0.0
   forward-headers-strategy: framework
 
-  servlet:
-    session:
-      cookie:
-        same-site: none
-        secure: true
-
 spring:
   application:
     name: "promate"
@@ -37,7 +31,7 @@ springdoc:
     enabled: true
 
   servers:
-    - url: https://promate.duckdns.org
+    - url: https://promate-server-2ryl7jsvhq-du.a.run.app
       description: Production
 
   security:
@@ -53,3 +47,4 @@ jwt:
   secret: ${JWT_SECRET}
   access-token-expiration: 3600000
   refresh-token-expiration: 1209600000
+

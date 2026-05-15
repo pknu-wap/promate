@@ -40,10 +40,12 @@ function Header({ onMenuClick }) {
       </div>
 
       <div className="header-right">
-        <span className="header-greeting">
+        <Link to="/profile" className="header-greeting">
           <strong>{userData.userName}</strong> 님 안녕하세요 :)
-        </span>
-        <div className="header-avatar">{userData.userInitial}</div>
+        </Link>
+        <Link to="/profile">
+          <div className="header-avatar">{userData.userInitial}</div>
+        </Link>
       </div>
     </header>
   );

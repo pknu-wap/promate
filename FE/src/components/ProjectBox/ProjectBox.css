@@ -53,7 +53,7 @@
 .project-box-text {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
   margin-top: 6px;
   flex: 1;
   min-width: 0;

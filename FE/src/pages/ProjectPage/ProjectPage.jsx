@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ProjectBox from './components/ProjectBox/ProjectBox';
+import ProjectBox from '../../components/ProjectBox/ProjectBox';
 import './ProjectPage.css';
 
 const mockProjects = [

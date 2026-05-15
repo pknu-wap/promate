@@ -14,7 +14,7 @@ body {
   height: 100%;
   overflow: hidden;
   background-color: #f8f8f8;
-  padding: 21px 30px 0;
+  padding: 19px 50px 20px 30px;
   background: linear-gradient(180deg, #f0f0f0 0%, #ffffff 100%);
 }
 
@@ -23,10 +23,10 @@ body {
   max-width: 100%;
   margin: 0 0 18px;
   margin-left: 0;
-  font-size: 21px;
+  font-size: 22px;
   line-height: 27px;
   font-family: "YSpotlightOTF", "Pretendard", sans-serif;
-  font-weight: 800;
+  font-weight: 500;
   color: #1a1a1a;
 }
 
@@ -180,6 +180,7 @@ body {
   cursor: pointer;
   transition: background-color 0.18s ease;
   font-family: inherit;
+  white-space: nowrap;
 }
 
 .btn-cancel:hover {

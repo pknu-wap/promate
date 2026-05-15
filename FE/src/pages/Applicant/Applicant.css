@@ -1,9 +1,3 @@
-/* ===== Applicant.css ===== */
-
-/* ════════════════════════════════
-   ApplicantList — 프로젝트 카드 목록
-   (FindTeamPage + Figma 기준)
-════════════════════════════════ */
 
 .al-page {
   min-height: 100%;
@@ -14,7 +8,6 @@
   box-sizing: border-box;
 }
 
-/* 페이지 제목 — 컨벤션: YSpotlightOTF 22px 500 */
 .al-title {
   margin: 0 0 20px 0;
   font-family: 'YSpotlightOTF', 'Pretendard', sans-serif;
@@ -24,7 +17,6 @@
   color: #000000;
 }
 
-/* 카드 목록 */
 .al-list {
   display: flex;
   flex-direction: column;
@@ -33,7 +25,6 @@
   filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.05));
 }
 
-/* 카드 — FindTeamPage 동일 크기 */
 .al-card {
   display: grid;
   grid-template-columns: 36px minmax(0, 1fr) 114px;
@@ -47,7 +38,6 @@
   box-sizing: border-box;
 }
 
-/* 로고 박스 — FindTeamPage 동일 크기 */
 .al-logo-box {
   width: 36px;
   height: 36px;
@@ -66,7 +56,6 @@
   opacity: 0.3;
 }
 
-/* 프로젝트 정보 */
 .al-content {
   display: flex;
   flex-direction: column;
@@ -74,7 +63,6 @@
   min-width: 0;
 }
 
-/* 프로젝트 제목 — FindTeamPage .find-team-heading h2 기준 */
 .al-project-title {
   margin: 0 0 4px 0;
   font-family: 'Pretendard', sans-serif;
@@ -87,7 +75,6 @@
   text-overflow: ellipsis;
 }
 
-/* 프로젝트 설명 — FindTeamPage .find-team-content p 기준 */
 .al-project-summary {
   margin: 0;
   font-family: 'Pretendard', sans-serif;
@@ -100,7 +87,6 @@
   text-overflow: ellipsis;
 }
 
-/* 우측 액션 영역 */
 .al-actions {
   display: flex;
   flex-direction: column;
@@ -108,7 +94,6 @@
   gap: 6px;
 }
 
-/* 모집인원 — FindTeamPage .find-team-actions > span 기준 */
 .al-capacity {
   font-family: 'Pretendard', sans-serif;
   font-size: 11px;
@@ -118,7 +103,6 @@
   white-space: nowrap;
 }
 
-/* 지원자 검토 버튼 — 114px 컬럼 기준 */
 .al-review-btn {
   display: flex;
   justify-content: center;
@@ -144,11 +128,6 @@
   background: #f08040;
 }
 
-/* ════════════════════════════════
-   ApplicantDetail — Figma 기반
-════════════════════════════════ */
-
-/* 페이지 래퍼 — 컨벤션 적용 */
 .ad-page {
   display: flex;
   flex-direction: column;
@@ -160,7 +139,6 @@
   box-sizing: border-box;
 }
 
-/* 페이지 제목 — 컨벤션: YSpotlightOTF 22px 500 */
 .ad-title {
   margin: 0;
   font-family: 'YSpotlightOTF', 'Pretendard', sans-serif;
@@ -170,7 +148,6 @@
   color: #000000;
 }
 
-/* 흰 카드 — al-list와 동일 너비 */
 .ad-card {
   display: flex;
   flex-direction: column;
@@ -184,7 +161,6 @@
   box-sizing: border-box;
 }
 
-/* ── 탭 바 (세그먼트 컨트롤) ── */
 .ad-tab-bar {
   display: flex;
   flex-direction: row;
@@ -215,21 +191,18 @@
   transition: background 0.15s, color 0.15s;
 }
 
-/* 활성 탭 — #FFEBDE bg, #FE9A57 text, 600 */
 .ad-tab--active {
   background: #FFEBDE;
   color: #FE9A57;
   font-weight: 600;
 }
 
-/* ── 테이블 ── */
 .ad-table {
   display: flex;
   flex-direction: column;
   width: 100%;
 }
 
-/* 헤더와 행 공통 — flexbox */
 .ad-thead,
 .ad-row {
   display: flex;
@@ -240,14 +213,13 @@
   width: 100%;
 }
 
-/* 헤더 행 */
+
 .ad-thead {
   height: 40px;
   border-top: 1px solid #D9D9D9;
   border-bottom: 1px solid #D9D9D9;
 }
 
-/* 헤더 셀 공통 */
 .ad-th {
   flex: 1;
   font-family: 'Pretendard', sans-serif;
@@ -258,7 +230,6 @@
   text-align: center;
 }
 
-/* "이름" 헤더: 고정 너비, logoBox(36px)+갭(20px) = 56px 들여쓰기로 텍스트 정렬 */
 .ad-th--name {
   flex: none;
   width: 200px;
@@ -267,21 +238,19 @@
   text-align: left;
 }
 
-/* 헤더 마지막 빈 열 (버튼 자리) */
 .ad-thead > span:last-child {
   flex: none;
   width: 121px;
   flex-shrink: 0;
 }
 
-/* 데이터 행 */
 .ad-row {
   height: 60px;
   background: #FFFFFF;
   border-bottom: 1px solid #D9D9D9;
 }
 
-/* 이름 셀 (아바타 + 이름 텍스트) — 헤더 이름 열과 동일 너비 */
+
 .ad-name-cell {
   flex: none;
   width: 200px;
@@ -292,7 +261,6 @@
   gap: 20px;
 }
 
-/* 아바타 — 40px 원, #D9D9D9 */
 .ad-avatar {
   width: 40px;
   height: 40px;
@@ -301,7 +269,6 @@
   flex-shrink: 0;
 }
 
-/* 이름 텍스트 — Pretendard 600 16px */
 .ad-name-text {
   font-family: 'Pretendard', sans-serif;
   font-size: 16px;
@@ -310,7 +277,6 @@
   color: #000000;
 }
 
-/* 데이터 셀 공통 — ProfilePage .proj-title 기준: Pretendard Variable 400 */
 .ad-cell {
   flex: 1;
   font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
@@ -325,7 +291,6 @@
   text-align: center;
 }
 
-/* 태스크 통계 셀 — 날짜 셀(.ad-cell)과 동일한 폰트/크기/굵기 */
 .ad-task-stat {
   flex: 1;
   display: flex;
@@ -345,7 +310,6 @@
   color: #000000;
 }
 
-/* 지원서 보기 버튼 — Figma: 121×32px, #FE9A57, border-radius 5px, Pretendard 700 16px */
 .ad-view-btn {
   display: flex;
   flex-direction: row;
@@ -376,11 +340,6 @@
   background: #f08040;
 }
 
-/* ════════════════════════════════
-   지원서 보기 오버레이 패널 (Figma 기반)
-════════════════════════════════ */
-
-/* 딤 배경 */
 .app-panel-dim {
   position: fixed;
   inset: 0;
@@ -388,7 +347,6 @@
   z-index: 9998;
 }
 
-/* 우측 패널 컨테이너 */
 .app-panel {
   position: fixed;
   top: 0;
@@ -401,7 +359,6 @@
   overflow-y: auto;
 }
 
-/* 패널 내부 레이아웃 */
 .app-panel-inner {
   display: flex;
   flex-direction: column;
@@ -412,7 +369,6 @@
   box-sizing: border-box;
 }
 
-/* 상단 영역: 프로필 헤더 + 프로젝트 경험 */
 .app-panel-top {
   display: flex;
   flex-direction: column;
@@ -421,7 +377,7 @@
   width: 100%;
 }
 
-/* ── 프로필 헤더 ── */
+
 .app-profile-header {
   display: flex;
   flex-direction: column;
@@ -430,7 +386,6 @@
   width: 100%;
 }
 
-/* 아바타: 80px 원 */
 .app-avatar {
   width: 80px;
   height: 80px;
@@ -440,7 +395,6 @@
   flex-shrink: 0;
 }
 
-/* 이름 / 온도 / 직무 텍스트 블록 */
 .app-profile-text {
   display: flex;
   flex-direction: column;
@@ -448,8 +402,6 @@
   gap: 8px;
   width: 100%;
 }
-
-/* 이름 + 온도 행 */
 .app-name-row {
   display: flex;
   flex-direction: row;
@@ -458,7 +410,6 @@
   width: 100%;
 }
 
-/* ProfilePage .user-name-text 기준 */
 .app-name {
   font-family: 'Pretendard', sans-serif;
   font-size: 24px;
@@ -467,7 +418,6 @@
   color: #000000;
 }
 
-/* 패널 태스크 통계 (3/5 형식) — 패널에서는 주황/검정 */
 .app-task-stat {
   display: flex;
   align-items: baseline;
@@ -489,13 +439,11 @@
   color: #000000;
 }
 
-/* 아바타 크기 오버라이드 — 패널 (80px) */
 .app-avatar-lg {
   width: 80px !important;
   height: 80px !important;
 }
 
-/* ── 프로젝트 경험 섹션 ── */
 .app-projects-section {
   display: flex;
   flex-direction: column;
@@ -507,7 +455,7 @@
   box-sizing: border-box;
 }
 
-/* ProfilePage .form-label 기준 */
+
 .app-projects-title {
   font-family: 'Pretendard', sans-serif;
   font-size: 18px;
@@ -524,7 +472,6 @@
   width: 100%;
 }
 
-/* 개별 프로젝트 행 — ProfilePage .project-experience-row 기준 */
 .app-proj-row {
   display: flex;
   flex-direction: row;
@@ -539,12 +486,10 @@
   box-sizing: border-box;
 }
 
-/* 인접 행끼리 이중 테두리 제거 — ProfilePage 동일 패턴 */
 .app-proj-row + .app-proj-row {
   border-top: none;
 }
 
-/* 좌측: 프로젝트명 + 역할 — ProfilePage .proj-name-group 기준 */
 .app-proj-left {
   display: flex;
   flex-direction: row;
@@ -554,7 +499,6 @@
   overflow: hidden;
 }
 
-/* ProfilePage .proj-title 기준 */
 .app-proj-name {
   font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
   font-size: 16px;
@@ -567,7 +511,6 @@
   min-width: 0;
 }
 
-/* ProfilePage .proj-role 기준 */
 .app-proj-role {
   font-family: 'Pretendard', sans-serif;
   font-size: 14px;
@@ -577,7 +520,6 @@
   white-space: nowrap;
 }
 
-/* 우측: 상태 뱃지 + 점수 — ProfilePage .proj-right-group 기준 */
 .app-proj-right {
   display: flex;
   flex-direction: row;
@@ -587,7 +529,6 @@
   flex-shrink: 0;
 }
 
-/* 진행중 뱃지 — ProfilePage .badge-ongoing 기준 */
 .app-status-badge--active {
   display: flex;
   justify-content: center;
@@ -606,7 +547,6 @@
   flex-shrink: 0;
 }
 
-/* 완료 뱃지 — ProfilePage .badge-completed 기준 */
 .app-status-badge--done {
   display: flex;
   justify-content: center;
@@ -625,7 +565,7 @@
   flex-shrink: 0;
 }
 
-/* 점수 컨테이너 — ProfilePage .proj-score-container 기준 */
+
 .app-score {
   display: flex;
   flex-direction: row;
@@ -636,7 +576,6 @@
   flex-shrink: 0;
 }
 
-/* ProfilePage .proj-score-num 기준 */
 .app-score-num {
   font-family: 'YSpotlightOTF', 'Pretendard', sans-serif;
   font-size: 20px;
@@ -647,7 +586,6 @@
   min-width: 34px;
 }
 
-/* ProfilePage .proj-score-text 기준 */
 .app-score-label {
   font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
   font-size: 14px;
@@ -657,7 +595,6 @@
   width: 13px;
 }
 
-/* ── 수락 / 거절 버튼 ── */
 .app-panel-actions {
   display: flex;
   flex-direction: row;
@@ -666,7 +603,6 @@
   width: 350px;
 }
 
-/* ProfilePage MainButton(.main-btn) / .btn-cancel 기준 */
 .app-btn-accept,
 .app-btn-reject {
   flex: 1;
@@ -699,9 +635,6 @@
   opacity: 0.85;
 }
 
-/* ════════════════════════════════
-   반응형 — 모바일 (사이드바 없음 기준)
-════════════════════════════════ */
 
 @media (max-width: 768px) {
   /* ApplicantList */
@@ -720,7 +653,7 @@
     width: 100%;
   }
 
-  /* 테이블 행 */
+
   .ad-thead,
   .ad-row {
     padding: 10px 8px;
@@ -745,7 +678,6 @@
     font-size: 12px;
   }
 
-  /* 날짜 컬럼 — 모바일에서 숨김 */
   .ad-th--date,
   .ad-cell--date {
     display: none;

@@ -6,6 +6,7 @@ import projectMenuIcon from '../../assets/projectMenuIcon.svg';
 import SummaryCard from './components/SummaryCard';
 import ProjectBox from '../../components/ProjectBox/ProjectBox';
 import moreIcon from '../../assets/moreIcon.svg';
+import ProfileModal from '../../components/ProfileModal/ProfileModal';
 
 // 임시 데이터
 const dummyDashboardData = {
@@ -34,6 +35,8 @@ function DashboardPage() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [visibleStatusCount, setVisibleStatusCount] = useState(3);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -78,6 +81,14 @@ function DashboardPage() {
     setVisibleStatusCount((prevCount) => prevCount + 3);
   };
 
+  const openProfileModal = () => {
+    setIsProfileModalOpen(true);
+  };
+
+  const closeProfileModal = () => {
+    setIsProfileModalOpen(false);
+  };
+
   if (isLoading) {
     return (
       <div className="dashboard-container">
@@ -89,7 +100,9 @@ function DashboardPage() {
 
   return (
     <div className="dashboard-container">
-      <h1 className="dashboard-title">대시보드</h1>
+      <h1 className="dashboard-title" onClick={openProfileModal}>
+        대시보드
+      </h1>
 
       <div className="dashboard-content">
         <div className="dashboard-summary-row">
@@ -129,18 +142,18 @@ function DashboardPage() {
             </div>
 
             {visibleStatusCount < dashboardData.projects.length ? (
-              <button 
-                className="more-btn" 
-                onClick={handleShowMoreStatus} 
+              <button
+                className="more-btn"
+                onClick={handleShowMoreStatus}
                 style={{ alignSelf: 'center', marginTop: '16px' }}
               >
                 더보기
                 <img src={moreIcon} alt="moreIcon" />
               </button>
             ) : dashboardData.projects.length > 3 ? (
-              <button 
-                className="more-btn" 
-                onClick={() => setVisibleStatusCount(3)} 
+              <button
+                className="more-btn"
+                onClick={() => setVisibleStatusCount(3)}
                 style={{ alignSelf: 'center', marginTop: '16px' }}
               >
                 접기
@@ -150,6 +163,11 @@ function DashboardPage() {
           </div>
         </div>
       </div>
+
+      <ProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={closeProfileModal}
+      />
     </div>
   );
 }

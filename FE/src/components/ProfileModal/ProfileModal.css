@@ -1,0 +1,245 @@
+.profile-popover-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+
+  background: transparent;
+}
+
+.profile-popover {
+  position: absolute;
+  top: 72px;
+  left: 24px;
+  z-index: 1000;
+
+  width: 360px;
+  padding: 24px;
+
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.14);
+}
+
+.profile-popover::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 30px;
+
+  width: 16px;
+  height: 16px;
+
+  background: #ffffff;
+  transform: rotate(45deg);
+}
+
+.profile-popover-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.profile-user-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.profile-avatar {
+  box-sizing: border-box;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 54px;
+  height: 54px;
+
+  background: #f1f1f1;
+  border: 1px solid #ababab;
+  border-radius: 50%;
+}
+
+.profile-avatar img {
+  width: 24px;
+  height: 24px;
+}
+
+.profile-name {
+  font-family: "Pretendard";
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 22px;
+
+  color: #000000;
+}
+
+.profile-task-count {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.completed-task {
+  font-family: "Y SpotlightOTF";
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 34px;
+
+  color: #ff6600;
+}
+
+.total-task {
+  font-family: "Pretendard";
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 24px;
+
+  color: #ababab;
+}
+
+.profile-project-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  margin-top: 22px;
+  padding-top: 18px;
+
+  border-top: 1px solid #d9d9d9;
+}
+
+.profile-section-title {
+  margin: 0;
+
+  font-family: "Pretendard";
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+
+  color: #000000;
+}
+
+.profile-project-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-project-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+
+  padding: 12px 0;
+
+  border-bottom: 1px solid #eeeeee;
+}
+
+.project-main-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.project-title {
+  font-family: "Pretendard";
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 18px;
+
+  color: #000000;
+}
+
+.project-period {
+  font-family: "Pretendard";
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+
+  color: #ababab;
+}
+
+.project-sub-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.project-status {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  min-width: 52px;
+  height: 22px;
+  padding: 2px 12px;
+
+  border-radius: 20px;
+
+  font-family: "Pretendard";
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 15px;
+}
+
+.project-status.active {
+  background: #ffebde;
+  color: #fe9a57;
+}
+
+.project-status.done {
+  background: #d9d9d9;
+  color: #ffffff;
+}
+
+.project-score {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 3px;
+
+  width: 42px;
+}
+
+.score-number {
+  font-family: "Y SpotlightOTF";
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 24px;
+
+  color: #fe9a57;
+}
+
+.score-text,
+.empty-score {
+  font-family: "Pretendard";
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+
+  color: #000000;
+}
+
+.profile-popover-close-btn {
+  width: 100%;
+  height: 40px;
+  margin-top: 18px;
+
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+
+  background: #fe9a57;
+  color: #ffffff;
+
+  font-family: "Pretendard";
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.profile-popover-close-btn:hover {
+  background: #f58b45;
+}

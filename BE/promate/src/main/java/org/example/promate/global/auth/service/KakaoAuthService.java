@@ -47,9 +47,8 @@ public class KakaoAuthService {
     @Value("${KAKAO_CLIENT_SECRET}")
     private String kakaoClientSecret;
 
-    public String setKakaoAuthUrl(HttpSession httpSession) {
+    public String setKakaoAuthUrl() {
         String state = UUID.randomUUID().toString();
-        httpSession.setAttribute("state", state);
 
         String encodedRedirectUri = URLEncoder.encode(kakaoRedirectUri, StandardCharsets.UTF_8);
 
@@ -61,16 +60,12 @@ public class KakaoAuthService {
                 + "&state="
                 + state;
     }
+
     @Transactional
-    public KakaoAuthResponseDTO kakaoLogin(String code, String state, HttpSession httpSession) {
+    public KakaoAuthResponseDTO kakaoLogin(String code, String state) {
 
-        String sessionState = (String) httpSession.getAttribute("state");
-
-        if (sessionState == null || state == null) {
-            throw new AuthException(AuthErrorCode.STATE_NOT_FOUND);
-        }
-        if (!sessionState.equals(state)) {
-            throw new AuthException(AuthErrorCode.STATE_MISMATCH);
+        if (code == null || code.isBlank()) {
+            throw new AuthException(AuthErrorCode.KAKAO_TOKEN_REQUEST_FAILED);
         }
 
         // access token 요청
@@ -101,6 +96,7 @@ public class KakaoAuthService {
             tokenResult = tokenResponse.getBody();
         } catch (Exception e) {
 
+            e.printStackTrace(); // 디버깅로그
 
             throw new AuthException(AuthErrorCode.KAKAO_TOKEN_REQUEST_FAILED);
         }
@@ -131,6 +127,8 @@ public class KakaoAuthService {
             );
             userInfo = userResponse.getBody();
         } catch (Exception e) {
+
+            e.printStackTrace(); // 디버깅로그
             throw new AuthException(AuthErrorCode.KAKAO_USER_INFO_FAILED);
         }
 

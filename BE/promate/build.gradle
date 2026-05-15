@@ -60,6 +60,8 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    testImplementation 'com.h2database:h2'
 }
 
 def querydslDir = layout.buildDirectory.dir("generated/querydsl").get().asFile
@@ -79,3 +81,5 @@ clean {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+

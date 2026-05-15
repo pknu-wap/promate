@@ -96,8 +96,6 @@ public class KakaoAuthService {
             tokenResult = tokenResponse.getBody();
         } catch (Exception e) {
 
-            e.printStackTrace(); // 디버깅로그
-
             throw new AuthException(AuthErrorCode.KAKAO_TOKEN_REQUEST_FAILED);
         }
 
@@ -127,8 +125,6 @@ public class KakaoAuthService {
             );
             userInfo = userResponse.getBody();
         } catch (Exception e) {
-
-            e.printStackTrace(); // 디버깅로그
             throw new AuthException(AuthErrorCode.KAKAO_USER_INFO_FAILED);
         }
 

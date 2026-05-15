@@ -1,16 +1,17 @@
 package org.example.promate.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.promate.domain.user.dto.UserProfileUpdateRequestDTO;
-import org.example.promate.domain.user.dto.UserProjectHistoryRequestDTO;
-import org.example.promate.domain.user.dto.UserProjectHistoryResponseDTO;
-import org.example.promate.domain.user.dto.UserResponseDTO;
+import org.example.promate.domain.project.entity.Project;
+import org.example.promate.domain.project.repository.MemberRepository;
+import org.example.promate.domain.user.dto.*;
 import org.example.promate.domain.user.entity.User;
 import org.example.promate.domain.user.entity.UserProjectHistory;
 import org.example.promate.domain.user.exception.UserErrorCode;
 import org.example.promate.domain.user.exception.UserException;
 import org.example.promate.domain.user.repository.UserProjectHistoryRepository;
 import org.example.promate.domain.user.repository.UserRepository;
+import org.example.promate.domain.workspace.enums.TaskStatus;
+import org.example.promate.domain.workspace.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -98,6 +99,35 @@ public class UserService {
                 .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND)); // 커스텀에러 추후 추가 예정
 
         userProjectHistoryRepository.delete(history);
+    }
+
+    private final MemberRepository memberRepository;
+    private final TaskRepository taskRepository;
+
+    public List<ProjectTaskCountResponseDTO> getProjectTaskCounts(Long userId) {
+        return memberRepository.findByUserId(userId)
+                .stream()
+                .map(member -> {
+                    Project project = member.getProject();
+
+                    int completedCount = taskRepository.countByProjectIdAndStatus(
+                            project.getId(),
+                            TaskStatus.DONE
+                    );
+
+                    int incompleteCount = taskRepository.countByProjectIdAndStatusIn(
+                            project.getId(),
+                            List.of(TaskStatus.TODO, TaskStatus.IN_PROGRESS)
+                    );
+
+                    return ProjectTaskCountResponseDTO.builder()
+                            .projectId(project.getId())
+                            .projectTitle(project.getTitle())
+                            .completedTaskCount(completedCount)
+                            .incompleteTaskCount(incompleteCount)
+                            .build();
+                })
+                .toList();
     }
 
 

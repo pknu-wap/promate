@@ -1,11 +1,10 @@
 package org.example.promate.domain.user.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.promate.domain.user.dto.UserProfileUpdateRequestDTO;
-import org.example.promate.domain.user.dto.UserProjectHistoryRequestDTO;
-import org.example.promate.domain.user.dto.UserProjectHistoryResponseDTO;
-import org.example.promate.domain.user.dto.UserResponseDTO;
+import org.example.promate.domain.user.dto.*;
 import org.example.promate.domain.user.service.UserService;
+import org.example.promate.global.ApiPayload.ApiResponse;
+import org.example.promate.global.ApiPayload.code.GeneralSuccessCode;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,4 +62,13 @@ public class UserController {
         userService.deleteProjectHistory(userId, historyId);
     }
 
+    @GetMapping("/me/projects/task-counts")
+    public ApiResponse<List<ProjectTaskCountResponseDTO>> getProjectTaskCounts(
+            @AuthenticationPrincipal Long userId
+    ) {
+        return ApiResponse.onSuccess(
+                GeneralSuccessCode.OK,
+                userService.getProjectTaskCounts(userId)
+        );
+    }
 }

@@ -13,8 +13,10 @@ import org.example.promate.domain.recruit.dto.request.RecruitSearchCondition;
 import org.example.promate.domain.recruit.dto.request.RecruitStatusRequest;
 import org.example.promate.domain.recruit.dto.request.RecruitUpdateRequest;
 import org.example.promate.domain.recruit.dto.response.*;
+import org.example.promate.domain.recruit.entity.Bookmark;
 import org.example.promate.domain.recruit.entity.Recruit;
 import org.example.promate.domain.recruit.enums.RecruitStatus;
+import org.example.promate.domain.recruit.repository.BookmarkRepository;
 import org.example.promate.domain.recruit.repository.RecruitRepository;
 import org.example.promate.domain.user.entity.User;
 import org.example.promate.domain.user.exception.UserErrorCode;
@@ -26,6 +28,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -36,6 +40,7 @@ public class RecruitService {
     private final ApplyRepository applyRepository; // 지원 내역 확인용
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
+    private final BookmarkRepository bookmarkRepository;
 
     @Transactional
     public RecruitCreateResponse createRecruitment(
@@ -183,5 +188,26 @@ public class RecruitService {
         recruitRepository.delete(recruit);
 
         return new RecruitStatusResponse(project.getId(), RecruitStatus.COMPLETED);
+    }
+
+    public BookmarkResponse toggleBookmark(Long recruitmentId, Long userId) {
+        // 게시글 존재 확인
+        Recruit recruit = recruitRepository.findById(recruitmentId)
+                .orElseThrow(() -> new GeneralException(RecruitErrorCode.RECRUITMENT_NOT_FOUND));
+
+        User user = userRepository.getReferenceById(userId);
+
+        // 이미 북마크했는지 확인
+        Optional<Bookmark> optionalBookmark = bookmarkRepository.findByUserAndRecruit(user, recruit);
+
+        if (optionalBookmark.isPresent()) {
+            // 이미 있다면 북마크 취소
+            bookmarkRepository.delete(optionalBookmark.get());
+            return new BookmarkResponse(recruitmentId, false);
+        } else {
+            // 없다면 북마크 등록
+            bookmarkRepository.save(new Bookmark(user, recruit));
+            return new BookmarkResponse(recruitmentId, true);
+        }
     }
 }

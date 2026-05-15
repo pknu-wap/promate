@@ -23,4 +23,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "where t.id = :taskId " +
             "and t.isDeleted = false")
     Optional<Task> findByIdAndIsDeletedFalse(@Param("taskId")Long id);
+
+    List<Task> findAllByProjectIdAndMemberId(Long projectId, Long memberId);
 }

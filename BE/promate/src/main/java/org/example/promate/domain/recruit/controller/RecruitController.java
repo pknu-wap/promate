@@ -98,4 +98,14 @@ public class RecruitController {
         RecruitStatusResponse response = recruitService.changeRecruitStatus(recruitmentId, userId, request);
         return ApiResponse.onSuccess(RecruitSuccessCode.APPLY_STATUS_UPDATED, response);
     }
+
+    @PostMapping("/{recruitmentId}/bookmarks")
+    public ApiResponse<BookmarkResponse> toggleBookmark(
+            @PathVariable Long recruitmentId,
+            @AuthenticationPrincipal Long userId
+    ) {
+        BookmarkResponse data = recruitService.toggleBookmark(recruitmentId, userId);
+        return ApiResponse.onSuccess(RecruitSuccessCode.RECRUITMENT_BOOKMARKED,data);
+    }
+
 }

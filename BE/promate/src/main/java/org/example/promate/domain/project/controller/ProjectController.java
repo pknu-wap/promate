@@ -21,6 +21,16 @@ public class ProjectController {
 
     private final ProjectService projectService;
 
+    @GetMapping("/me")
+    public ApiResponse<List<MyProjectResponseDTO>> getMyProjects(
+            @AuthenticationPrincipal Long userId
+    ) {
+        return ApiResponse.onSuccess(
+                GeneralSuccessCode.OK,
+                projectService.getMyProjects(userId)
+        );
+    }
+
     @GetMapping("/applications/me")
     public ApiResponse<List<MyApplicationResponseDTO>> getMyApplications(
             @AuthenticationPrincipal Long userId
@@ -28,16 +38,6 @@ public class ProjectController {
         return ApiResponse.onSuccess(
                 GeneralSuccessCode.OK,
                 projectService.getMyApplications(userId)
-        );
-    }
-
-    @GetMapping("/projects/me")
-    public ApiResponse<List<MyProjectResponseDTO>> getMyProjects(
-            @AuthenticationPrincipal Long userId
-    ) {
-        return ApiResponse.onSuccess(
-                GeneralSuccessCode.OK,
-                projectService.getMyProjects(userId)
         );
     }
 

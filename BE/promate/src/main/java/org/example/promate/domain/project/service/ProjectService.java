@@ -5,11 +5,14 @@ import org.example.promate.domain.apply.repository.ApplyRepository;
 import org.example.promate.domain.project.dto.MyActivityResponseDTO;
 import org.example.promate.domain.project.dto.MyApplicationResponseDTO;
 import org.example.promate.domain.project.dto.MyProjectResponseDTO;
+import org.example.promate.domain.project.entity.Project;
 import org.example.promate.domain.project.enums.ProjectStatus;
 import org.example.promate.domain.project.repository.MemberRepository;
 import org.example.promate.domain.project.repository.ProjectRepository;
 import org.example.promate.domain.recruit.repository.RecruitRepository;
 import org.example.promate.domain.user.repository.UserRepository;
+import org.example.promate.domain.workspace.enums.TaskStatus;
+import org.example.promate.domain.workspace.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +27,7 @@ public class ProjectService {
     private final RecruitRepository recruitRepository;
     private final ApplyRepository applyRepository;
     private final MemberRepository memberRepository;
+    private final TaskRepository taskRepository;
 
 
     @Transactional(readOnly = true)
@@ -47,12 +51,32 @@ public class ProjectService {
                         ProjectStatus.ACTIVE
                 )
                 .stream()
-                .map(member -> MyProjectResponseDTO.builder()
-                        .projectId(member.getProject().getId())
-                        .title(member.getProject().getTitle())
-                        .build())
+                .map(member -> {
+                    Project project = member.getProject();
+
+                    int completedTaskCount =
+                            taskRepository.countAllByProjectIdAndStatusAndIsDeletedFalse(
+                                    project.getId(),
+                                    TaskStatus.DONE
+                            );
+
+                    int incompleteTaskCount =
+                            taskRepository.countAllByProjectIdAndStatusInAndIsDeletedFalse(
+                                    project.getId(),
+                                    List.of(TaskStatus.TODO, TaskStatus.IN_PROGRESS)
+                            );
+
+                    return MyProjectResponseDTO.builder()
+                            .projectId(project.getId())
+                            .title(project.getTitle())
+                            .projectStatus(project.getStatus())
+                            .completedTaskCount(completedTaskCount)
+                            .incompleteTaskCount(incompleteTaskCount)
+                            .build();
+                })
                 .toList();
     }
+
 
     @Transactional(readOnly = true)
     public List<MyActivityResponseDTO> getMyActivities(Long userId) {

@@ -6,82 +6,81 @@
 
 body {
   font-family: "Pretendard", "Noto Sans KR", sans-serif;
- 
   color: #1a1a1a;
 }
 
 .page-wrapper {
-  min-height: 100vh;
-  background-color: #f0f0f0;
-  padding: 40px 20px;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #f8f8f8;
+  padding: 21px 30px 0;
   background: linear-gradient(180deg, #f0f0f0 0%, #ffffff 100%);
 }
 
 .page-title {
-  font-size: 22px;
-  font-weight: 700;
+  width: 864px;
+  max-width: 100%;
+  margin: 0 0 18px;
+  margin-left: 0;
+  font-size: 21px;
+  line-height: 27px;
+  font-family: "YSpotlightOTF", "Pretendard", sans-serif;
+  font-weight: 800;
   color: #1a1a1a;
-  margin-bottom: 24px;
-  padding-left: 4px;
 }
 
 .card {
   background-color: #ffffff;
-  border-radius: 16px;
-  padding: 40px 40px 100px 40px;
-  max-width: 860px;
-  margin: 0 auto;
+  border-radius: 9px;
+  width: 864px;
+  max-width: 100%;
+  height: 506px;
+  padding: 27px 33px;
+  margin: 0;
   position: relative;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.04);
 }
 
-.image-upload-wrapper {
-  margin-bottom: 32px;
+.teammaking-logo-box {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  border-radius: 4px;
+  background-color: #f0f0f0;
 }
 
-.image-upload-trigger {
-  display: inline-flex;
-  border-radius: 999px;
-  cursor: pointer;
-  transition: transform 0.18s ease;
-}
-
-.image-upload-trigger:hover {
-  transform: translateY(-1px);
-}
-
-.image-upload-trigger:focus-visible {
-  outline: 2px solid #fe9a57;
-  outline-offset: 4px;
-}
-
-.image-upload-avatar {
-  width: 88px;
-  height: 88px;
-  background-color: #efefef;
-  border-color: #d7d7d7;
+.teammaking-logo-box img {
+  width: 28px;
+  height: 28px;
+  filter: grayscale(1);
+  opacity: 0.24;
 }
 
 .form-field {
-  margin-bottom: 32px;
+  margin-bottom: 27px;
 }
 
 .form-label {
   display: block;
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 800;
   color: #1a1a1a;
-  margin-bottom: 12px;
+  margin-bottom: 9px;
 }
 
 .text-input {
-  width: 100%;
-  max-width: 480px;
-  height: 48px;
-  padding: 0 16px;
-  border: none;
-  border-radius: 8px;
-  background-color: #f0f0f0;
+  width: 507px;
+  max-width: 100%;
+  height: 35px;
+  padding: 0 11px;
+  border: 1px solid #bcbcbc;
+  border-radius: 3px;
+  background-color: #f3f3f3;
   font-size: 14px;
   color: #1a1a1a;
   outline: none;
@@ -94,28 +93,52 @@ body {
 }
 
 .text-input::placeholder {
-  color: #bbbbbb;
+  color: #b8b8b8;
 }
 
 .domain-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
+}
+
+.page-wrapper .badge {
+  min-width: 0;
+  height: 26px;
+  padding: 0 12px;
+  border-color: #bdbdbd;
+  border-radius: 999px;
+  background: #d8d8d8;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.08);
+}
+
+.page-wrapper .badge--selected {
+  border-color: #fe8f48;
+  background: #fe9a57;
+}
+
+.page-wrapper .badge:hover {
+  transform: none;
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.08);
 }
 
 .textarea-input {
-  width: 100%;
-  max-width: 480px;
-  height: 120px;
-  padding: 14px 16px;
-  border: none;
-  border-radius: 8px;
-  background-color: #f0f0f0;
+  width: 507px;
+  max-width: 100%;
+  height: 84px;
+  padding: 11px;
+  border: 1px solid #bcbcbc;
+  border-radius: 3px;
+  background-color: #f3f3f3;
   font-size: 14px;
   color: #1a1a1a;
   resize: none;
   outline: none;
-  line-height: 1.6;
+  line-height: 1.4;
   font-family: inherit;
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -126,36 +149,34 @@ body {
 }
 
 .textarea-input::placeholder {
-  color: #bbbbbb;
+  color: #b8b8b8;
 }
 
 .bottom-bar {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 20px 40px;
+  right: 33px;
+  bottom: 27px;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  border-top: 1px solid #f0f0f0;
-  border-radius: 0 0 16px 16px;
 }
 
 .action-buttons {
   display: flex;
-  gap: 12px;
+  gap: 15px;
 }
 
 .btn-cancel {
-  height: 48px;
-  padding: 0 28px;
-  border-radius: 10px;
+  width: 63px;
+  height: 38px;
+  padding: 0;
+  border-radius: 5px;
   border: none;
   background-color: #e0e0e0;
-  color: #555555;
+  color: #ffffff;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 800;
   cursor: pointer;
   transition: background-color 0.18s ease;
   font-family: inherit;
@@ -166,107 +187,110 @@ body {
 }
 
 .btn-submit {
-  height: 48px;
-  padding: 0 28px;
-  border-radius: 10px;
+  width: 101px;
+  height: 38px;
+  padding: 0;
+  border-radius: 5px;
   border: none;
-  background-color: #f3841e;
+  background-color: #fe9a57;
   color: #ffffff;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 800;
   cursor: pointer;
   transition: background-color 0.18s ease, transform 0.1s ease;
   font-family: inherit;
 }
 
 .btn-submit:hover {
-  background-color: #e07519;
+  background-color: #ee8846;
+}
+
+.btn-submit:disabled {
+  background-color: #d9d9d9;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.btn-submit:disabled:hover {
+  background-color: #d9d9d9;
 }
 
 .btn-submit:active {
   transform: scale(0.98);
 }
 
+.btn-submit:disabled:active {
+  transform: none;
+}
+
 @media (max-width: 480px) {
   .page-wrapper {
-    padding: 24px 16px;
+    padding: 16px 14px 0;
   }
 
   .page-title {
-    font-size: 28px;
-    margin-bottom: 20px;
+    width: 100%;
+    font-size: 21px;
+    line-height: 27px;
+    margin-bottom: 18px;
     padding-left: 0;
   }
 
   .card {
-    border-radius: 20px;
-    padding: 24px 16px 24px;
-    max-width: 100%;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    height: min(506px, calc(100dvh - 105px));
+    border-radius: 9px;
+    padding: 27px 18px;
   }
 
-  .image-upload-wrapper {
-    margin-bottom: 28px;
-  }
-
-  .image-upload-circle {
-    width: 84px;
-    height: 84px;
+  .teammaking-logo-box {
+    margin-bottom: 18px;
   }
 
   .form-field {
-    margin-bottom: 28px;
+    margin-bottom: 24px;
   }
 
   .form-label {
     font-size: 14px;
-    margin-bottom: 10px;
+    line-height: 18px;
+    margin-bottom: 9px;
   }
 
   .text-input,
   .textarea-input {
-    max-width: none;
     width: 100%;
   }
 
   .text-input {
-    height: 52px;
-    font-size: 15px;
+    height: 35px;
+    font-size: 14px;
   }
 
   .textarea-input {
-    min-height: 132px;
-    height: 132px;
-    font-size: 15px;
+    min-height: 84px;
+    height: 84px;
+    font-size: 14px;
   }
 
   .domain-tags {
     gap: 8px;
   }
 
-  .domain-tag {
-    padding: 10px 16px;
-    font-size: 13px;
-    flex: 0 0 auto;
-  }
-
   .bottom-bar {
-    position: static;
-    padding: 0;
-    margin-top: 12px;
-    border-top: none;
+    position: absolute;
+    right: 18px;
+    bottom: 27px;
   }
 
   .action-buttons {
-    width: 100%;
-    gap: 10px;
+    gap: 15px;
   }
 
   .btn-cancel,
   .btn-submit {
-    flex: 1 1 0;
-    height: 52px;
-    padding: 0 16px;
-    font-size: 16px;
+    flex: 0 0 auto;
+    height: 38px;
+    font-size: 15px;
   }
 }

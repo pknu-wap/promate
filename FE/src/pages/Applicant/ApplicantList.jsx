@@ -1,47 +1,51 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import Avatar from '../../components/Avatar/Avatar';
+import logoIcon from '../../assets/logoIcon.svg';
 import './Applicant.css';
+
+const projects = [
+  { id: 1, title: '캡스톤 디자인', summary: '안녕하세요. WAP 화이팅', capacity: 4 },
+  { id: 2, title: '캡스톤 디자인', summary: '안녕하세요. WAP 화이팅', capacity: 4 },
+  { id: 3, title: '캡스톤 디자인', summary: '안녕하세요. WAP 화이팅', capacity: 4 },
+  { id: 4, title: '캡스톤 디자인', summary: '안녕하세요. WAP 화이팅', capacity: 4 },
+  { id: 5, title: '캡스톤 디자인', summary: '안녕하세요. WAP 화이팅', capacity: 4 },
+];
 
 const ApplicantList = () => {
   const navigate = useNavigate();
 
-  const projects = [
-    { id: 1, title: '캡스톤 디자인', description: '안녕하세요. WAP 파이팅', members: 4 },
-    { id: 2, title: '캡스톤 디자인', description: '안녕하세요. WAP 파이팅', members: 4 },
-    { id: 3, title: '캡스톤 디자인', description: '안녕하세요. WAP 파이팅', members: 4 },
-    { id: 4, title: '캡스톤 디자인', description: '안녕하세요. WAP 파이팅', members: 4 },
-    { id: 5, title: '캡스톤 디자인', description: '안녕하세요. WAP 파이팅', members: 4 },
-  ];
-
-  const handleReviewClick = (id) => {
-    navigate(`/applicant/detail`);
-    // 나중에 서버 연결하면 navigate(`/applicant/detail/${id}`) 로 바꿀 거예요!
-  };
-
   return (
-    <div className="applicant-list-container">
-      <h2>지원자 검토</h2>
-      <div className="project-cards">
+    <main className="al-page">
+      <h1 className="al-title">지원자 검토</h1>
+
+      <section className="al-list">
         {projects.map((project) => (
-          <div key={project.id} className="project-card">
-            <div className="card-left">
-              <Avatar size="md" />
-              <div className="project-info">
-                <h3>{project.title}</h3>
-                <p>{project.description}</p>
-              </div>
+          <article className="al-card" key={project.id}>
+            {/* 로고 박스 */}
+            <div className="al-logo-box">
+              <img src={logoIcon} alt={`${project.title} 로고`} />
             </div>
-            <div className="card-right">
-              <span className="member-count">모집인원: {project.members}명</span>
-              <button className="review-btn" onClick={() => handleReviewClick(project.id)}>
+
+            {/* 프로젝트 정보 */}
+            <div className="al-content">
+              <h2 className="al-project-title">{project.title}</h2>
+              <p className="al-project-summary">{project.summary}</p>
+            </div>
+
+            {/* 우측: 모집인원 + 버튼 */}
+            <div className="al-actions">
+              <span className="al-capacity">모집인원: {project.capacity}명</span>
+              <button
+                className="al-review-btn"
+                onClick={() => navigate('/applicant/detail')}
+              >
                 지원자 검토
               </button>
             </div>
-          </div>
+          </article>
         ))}
-      </div>
-    </div>
+      </section>
+    </main>
   );
 };
 

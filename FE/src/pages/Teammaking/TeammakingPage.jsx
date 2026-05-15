@@ -1,7 +1,7 @@
 ﻿import { useState } from "react";
+import logoIcon from "../../assets/logoIcon.svg";
 import DomainSelector from "./components/DomainSelector.jsx";
 import FormActions from "./components/FormActions.jsx";
-import ImageUploadField from "./components/ImageUploadField.jsx";
 import ProjectDescriptionField from "./components/ProjectDescriptionField.jsx";
 import ProjectNameField from "./components/ProjectNameField.jsx";
 import "./TeammakingPage.css";
@@ -18,16 +18,17 @@ function TeammakingPage() {
   const [projectName, setProjectName] = useState("");
   const [selectedDomain, setSelectedDomain] = useState("assignment");
   const [description, setDescription] = useState("");
-  const [imageSrc, setImageSrc] = useState(null);
+  const isSubmitEnabled = projectName.trim() !== "" && description.trim() !== "";
 
   const handleCancel = () => {
     setProjectName("");
     setSelectedDomain("assignment");
     setDescription("");
-    setImageSrc(null);
   };
 
   const handleSubmit = () => {
+    if (!isSubmitEnabled) return;
+
     const selectedDomainLabel =
       domainOptions.find((option) => option.id === selectedDomain)?.label ?? selectedDomain;
 
@@ -40,7 +41,9 @@ function TeammakingPage() {
     <div className="page-wrapper">
       <h1 className="page-title">프로젝트 생성</h1>
       <div className="card">
-        <ImageUploadField imageSrc={imageSrc} onImageChange={setImageSrc} />
+        <div className="teammaking-logo-box" aria-hidden="true">
+          <img src={logoIcon} alt="" />
+        </div>
         <ProjectNameField
           projectName={projectName}
           onProjectNameChange={setProjectName}
@@ -54,7 +57,11 @@ function TeammakingPage() {
           description={description}
           onDescriptionChange={setDescription}
         />
-        <FormActions onCancel={handleCancel} onSubmit={handleSubmit} />
+        <FormActions
+          onCancel={handleCancel}
+          onSubmit={handleSubmit}
+          isSubmitEnabled={isSubmitEnabled}
+        />
       </div>
     </div>
   );

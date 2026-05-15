@@ -1,183 +1,154 @@
 import React, { useState } from 'react';
 import Avatar from '../../components/Avatar/Avatar';
-import Badge from '../../components/Badge/Badge';
-import MainButton from '../../components/MainButton/MainButton';
+import logoIcon from '../../assets/logoIcon.svg';
 import './Applicant.css';
+
+const applicantList = [
+  {
+    id: 1, name: '김은비', taskStats: { completed: 3, total: 5 }, date: '2026-05-02',
+    projects: [
+      { name: '동아리 프로젝트', role: 'PM', status: '진행중', score: 4.6 },
+      { name: 'WAP 해커톤',    role: 'FE', status: '완료',   score: 4.7 },
+    ],
+  },
+  {
+    id: 2, name: '김은비', taskStats: { completed: 3, total: 5 }, date: '2026-05-02',
+    projects: [
+      { name: '동아리 프로젝트', role: 'PM', status: '진행중', score: 4.6 },
+      { name: 'WAP 해커톤',    role: 'FE', status: '완료',   score: 4.7 },
+    ],
+  },
+  {
+    id: 3, name: '김은비', taskStats: { completed: 3, total: 5 }, date: '2026-05-02',
+    projects: [
+      { name: '동아리 프로젝트', role: 'PM', status: '진행중', score: 4.6 },
+      { name: 'WAP 해커톤',    role: 'FE', status: '완료',   score: 4.7 },
+    ],
+  },
+];
+
+const tabs = [
+  { key: 'applicant', label: '현재 지원자' },
+  { key: 'member',    label: '현재 팀원' },
+  { key: 'rejected',  label: '거절한 지원자' },
+];
 
 const ApplicantDetail = () => {
   const [activeTab, setActiveTab] = useState('applicant');
   const [selectedApplicant, setSelectedApplicant] = useState(null);
 
-  const applicantList = [
-    {
-      id: 1,
-      name: '김은비',
-      position: 'UIUX',
-      temperature: 94,
-      date: '2026-05-02',
-      role: 'UIUX 디자이너',
-      phone: '010.0000.0000',
-      email: 'WAP1234@WAP.com',
-      motivation: '디자인에 대한 열정으로 팀 프로젝트에 적극 기여하고 싶습니다. 다양한 프로젝트 경험을 바탕으로 UI/UX 품질을 높이겠습니다.',
-      projects: [
-        { name: '동아리 프로젝트', role: 'PM', status: '진행중', score: 4.6 },
-        { name: 'WAP 해커톤', role: 'FE', status: '경험', score: 4.7 },
-      ],
-    },
-    {
-      id: 2,
-      name: '김은비',
-      position: 'UIUX',
-      temperature: 94,
-      date: '2026-05-02',
-      role: 'UIUX 디자이너',
-      phone: '010.0000.0000',
-      email: 'WAP1234@WAP.com',
-      motivation: '디자인에 대한 열정으로 팀 프로젝트에 적극 기여하고 싶습니다. 다양한 프로젝트 경험을 바탕으로 UI/UX 품질을 높이겠습니다.',
-      projects: [
-        { name: '동아리 프로젝트', role: 'PM', status: '진행중', score: 4.6 },
-        { name: 'WAP 해커톤', role: 'FE', status: '경험', score: 4.7 },
-      ],
-    },
-    {
-      id: 3,
-      name: '김은비',
-      position: 'UIUX',
-      temperature: 94,
-      date: '2026-05-02',
-      role: 'UIUX 디자이너',
-      phone: '010.0000.0000',
-      email: 'WAP1234@WAP.com',
-      motivation: '디자인에 대한 열정으로 팀 프로젝트에 적극 기여하고 싶습니다. 다양한 프로젝트 경험을 바탕으로 UI/UX 품질을 높이겠습니다.',
-      projects: [
-        { name: '동아리 프로젝트', role: 'PM', status: '진행중', score: 4.6 },
-        { name: 'WAP 해커톤', role: 'FE', status: '경험', score: 4.7 },
-      ],
-    },
-  ];
-
-  const tabs = [
-    { key: 'applicant', label: '현재 지원자' },
-    { key: 'member',    label: '현재 팀원' },
-    { key: 'rejected',  label: '거절한 지원자' },
-  ];
+  const closePanel = () => setSelectedApplicant(null);
 
   return (
-    <div className="detail-container">
-      <h2 className="detail-title">지원자 검토 - 캡스톤 디자인</h2>
+    <div className="ad-page">
+      <h1 className="ad-title">지원자 검토 - 캡스톤 디자인</h1>
 
-      <div className="detail-body">
-        {/* 좌측: 탭 + 테이블 */}
-        <div className="table-section">
-          <div className="tab-menu">
-            {tabs.map((tab) => (
-              <button
-                key={tab.key}
-                className={activeTab === tab.key ? 'tab-btn active' : 'tab-btn'}
-                onClick={() => setActiveTab(tab.key)}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
+      <div className="ad-card">
 
-          <div className="table-wrapper">
-            <table className="applicant-table">
-              <thead>
-                <tr>
-                  <th>이름</th>
-                  <th>포지션</th>
-                  <th>온도</th>
-                  <th>지원 날짜</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {applicantList.map((person) => (
-                  <tr
-                    key={person.id}
-                    className={selectedApplicant?.id === person.id ? 'selected-row' : ''}
-                  >
-                    <td>
-                      <div className="user-cell">
-                        <Avatar size="sm" />
-                        {person.name}
-                      </div>
-                    </td>
-                    <td>{person.position}</td>
-                    <td className="temp-text">{person.temperature}℃</td>
-                    <td>{person.date.replace(/-/g, ' - ')}</td>
-                    <td>
-                      <button
-                        className="profile-view-btn"
-                        onClick={() => setSelectedApplicant(person)}
-                      >
-                        프로필 보기
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        {/* 탭 바 */}
+        <div className="ad-tab-bar">
+          {tabs.map((tab) => (
+            <button
+              key={tab.key}
+              className={`ad-tab${activeTab === tab.key ? ' ad-tab--active' : ''}`}
+              onClick={() => setActiveTab(tab.key)}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
 
-        {/* 우측: 프로필 패널 */}
-        {selectedApplicant && (
-          <div className="profile-panel">
-            <div className="profile-header">
-              <Avatar size="lg" />
-              <div className="profile-name-row">
-                <span className="profile-name">{selectedApplicant.name}</span>
-                <span className="profile-temp">{selectedApplicant.temperature}℃</span>
-              </div>
-              <p className="profile-role">{selectedApplicant.role}</p>
-            </div>
+        {/* 테이블 */}
+        <div className="ad-table">
+          <div className="ad-thead">
+            <span className="ad-th ad-th--name">이름</span>
+            <span className="ad-th">태스크</span>
+            <span className="ad-th ad-th--date">지원 날짜</span>
+            <span />
+          </div>
 
-            <div className="profile-divider" />
-
-            <div className="profile-section">
-              <h4 className="profile-section-title">연락처</h4>
-              <p className="profile-contact-item">
-                <span className="contact-icon">☎</span>
-                {selectedApplicant.phone}
-              </p>
-              <p className="profile-contact-item">
-                <span className="contact-icon">✉</span>
-                {selectedApplicant.email}
-              </p>
-            </div>
-
-            <div className="profile-divider" />
-
-            <div className="profile-section">
-              <h4 className="profile-section-title">지원동기</h4>
-              <p className="profile-motivation">{selectedApplicant.motivation}</p>
-            </div>
-
-            <div className="profile-divider" />
-
-            <div className="profile-section">
-              <h4 className="profile-section-title">프로젝트 경험</h4>
-              {selectedApplicant.projects.map((proj, i) => (
-                <div key={i} className="proj-row">
-                  <span className="proj-name">{proj.name}</span>
-                  <span className="proj-role-tag">{proj.role}</span>
-                  <Badge selected={proj.status === '진행중'}>{proj.status}</Badge>
-                  <span className="proj-score">{proj.score} 점</span>
+          {applicantList.map((person) => (
+            <div key={person.id} className="ad-row">
+              <div className="ad-name-cell">
+                <div className="al-logo-box">
+                  <img src={logoIcon} alt="avatar" />
                 </div>
-              ))}
-            </div>
-
-            <div className="profile-actions">
-              <MainButton>수락</MainButton>
-              <button className="reject-btn" onClick={() => setSelectedApplicant(null)}>
-                거절
+                <span className="ad-name-text">{person.name}</span>
+              </div>
+              <div className="ad-cell ad-task-stat">
+                <span className="ad-task-num">{person.taskStats.completed}</span>
+                <span className="ad-task-sep">/</span>
+                <span className="ad-task-total">{person.taskStats.total}</span>
+              </div>
+              <span className="ad-cell ad-cell--date">{person.date.replace(/-/g, ' - ')}</span>
+              <button
+                className="ad-view-btn"
+                onClick={() => setSelectedApplicant(person)}
+              >
+                지원서 보기
               </button>
             </div>
-          </div>
-        )}
+          ))}
+        </div>
+
       </div>
+
+      {/* 지원서 보기 패널 */}
+      {selectedApplicant && (
+        <>
+          <div className="app-panel-dim" onClick={closePanel} />
+
+          <div className="app-panel">
+            <div className="app-panel-inner">
+
+              <div className="app-panel-top">
+                <div className="app-profile-header">
+                  <Avatar size="lg" className="app-avatar-lg" />
+                  <div className="app-profile-text">
+                    <div className="app-name-row">
+                      <span className="app-name">{selectedApplicant.name}</span>
+                      <div className="app-task-stat">
+                        <span className="app-task-num">{selectedApplicant.taskStats.completed}</span>
+                        <span className="app-task-sep">/</span>
+                        <span className="app-task-total">{selectedApplicant.taskStats.total}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="app-projects-section">
+                  <span className="app-projects-title">프로젝트 경험</span>
+                  <div className="app-projects-list">
+                    {selectedApplicant.projects.map((proj, i) => (
+                      <div key={i} className="app-proj-row">
+                        <div className="app-proj-left">
+                          <span className="app-proj-name">{proj.name}</span>
+                          <span className="app-proj-role">{proj.role}</span>
+                        </div>
+                        <div className="app-proj-right">
+                          <span className={`app-status-badge--${proj.status === '진행중' ? 'active' : 'done'}`}>
+                            {proj.status}
+                          </span>
+                          <div className="app-score">
+                            <span className="app-score-num">{proj.score}</span>
+                            <span className="app-score-label">점</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="app-panel-actions">
+                <button className="app-btn-accept">수락</button>
+                <button className="app-btn-reject" onClick={closePanel}>거절</button>
+              </div>
+
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

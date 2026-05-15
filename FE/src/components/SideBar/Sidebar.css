@@ -123,6 +123,9 @@
   transform: scale(0.98);
 }
 
+.new-project-btn:hover {
+  background-color: #F58B45;
+}
 
 
 @media (max-width: 768px) {

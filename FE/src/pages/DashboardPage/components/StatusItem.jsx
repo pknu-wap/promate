@@ -1,10 +1,12 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './StatusItem.css';
-import Avatar from '../../../components/Avatar/Avatar';
+import ProjectAvatar from '../../../components/ProjectAvatar/ProjectAvatar';
 import ProgressBar from '../../../components/ProgressBar/ProgressBar';
 import { getDiffDays } from '../components/DateUtils';
 
-function StatusItem({ title, date = '', tag = '여유', ratio }) {
+function StatusItem({ id, title, date = '', tag = '여유', ratio }) {
+  const navigate = useNavigate();
   let progressValue = 0;
   
   if (ratio && ratio.includes('/')) {
@@ -17,11 +19,14 @@ function StatusItem({ title, date = '', tag = '여유', ratio }) {
   const diffDays = getDiffDays(date);
 
   return (
-    <div className="status-item">
+    <div 
+      className="status-item"
+      onClick={() => navigate(`/project/${id}`)}
+    >
       <div className="status-info-row">
         <div className="status-left">
           <div className="logo-placeholder">
-            <Avatar />
+            <ProjectAvatar />
           </div>
 
           <div className="status-text">

@@ -18,48 +18,70 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/me")
-    public UserResponseDTO getMyInfo(@AuthenticationPrincipal Long userId) {
-        return userService.getUser(userId);
+    public ApiResponse<UserResponseDTO> getMyInfo(
+            @AuthenticationPrincipal Long userId
+    ) {
+        return ApiResponse.onSuccess(
+                GeneralSuccessCode.OK,
+                userService.getUser(userId)
+        );
     }
 
     @PatchMapping("/me")
-    public UserResponseDTO updateMyInfo(
+    public ApiResponse<UserResponseDTO> updateMyInfo(
             @AuthenticationPrincipal Long userId,
             @RequestBody UserProfileUpdateRequestDTO request
     ) {
-        return userService.updateUserProfile(userId, request);
+        return ApiResponse.onSuccess(
+                GeneralSuccessCode.OK,
+                userService.updateUserProfile(userId, request)
+        );
     }
 
     @GetMapping("/me/projectHistories")
-    public List<UserProjectHistoryResponseDTO> getMyProjectHistories(
+    public ApiResponse<List<UserProjectHistoryResponseDTO>> getMyProjectHistories(
             @AuthenticationPrincipal Long userId
     ) {
-        return userService.getMyProjectHistories(userId);
+        return ApiResponse.onSuccess(
+                GeneralSuccessCode.OK,
+                userService.getMyProjectHistories(userId)
+        );
     }
 
     @PostMapping("/me/projectHistories")
-    public UserProjectHistoryResponseDTO createProjectHistory(
+    public ApiResponse<UserProjectHistoryResponseDTO> createProjectHistory(
             @AuthenticationPrincipal Long userId,
             @RequestBody UserProjectHistoryRequestDTO request
     ) {
-        return userService.createProjectHistory(userId, request);
+        return ApiResponse.onSuccess(
+                GeneralSuccessCode.OK,
+                userService.createProjectHistory(userId, request)
+        );
     }
 
     @PatchMapping("/me/projectHistories/{historyId}")
-    public UserProjectHistoryResponseDTO updateProjectHistory(
+    public ApiResponse<UserProjectHistoryResponseDTO> updateProjectHistory(
             @AuthenticationPrincipal Long userId,
             @PathVariable Long historyId,
             @RequestBody UserProjectHistoryRequestDTO request
     ) {
-        return userService.updateProjectHistory(userId, historyId, request);
+        return ApiResponse.onSuccess(
+                GeneralSuccessCode.OK,
+                userService.updateProjectHistory(userId, historyId, request)
+        );
     }
 
     @DeleteMapping("/me/projectHistories/{historyId}")
-    public void deleteProjectHistory(
+    public ApiResponse<Void> deleteProjectHistory(
             @AuthenticationPrincipal Long userId,
             @PathVariable Long historyId
     ) {
         userService.deleteProjectHistory(userId, historyId);
+
+        return ApiResponse.onSuccess(
+                GeneralSuccessCode.OK,
+                null
+        );
     }
 
     @GetMapping("/me/projects/task-counts")

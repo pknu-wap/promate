@@ -1,6 +1,7 @@
 import React from "react";
 import "./ProfileModal.css";
 import profileIcon from "../../assets/icons/profileIcon.svg";
+import closeIcon from "../../assets/icons/closeIcon.svg";
 
 function ProfileModal({ isOpen, onClose, user }) {
   if (!isOpen) return null;
@@ -25,6 +26,10 @@ function ProfileModal({ isOpen, onClose, user }) {
       <div className="profile-popover-backdrop" onClick={onClose} />
 
       <div className="profile-popover" onClick={(e) => e.stopPropagation()}>
+        <button className="profile-close-x-btn" onClick={onClose} aria-label="닫기">
+            <img src={closeIcon} alt="닫기 아이콘" />
+        </button>
+
         <div className="profile-popover-header">
           <div className="profile-user-info">
             <div className="profile-avatar">
@@ -75,9 +80,6 @@ function ProfileModal({ isOpen, onClose, user }) {
             ))}
           </div>
         </div>
-        <button type="button" className="profile-popover-close-btn" onClick={onClose}>
-          닫기
-        </button>
       </div>
     </>
   );

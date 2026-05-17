@@ -38,6 +38,36 @@
   justify-content: space-between;
   align-items: center;
   gap: 16px;
+  padding-right: 16px;
+}
+
+.profile-close-x-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 30px;
+  height: 30px;
+  padding: 0;
+
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 30%;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.profile-close-x-btn:hover {
+  background-color: #f1f1f1;
+}
+
+.profile-close-x-btn img {
+  width: 24px;
+  height: 24px;
 }
 
 .profile-user-info {

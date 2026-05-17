@@ -1,0 +1,19 @@
+.profile-avatar {
+  box-sizing: border-box;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 54px;
+  height: 54px;
+
+  background: #f1f1f1;
+  border: 1px solid #ababab;
+  border-radius: 50%;
+}
+
+.profile-avatar img {
+  width: 24px;
+  height: 24px;
+}

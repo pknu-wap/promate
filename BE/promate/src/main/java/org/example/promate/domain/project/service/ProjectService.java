@@ -10,6 +10,8 @@ import org.example.promate.domain.project.enums.ProjectStatus;
 import org.example.promate.domain.project.repository.MemberRepository;
 import org.example.promate.domain.project.repository.ProjectRepository;
 import org.example.promate.domain.recruit.repository.RecruitRepository;
+import org.example.promate.domain.review.entity.MemberReview;
+import org.example.promate.domain.review.repository.MemberReviewRepository;
 import org.example.promate.domain.user.repository.UserRepository;
 import org.example.promate.domain.workspace.enums.TaskStatus;
 import org.example.promate.domain.workspace.repository.TaskRepository;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +31,7 @@ public class ProjectService {
     private final ApplyRepository applyRepository;
     private final MemberRepository memberRepository;
     private final TaskRepository taskRepository;
+    private final MemberReviewRepository memberReviewRepository;
 
 
     @Transactional(readOnly = true)
@@ -77,17 +81,47 @@ public class ProjectService {
                 .toList();
     }
 
+    private double calculateAverageReviewScore(Long projectId, Long userId) {
+
+        List<MemberReview> reviews =
+                memberReviewRepository.findByProjectIdAndRevieweeId(
+                        projectId,
+                        userId
+                );
+
+        return reviews.stream()
+                .flatMapToInt(review -> IntStream.of(
+                        review.getCommunicationScore(),
+                        review.getProactivenessScore(),
+                        review.getResponsibilityScore(),
+                        review.getProblemSolvingScore()
+                ))
+                .average()
+                .stream()
+                .map(avg -> Math.round(avg * 10) / 10.0)
+                .findFirst()
+                .orElse(0.0);
+    }
 
     @Transactional(readOnly = true)
     public List<MyActivityResponseDTO> getMyActivities(Long userId) {
 
+
         return memberRepository
                 .findByUserIdAndProjectStatus(userId, ProjectStatus.COMPLETED)
                 .stream()
-                .map(member -> MyActivityResponseDTO.builder()
-                        .projectId(member.getProject().getId())
-                        .title(member.getProject().getTitle())
-                        .build())
+                .map(member -> {
+                    double averageReviewScore =
+                            calculateAverageReviewScore(
+                                    member.getProject().getId(),
+                                    userId
+                            );
+                    return MyActivityResponseDTO.builder()
+                            .projectId(member.getProject().getId())
+                            .title(member.getProject().getTitle())
+                            .averageReviewScore(averageReviewScore)
+                            .build();
+                })
                 .toList();
     }
 }

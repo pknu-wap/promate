@@ -16,6 +16,8 @@ public interface MemberRepository extends JpaRepository<Member,Long> {
     Optional<Member> findByIdAndProjectId(Long userId,Long projectId);
     Optional<Member> findByUserIdAndProjectId(Long userId,Long projectId);
 
+    List<Member> findByProjectId(Long projectId);
+
     // 특정 사용자의 프로젝트 목록 조회 (N+1 문제 방지)
     @Query("select m from Member m join fetch m.project where m.user.id = :userId and m.project.status = :status")
     List<Member> findByUserIdAndProjectStatus(

@@ -8,4 +8,5 @@ import lombok.Getter;
 public class MyActivityResponseDTO {
     private Long projectId;
     private String title;
+    private Double averageReviewScore;
 }

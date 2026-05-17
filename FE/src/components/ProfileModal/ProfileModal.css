@@ -154,6 +154,22 @@
 .profile-project-list {
   display: flex;
   flex-direction: column;
+  max-height: 126px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.profile-project-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.profile-project-list::-webkit-scrollbar-thumb {
+  background: #d9d9d9;
+  border-radius: 4px;
+}
+
+.profile-project-list::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .profile-project-item {

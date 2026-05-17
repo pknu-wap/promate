@@ -75,7 +75,9 @@ function ProfileModal({ isOpen, onClose, user }) {
             ))}
           </div>
         </div>
-
+        <button type="button" className="profile-popover-close-btn" onClick={onClose}>
+          닫기
+        </button>
       </div>
     </>
   );

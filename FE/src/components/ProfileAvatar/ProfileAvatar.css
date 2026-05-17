@@ -11,9 +11,15 @@
   background: #f1f1f1;
   border: 1px solid #ababab;
   border-radius: 50%;
+  overflow: hidden;
+}
+
+.profile-avatar.clickable {
+  cursor: pointer;
 }
 
 .profile-avatar img {
   width: 24px;
   height: 24px;
+  object-fit: cover;
 }

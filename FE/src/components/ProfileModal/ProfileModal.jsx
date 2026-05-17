@@ -1,6 +1,5 @@
 import React from "react";
 import "./ProfileModal.css";
-import profileIcon from "../../assets/icons/profileIcon.svg";
 import closeIcon from "../../assets/icons/closeIcon.svg";
 import ProfileAvatar from "../ProfileAvatar/ProfileAvatar";
 
@@ -51,7 +50,7 @@ function ProfileModal({ isOpen, onClose, user }) {
 
         <div className="profile-popover-header">
           <div className="profile-user-info">
-            <ProfileAvatar src={user?.profileImage || profileIcon} alt="프로필 이미지" />
+            <ProfileAvatar src={user?.profileImage} alt="프로필 이미지" />
 
             <strong className="profile-name">{user?.name || "김아무개"}</strong>
           </div>

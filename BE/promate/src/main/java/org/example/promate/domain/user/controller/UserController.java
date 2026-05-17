@@ -1,6 +1,7 @@
 package org.example.promate.domain.user.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.promate.domain.user.code.UserSuccessCode;
 import org.example.promate.domain.user.dto.*;
 import org.example.promate.domain.user.service.UserService;
 import org.example.promate.global.ApiPayload.ApiResponse;
@@ -22,7 +23,7 @@ public class UserController {
             @AuthenticationPrincipal Long userId
     ) {
         return ApiResponse.onSuccess(
-                GeneralSuccessCode.OK,
+                UserSuccessCode.GET_USER_SUCCESS,
                 userService.getUser(userId)
         );
     }
@@ -33,7 +34,7 @@ public class UserController {
             @RequestBody UserProfileUpdateRequestDTO request
     ) {
         return ApiResponse.onSuccess(
-                GeneralSuccessCode.OK,
+                UserSuccessCode.UPDATE_USER_SUCCESS,
                 userService.updateUserProfile(userId, request)
         );
     }
@@ -43,7 +44,7 @@ public class UserController {
             @AuthenticationPrincipal Long userId
     ) {
         return ApiResponse.onSuccess(
-                GeneralSuccessCode.OK,
+                UserSuccessCode.GET_PROJECT_HISTORY_SUCCESS,
                 userService.getMyProjectHistories(userId)
         );
     }
@@ -54,7 +55,7 @@ public class UserController {
             @RequestBody UserProjectHistoryRequestDTO request
     ) {
         return ApiResponse.onSuccess(
-                GeneralSuccessCode.OK,
+                UserSuccessCode.CREATE_PROJECT_HISTORY_SUCCESS,
                 userService.createProjectHistory(userId, request)
         );
     }
@@ -66,7 +67,7 @@ public class UserController {
             @RequestBody UserProjectHistoryRequestDTO request
     ) {
         return ApiResponse.onSuccess(
-                GeneralSuccessCode.OK,
+                UserSuccessCode.UPDATE_PROJECT_HISTORY_SUCCESS,
                 userService.updateProjectHistory(userId, historyId, request)
         );
     }
@@ -79,7 +80,7 @@ public class UserController {
         userService.deleteProjectHistory(userId, historyId);
 
         return ApiResponse.onSuccess(
-                GeneralSuccessCode.OK,
+                UserSuccessCode.DELETE_PROJECT_HISTORY_SUCCESS,
                 null
         );
     }
@@ -89,7 +90,7 @@ public class UserController {
             @AuthenticationPrincipal Long userId
     ) {
         return ApiResponse.onSuccess(
-                GeneralSuccessCode.OK,
+                UserSuccessCode.GET_PROJECT_TASK_COUNT_SUCCESS,
                 userService.getProjectTaskCounts(userId)
         );
     }

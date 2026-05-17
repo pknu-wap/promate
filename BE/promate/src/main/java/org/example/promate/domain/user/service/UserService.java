@@ -81,7 +81,7 @@ public class UserService {
             UserProjectHistoryRequestDTO request
     ) {
         UserProjectHistory history = userProjectHistoryRepository.findByIdAndUserId(historyId, userId)
-                .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND)); // 커스텀에러 추후 추가 예정
+                .orElseThrow(() -> new UserException(UserErrorCode.PROJECT_HISTORY_NOT_FOUND)); // 커스텀에러 추후 추가 예정
 
         history.update(
                 request.getProjectName(),
@@ -96,7 +96,7 @@ public class UserService {
     @Transactional
     public void deleteProjectHistory(Long userId, Long historyId) {
         UserProjectHistory history = userProjectHistoryRepository.findByIdAndUserId(historyId, userId)
-                .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND)); // 커스텀에러 추후 추가 예정
+                .orElseThrow(() -> new UserException(UserErrorCode.PROJECT_HISTORY_NOT_FOUND)); // 커스텀에러 추후 추가 예정
 
         userProjectHistoryRepository.delete(history);
     }

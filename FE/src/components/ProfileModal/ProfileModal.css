@@ -43,8 +43,8 @@
 
 .profile-close-x-btn {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 10px;
+  right: 10px;
 
   display: flex;
   justify-content: center;
@@ -247,4 +247,56 @@
   line-height: 15px;
 
   color: #000000;
+}
+
+@media (max-width: 768px) {
+  .profile-popover {
+    top: 64px;
+    left: 50%;
+    transform: translateX(-50%);
+    
+    width: calc(100vw - 32px);
+    max-width: 360px;
+    padding: 20px 16px;
+  }
+
+  .profile-popover::before {
+    display: none;
+  }
+
+  .profile-user-info {
+    gap: 10px;
+  }
+
+  .profile-name {
+    font-size: 16px;
+  }
+
+  .completed-task {
+    font-size: 24px;
+  }
+
+  .total-task {
+    font-size: 16px;
+  }
+
+  .project-title {
+    font-size: 14px;
+  }
+
+  .project-period {
+    font-size: 11px;
+  }
+
+  .project-status {
+    min-width: 46px;
+    font-size: 11px;
+    padding: 2px 8px;
+  }
+
+  .profile-close-x-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
 }

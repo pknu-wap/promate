@@ -1,30 +1,24 @@
 import React, { useState } from 'react';
 import MainButton from '../../components/MainButton/MainButton';
 import Avatar from '../../components/Avatar/Avatar';
+import AddProjectModal from './components/AddProjectModal';
 import './ProfilePage.css';
 
 const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  const [isAllDay, setIsAllDay] = useState(true);
-  const [newProjectName, setNewProjectName] = useState('');
-  const [newStartDate, setNewStartDate] = useState('');
-  const [newStartTime, setNewStartTime] = useState('12:00');
-  const [newEndDate, setNewEndDate] = useState('');
-  const [newEndTime, setNewEndTime] = useState('13:00');
-
   const [userInfo] = useState({
     name: '김아무개',
     taskStats: { completed: 3, total: 4 },
   });
 
-  const [projects] = useState([
+  const [projects, setProjects] = useState([
     { id: 1, title: '동아리 프로젝트', role: 'PM', startDate: '2025-03-20', endDate: null, score: null },
     { id: 2, title: 'WAP 해커톤', role: 'FE', startDate: '2025-03-20', endDate: '2025-07-20', score: 4.7 },
   ]);
 
-  const [manualProjects] = useState([]);
+  const [manualProjects, setManualProjects] = useState([]);
 
   const formatDate = (dateStr) => {
     if (!dateStr) return '';
@@ -32,12 +26,11 @@ const ProfilePage = () => {
     return `${y}.${m}.${d}`;
   };
 
-  const handleCloseModal = () => {
-    setIsAddModalOpen(false);
-    setNewProjectName('');
-    setNewStartDate('');
-    setNewEndDate('');
-    setIsAllDay(true);
+  const handleAddProject = (newProject) => {
+    setManualProjects((prev) => [
+      ...prev,
+      { id: Date.now(), ...newProject },
+    ]);
   };
 
   return (
@@ -47,7 +40,6 @@ const ProfilePage = () => {
       </h1>
 
       <section className="profile-main-card">
-        {/* 상단: 아바타+이름 / 태스크 */}
         <div className="profile-header-row">
           <div className="profile-user-info">
             <Avatar alt="프로필" size="lg" />
@@ -65,7 +57,6 @@ const ProfilePage = () => {
 
         <hr className="profile-divider" />
 
-        {/* 프로젝트 경험 */}
         <div className="form-field">
           <label className="form-label">프로젝트 경험</label>
           <div className="project-experience-list">
@@ -140,81 +131,10 @@ const ProfilePage = () => {
       </section>
 
       {isAddModalOpen && (
-        <>
-          <div className="modal-overlay" onClick={handleCloseModal} />
-          <div className="modal-container">
-            <div className="modal-inner">
-
-              <h3 className="modal-title">프로젝트 추가</h3>
-
-              {/* 프로젝트 이름 */}
-              <div className="modal-field">
-                <label className="modal-field-label">프로젝트 이름</label>
-                <input
-                  className="modal-input"
-                  placeholder="이름을 적어주세요."
-                  value={newProjectName}
-                  onChange={(e) => setNewProjectName(e.target.value)}
-                />
-              </div>
-
-              <div className="modal-field">
-                <label className="modal-field-label">참여했던 직무</label>
-
-               
-                <div className="modal-date-row">
-                  <span className="modal-row-label">시작</span>
-                  <input
-                    type="date"
-                    className="modal-date-input"
-                    value={newStartDate}
-                    onChange={(e) => setNewStartDate(e.target.value)}
-                  />
-                  <input
-                    type="time"
-                    className="modal-time-input"
-                    value={newStartTime}
-                    onChange={(e) => setNewStartTime(e.target.value)}
-                    disabled={isAllDay}
-                  />
-                </div>
-
-                <div className="modal-date-row">
-                  <span className="modal-row-label">종료</span>
-                  <input
-                    type="date"
-                    className="modal-date-input"
-                    value={newEndDate}
-                    onChange={(e) => setNewEndDate(e.target.value)}
-                  />
-                  <input
-                    type="time"
-                    className="modal-time-input"
-                    value={newEndTime}
-                    onChange={(e) => setNewEndTime(e.target.value)}
-                    disabled={isAllDay}
-                  />
-                </div>
-
-                <div className="modal-date-row">
-                  <span className="modal-row-label">종일</span>
-                  <div
-                    className={`modal-switch ${isAllDay ? 'modal-switch--on' : 'modal-switch--off'}`}
-                    onClick={() => setIsAllDay(!isAllDay)}
-                  >
-                    <div className="modal-switch-handle" />
-                  </div>
-                </div>
-              </div>
-              
-              <div className="modal-actions">
-                <button className="modal-btn-cancel" onClick={handleCloseModal}>취소</button>
-                <button className="modal-btn-add">프로젝트 추가</button>
-              </div>
-
-            </div>
-          </div>
-        </>
+        <AddProjectModal
+          onClose={() => setIsAddModalOpen(false)}
+          onAdd={handleAddProject}
+        />
       )}
     </div>
   );

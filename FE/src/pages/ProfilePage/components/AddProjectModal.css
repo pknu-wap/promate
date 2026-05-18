@@ -1,0 +1,258 @@
+/* AddEventModal.css 패턴 기반 */
+
+.add-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.add-modal-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 30px 30px 24px;
+  gap: 10px;
+  width: 400px;
+  min-width: 300px;
+  background: #FFFFFF;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.add-modal-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  gap: 20px;
+  width: 100%;
+}
+
+.add-modal-title {
+  width: 100%;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  color: #000000;
+  margin: 0;
+}
+
+/* 필드 그룹 */
+.add-modal-field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+}
+
+.add-modal-field-label {
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 19px;
+  color: #000000;
+}
+
+/* 프로젝트 이름 input */
+.add-modal-input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 40px;
+  background: #F1F1F1;
+  border: 1px solid #ABABAB;
+  border-radius: 5px;
+  padding: 10px 12px;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: #000000;
+  outline: none;
+}
+.add-modal-input::placeholder { color: #ABABAB; }
+.add-modal-input:focus { border-color: #FE9A57; }
+
+/* 날짜 행 */
+.add-modal-date-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 40px;
+}
+
+.add-modal-row-label {
+  width: 36px;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  color: #000000;
+  flex-shrink: 0;
+}
+
+/* 날짜 피커 (AddEventModal 패턴 동일) */
+.add-modal-custom-date {
+  position: relative;
+  flex: 1;
+  height: 40px;
+}
+
+.add-modal-date-display {
+  width: 100%;
+  height: 100%;
+  background: #FFFFFF;
+  border-radius: 5px;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.add-modal-hidden-date {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+.add-modal-hidden-date::-webkit-calendar-picker-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+/* 시간 선택 */
+.add-modal-time-select {
+  width: 64px;
+  height: 40px;
+  background: #FFFFFF;
+  border: none;
+  border-radius: 5px;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #000000;
+  box-sizing: border-box;
+  text-align: center;
+  appearance: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.add-modal-custom-date:focus-within .add-modal-date-display,
+.add-modal-time-select:focus { outline: 1px solid #FE9A57; }
+
+/* 종일 토글 스위치 (AddEventModal 패턴 동일) */
+.add-modal-switch {
+  position: relative;
+  width: 52px;
+  height: 32px;
+  flex-shrink: 0;
+}
+.add-modal-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.add-modal-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #D9D9D9;
+  transition: 0.4s;
+  border-radius: 100px;
+}
+.add-modal-slider:before {
+  position: absolute;
+  content: "";
+  height: 24px;
+  width: 24px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+.add-modal-switch input:checked + .add-modal-slider { background-color: #FE9A57; }
+.add-modal-switch input:checked + .add-modal-slider:before { transform: translateX(20px); }
+
+/* 액션 버튼 */
+.add-modal-actions {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+  height: 41px;
+}
+
+.add-modal-btn-cancel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 20px;
+  width: 72px;
+  height: 41px;
+  background: #D9D9D9;
+  border: none;
+  border-radius: 5px;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 21px;
+  color: #FFFFFF;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.add-modal-btn-cancel:hover { background: #c4c4c4; }
+
+.add-modal-btn-add {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 25px;
+  flex: 1;
+  height: 41px;
+  background: #FE9A57;
+  border: none;
+  border-radius: 5px;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 21px;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.add-modal-btn-add:hover { background: #f08040; }
+
+@media (max-width: 480px) {
+  .add-modal-container {
+    width: calc(100% - 32px);
+    min-width: unset;
+  }
+}

@@ -1,25 +1,36 @@
 import React, { useState } from 'react';
 import MainButton from '../../components/MainButton/MainButton';
 import Avatar from '../../components/Avatar/Avatar';
+import AddProjectModal from './components/AddProjectModal';
 import './ProfilePage.css';
 
 const ProfilePage = () => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
   const [userInfo] = useState({
     name: '김아무개',
-    taskStats: { completed: 3, total: 5 },
+    taskStats: { completed: 3, total: 4 },
   });
 
-  const [projects] = useState([
+  const [projects, setProjects] = useState([
     { id: 1, title: '동아리 프로젝트', role: 'PM', startDate: '2025-03-20', endDate: null, score: null },
     { id: 2, title: 'WAP 해커톤', role: 'FE', startDate: '2025-03-20', endDate: '2025-07-20', score: 4.7 },
   ]);
 
-  const [manualProjects] = useState([]);
+  const [manualProjects, setManualProjects] = useState([]);
 
   const formatDate = (dateStr) => {
     if (!dateStr) return '';
     const [y, m, d] = dateStr.split('-');
     return `${y}.${m}.${d}`;
+  };
+
+  const handleAddProject = (newProject) => {
+    setManualProjects((prev) => [
+      ...prev,
+      { id: Date.now(), ...newProject },
+    ]);
   };
 
   return (
@@ -29,7 +40,6 @@ const ProfilePage = () => {
       </h1>
 
       <section className="profile-main-card">
-        {/* 상단: 아바타+이름 / 태스크 */}
         <div className="profile-header-row">
           <div className="profile-user-info">
             <Avatar alt="프로필" size="lg" />
@@ -39,15 +49,14 @@ const ProfilePage = () => {
           </div>
           <div className="user-task-display">
             <span className="task-stats-num">
-              <span style={{ color: '#FF6600' }}>{userInfo.taskStats.completed}</span>
-              <span style={{ color: '#000000' }}>/{userInfo.taskStats.total}</span>
+              <span className="task-stats-completed">{userInfo.taskStats.completed}</span>
+              <span className="task-stats-total">/{userInfo.taskStats.total}</span>
             </span>
           </div>
         </div>
 
         <hr className="profile-divider" />
 
-        {/* 프로젝트 경험 */}
         <div className="form-field">
           <label className="form-label">프로젝트 경험</label>
           <div className="project-experience-list">
@@ -96,12 +105,37 @@ const ProfilePage = () => {
                 </div>
               </div>
             ))}
+
+            {isEditing && (
+              <button className="proj-add-row-btn" onClick={() => setIsAddModalOpen(true)}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <line x1="12" y1="5" x2="12" y2="19" stroke="#ABABAB" strokeWidth="1.5" strokeLinecap="round"/>
+                  <line x1="5" y1="12" x2="19" y2="12" stroke="#ABABAB" strokeWidth="1.5" strokeLinecap="round"/>
+                </svg>
+                <span className="proj-add-text">프로젝트 추가하기</span>
+              </button>
+            )}
           </div>
         </div>
+
         <div className="profile-actions">
-          <MainButton size="md">수정하기</MainButton>
+          {isEditing ? (
+            <>
+              <button className="btn-edit-cancel" onClick={() => setIsEditing(false)}>취소</button>
+              <button className="btn-edit-complete">완료</button>
+            </>
+          ) : (
+            <MainButton size="md" onClick={() => setIsEditing(true)}>수정하기</MainButton>
+          )}
         </div>
       </section>
+
+      {isAddModalOpen && (
+        <AddProjectModal
+          onClose={() => setIsAddModalOpen(false)}
+          onAdd={handleAddProject}
+        />
+      )}
     </div>
   );
 };

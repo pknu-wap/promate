@@ -1,5 +1,6 @@
 package org.example.promate.domain.apply.repository;
 
+
 import org.example.promate.domain.apply.entity.Apply;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -29,6 +30,10 @@ public interface ApplyRepository extends JpaRepository<Apply, Long> {
             "left join fetch ap.project " +
             "where a.id = :applicationId")
     Optional<Apply> findByIdWithUserAndProjects(@Param("applicationId") Long applicationId);
+
+    // 특정 사용자의 지원 목록 조회 (N+1 문제 방지)
+    @Query("select a from Apply a join fetch a.recruit where a.user.id = :userId")
+    List<Apply> findByUserIdWithRecruit(@Param("userId") Long userId);
 
 
     void deleteAllByRecruitId(Long id);

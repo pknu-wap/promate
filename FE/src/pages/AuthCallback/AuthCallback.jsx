@@ -1,11 +1,13 @@
 import { useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { requestKakaoLogin } from "../../api/authApi";
+import { requestKakaoLogin } from "../../api/kakaoAuthApi.js";
+import { useAuthStore } from "../../stores/useAuthStore.js";
 
 export default function AuthCallback() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const isRequesting = useRef(false);
+  const login = useAuthStore((state) => state.login);
 
   useEffect(() => {
     const code = searchParams.get("code");
@@ -25,11 +27,10 @@ export default function AuthCallback() {
 
       try {
         const data = await requestKakaoLogin(code, state);
-        if (data && data.accessToken) {
-          localStorage.setItem("accessToken", data.accessToken);
+        if (data) {
+          login(data.accessToken, data.refreshToken);
         }
-        localStorage.removeItem("oauth_state");
-        navigate("/");
+        navigate("/dashboard");
       } catch (err) {
         console.error("카카오 로그인 처리 실패:", err);
         alert(err.message || "로그인 처리 중 오류가 발생했습니다.");

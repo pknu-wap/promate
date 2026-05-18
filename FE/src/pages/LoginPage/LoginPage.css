@@ -108,6 +108,8 @@ body,
   border-radius: 5px;
   background: #fee500;
   cursor: pointer;
+  text-decoration: none;
+  color: inherit;
 }
 
 .kakao-login-btn:hover {
@@ -143,6 +145,7 @@ body,
   line-height: 1;
   color: #371d1e;
   white-space: nowrap;
+  
 }
 
 @media (max-width: 414px) {

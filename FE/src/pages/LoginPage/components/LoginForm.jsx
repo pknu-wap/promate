@@ -11,12 +11,16 @@ function LoginForm({ onLogin, isLoading }) {
 
   return (
     <form className="login-form" onSubmit={handleSubmit}>
-      <button type="submit" className="kakao-login-btn" disabled={isLoading}>
+      <button
+        type="submit"
+        className="kakao-login-btn"
+        disabled={isLoading}
+      >
         <span className="kakao-login-content">
           <img src={kakaoLogo} alt="카카오 로고" className="kakao-icon" />
 
           <span className="kakao-login-text">
-            {isLoading ? "로그인 연결 중..." : "카카오 로그인으로 시작"}
+            {isLoading ? "이동 중..." : "카카오 로그인으로 시작"}
           </span>
         </span>
       </button>

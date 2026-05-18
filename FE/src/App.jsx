@@ -10,6 +10,7 @@ import TeammakingPage from "./pages/Teammaking/TeammakingPage.jsx";
 import ProfilePage from "./pages/ProfilePage/ProfilePage.jsx";
 import FindTeamPage from "./pages/FindTeam/FindTeamPage.jsx";
 import DashboardPage from "./pages/DashboardPage/DashboardPage.jsx";
+import ProjectPage from "./pages/ProjectPage/ProjectPage.jsx";
 
 function AppLayout({ isMenuOpen, toggleMenu, closeMenu }) {
   return (
@@ -58,6 +59,7 @@ function App() {
           <Route path="/teammaking" element={<TeammakingPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/find-team" element={<FindTeamPage />} />
+          <Route path="/project" element={<ProjectPage />} />
          
           <Route path="*" element={<ComingSoonPage />} />
         </Route>

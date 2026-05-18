@@ -1,53 +1,40 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './DashboardPage.css';
-import Calendar from './components/Calendar';
+import Calendar from '../../components/Calendar/Calendar';
 import projectMenuIcon from '../../assets/projectMenuIcon.svg';
 import SummaryCard from './components/SummaryCard';
-import StatusItem from './components/StatusItem';
+import ProjectBox from '../../components/ProjectBox/ProjectBox';
+import moreIcon from '../../assets/moreIcon.svg';
 
 // 임시 데이터
 const dummyDashboardData = {
-  activeProjects: [
-    { id: 1, title: '캡스톤 디자인', date: '2026.05.08' },
-    { id: 2, title: '팀플 과제', date: '2026.06.01' },
-    { id: 3, title: 'WAP 프로젝트', date: '2026.06.05' },
-
+  projects: [
+    { id: 1, title: 'WAP 프로젝트', dueDate: '2026.06.05', currentStep: 125, totalStep: 150 },
+    { id: 2, title: '프로그래밍 팀플', dueDate: '2026.06.17', currentStep: 12, totalStep: 18 },
   ],
   urgentTasks: [
-    { id: 1, title: '캡스톤 디자인 - 자료 조사하기', date: '2026.05.05' },
-    { id: 2, title: 'WAP 프로젝트 - 중간 발표', date: '2026.05.06' },
-    { id: 3, title: '팀플 과제 - PPT 제작', date: '2026.05.17' },
-    { id: 4, title: '팀플 과제 - PPT 제작', date: '2026.05.19' },
+    { id: 1, title: '캡스톤 디자인 - 자료 조사하기', dueDate: '2026.05.05' },
+    { id: 2, title: 'WAP 프로젝트 - 중간 발표', dueDate: '2026.05.06' },
   ],
   completedTasks: [
-    { id: 1, title: 'WAP 프로젝트', date: '2025.11.28' },
-    { id: 2, title: '팀플 과제', date: '2026.04.01' },
-  ],
-  projectStatuses: [
-    {
-      id: 1,
-      title: '캡스톤 디자인',
-      date: '2026.05.08',
-      ratio: '12/18',
-    },
-    {
-      id: 2,
-      title: 'WAP 프로젝트',
-      date: '2027.06.05',
-      ratio: '3/18',
-    },
+    { id: 1, title: 'WAP 프로젝트 - 대시보드 개발', dueDate: '2025.11.28' },
+    { id: 2, title: '프로그래밍 팀플 - 오류 수정', dueDate: '2026.04.01' },
+    { id: 3, title: '프로그래밍 팀플 - PPT 제작', dueDate: '2026.04.17' },
+    { id: 4, title: '캡스톤 디자인 - 프로젝트 계획서 작성', dueDate: '2026.05.01' },
   ],
 };
 
 function DashboardPage() {
   const [dashboardData, setDashboardData] = useState({
-    activeProjects: [],
+    projects: [],
     urgentTasks: [],
     completedTasks: [],
-    projectStatuses: [],
   });
 
   const [isLoading, setIsLoading] = useState(true);
+  const [visibleStatusCount, setVisibleStatusCount] = useState(3);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // 백엔드 API 연결 시 이 부분 수정
@@ -70,7 +57,7 @@ function DashboardPage() {
       {
         id: 1,
         title: '참여 중인 프로젝트',
-        items: dashboardData.activeProjects,
+        items: dashboardData.projects,
         showDot: true,
       },
       {
@@ -86,6 +73,10 @@ function DashboardPage() {
     ],
     [dashboardData]
   );
+
+  const handleShowMoreStatus = () => {
+    setVisibleStatusCount((prevCount) => prevCount + 3);
+  };
 
   if (isLoading) {
     return (
@@ -123,15 +114,39 @@ function DashboardPage() {
             </div>
 
             <div className="status-list">
-              {dashboardData.projectStatuses.map((project) => (
-                <StatusItem
+              {dashboardData.projects.slice(0, visibleStatusCount).map((project) => (
+                <ProjectBox
                   key={project.id}
                   title={project.title}
-                  date={project.date}
-                  ratio={project.ratio}
+                  dueDate={project.dueDate}
+                  currentStep={project.currentStep}
+                  totalStep={project.totalStep}
+                  avatarSize="52px"
+                  onClick={() => navigate(`/project/${project.id}`)}
+                  hidePcLabel
                 />
               ))}
             </div>
+
+            {visibleStatusCount < dashboardData.projects.length ? (
+              <button 
+                className="more-btn" 
+                onClick={handleShowMoreStatus} 
+                style={{ alignSelf: 'center', marginTop: '16px' }}
+              >
+                더보기
+                <img src={moreIcon} alt="moreIcon" />
+              </button>
+            ) : dashboardData.projects.length > 3 ? (
+              <button 
+                className="more-btn" 
+                onClick={() => setVisibleStatusCount(3)} 
+                style={{ alignSelf: 'center', marginTop: '16px' }}
+              >
+                접기
+                <img src={moreIcon} alt="moreIcon" style={{ transform: 'rotate(180deg)' }} />
+              </button>
+            ) : null}
           </div>
         </div>
       </div>

@@ -80,6 +80,20 @@
   flex-direction: column;
 }
 
+.favorite-item-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  padding: 8px 12px;
+  margin: -8px -12px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.favorite-item-link:hover {
+  background-color: #F8F9FA;
+}
+
 .favorite-item-header {
   display: flex;
   align-items: center;
@@ -123,6 +137,9 @@
   transform: scale(0.98);
 }
 
+.new-project-btn:hover {
+  background-color: #F58B45;
+}
 
 
 @media (max-width: 768px) {

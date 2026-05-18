@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import moreIcon from '../../../assets/moreIcon.svg';
 import './SummaryCard.css';
 import { getDiffDays } from '../components/DateUtils';
 
 function SummaryCard({ title, count, items = [], showDot }) {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(() => window.innerWidth > 768);
   const [visibleCount, setVisibleCount] = useState(3);
+  
+  const navigate = useNavigate();
 
   //카드 헤더 클릭 시 리스트를 접거나 펼쳐짐, 접을 때 표시 개수를 초기값으로 리셋
   const toggleExpand = () => {
@@ -47,17 +50,21 @@ function SummaryCard({ title, count, items = [], showDot }) {
         <>
           <ul className="summary-list">
             {visibleItems.map((item) => (
-              <li key={item.id} className="summary-item">
+              <li 
+                key={item.id} 
+                className="summary-item"
+                onClick={() => navigate(`/project/${item.id}`)}
+              >
                 {showDot && (
                   <span
                     className="item-dot"
-                    style={{ backgroundColor: getDotColor(item.date) }}
+                    style={{ backgroundColor: getDotColor(item.dueDate) }}
                   />
                 )}
 
                 <div className="item-text">
                   <span className="item-name">{item.title}</span>
-                  <span className="item-date">마감일: {item.date}</span>
+                  <span className="item-date">마감일: {item.dueDate}</span>
                 </div>
               </li>
             ))}

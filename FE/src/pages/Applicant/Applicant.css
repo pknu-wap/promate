@@ -228,6 +228,7 @@
   line-height: 19px;
   color: #909090;
   text-align: center;
+  white-space: nowrap;
 }
 
 .ad-th--name {
@@ -418,25 +419,37 @@
   color: #000000;
 }
 
+/* 패널 태스크 통계 — Figma 기준 */
 .app-task-stat {
   display: flex;
-  align-items: baseline;
-  gap: 1px;
-  font-family: 'YSpotlightOTF', 'Pretendard', sans-serif;
-  font-weight: 400;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  width: 46px;
+  height: 40px;
 }
 
+/* 숫자 (3) — YSpotlightOTF 30px #FF6600 */
 .app-task-num {
-  font-size: 24px;
-  line-height: 32px;
-  color: #FE9A57;
+  font-family: 'YSpotlightOTF', 'Pretendard', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 40px;
+  color: #FF6600;
+  text-align: right;
 }
 
-.app-task-sep,
-.app-task-total {
-  font-size: 22px;
-  line-height: 30px;
-  color: #000000;
+/* 분모 (/4) — Pretendard 600 20px #ABABAB */
+.app-task-denom {
+  font-family: 'Pretendard', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 24px;
+  color: #ABABAB;
+  text-align: right;
 }
 
 .app-avatar-lg {
@@ -681,6 +694,16 @@
   .ad-th--date,
   .ad-cell--date {
     display: none;
+  }
+
+  /* 지원서 보기 버튼 — 모바일에서 축소 */
+  .ad-view-btn {
+    width: 80px;
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+  .ad-thead > span:last-child {
+    width: 80px;
   }
 
   /* 패널 */

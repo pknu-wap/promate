@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Avatar from '../../components/Avatar/Avatar';
+import ProjectCard from '../../components/ProjectCard/ProjectCard';
 import logoIcon from '../../assets/logoIcon.svg';
 import './Applicant.css';
 
@@ -8,29 +9,29 @@ const applicantList = [
     id: 1, name: '김은비', taskStats: { completed: 3, total: 5 }, date: '2026-05-02',
     projects: [
       { name: '동아리 프로젝트', role: 'PM', status: '진행중', score: 4.6 },
-      { name: 'WAP 해커톤',    role: 'FE', status: '완료',   score: 4.7 },
+      { name: 'WAP 해커톤', role: 'FE', status: '완료', score: 4.7 },
     ],
   },
   {
     id: 2, name: '김은비', taskStats: { completed: 3, total: 5 }, date: '2026-05-02',
     projects: [
       { name: '동아리 프로젝트', role: 'PM', status: '진행중', score: 4.6 },
-      { name: 'WAP 해커톤',    role: 'FE', status: '완료',   score: 4.7 },
+      { name: 'WAP 해커톤', role: 'FE', status: '완료', score: 4.7 },
     ],
   },
   {
     id: 3, name: '김은비', taskStats: { completed: 3, total: 5 }, date: '2026-05-02',
     projects: [
       { name: '동아리 프로젝트', role: 'PM', status: '진행중', score: 4.6 },
-      { name: 'WAP 해커톤',    role: 'FE', status: '완료',   score: 4.7 },
+      { name: 'WAP 해커톤', role: 'FE', status: '완료', score: 4.7 },
     ],
   },
 ];
 
 const tabs = [
   { key: 'applicant', label: '현재 지원자' },
-  { key: 'member',    label: '현재 팀원' },
-  { key: 'rejected',  label: '거절한 지원자' },
+  { key: 'member', label: '현재 팀원' },
+  { key: 'rejected', label: '거절한 지원자' },
 ];
 
 const ApplicantDetail = () => {
@@ -44,8 +45,6 @@ const ApplicantDetail = () => {
       <h1 className="ad-title">지원자 검토 - 캡스톤 디자인</h1>
 
       <div className="ad-card">
-
-        {/* 탭 바 */}
         <div className="ad-tab-bar">
           {tabs.map((tab) => (
             <button
@@ -58,7 +57,6 @@ const ApplicantDetail = () => {
           ))}
         </div>
 
-        {/* 테이블 */}
         <div className="ad-table">
           <div className="ad-thead">
             <span className="ad-th ad-th--name">이름</span>
@@ -90,17 +88,14 @@ const ApplicantDetail = () => {
             </div>
           ))}
         </div>
-
       </div>
 
-      {/* 지원서 보기 패널 */}
       {selectedApplicant && (
         <>
           <div className="app-panel-dim" onClick={closePanel} />
 
           <div className="app-panel">
             <div className="app-panel-inner">
-
               <div className="app-panel-top">
                 <div className="app-profile-header">
                   <Avatar size="lg" className="app-avatar-lg" />
@@ -109,8 +104,7 @@ const ApplicantDetail = () => {
                       <span className="app-name">{selectedApplicant.name}</span>
                       <div className="app-task-stat">
                         <span className="app-task-num">{selectedApplicant.taskStats.completed}</span>
-                        <span className="app-task-sep">/</span>
-                        <span className="app-task-total">{selectedApplicant.taskStats.total}</span>
+                        <span className="app-task-denom">/{selectedApplicant.taskStats.total}</span>
                       </div>
                     </div>
                   </div>
@@ -120,21 +114,13 @@ const ApplicantDetail = () => {
                   <span className="app-projects-title">프로젝트 경험</span>
                   <div className="app-projects-list">
                     {selectedApplicant.projects.map((proj, i) => (
-                      <div key={i} className="app-proj-row">
-                        <div className="app-proj-left">
-                          <span className="app-proj-name">{proj.name}</span>
-                          <span className="app-proj-role">{proj.role}</span>
-                        </div>
-                        <div className="app-proj-right">
-                          <span className={`app-status-badge--${proj.status === '진행중' ? 'active' : 'done'}`}>
-                            {proj.status}
-                          </span>
-                          <div className="app-score">
-                            <span className="app-score-num">{proj.score}</span>
-                            <span className="app-score-label">점</span>
-                          </div>
-                        </div>
-                      </div>
+                      <ProjectCard
+                        key={i}
+                        name={proj.name}
+                        role={proj.role}
+                        status={proj.status}
+                        score={proj.score}
+                      />
                     ))}
                   </div>
                 </div>
@@ -144,7 +130,6 @@ const ApplicantDetail = () => {
                 <button className="app-btn-accept">수락</button>
                 <button className="app-btn-reject" onClick={closePanel}>거절</button>
               </div>
-
             </div>
           </div>
         </>

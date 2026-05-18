@@ -21,18 +21,15 @@ const ApplicantList = () => {
       <section className="al-list">
         {projects.map((project) => (
           <article className="al-card" key={project.id}>
-            {/* 로고 박스 */}
             <div className="al-logo-box">
               <img src={logoIcon} alt={`${project.title} 로고`} />
             </div>
 
-            {/* 프로젝트 정보 */}
             <div className="al-content">
               <h2 className="al-project-title">{project.title}</h2>
               <p className="al-project-summary">{project.summary}</p>
             </div>
 
-            {/* 우측: 모집인원 + 버튼 */}
             <div className="al-actions">
               <span className="al-capacity">모집인원: {project.capacity}명</span>
               <button

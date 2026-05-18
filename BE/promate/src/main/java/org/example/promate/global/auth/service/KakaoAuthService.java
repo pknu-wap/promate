@@ -96,8 +96,6 @@ public class KakaoAuthService {
             tokenResult = tokenResponse.getBody();
         } catch (Exception e) {
 
-            e.printStackTrace(); // 디버깅로그
-
             throw new AuthException(AuthErrorCode.KAKAO_TOKEN_REQUEST_FAILED);
         }
 
@@ -127,8 +125,6 @@ public class KakaoAuthService {
             );
             userInfo = userResponse.getBody();
         } catch (Exception e) {
-
-            e.printStackTrace(); // 디버깅로그
             throw new AuthException(AuthErrorCode.KAKAO_USER_INFO_FAILED);
         }
 
@@ -138,11 +134,21 @@ public class KakaoAuthService {
 
         Long kakaoId = userInfo.getKakaoId();
 
+        String profileImageUrl = userInfo.getKakaoAccount()
+                .getProfile()
+                .getProfileImageUrl();
+
+        String name = userInfo.getKakaoAccount() // 카카오에서 일단 카카오톡 닉네임을 받아오고, 나중에 프로필 수정에서 수정 가능
+                .getProfile()
+                .getNickname();
+
         User user = userRepository.findByKakaoId(kakaoId)
                 .orElseGet(() -> userRepository.save(
                         User.builder()
                                 .kakaoId(kakaoId)
+                                .name(name)
                                 .isProfileCompleted(false)
+                                .profileImageUrl(profileImageUrl)
                                 .build()
                 ));
 

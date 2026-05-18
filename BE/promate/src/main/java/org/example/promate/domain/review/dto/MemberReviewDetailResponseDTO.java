@@ -3,6 +3,7 @@ package org.example.promate.domain.review.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -23,5 +24,6 @@ public class MemberReviewDetailResponseDTO {
         private int problemSolvingScore;
         private double averageScore;
         private String comment;
+        private LocalDateTime createdAt;
     }
 }

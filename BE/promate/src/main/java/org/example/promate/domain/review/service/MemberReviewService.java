@@ -141,7 +141,8 @@ public class MemberReviewService {
                             review.getResponsibilityScore(),
                             review.getProblemSolvingScore(),
                             Math.round(reviewAverage * 10) / 10.0,
-                            review.getComment()
+                            review.getComment(),
+                            review.getCreatedAt()
                     );
                 })
                 .toList();

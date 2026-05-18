@@ -34,7 +34,6 @@ function DashboardPage() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [visibleStatusCount, setVisibleStatusCount] = useState(3);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -130,18 +129,18 @@ function DashboardPage() {
             </div>
 
             {visibleStatusCount < dashboardData.projects.length ? (
-              <button
-                className="more-btn"
-                onClick={handleShowMoreStatus}
+              <button 
+                className="more-btn" 
+                onClick={handleShowMoreStatus} 
                 style={{ alignSelf: 'center', marginTop: '16px' }}
               >
                 더보기
                 <img src={moreIcon} alt="moreIcon" />
               </button>
             ) : dashboardData.projects.length > 3 ? (
-              <button
-                className="more-btn"
-                onClick={() => setVisibleStatusCount(3)}
+              <button 
+                className="more-btn" 
+                onClick={() => setVisibleStatusCount(3)} 
                 style={{ alignSelf: 'center', marginTop: '16px' }}
               >
                 접기

@@ -11,6 +11,7 @@ import org.example.promate.domain.workspace.dto.req.PostReqDto;
 import org.example.promate.domain.workspace.dto.req.ScheduleReqDto;
 import org.example.promate.domain.workspace.dto.res.PostResDto;
 import org.example.promate.domain.workspace.dto.res.ScheduleResDto;
+import org.example.promate.domain.workspace.enums.PostType;
 import org.example.promate.global.ApiPayload.ApiResponse;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -104,7 +105,7 @@ public interface PostControllerDocs {
     @Operation(
             summary = "POST_05 게시글 목록 조회하기",
             operationId = "WORKSPACE_POST_05",
-            description = "게시글의 목록을 조회합니다."
+            description = "게시글의 타입별로 목록을 조회합니다. 타입이 null인 경우 전체 게시글 목록을, NOTICE, GENERAL인 경우 각각의 게시글 목록을 반환합니다."
     )
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(
@@ -114,8 +115,9 @@ public interface PostControllerDocs {
             )
     })
     @GetMapping("/projects/{projectId}")
-    ApiResponse<PostResDto.PostListDto> getAllPost(
+    ApiResponse<PostResDto.PostListDto> getAllPostByType(
             @AuthenticationPrincipal Long userId,
-            @PathVariable Long projectId
+            @PathVariable Long projectId,
+            @RequestParam(name = "type", required = false) PostType postType
     );
 }

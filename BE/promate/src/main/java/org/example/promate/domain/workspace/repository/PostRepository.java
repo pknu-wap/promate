@@ -1,6 +1,7 @@
 package org.example.promate.domain.workspace.repository;
 
 import org.example.promate.domain.workspace.entity.Post;
+import org.example.promate.domain.workspace.enums.PostType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,6 +29,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("select p from Post p " +
             "join fetch p.project " +
-            "where p.project.id = :projectId and p.isDeleted = false")
-    List<Post> findAllByProjectId(@Param("projectId") Long projectId);
+            "where p.project.id = :projectId " +
+            "and p.isDeleted = false " +
+            "and (:postType is null or p.postType = :postType) " +
+            "order by p.createdAt desc") // 최신순 정렬 추가
+    List<Post> findAllByProjectIdAndPostType(
+            @Param("projectId") Long projectId,
+            @Param("postType") PostType type
+    );
 }

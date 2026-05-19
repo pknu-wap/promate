@@ -5,6 +5,7 @@ import org.example.promate.domain.workspace.code.PostSuccessCode;
 import org.example.promate.domain.workspace.controller.docs.PostControllerDocs;
 import org.example.promate.domain.workspace.dto.req.PostReqDto;
 import org.example.promate.domain.workspace.dto.res.PostResDto;
+import org.example.promate.domain.workspace.enums.PostType;
 import org.example.promate.domain.workspace.service.command.PostCommandService;
 import org.example.promate.domain.workspace.service.query.PostQueryService;
 import org.example.promate.global.ApiPayload.ApiResponse;
@@ -61,10 +62,12 @@ public class PostController implements PostControllerDocs {
 
     // 게시글 목록 조회
     @GetMapping()
-    public ApiResponse<PostResDto.PostListDto> getAllPost(
+    public ApiResponse<PostResDto.PostListDto> getAllPostByType(
             @AuthenticationPrincipal Long userId,
-            @PathVariable Long projectId
+            @PathVariable Long projectId,
+            @RequestParam(name = "type", required = false) PostType postType
     ){
-        return ApiResponse.onSuccess(PostSuccessCode.LIST_OK, postQueryService.getAllPost(userId, projectId));
+        return ApiResponse.onSuccess(PostSuccessCode.LIST_OK, postQueryService.getAllPostByType(userId, projectId, postType));
     }
+
 }

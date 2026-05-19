@@ -8,6 +8,7 @@ import org.example.promate.domain.workspace.code.PostErrorCode;
 import org.example.promate.domain.workspace.converter.PostConverter;
 import org.example.promate.domain.workspace.dto.res.PostResDto;
 import org.example.promate.domain.workspace.entity.Post;
+import org.example.promate.domain.workspace.enums.PostType;
 import org.example.promate.domain.workspace.exception.PostException;
 import org.example.promate.domain.workspace.repository.PostRepository;
 import org.springframework.data.domain.Page;
@@ -19,7 +20,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class PostQueryServiceImpl implements PostQueryService{
+public class PostQueryServiceImpl implements PostQueryService {
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
 
@@ -27,7 +28,7 @@ public class PostQueryServiceImpl implements PostQueryService{
     @Override
     public PostResDto.PostDto getPost(Long userId, Long projectId, Long postId) {
         //검증1: 사용자가 프로젝트 멤버인가
-        if(!memberRepository.existsByUserIdAndProjectId(userId, projectId)){
+        if (!memberRepository.existsByUserIdAndProjectId(userId, projectId)) {
             throw new MemberException(MemberErrorCode.POST_FORBIDDEN_NOT_PROJECT_MEMBER);
         }
 
@@ -38,14 +39,13 @@ public class PostQueryServiceImpl implements PostQueryService{
     }
 
     @Override
-    public PostResDto.PostListDto getAllPost(Long userId, Long projectId) {
+    public PostResDto.PostListDto getAllPostByType(Long userId, Long projectId, PostType type) {
         //검증1: 사용자가 프로젝트 멤버인가
-        if(!memberRepository.existsByUserIdAndProjectId(userId, projectId)){
+        if (!memberRepository.existsByUserIdAndProjectId(userId, projectId)) {
             throw new MemberException(MemberErrorCode.POST_FORBIDDEN_NOT_PROJECT_MEMBER);
         }
 
-        List<Post> allByProjectId = postRepository.findAllByProjectId(projectId);
-
-        return PostConverter.toPostListDto(allByProjectId);
+        List<Post> allByProjectIdAndPostType = postRepository.findAllByProjectIdAndPostType(projectId, type);
+        return PostConverter.toPostListDto(allByProjectIdAndPostType);
     }
 }

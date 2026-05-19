@@ -24,5 +24,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "and t.isDeleted = false")
     Optional<Task> findByIdAndIsDeletedFalse(@Param("taskId")Long id);
 
-    List<Task> findAllByProjectIdAndMemberId(Long projectId, Long memberId);
+    int countByProjectIdAndStatus(Long projectId, TaskStatus status);
+    int countByProjectIdAndStatusIn(Long projectId, List<TaskStatus> statuses); // 완료, 미완료 task 조회
 }

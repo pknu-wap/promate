@@ -1,0 +1,302 @@
+.profile-popover-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+
+  background: transparent;
+}
+
+.profile-popover {
+  position: absolute;
+  top: 72px;
+  left: 24px;
+  z-index: 1000;
+
+  width: 360px;
+  padding: 24px;
+
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.14);
+}
+
+.profile-popover::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 30px;
+
+  width: 16px;
+  height: 16px;
+
+  background: #ffffff;
+  transform: rotate(45deg);
+}
+
+.profile-popover-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding-right: 16px;
+}
+
+.profile-close-x-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 30px;
+  height: 30px;
+  padding: 0;
+
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 30%;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.profile-close-x-btn:hover {
+  background-color: #f1f1f1;
+}
+
+.profile-close-x-btn img {
+  width: 24px;
+  height: 24px;
+}
+
+.profile-user-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.profile-name {
+  font-family: "Pretendard";
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 22px;
+
+  color: #000000;
+}
+
+.profile-task-count {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.completed-task {
+  font-family: "Y SpotlightOTF";
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 34px;
+
+  color: #ff6600;
+}
+
+.total-task {
+  font-family: "Pretendard";
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 24px;
+
+  color: #ababab;
+}
+
+.profile-project-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  margin-top: 20px;
+  padding-top: 18px;
+
+  border-top: 1px solid #d9d9d9;
+}
+
+.profile-section-title {
+  margin: 0;
+
+  font-family: "Pretendard";
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+
+  color: #000000;
+}
+
+.profile-project-list {
+  display: flex;
+  flex-direction: column;
+  max-height: 126px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.profile-project-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.profile-project-list::-webkit-scrollbar-thumb {
+  background: #d9d9d9;
+  border-radius: 4px;
+}
+
+.profile-project-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.profile-project-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+
+  padding: 12px 0;
+
+  border-bottom: 1px solid #eeeeee;
+}
+
+.project-main-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.project-title {
+  font-family: "Pretendard";
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 18px;
+
+  color: #000000;
+}
+
+.project-period {
+  font-family: "Pretendard";
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+
+  color: #ababab;
+}
+
+.project-sub-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.project-status {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  min-width: 52px;
+  height: 22px;
+  padding: 2px 12px;
+
+  border-radius: 20px;
+
+  font-family: "Pretendard";
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 15px;
+}
+
+.project-status.active {
+  background: #ffebde;
+  color: #fe9a57;
+}
+
+.project-status.done {
+  background: #d9d9d9;
+  color: #ffffff;
+}
+
+.project-score {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 3px;
+
+  width: 42px;
+}
+
+.score-number {
+  font-family: "Y SpotlightOTF";
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 24px;
+
+  color: #fe9a57;
+}
+
+.score-text,
+.empty-score {
+  font-family: "Pretendard";
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+
+  color: #000000;
+}
+
+@media (max-width: 768px) {
+  .profile-popover {
+    top: 64px;
+    left: 50%;
+    transform: translateX(-50%);
+    
+    width: calc(100vw - 32px);
+    max-width: 360px;
+    padding: 20px 16px;
+  }
+
+  .profile-popover::before {
+    display: none;
+  }
+
+  .profile-user-info {
+    gap: 10px;
+  }
+
+  .profile-name {
+    font-size: 16px;
+  }
+
+  .completed-task {
+    font-size: 24px;
+  }
+
+  .total-task {
+    font-size: 16px;
+  }
+
+  .project-title {
+    font-size: 14px;
+  }
+
+  .project-period {
+    font-size: 11px;
+  }
+
+  .project-status {
+    min-width: 46px;
+    font-size: 11px;
+    padding: 2px 8px;
+  }
+
+  .profile-close-x-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+}

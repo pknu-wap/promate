@@ -24,4 +24,6 @@ public interface MemberRepository extends JpaRepository<Member,Long> {
             @Param("userId") Long userId,
             @Param("status") ProjectStatus status
     );
+
+    Optional<Member> findByUserId(Long userId);
 }

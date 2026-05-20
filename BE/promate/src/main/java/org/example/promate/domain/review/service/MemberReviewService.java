@@ -158,4 +158,22 @@ public class MemberReviewService {
                 reviewDetails
         );
     }
+
+    @Transactional(readOnly = true)
+    public List<MemberReviewResponseDTO.ReviewTarget> getReviewTargets(
+            Long userId,
+            Long projectId
+    ) {
+        if (!memberRepository.existsByUserIdAndProjectId(userId, projectId)) {
+            throw new ReviewException(ReviewErrorCode.NOT_PROJECT_MEMBER);
+        }
+
+        return memberRepository.findByProjectId(projectId).stream()
+                .filter(member -> !member.getUser().getId().equals(userId))
+                .map(member -> new MemberReviewResponseDTO.ReviewTarget(
+                        member.getUser().getId(),
+                        member.getUser().getName()
+                ))
+                .toList();
+    }
 }

@@ -8,4 +8,11 @@ import lombok.Getter;
 public class MemberReviewResponseDTO {
 
     private int submittedCount;
+
+    @Getter
+    @AllArgsConstructor
+    public static class ReviewTarget {
+        private Long revieweeId;
+        private String name;
+    }
 }

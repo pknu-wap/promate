@@ -10,6 +10,8 @@ import org.example.promate.global.ApiPayload.ApiResponse;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/projects")
@@ -37,6 +39,17 @@ public class MemberReviewController {
         return ApiResponse.onSuccess(
                 ReviewSuccessCode.REVIEW_READ,
                 memberReviewService.getMyReviews(userId, projectId)
+        );
+    }
+
+    @GetMapping("/{projectId}/reviews/targets")
+    public ApiResponse<List<MemberReviewResponseDTO.ReviewTarget>> getReviewTargets(
+            @AuthenticationPrincipal Long userId,
+            @PathVariable Long projectId
+    ) {
+        return ApiResponse.onSuccess(
+                ReviewSuccessCode.REVIEW_READ,
+                memberReviewService.getReviewTargets(userId, projectId)
         );
     }
 }

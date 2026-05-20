@@ -48,7 +48,7 @@ public class MemberReviewController {
             @PathVariable Long projectId
     ) {
         return ApiResponse.onSuccess(
-                ReviewSuccessCode.REVIEW_READ,
+                ReviewSuccessCode.REVIEW_TARGETS_READ,
                 memberReviewService.getReviewTargets(userId, projectId)
         );
     }

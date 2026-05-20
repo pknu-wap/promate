@@ -1,7 +1,5 @@
 package org.example.promate.global.auth.controller;
 
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.example.promate.global.ApiPayload.ApiResponse;
 import org.example.promate.global.ApiPayload.code.GeneralSuccessCode;
@@ -10,12 +8,8 @@ import org.example.promate.global.auth.dto.LogoutRequestDTO;
 import org.example.promate.global.auth.dto.TokenReissueResponseDTO;
 import org.example.promate.global.auth.service.KakaoAuthService;
 import org.example.promate.global.jwt.JwtTokenDto;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.io.IOException;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -48,6 +42,7 @@ public class KakaoAuthController {
                 GeneralSuccessCode.OK,
                 authResponse
         );
+
     }
 
     @PostMapping("/reissue")

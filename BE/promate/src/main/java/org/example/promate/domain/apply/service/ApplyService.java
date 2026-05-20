@@ -6,18 +6,18 @@ import org.example.promate.domain.apply.entity.ApplyProject;
 import org.example.promate.domain.apply.enums.Status;
 import org.example.promate.domain.apply.repository.ApplicationProjectRepository;
 import org.example.promate.domain.apply.repository.ApplyRepository;
-import org.example.promate.domain.project.entity.ManualProject;
 import org.example.promate.domain.project.entity.Member;
 import org.example.promate.domain.project.entity.Project;
 import org.example.promate.domain.project.enums.Position;
-import org.example.promate.domain.project.repository.ManualProjectRepository;
 import org.example.promate.domain.project.repository.MemberRepository;
 import org.example.promate.domain.project.repository.ProjectRepository;
 import org.example.promate.domain.recruit.entity.Recruit;
 import org.example.promate.domain.recruit.enums.RecruitStatus;
 import org.example.promate.domain.recruit.repository.RecruitRepository;
 import org.example.promate.domain.user.entity.User;
+import org.example.promate.domain.user.entity.UserProjectHistory;
 import org.example.promate.domain.user.exception.UserErrorCode;
+import org.example.promate.domain.user.repository.UserProjectHistoryRepository;
 import org.example.promate.domain.user.repository.UserRepository;
 import org.example.promate.domain.recruit.code.RecruitErrorCode;
 import org.example.promate.domain.workspace.entity.Task;
@@ -25,9 +25,7 @@ import org.example.promate.domain.workspace.repository.TaskRepository;
 import org.example.promate.global.ApiPayload.exception.GeneralException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
-
 
 @Service
 @Transactional(readOnly = true)
@@ -41,7 +39,8 @@ public class ApplyService {
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
     private final TaskRepository taskRepository;
-    private final ManualProjectRepository manualProjectRepository;
+    private final UserProjectHistoryRepository userProjectHistoryRepository;
+
 
     public ApplyFormResponse getApplyForm(Long recruitmentId, Long userId) {
         // 모집글 제목을 위한 조회 (Soft Delete 고려)
@@ -71,9 +70,10 @@ public class ApplyService {
 
         validateRecruitingStatus(recruit);
 
-        User user = userRepository.findById(userId).get();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new GeneralException(UserErrorCode.USER_NOT_FOUND));
 
-        // 지원서 Status가 PENDING 아닌 상태라면 지원 차단
+        // 모집글 Status가 RECRUITING 아닌 상태라면 지원 차단
         if (recruit.getStatus() != RecruitStatus.RECRUITING) {
             throw new GeneralException(RecruitErrorCode.RECRUITMENT_ALREADY_CLOSED);
         }
@@ -91,12 +91,20 @@ public class ApplyService {
         // 선택한 프로젝트 이력 매핑 저장
         if (request.getSelectedProjectIds() != null && !request.getSelectedProjectIds().isEmpty()) {
             List<ApplyProject> mappings = request.getSelectedProjectIds().stream()
-                    .map(projectDto -> ApplyProject.builder()
-                            .apply(application)
-                            .isManual(projectDto.isManual())
-                            .promateProjectId(projectDto.isManual() ? null : projectDto.getProjectId())
-                            .manualProjectId(projectDto.isManual() ? projectDto.getProjectId() : null)
-                            .build())
+                    .map(projectDto -> {
+                        ApplyProject.ApplyProjectBuilder builder = ApplyProject.builder()
+                                .apply(application)
+                                .isManual(projectDto.isManual());
+
+                        if (projectDto.isManual()) {
+                            // 수동 프로젝트는 UserProjectHistory ID만 저장
+                            builder.manualProjectId(projectDto.getProjectId());
+                        } else {
+                            Project project = projectRepository.getReferenceById(projectDto.getProjectId());
+                            builder.project(project);
+                        }
+                        return builder.build();
+                    })
                     .toList();
             applyProjectRepository.saveAll(mappings);
         }
@@ -209,7 +217,7 @@ public class ApplyService {
 
         List<ApplicationDetailResponse.PastProjectInfo> pastProjects = apply.getApplyProjects().stream()
                 .map(ap -> {
-                    if (!ap.isManual()) { //applyProject의 isManual 컬럼 값으로 분기
+                    if (!ap.isManual()) {
                         // ProMate 프로젝트 태스크 목록 조회
                         List<String> taskNames = taskRepository.findAllByProjectIdAndMemberId(
                                 ap.getProject().getId(), apply.getUser().getId()
@@ -223,16 +231,16 @@ public class ApplyService {
                                 null
                         );
                     } else {
-                        // 수동 입력 프로젝트 <- 테스크 목록 대신 50자 이내의 글 가져오기
-                        ManualProject manualProject = manualProjectRepository.findById(ap.getManualProjectId())
-                                .orElseThrow(() -> new GeneralException(UserErrorCode.PROJECT_NOT_FOUND));
+                        // 수동 입력 프로젝트 UserProjectHistory
+                        UserProjectHistory userProjectHistory = userProjectHistoryRepository.findById(ap.getManualProjectId())
+                                .orElseThrow(() -> new GeneralException(UserErrorCode.PROJECT_HISTORY_NOT_FOUND));
 
                         return new ApplicationDetailResponse.PastProjectInfo(
                                 ap.getManualProjectId(),
-                                manualProject.getTitle(),
+                                userProjectHistory.getProjectName(), // title -> projectName 변경
                                 "MANUAL",
                                 null,
-                                manualProject.getTaskDescription()// 50자 정도의 String
+                                userProjectHistory.getDescription()  // taskDescription -> description 변경
                         );
                     }
                 }).toList();
@@ -325,3 +333,5 @@ public class ApplyService {
         applyRepository.delete(apply); // 공통 로직 : 지원서 삭제
     }
 }
+
+

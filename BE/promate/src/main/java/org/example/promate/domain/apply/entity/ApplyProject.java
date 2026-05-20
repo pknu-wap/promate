@@ -6,12 +6,9 @@ import org.example.promate.domain.project.entity.Project;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED) // JPA를 위한 최소한의 접근 허용
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ApplyProject {
 
-
-    //지원서 1개는 여러 가지 프로젝트 포함 가능 / 프로젝트 1개는 여러 지원서에 채택 가능
-    //다대다 관계를 표현하기 위한 매핑 클래스임
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,28 +17,24 @@ public class ApplyProject {
     @JoinColumn(name= "apply_id")
     private Apply apply;
 
+    // PROMATE 프로젝트일 경우 객체 그래프 탐색을 위해 매핑 (null 가능)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
 
+    private boolean isManual; // true: 수동 입력(UserProjectHistory), false: ProMate 프로젝트
+
+    // 수동 입력 프로젝트일 경우, 테이블 PK 보관 (null 가능)
+    private Long manualProjectId;
+
     @Builder
-    public ApplyProject(Apply apply, Project project, Long promateProjectId ,Long manualProjectId, boolean isManual) {
+    public ApplyProject(Apply apply, Project project, Long manualProjectId, boolean isManual) {
         this.apply = apply;
         this.project = project;
-        this.promateProjectId = promateProjectId; // 시스템 프로젝트일 경우 (null 가능)
-        this.manualProjectId = manualProjectId; // 수동 프로젝트일 경우 (null 가능)
+        this.manualProjectId = manualProjectId;
         this.isManual = isManual;
     }
 
-    private boolean isManual; // true: 수동 입력한 프로젝트임 , false: ProMate에서 불러온 프로젝트임.
-
-    // 프로메이트로 수행한 프로젝트일 경우의 연관관계
-    private Long promateProjectId;
-
-    // 수동 입력 프로젝트일 경우의 연관관계
-    private Long manualProjectId;
-
-    // 프로젝트 타입 조회용 메서드 (응답 시 활용)
     public String getProjectType() {
         return isManual ? "MANUAL" : "PROMATE";
     }

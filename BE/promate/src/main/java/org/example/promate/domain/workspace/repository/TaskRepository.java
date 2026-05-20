@@ -26,4 +26,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     int countByProjectIdAndStatus(Long projectId, TaskStatus status);
     int countByProjectIdAndStatusIn(Long projectId, List<TaskStatus> statuses); // 완료, 미완료 task 조회
+
+    List<Task> findAllByProjectIdAndMemberId(Long projectId, Long memberId);
 }

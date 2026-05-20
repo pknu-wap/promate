@@ -15,15 +15,16 @@ public enum RecruitSuccessCode implements BaseSuccessCode {
     RECRUITMENT_DELETED(HttpStatus.NO_CONTENT, "RECRUIT_S004", "팀 모집글 삭제를 성공했습니다."),
     RECRUITMENT_FILTERED(HttpStatus.NO_CONTENT, "RECRUIT_S005", "팀 모집글 필터링을 성공했습니다."),
     RECRUITMENT_BOOKMARKED(HttpStatus.NO_CONTENT, "RECRUIT_S006", "팀 모집글 북마크를 성공했습니다."),
+    RECRUITMENT_BOOKMARKED_LIST_FETCHED(HttpStatus.OK,"RECRUIT_S007", "북마크된 모집글 리스트 불러오기를 성공했습니다."),
 
-    APPLY_FORM_LOADED(HttpStatus.OK, "RECRUIT_S007", "팀 지원글 작성 페이지 불러오기를 성공했습니다."),
-    APPLY_FORM_SUBMITTED(HttpStatus.OK, "RECRUIT_S008", "팀 지원글 발행을 성공했습니다."),
-    APPLY_FORM_UPDATED(HttpStatus.OK, "RECRUIT_S009", "팀 지원글 수정을 성공했습니다."),
-    APPLY_FORM_DELETED(HttpStatus.NO_CONTENT, "RECRUIT_S010", "팀 지원글 삭제를 성공했습니다."),
+    APPLY_FORM_LOADED(HttpStatus.OK, "RECRUIT_S008", "팀 지원글 작성 페이지 불러오기를 성공했습니다."),
+    APPLY_FORM_SUBMITTED(HttpStatus.OK, "RECRUIT_S009", "팀 지원글 발행을 성공했습니다."),
+    APPLY_FORM_UPDATED(HttpStatus.OK, "RECRUIT_S010", "팀 지원글 수정을 성공했습니다."),
+    APPLY_FORM_DELETED(HttpStatus.NO_CONTENT, "RECRUIT_S011", "팀 지원글 삭제를 성공했습니다."),
 
-    APPLY_LIST_FETCHED(HttpStatus.OK,"RECRUIT_S011", "팀 지원서 리스트 불러오기를 성공했습니다."),
-    APPLY_DETAIL_FETCHED(HttpStatus.OK, "RECRUIT_S012", "팀 지원서 상세 조회를 성공했습니다."),
-    APPLY_STATUS_UPDATED(HttpStatus.OK, "RECRUIT_S013", "팀 모집이 완료되었습니다.")
+    APPLY_LIST_FETCHED(HttpStatus.OK,"RECRUIT_S012", "팀 지원서 리스트 불러오기를 성공했습니다."),
+    APPLY_DETAIL_FETCHED(HttpStatus.OK, "RECRUIT_S013", "팀 지원서 상세 조회를 성공했습니다."),
+    APPLY_STATUS_UPDATED(HttpStatus.OK, "RECRUIT_S014", "팀 모집이 완료되었습니다.")
     ;
 
     private final HttpStatus status;

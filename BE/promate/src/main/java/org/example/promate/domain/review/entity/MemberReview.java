@@ -5,14 +5,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.example.promate.global.entity.BaseTimeEntity;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder   //BaseTimeEntity와의 Builder 일치
 public class MemberReview extends BaseTimeEntity {
 
     @Id
@@ -42,7 +43,7 @@ public class MemberReview extends BaseTimeEntity {
     // 추가 의견 (선택적)
     private String comment;
 
-    @Builder
+    //@AllArgsConstructor로 대체 가능
     public MemberReview(
             Long projectId,
             Long reviewerId,

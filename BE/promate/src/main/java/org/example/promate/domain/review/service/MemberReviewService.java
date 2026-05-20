@@ -97,7 +97,7 @@ public class MemberReviewService {
                             .comment(item.getComment())
                             .build();
                 })
-                .toList();
+                .collect(Collectors.toList());
 
         memberReviewRepository.saveAll(reviews);
 

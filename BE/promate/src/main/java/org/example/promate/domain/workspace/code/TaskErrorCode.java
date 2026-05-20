@@ -12,7 +12,7 @@ public enum TaskErrorCode implements BaseErrorCode {
     NOT_PROJECT_TASK(HttpStatus.FORBIDDEN, "TASK_E002", "해당 프로젝트의 사용자만 접근 가능합니다."),
     EMPTY_PROJECT_TASKS(HttpStatus.NOT_FOUND, "TASK_E003", "해당 프로젝트에 할당된 태스크를 찾을 수 없어 진행률을 계산할 수 없습니다."),
     NOT_ASSIGNEE_OR_PROJECT_LEADER(HttpStatus.FORBIDDEN, "TASK_E004", "태스크 담당자나 프로젝트 리더만 수정 가능합니다."),
-    NOT_ASSIGNEE(HttpStatus.FORBIDDEN, "TASK_E004", "태스크 담당자만 상태 변경이 가능합니다."),
+    CANNOT_UPDATE_SELF_TASK(HttpStatus.FORBIDDEN, "TASK_E005", "태스크 담당자가 상태 변경을 할 수 없습니다."),
     ;
 
     private final HttpStatus status;

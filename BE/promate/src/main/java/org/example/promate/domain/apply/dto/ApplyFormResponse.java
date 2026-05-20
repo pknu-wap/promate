@@ -1,7 +1,4 @@
 package org.example.promate.domain.apply.dto;
-
-import org.example.promate.domain.recruit.enums.Category;
-
 import java.util.List;
 
 public record ApplyFormResponse(

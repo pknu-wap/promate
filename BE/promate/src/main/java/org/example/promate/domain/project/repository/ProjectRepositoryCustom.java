@@ -1,9 +1,9 @@
 package org.example.promate.domain.project.repository;
 
-import org.example.promate.domain.apply.dto.PastProjectDto;
+import org.example.promate.domain.project.entity.Project;
 
 import java.util.List;
 
 public interface ProjectRepositoryCustom {
-    List<PastProjectDto> findCompletedProjectsByUserId(Long userId);
+    List<Project> findCompletedProjectsByUserId(Long userId);
 }

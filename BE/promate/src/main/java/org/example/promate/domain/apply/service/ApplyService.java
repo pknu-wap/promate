@@ -25,6 +25,8 @@ import org.example.promate.domain.workspace.repository.TaskRepository;
 import org.example.promate.global.ApiPayload.exception.GeneralException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -43,17 +45,32 @@ public class ApplyService {
 
 
     public ApplyFormResponse getApplyForm(Long recruitmentId, Long userId) {
-        // 모집글 제목을 위한 조회 (Soft Delete 고려)
+        // 모집글 제목 및 상태 검증 (Soft Delete 고려)
         Recruit recruit = recruitRepository.findByIdAndIsDeletedFalse(recruitmentId)
                 .orElseThrow(() -> new GeneralException(RecruitErrorCode.RECRUITMENT_NOT_FOUND));
 
         validateRecruitingStatus(recruit);
 
-        // 사용자의 과거 완료된 프로젝트 목록 조회
-        // ProMate에서 완료된 프로젝트(Category, Title) 정보를 DTO 형식으로 바로 리스트화
-        List<PastProjectDto> pastProjects = projectRepository.findCompletedProjectsByUserId(userId);
+        // 1.ProMate에서 완료된 프로젝트 조회 (isManual = false)
+        List<Project> completedSystemProjects = projectRepository.findCompletedProjectsByUserId(userId);
+        List<PastProjectDto> systemProjectDtos = completedSystemProjects.stream()
+                .map(PastProjectDto::fromSystem)
+                .toList();
 
-        return ApplyFormResponse.of(recruit.getTitle(), pastProjects);
+        // 2. 수동 입력 프로젝트 조회 (isManual = true)
+        List<UserProjectHistory> manualProjects = userProjectHistoryRepository.findByUserId(userId);
+        List<PastProjectDto> manualProjectDtos = manualProjects.stream()
+                .map(PastProjectDto::fromManual)
+                .toList();
+
+        // 3. 두 리스트를 하나로 융합
+        List<PastProjectDto> combinedPastProjects = new ArrayList<>();
+        combinedPastProjects.addAll(systemProjectDtos);
+        combinedPastProjects.addAll(manualProjectDtos);
+
+        // ApplyForm에서 작성 한 내용을 submit으로 제출 -> request body에 isManual도 추가로 들어감
+        // -> ApplyProject 엔티티에서 구분하는 플래그 정보로 사용
+        return ApplyFormResponse.of(recruit.getTitle(), combinedPastProjects);
     }
 
 
@@ -90,7 +107,7 @@ public class ApplyService {
 
         // 선택한 프로젝트 이력 매핑 저장
         if (request.getSelectedProjectIds() != null && !request.getSelectedProjectIds().isEmpty()) {
-            List<ApplyProject> mappings = request.getSelectedProjectIds().stream()
+            List<ApplyProject> mappings = request.getSelectedProjectIds().stream().distinct()
                     .map(projectDto -> {
                         ApplyProject.ApplyProjectBuilder builder = ApplyProject.builder()
                                 .apply(application)
@@ -166,6 +183,7 @@ public class ApplyService {
         }
         return apply;
     }
+
     private void validateRecruitingStatus(Recruit recruit) {
         if (recruit.getStatus() != RecruitStatus.RECRUITING) {
             throw new GeneralException(RecruitErrorCode.RECRUITMENT_ALREADY_CLOSED);

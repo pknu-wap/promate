@@ -40,7 +40,8 @@ public class Recruit extends BaseEntity {
 
     @Column(name="status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private RecruitStatus status;
+    @Builder.Default
+    private RecruitStatus status = RecruitStatus.RECRUITING;
 
     @Column(name="joined_count", nullable = false)
     private int joinedCount;

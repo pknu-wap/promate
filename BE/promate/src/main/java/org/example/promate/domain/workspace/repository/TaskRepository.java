@@ -15,6 +15,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findByProjectIdAndIsDeletedFalse(Long projectId);
     int countAllByProjectIdAndIsDeletedFalse(Long projectId);
     int countAllByProjectIdAndStatusAndIsDeletedFalse(Long projectId, TaskStatus status);
+    int countAllByProjectIdAndStatusInAndIsDeletedFalse(Long projectId, List<TaskStatus> statuses);
 
     // N+1 방지: Task를 가져올 때 Task의 Member, Project 정보도 한 번에 가져옴(삭제되지 않은 정보 대상)
     @Query("select t from Task t " +
@@ -23,4 +24,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "where t.id = :taskId " +
             "and t.isDeleted = false")
     Optional<Task> findByIdAndIsDeletedFalse(@Param("taskId")Long id);
+    
+    int countByProjectIdAndStatus(Long projectId, TaskStatus status);
+    int countByProjectIdAndStatusIn(Long projectId, List<TaskStatus> statuses); // 완료, 미완료 task 조회
 }

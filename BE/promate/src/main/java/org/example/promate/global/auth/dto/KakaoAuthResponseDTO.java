@@ -10,4 +10,12 @@ public class KakaoAuthResponseDTO {
     private boolean isProfileCompleted; // 추가 정보 입력 완료 여부
     private String accessToken;
     private String refreshToken;
+    public KakaoAuthResponseDTO withoutRefreshToken() {
+        return KakaoAuthResponseDTO.builder()
+                .id(this.id)
+                .accessToken(this.accessToken)
+                .isProfileCompleted(this.isProfileCompleted)
+                .build();
+    }
 }
+

@@ -1,6 +1,7 @@
 server:
   port: 8082
   address: 0.0.0.0
+  forward-headers-strategy: framework
 
 spring:
   application:
@@ -25,8 +26,13 @@ spring:
 springdoc:
   querydsl:
     enabled: false
+
   api-docs:
     enabled: true
+
+  servers:
+    - url: https://promate-server-2ryl7jsvhq-du.a.run.app
+      description: Production
 
   security:
     oauth2:
@@ -41,3 +47,4 @@ jwt:
   secret: ${JWT_SECRET}
   access-token-expiration: 3600000
   refresh-token-expiration: 1209600000
+

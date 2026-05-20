@@ -64,9 +64,12 @@ public class User extends BaseEntity {
     @Builder.Default
     private List<Apply> applies = new ArrayList<>();
 
-    public void updateProfile(String name, String profileImageUrl) {
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<UserProjectHistory> projectHistories = new ArrayList<>();
+
+    public void updateProfile(String name) {
         this.name = name;
-        this.profileImageUrl = profileImageUrl;
         this.isProfileCompleted = true;
     }
 }

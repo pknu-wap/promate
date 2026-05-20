@@ -26,9 +26,12 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                        session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "/",
+                                "/login",
+                                "/actuator/health",
                                 "/api/auth/kakao/login",
                                 "/api/auth/kakao/callback",
                                 "/api/auth/kakao/reissue",

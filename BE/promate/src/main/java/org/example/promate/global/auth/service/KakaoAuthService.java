@@ -47,9 +47,8 @@ public class KakaoAuthService {
     @Value("${KAKAO_CLIENT_SECRET}")
     private String kakaoClientSecret;
 
-    public String setKakaoAuthUrl(HttpSession httpSession) {
+    public String setKakaoAuthUrl() {
         String state = UUID.randomUUID().toString();
-        httpSession.setAttribute("state", state);
 
         String encodedRedirectUri = URLEncoder.encode(kakaoRedirectUri, StandardCharsets.UTF_8);
 
@@ -61,16 +60,12 @@ public class KakaoAuthService {
                 + "&state="
                 + state;
     }
+
     @Transactional
-    public KakaoAuthResponseDTO kakaoLogin(String code, String state, HttpSession httpSession) {
+    public KakaoAuthResponseDTO kakaoLogin(String code, String state) {
 
-        String sessionState = (String) httpSession.getAttribute("state");
-
-        if (sessionState == null || state == null) {
-            throw new AuthException(AuthErrorCode.STATE_NOT_FOUND);
-        }
-        if (!sessionState.equals(state)) {
-            throw new AuthException(AuthErrorCode.STATE_MISMATCH);
+        if (code == null || code.isBlank()) {
+            throw new AuthException(AuthErrorCode.KAKAO_TOKEN_REQUEST_FAILED);
         }
 
         // access token 요청
@@ -100,7 +95,6 @@ public class KakaoAuthService {
             );
             tokenResult = tokenResponse.getBody();
         } catch (Exception e) {
-
 
             throw new AuthException(AuthErrorCode.KAKAO_TOKEN_REQUEST_FAILED);
         }
@@ -140,11 +134,21 @@ public class KakaoAuthService {
 
         Long kakaoId = userInfo.getKakaoId();
 
+        String profileImageUrl = userInfo.getKakaoAccount()
+                .getProfile()
+                .getProfileImageUrl();
+
+        String name = userInfo.getKakaoAccount() // 카카오에서 일단 카카오톡 닉네임을 받아오고, 나중에 프로필 수정에서 수정 가능
+                .getProfile()
+                .getNickname();
+
         User user = userRepository.findByKakaoId(kakaoId)
                 .orElseGet(() -> userRepository.save(
                         User.builder()
                                 .kakaoId(kakaoId)
+                                .name(name)
                                 .isProfileCompleted(false)
+                                .profileImageUrl(profileImageUrl)
                                 .build()
                 ));
 

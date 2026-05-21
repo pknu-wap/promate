@@ -7,9 +7,11 @@ import ComingSoonPage from "./pages/ComingSoonPage.jsx";
 import LoginPage from "./pages/LoginPage/LoginPage.jsx";
 import AuthCallback from "./pages/AuthCallback/AuthCallback.jsx";
 import TeammakingPage from "./pages/Teammaking/TeammakingPage.jsx";
+import DashboardPage from "./pages/DashboardPage/DashboardPage.jsx";
+import ApplicantPage from "./pages/Applicant/ApplicantList.jsx";
+import ApplicantDetail from "./pages/Applicant/ApplicantDetail.jsx";
 import ProfilePage from "./pages/ProfilePage/ProfilePage.jsx";
 import FindTeamPage from "./pages/FindTeam/FindTeamPage.jsx";
-import DashboardPage from "./pages/DashboardPage/DashboardPage.jsx";
 import ProjectPage from "./pages/ProjectPage/ProjectPage.jsx";
 
 function AppLayout({ isMenuOpen, toggleMenu, closeMenu }) {
@@ -57,6 +59,8 @@ function App() {
           <Route path="/" element={<DashboardPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/teammaking" element={<TeammakingPage />} />
+          <Route path="/applicant" element={<ApplicantPage/>} />
+          <Route path="/applicant/detail" element={<ApplicantDetail />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/find-team" element={<FindTeamPage />} />
           <Route path="/project" element={<ProjectPage />} />

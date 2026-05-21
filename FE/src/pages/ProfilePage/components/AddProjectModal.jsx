@@ -2,13 +2,6 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import './AddProjectModal.css';
 
-const timeOptions = [];
-for (let i = 0; i < 24; i++) {
-  const hour = String(i).padStart(2, '0');
-  timeOptions.push(`${hour}:00`);
-  timeOptions.push(`${hour}:30`);
-}
-
 const getTodayString = () => {
   const today = new Date();
   const year = today.getFullYear();
@@ -29,17 +22,17 @@ const formatDateWithDay = (dateString) => {
 
 const AddProjectModal = ({ onClose, onAdd }) => {
   const [projectName, setProjectName] = useState('');
+  const [description, setDescription] = useState('');
+  const [role, setRole] = useState('');
   const [startDate, setStartDate] = useState(getTodayString());
-  const [startTime, setStartTime] = useState('12:00');
   const [endDate, setEndDate] = useState(getTodayString());
-  const [endTime, setEndTime] = useState('13:00');
-  const [isAllDay, setIsAllDay] = useState(true);
 
   const handleClose = () => {
     setProjectName('');
+    setDescription('');
+    setRole('');
     setStartDate(getTodayString());
     setEndDate(getTodayString());
-    setIsAllDay(true);
     onClose();
   };
 
@@ -48,14 +41,12 @@ const AddProjectModal = ({ onClose, onAdd }) => {
       alert('프로젝트 이름을 입력해주세요.');
       return;
     }
-    
     onAdd({
       title: projectName.trim(),
+      description: description.trim(),
+      role: role.trim() || null,
       startDate,
-      startTime: isAllDay ? '00:00' : startTime,
       endDate: endDate || null,
-      endTime: isAllDay ? '23:59' : endTime,
-      isAllDay,
     });
     handleClose();
   };
@@ -65,8 +56,8 @@ const AddProjectModal = ({ onClose, onAdd }) => {
       <div className="add-modal-container" onClick={(e) => e.stopPropagation()}>
         <div className="add-modal-inner">
 
-          <h3 className="add-modal-title">프로젝트 추가</h3>
-          
+          <h3 className="add-modal-title">프로젝트 직접 추가</h3>
+
           <div className="add-modal-field">
             <label className="add-modal-field-label">프로젝트 이름</label>
             <input
@@ -78,14 +69,35 @@ const AddProjectModal = ({ onClose, onAdd }) => {
           </div>
 
           <div className="add-modal-field">
-            <label className="add-modal-field-label">참여했던 직무</label>
+            <label className="add-modal-field-label">
+              프로젝트 설명 <span className="add-modal-field-label-sub">(50자 제한)</span>
+            </label>
+            <textarea
+              className="add-modal-textarea"
+              placeholder="설명을 간단히 적어주세요."
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              maxLength={50}
+            />
+          </div>
 
-            <div className="add-modal-date-row">
-              <span className="add-modal-row-label">시작</span>
+          <div className="add-modal-field">
+            <label className="add-modal-field-label">
+              참여했던 직무 <span className="add-modal-field-label-sub">(선택)</span>
+            </label>
+            <input
+              className="add-modal-input"
+              placeholder="참여했던 직무를 적어주세요."
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+            />
+          </div>
+
+          <div className="add-modal-field">
+            <label className="add-modal-field-label">프로젝트 기간</label>
+            <div className="add-modal-date-range">
               <div className="add-modal-custom-date">
-                <div className="add-modal-date-display">
-                  {formatDateWithDay(startDate)}
-                </div>
+                <div className="add-modal-date-display">{formatDateWithDay(startDate)}</div>
                 <input
                   type="date"
                   className="add-modal-hidden-date"
@@ -93,25 +105,9 @@ const AddProjectModal = ({ onClose, onAdd }) => {
                   onChange={(e) => setStartDate(e.target.value)}
                 />
               </div>
-              {!isAllDay && (
-                <select
-                  className="add-modal-time-select"
-                  value={startTime}
-                  onChange={(e) => setStartTime(e.target.value)}
-                >
-                  {timeOptions.map((t) => (
-                    <option key={t} value={t}>{t}</option>
-                  ))}
-                </select>
-              )}
-            </div>
-
-            <div className="add-modal-date-row">
-              <span className="add-modal-row-label">종료</span>
+              <span className="add-modal-date-sep">~</span>
               <div className="add-modal-custom-date">
-                <div className="add-modal-date-display">
-                  {formatDateWithDay(endDate)}
-                </div>
+                <div className="add-modal-date-display">{formatDateWithDay(endDate)}</div>
                 <input
                   type="date"
                   className="add-modal-hidden-date"
@@ -119,29 +115,6 @@ const AddProjectModal = ({ onClose, onAdd }) => {
                   onChange={(e) => setEndDate(e.target.value)}
                 />
               </div>
-              {!isAllDay && (
-                <select
-                  className="add-modal-time-select"
-                  value={endTime}
-                  onChange={(e) => setEndTime(e.target.value)}
-                >
-                  {timeOptions.map((t) => (
-                    <option key={t} value={t}>{t}</option>
-                  ))}
-                </select>
-              )}
-            </div>
-
-            <div className="add-modal-date-row">
-              <span className="add-modal-row-label">종일</span>
-              <label className="add-modal-switch">
-                <input
-                  type="checkbox"
-                  checked={isAllDay}
-                  onChange={(e) => setIsAllDay(e.target.checked)}
-                />
-                <span className="add-modal-slider" />
-              </label>
             </div>
           </div>
 

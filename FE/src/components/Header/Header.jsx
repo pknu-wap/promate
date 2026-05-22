@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getUserInfo } from '../../api/userProfileApi.js';
+import { getUserInfo } from '../../api/User/userProfileApi.js';
 import logoImg from '../../assets/logoOrange.svg';
 import ProfileAvatar from '../ProfileAvatar/ProfileAvatar';
 import './Header.css';

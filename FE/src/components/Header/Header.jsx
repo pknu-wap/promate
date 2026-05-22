@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getUserInfo } from '../../api/userProfileApi.js';
 import logoImg from '../../assets/logoOrange.svg';
+import ProfileAvatar from '../ProfileAvatar/ProfileAvatar';
 import './Header.css';
 
 function Header({ onMenuClick }) {
@@ -44,7 +45,7 @@ function Header({ onMenuClick }) {
           <strong>{userData.userName}</strong> 님 안녕하세요 :)
         </Link>
         <Link to="/profile">
-          <div className="header-avatar">{userData.userInitial}</div>
+          <ProfileAvatar size="36px" />
         </Link>
       </div>
     </header>

@@ -1,28 +1,45 @@
-// ApplyModal.jsx
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./ApplyModal.css";
+import { getApplicationForm } from "../../api/Recruits/recruitmentApi";
 
 function ApplyModal({
   isOpen,
   onClose,
   onSubmit,
   projectName,
+  recruitmentId,
   job,
   motivation,
   setJob,
   setMotivation,
 }) {
+  const [fetchedTitle, setFetchedTitle] = useState("");
+
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
 
     if (isOpen) {
       document.body.style.overflow = "hidden";
+
+      if (recruitmentId) {
+        const fetchApplyData = async () => {
+          try {
+            const response = await getApplicationForm(recruitmentId);
+            if (response.isSuccess) {
+              setFetchedTitle(response.data.RecruitmentTitle);
+            }
+          } catch (error) {
+            console.error("지원서 작성용 데이터 로드 실패:", error);
+          }
+        };
+        fetchApplyData();
+      }
     }
 
     return () => {
       document.body.style.overflow = previousOverflow;
     };
-  }, [isOpen]);
+  }, [isOpen, recruitmentId]);
 
   if (!isOpen) return null;
 
@@ -40,7 +57,7 @@ function ApplyModal({
   return (
     <div className="apply-modal-overlay" onClick={handleOverlayClick}>
       <div className="apply-modal">
-        <h2 className="apply-modal-title">{projectName}</h2>
+        <h2 className="apply-modal-title">{fetchedTitle || projectName}</h2>
 
         <form className="apply-modal-form" onSubmit={handleSubmit}>
           <div className="apply-modal-group">

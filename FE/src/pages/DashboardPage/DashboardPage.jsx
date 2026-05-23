@@ -6,6 +6,7 @@ import projectMenuIcon from '../../assets/projectMenuIcon.svg';
 import SummaryCard from '../../components/SummaryCard/SummaryCard';
 import ProjectBox from '../../components/ProjectBox/ProjectBox';
 import moreIcon from '../../assets/moreIcon.svg';
+import apiClient from '../../api/apiClient';
 
 // 임시 데이터
 const dummyDashboardData = {
@@ -37,13 +38,30 @@ function DashboardPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // 백엔드 API 연결 시 이 부분 수정
     const fetchDashboardData = async () => {
       try {
         setIsLoading(true);
-        setDashboardData(dummyDashboardData);
+        
+        const response = await apiClient.get('/dashboard/projects/me');
+
+        if (response.data.isSuccess) {
+          const fetchedProjects = response.data.data.map((project) => ({
+            id: project.projectId,
+            title: project.title,
+            dueDate: project.endDate.replace(/-/g, '.'),
+            currentStep: 0,
+            totalStep: 0,
+          }));
+
+          setDashboardData({
+            ...dummyDashboardData, // 태스크 관련 데이터는 다른 API가 나오기 전까지 더미 유지
+            projects: fetchedProjects,
+          });
+        }
       } catch (error) {
         console.error('대시보드 데이터 조회 실패:', error);
+        // 실패 시 UI를 확인하기 위해 기존 더미 데이터 세팅
+        setDashboardData(dummyDashboardData);
       } finally {
         setIsLoading(false);
       }

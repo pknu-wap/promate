@@ -42,22 +42,33 @@ function DashboardPage() {
       try {
         setIsLoading(true);
         
-        const response = await apiClient.get('/dashboard/projects/me');
+        const [projectsRes, urgentTasksRes] = await Promise.all([
+          apiClient.get('/dashboard/projects/me'),
+          apiClient.get('/dashboard/tasks/deadline'),
+        ]);
 
-        if (response.data.isSuccess) {
-          const fetchedProjects = response.data.data.map((project) => ({
+        const newDashboardData = { ...dummyDashboardData };
+
+        if (projectsRes.data.isSuccess) {
+          newDashboardData.projects = projectsRes.data.data.map((project) => ({
             id: project.projectId,
             title: project.title,
             dueDate: project.endDate.replace(/-/g, '.'),
             currentStep: 0,
             totalStep: 0,
           }));
-
-          setDashboardData({
-            ...dummyDashboardData, // 태스크 관련 데이터는 다른 API가 나오기 전까지 더미 유지
-            projects: fetchedProjects,
-          });
         }
+
+        if (urgentTasksRes.data.isSuccess) {
+          newDashboardData.urgentTasks = urgentTasksRes.data.data.map((task) => ({
+            id: task.taskId,
+            projectId: task.projectId, // 나중에 태스크 클릭 시 해당 프로젝트로 이동하기 위해 추가
+            title: `${task.projectTitle} - ${task.title}`,
+            dueDate: task.dueDate.replace(/-/g, '.'),
+          }));
+        }
+
+        setDashboardData(newDashboardData);
       } catch (error) {
         console.error('대시보드 데이터 조회 실패:', error);
         // 실패 시 UI를 확인하기 위해 기존 더미 데이터 세팅

@@ -42,9 +42,10 @@ function DashboardPage() {
       try {
         setIsLoading(true);
         
-        const [projectsRes, urgentTasksRes] = await Promise.all([
+        const [projectsRes, urgentTasksRes, completedTasksRes] = await Promise.all([
           apiClient.get('/dashboard/projects/me'),
           apiClient.get('/dashboard/tasks/deadline'),
+          apiClient.get('/dashboard/tasks/completed'),
         ]);
 
         const newDashboardData = { ...dummyDashboardData };
@@ -63,6 +64,15 @@ function DashboardPage() {
           newDashboardData.urgentTasks = urgentTasksRes.data.data.map((task) => ({
             id: task.taskId,
             projectId: task.projectId, // 나중에 태스크 클릭 시 해당 프로젝트로 이동하기 위해 추가
+            title: `${task.projectTitle} - ${task.title}`,
+            dueDate: task.dueDate.replace(/-/g, '.'),
+          }));
+        }
+
+        if (completedTasksRes.data.isSuccess) {
+          newDashboardData.completedTasks = completedTasksRes.data.data.map((task) => ({
+            id: task.taskId,
+            projectId: task.projectId,
             title: `${task.projectTitle} - ${task.title}`,
             dueDate: task.dueDate.replace(/-/g, '.'),
           }));
@@ -129,7 +139,7 @@ function DashboardPage() {
               count={items.length}
               items={items}
               showDot={showDot}
-              onItemClick={(item) => navigate(`/project/${item.id}`)}
+              onItemClick={(item) => navigate(`/project/${item.projectId || item.id}`)}
             />
           ))}
         </div>

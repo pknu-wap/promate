@@ -37,4 +37,6 @@ public interface ApplyRepository extends JpaRepository<Apply, Long> {
 
 
     void deleteAllByRecruitId(Long id);
+
+    List<Apply> findByUserIdAndRecruitIdIn(Long userId, List<Long> recruitIds);
 }

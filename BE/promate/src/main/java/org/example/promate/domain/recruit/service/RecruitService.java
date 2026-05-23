@@ -1,6 +1,7 @@
 package org.example.promate.domain.recruit.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.promate.domain.apply.entity.Apply;
 import org.example.promate.domain.apply.repository.ApplyRepository;
 import org.example.promate.domain.project.entity.Member;
 import org.example.promate.domain.project.entity.Project;
@@ -13,8 +14,10 @@ import org.example.promate.domain.recruit.dto.request.RecruitSearchCondition;
 import org.example.promate.domain.recruit.dto.request.RecruitStatusRequest;
 import org.example.promate.domain.recruit.dto.request.RecruitUpdateRequest;
 import org.example.promate.domain.recruit.dto.response.*;
+import org.example.promate.domain.recruit.entity.Bookmark;
 import org.example.promate.domain.recruit.entity.Recruit;
 import org.example.promate.domain.recruit.enums.RecruitStatus;
+import org.example.promate.domain.recruit.repository.BookmarkRepository;
 import org.example.promate.domain.recruit.repository.RecruitRepository;
 import org.example.promate.domain.user.entity.User;
 import org.example.promate.domain.user.exception.UserErrorCode;
@@ -22,9 +25,13 @@ import org.example.promate.domain.user.repository.UserRepository;
 import org.example.promate.domain.recruit.code.RecruitErrorCode;
 import org.example.promate.global.ApiPayload.exception.GeneralException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +43,7 @@ public class RecruitService {
     private final ApplyRepository applyRepository; // 지원 내역 확인용
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
+    private final BookmarkRepository bookmarkRepository;
 
     @Transactional
     public RecruitCreateResponse createRecruitment(
@@ -131,9 +139,18 @@ public class RecruitService {
         recruit.delete();
     }
 
-    public RecruitPageResponse<RecruitResponse> getRecruitments(RecruitSearchCondition condition, Pageable pageable) {
 
-        Page<RecruitResponse> resultPage = recruitRepository.searchRecruits(condition, pageable);
+    /* userId는 보안 검증 X , 로직 분기용(모집글 조회 시 지원 상태 제공)
+    userId != null (로그인 유저) -> 쿼리를 날려 심사중, 합격 등 상태를 채워줌
+    userId == null (비로그인 유저) -> 지원 상태를 전부 null로 채움*/
+    public RecruitPageResponse<RecruitResponse> getRecruitments(RecruitSearchCondition condition, Pageable pageable, Long currentUserId) {
+        // 1. 레포지토리에서 순수 엔티티 페이징 데이터 가져오기
+        Page<Recruit> recruitPage = recruitRepository.searchRecruits(condition, pageable);
+
+        // 2. 로그인 유저 상태에 맞게 지원 상태를 결합
+        List<RecruitResponse> dtoList = enrichRecruitmentsWithApplyStatus(recruitPage.getContent(), currentUserId);
+
+        Page<RecruitResponse> resultPage = new PageImpl<>(dtoList, pageable, recruitPage.getTotalElements());
 
         return RecruitPageResponse.of(resultPage);
     }
@@ -183,5 +200,76 @@ public class RecruitService {
         recruitRepository.delete(recruit);
 
         return new RecruitStatusResponse(project.getId(), RecruitStatus.COMPLETED);
+    }
+
+    public BookmarkResponse toggleBookmark(Long recruitmentId, Long userId) {
+        // 게시글 존재 확인
+        Recruit recruit = recruitRepository.findById(recruitmentId)
+                .orElseThrow(() -> new GeneralException(RecruitErrorCode.RECRUITMENT_NOT_FOUND));
+
+        User user = userRepository.getReferenceById(userId);
+
+        // 이미 북마크했는지 확인
+        Optional<Bookmark> optionalBookmark = bookmarkRepository.findByUserAndRecruit(user, recruit);
+
+        if (optionalBookmark.isPresent()) {
+            // 이미 있다면 북마크 취소
+            bookmarkRepository.delete(optionalBookmark.get());
+            return new BookmarkResponse(recruitmentId, false);
+        } else {
+            // 없다면 북마크 등록
+            bookmarkRepository.save(new Bookmark(user, recruit));
+            return new BookmarkResponse(recruitmentId, true);
+        }
+    }
+
+    public RecruitPageResponse<RecruitResponse> getBookmarkedRecruitments(Long currentUserId, Pageable pageable) {
+
+        userRepository.findById(currentUserId).orElseThrow(() -> new GeneralException(UserErrorCode.USER_NOT_FOUND));
+
+        Page<Bookmark> bookmarkPage = bookmarkRepository.findByUserIdWithRecruit(currentUserId, pageable);
+
+        List<Recruit> bookmarkedRecruits = bookmarkPage.getContent().stream()
+                .map(Bookmark::getRecruit)
+                .toList();
+
+        // 상태 결합 함수를 호출
+        List<RecruitResponse> dtoList = enrichRecruitmentsWithApplyStatus(bookmarkedRecruits, currentUserId);
+
+        Page<RecruitResponse> resultPage = new PageImpl<>(dtoList, pageable, bookmarkPage.getTotalElements());
+
+        return RecruitPageResponse.of(resultPage);
+    }
+
+    /* 다른 API에서 사용하는 메서드,
+    1. "북마크 했으나 최종 탈락한 프로젝트는 상세 내역 확인 못 들어가게"
+    2. "팀 찾기 페이지에서 각 모집글 옆에, 본인의 지원 상태(심사 전, 합격, 불합격)를 반환하는 필드 추가"
+
+    해당 분기점 발생을 위해 userId 존재 시, 특정 모집글에 대한 지원글의 status + ID를 가져옴.
+    */
+    private List<RecruitResponse> enrichRecruitmentsWithApplyStatus(List<Recruit> recruits, Long userId) {
+        if (recruits.isEmpty()) return Collections.emptyList();
+
+        Map<Long, Apply> applyMap = new HashMap<>();
+
+        // 로그인한 유저인 경우에만 쿼리로 지원서들을 한 번에 싹 긁어옴
+        if (userId != null) {
+            List<Long> recruitIds = recruits.stream().map(Recruit::getId).toList();
+            List<Apply> myApplies = applyRepository.findByUserIdAndRecruitIdIn(userId, recruitIds);
+            applyMap = myApplies.stream()
+                    .collect(Collectors.toMap(apply -> apply.getRecruit().getId(), apply -> apply));
+        }
+
+        Map<Long, Apply> finalApplyMap = applyMap;
+
+        return recruits.stream().map(recruit -> {
+            Apply myApply = finalApplyMap.get(recruit.getId());
+
+            return RecruitResponse.of(
+                    recruit,
+                    myApply != null ? myApply.getStatus() : null,
+                    myApply != null ? myApply.getId() : null
+            );
+        }).toList();
     }
 }

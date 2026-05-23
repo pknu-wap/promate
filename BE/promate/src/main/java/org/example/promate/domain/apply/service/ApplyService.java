@@ -15,14 +15,19 @@ import org.example.promate.domain.recruit.entity.Recruit;
 import org.example.promate.domain.recruit.enums.RecruitStatus;
 import org.example.promate.domain.recruit.repository.RecruitRepository;
 import org.example.promate.domain.user.entity.User;
+import org.example.promate.domain.user.entity.UserProjectHistory;
+import org.example.promate.domain.user.exception.UserErrorCode;
+import org.example.promate.domain.user.repository.UserProjectHistoryRepository;
 import org.example.promate.domain.user.repository.UserRepository;
 import org.example.promate.domain.recruit.code.RecruitErrorCode;
+import org.example.promate.domain.workspace.entity.Task;
+import org.example.promate.domain.workspace.repository.TaskRepository;
 import org.example.promate.global.ApiPayload.exception.GeneralException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
-
 
 @Service
 @Transactional(readOnly = true)
@@ -35,19 +40,37 @@ public class ApplyService {
     private final RecruitRepository recruitRepository;
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
+    private final TaskRepository taskRepository;
+    private final UserProjectHistoryRepository userProjectHistoryRepository;
+
 
     public ApplyFormResponse getApplyForm(Long recruitmentId, Long userId) {
-        // 모집글 제목을 위한 조회 (Soft Delete 고려)
+        // 모집글 제목 및 상태 검증 (Soft Delete 고려)
         Recruit recruit = recruitRepository.findByIdAndIsDeletedFalse(recruitmentId)
                 .orElseThrow(() -> new GeneralException(RecruitErrorCode.RECRUITMENT_NOT_FOUND));
 
         validateRecruitingStatus(recruit);
 
-        // 사용자의 과거 완료된 프로젝트 목록 조회
-        // ProMate에서 완료된 프로젝트(Category, Title) 정보를 DTO 형식으로 바로 리스트화
-        List<PastProjectDto> pastProjects = projectRepository.findCompletedProjectsByUserId(userId);
+        // 1.ProMate에서 완료된 프로젝트 조회 (isManual = false)
+        List<Project> completedSystemProjects = projectRepository.findCompletedProjectsByUserId(userId);
+        List<PastProjectDto> systemProjectDtos = completedSystemProjects.stream()
+                .map(PastProjectDto::fromSystem)
+                .toList();
 
-        return ApplyFormResponse.of(recruit.getTitle(), pastProjects);
+        // 2. 수동 입력 프로젝트 조회 (isManual = true)
+        List<UserProjectHistory> manualProjects = userProjectHistoryRepository.findByUserId(userId);
+        List<PastProjectDto> manualProjectDtos = manualProjects.stream()
+                .map(PastProjectDto::fromManual)
+                .toList();
+
+        // 3. 두 리스트를 하나로 융합
+        List<PastProjectDto> combinedPastProjects = new ArrayList<>();
+        combinedPastProjects.addAll(systemProjectDtos);
+        combinedPastProjects.addAll(manualProjectDtos);
+
+        // ApplyForm에서 작성 한 내용을 submit으로 제출 -> request body에 isManual도 추가로 들어감
+        // -> ApplyProject 엔티티에서 구분하는 플래그 정보로 사용
+        return ApplyFormResponse.of(recruit.getTitle(), combinedPastProjects);
     }
 
 
@@ -64,9 +87,10 @@ public class ApplyService {
 
         validateRecruitingStatus(recruit);
 
-        User user = userRepository.findById(userId).get();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new GeneralException(UserErrorCode.USER_NOT_FOUND));
 
-        // 지원서 Status가 PENDING 아닌 상태라면 지원 차단
+        // 모집글 Status가 RECRUITING 아닌 상태라면 지원 차단
         if (recruit.getStatus() != RecruitStatus.RECRUITING) {
             throw new GeneralException(RecruitErrorCode.RECRUITMENT_ALREADY_CLOSED);
         }
@@ -75,18 +99,29 @@ public class ApplyService {
         Apply application = Apply.builder()
                 .user(user)
                 .recruit(recruit)
-                .objective(request.preferredRole())
-                .prContent(request.introduction())
+                .objective(request.getPreferredRole())
+                .prContent(request.getIntroduction())
                 .status(Status.PENDING)
                 .build();
         applyRepository.save(application);
 
         // 선택한 프로젝트 이력 매핑 저장
-        if (request.selectedProjectIds() != null && !request.selectedProjectIds().isEmpty()) {
-            List<Project> projects = projectRepository.findAllById(request.selectedProjectIds());
+        if (request.getSelectedProjectIds() != null && !request.getSelectedProjectIds().isEmpty()) {
+            List<ApplyProject> mappings = request.getSelectedProjectIds().stream().distinct()
+                    .map(projectDto -> {
+                        ApplyProject.ApplyProjectBuilder builder = ApplyProject.builder()
+                                .apply(application)
+                                .isManual(projectDto.isManual());
 
-            List<ApplyProject> mappings = projects.stream()
-                    .map(p -> new ApplyProject(application, p))
+                        if (projectDto.isManual()) {
+                            // 수동 프로젝트는 UserProjectHistory ID만 저장
+                            builder.manualProjectId(projectDto.getProjectId());
+                        } else {
+                            Project project = projectRepository.getReferenceById(projectDto.getProjectId());
+                            builder.project(project);
+                        }
+                        return builder.build();
+                    })
                     .toList();
             applyProjectRepository.saveAll(mappings);
         }
@@ -148,6 +183,7 @@ public class ApplyService {
         }
         return apply;
     }
+
     private void validateRecruitingStatus(Recruit recruit) {
         if (recruit.getStatus() != RecruitStatus.RECRUITING) {
             throw new GeneralException(RecruitErrorCode.RECRUITMENT_ALREADY_CLOSED);
@@ -182,7 +218,8 @@ public class ApplyService {
         return new ApplicantListResponse(recruit.getId(), recruit.getTitle(), summaries.size(), summaries);
     }
 
-    // 2. 지원서 상세 조회
+
+    // 지원서 상세 조회
     public ApplicationDetailResponse getApplicationDetail(Long recruitmentId, Long applicationId, Long leaderId) {
         // 모집글 존재 확인 및 권한 검증
         Recruit recruit = recruitRepository.findById(recruitmentId)
@@ -196,25 +233,48 @@ public class ApplyService {
         Apply apply = applyRepository.findByIdWithUserAndProjects(applicationId)
                 .orElseThrow(() -> new GeneralException(RecruitErrorCode.RECRUITMENT_NOT_FOUND));
 
-        // DTO 변환
+        List<ApplicationDetailResponse.PastProjectInfo> pastProjects = apply.getApplyProjects().stream()
+                .map(ap -> {
+                    if (!ap.isManual()) {
+                        // ProMate 프로젝트 태스크 목록 조회
+                        List<String> taskNames = taskRepository.findAllByProjectIdAndMemberId(
+                                ap.getProject().getId(), apply.getUser().getId()
+                        ).stream().map(Task::getTitle).toList();
+
+                        return new ApplicationDetailResponse.PastProjectInfo(
+                                ap.getProject().getId(),
+                                ap.getProject().getTitle(),
+                                "PROMATE",
+                                taskNames,
+                                null
+                        );
+                    } else {
+                        // 수동 입력 프로젝트 UserProjectHistory
+                        UserProjectHistory userProjectHistory = userProjectHistoryRepository.findById(ap.getManualProjectId())
+                                .orElseThrow(() -> new GeneralException(UserErrorCode.PROJECT_HISTORY_NOT_FOUND));
+
+                        return new ApplicationDetailResponse.PastProjectInfo(
+                                ap.getManualProjectId(),
+                                userProjectHistory.getProjectName(), // title -> projectName 변경
+                                "MANUAL",
+                                null,
+                                userProjectHistory.getDescription()  // taskDescription -> description 변경
+                        );
+                    }
+                }).toList();
+
+        //최종 DTO 조립
         ApplicationDetailResponse.ApplicantProfile profile = new ApplicationDetailResponse.ApplicantProfile(
                 apply.getUser().getName(),
                 apply.getUser().getMannerTemp(),
-                apply.getUser().getDiligenceTemp(),
-                apply.getUser().getProfileImageUrl()
+                apply.getUser().getDiligenceTemp()
         );
-
-        List<ApplicationDetailResponse.PastProjectInfo> pastProjects = apply.getApplyProjects().stream()
-                .map(ap -> new ApplicationDetailResponse.PastProjectInfo(
-                        ap.getProject().getId(),
-                        ap.getProject().getTitle(),
-                        recruit.getCategory()
-                )).toList();
 
         return new ApplicationDetailResponse(
                 apply.getId(),
                 profile,
                 apply.getPrContent(),
+                apply.getObjective(),
                 apply.getCreatedAt(),
                 apply.getStatus(),
                 pastProjects
@@ -291,3 +351,5 @@ public class ApplyService {
         applyRepository.delete(apply); // 공통 로직 : 지원서 삭제
     }
 }
+
+

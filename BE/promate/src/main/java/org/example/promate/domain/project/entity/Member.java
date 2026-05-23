@@ -1,14 +1,12 @@
 package org.example.promate.domain.project.entity;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.example.promate.domain.project.enums.Position;
 import org.example.promate.domain.user.entity.User;
 
-import org.example.promate.domain.workspace.entity.MeetingLog;
-import org.example.promate.domain.workspace.entity.Notice;
+import org.example.promate.domain.workspace.entity.Post;
 import org.example.promate.global.entity.BaseEntity;
 
 import java.util.ArrayList;
@@ -44,11 +42,7 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     @Builder.Default
-    private List<MeetingLog> meetingLogs = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<Notice> notices = new ArrayList<>();
+    private List<Post> posts = new ArrayList<>();
 
     public void delete(){
         super.performDelete();

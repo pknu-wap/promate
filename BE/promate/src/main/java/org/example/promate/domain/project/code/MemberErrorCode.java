@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum MemberErrorCode implements BaseErrorCode {
     SCHEDULE_FORBIDDEN_NOT_PROJECT_MEMBER(HttpStatus.FORBIDDEN, "MEMBER_E001", "해당 프로젝트에 속한 사용자만 수행 가능합니다."),
+    TASK_FORBIDDEN_NOT_PROJECT_MEMBER(HttpStatus.FORBIDDEN, "MEMBER_E002", "해당 프로젝트에 속한 사용자만 수행 가능합니다."),
+    POST_FORBIDDEN_NOT_PROJECT_MEMBER(HttpStatus.FORBIDDEN, "MEMBER_E003", "해당 프로젝트에 속한 사용자만 수행 가능합니다."),
     ;
 
 

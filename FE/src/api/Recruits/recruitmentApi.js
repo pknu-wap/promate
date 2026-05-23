@@ -5,3 +5,9 @@ export const getApplicationForm = async (recruitmentId) => {
 
   return response.data;
 };
+
+export const postApplication = async (recruitmentId, applicationData) => {
+  const response = await apiClient.post(`/recruitments/${recruitmentId}/apply`, applicationData);
+
+  return response.data;
+};

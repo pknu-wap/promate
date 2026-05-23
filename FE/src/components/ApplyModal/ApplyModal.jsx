@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./ApplyModal.css";
-import { getApplicationForm } from "../../api/Recruits/recruitmentApi";
+import { getApplicationForm, postApplication } from "../../api/Recruits/recruitmentApi";
 
 function ApplyModal({
   isOpen,
@@ -43,9 +43,27 @@ function ApplyModal({
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit?.();
+
+    try {
+      const applicationData = {
+        objective: job,
+        prContent: motivation,
+        selectedProjectIds: []
+      };
+
+      const response = await postApplication(recruitmentId, applicationData);
+      
+      if (response.isSuccess) {
+        alert(response.message);
+        onSubmit?.();
+        onClose?.();
+      }
+    } catch (error) {
+      console.error("지원서 제출 실패:", error);
+      alert(error.response?.data?.message || "지원서 제출 중 오류가 발생했습니다.");
+    }
   };
 
   const handleOverlayClick = (e) => {

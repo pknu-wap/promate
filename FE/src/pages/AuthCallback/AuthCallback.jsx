@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { requestKakaoLogin } from "../../api/kakaoAuthApi.js";
+import { requestKakaoLogin } from "../../api/Auth/kakaoAuthApi.js";
 import { useAuthStore } from "../../stores/useAuthStore.js";
 
 export default function AuthCallback() {

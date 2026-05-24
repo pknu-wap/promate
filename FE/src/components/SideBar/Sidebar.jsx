@@ -56,7 +56,7 @@ function Sidebar({ isOpen, onClose }) {
             onClick={onClose}
           />
           <SidebarItem
-            to="/applicants"
+            to="/applicant"
             label="지원자 검토"
             icon={applicantReviewIcon}
             activeIcon={applicantReviewOrangeIcon}

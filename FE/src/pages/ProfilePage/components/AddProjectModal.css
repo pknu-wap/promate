@@ -13,7 +13,7 @@
 
 .add-modal-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: flex-start;
   padding: 30px 30px 24px;
@@ -59,12 +59,6 @@
   font-size: 16px;
   line-height: 19px;
   color: #000000;
-}
-
-.add-modal-field-label-sub {
-  font-weight: 400;
-  font-size: 14px;
-  color: #ABABAB;
 }
 
 .add-modal-input {

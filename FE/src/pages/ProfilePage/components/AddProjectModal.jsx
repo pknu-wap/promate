@@ -56,7 +56,7 @@ const AddProjectModal = ({ onClose, onAdd }) => {
       <div className="add-modal-container" onClick={(e) => e.stopPropagation()}>
         <div className="add-modal-inner">
 
-          <h3 className="add-modal-title">프로젝트 직접 추가</h3>
+          <h3 className="add-modal-title">프로젝트 추가</h3>
 
           <div className="add-modal-field">
             <label className="add-modal-field-label">프로젝트 이름</label>
@@ -69,9 +69,7 @@ const AddProjectModal = ({ onClose, onAdd }) => {
           </div>
 
           <div className="add-modal-field">
-            <label className="add-modal-field-label">
-              프로젝트 설명 <span className="add-modal-field-label-sub">(50자 제한)</span>
-            </label>
+            <label className="add-modal-field-label">프로젝트 설명 (50자 제한)</label>
             <textarea
               className="add-modal-textarea"
               placeholder="설명을 간단히 적어주세요."
@@ -82,9 +80,7 @@ const AddProjectModal = ({ onClose, onAdd }) => {
           </div>
 
           <div className="add-modal-field">
-            <label className="add-modal-field-label">
-              참여했던 직무 <span className="add-modal-field-label-sub">(선택)</span>
-            </label>
+            <label className="add-modal-field-label">참여했던 직무 (선택)</label>
             <input
               className="add-modal-input"
               placeholder="참여했던 직무를 적어주세요."

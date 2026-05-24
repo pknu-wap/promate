@@ -8,29 +8,12 @@ import ProjectBox from '../../components/ProjectBox/ProjectBox';
 import moreIcon from '../../assets/moreIcon.svg';
 import apiClient from '../../api/apiClient';
 
-// 임시 데이터
-const dummyDashboardData = {
-  projects: [
-    { id: 1, title: 'WAP 프로젝트', dueDate: '2026.06.05', currentStep: 125, totalStep: 150 },
-    { id: 2, title: '프로그래밍 팀플', dueDate: '2026.06.17', currentStep: 12, totalStep: 18 },
-  ],
-  urgentTasks: [
-    { id: 1, title: '캡스톤 디자인 - 자료 조사하기', dueDate: '2026.05.05' },
-    { id: 2, title: 'WAP 프로젝트 - 중간 발표', dueDate: '2026.05.06' },
-  ],
-  completedTasks: [
-    { id: 1, title: 'WAP 프로젝트 - 대시보드 개발', dueDate: '2025.11.28' },
-    { id: 2, title: '프로그래밍 팀플 - 오류 수정', dueDate: '2026.04.01' },
-    { id: 3, title: '프로그래밍 팀플 - PPT 제작', dueDate: '2026.04.17' },
-    { id: 4, title: '캡스톤 디자인 - 프로젝트 계획서 작성', dueDate: '2026.05.01' },
-  ],
-};
-
 function DashboardPage() {
   const [dashboardData, setDashboardData] = useState({
     projects: [],
     urgentTasks: [],
     completedTasks: [],
+    projectStatuses: [],
   });
 
   const [isLoading, setIsLoading] = useState(true);
@@ -42,13 +25,19 @@ function DashboardPage() {
       try {
         setIsLoading(true);
         
-        const [projectsRes, urgentTasksRes, completedTasksRes] = await Promise.all([
+        const [projectsRes, urgentTasksRes, completedTasksRes, projectStatusesRes] = await Promise.all([
           apiClient.get('/dashboard/projects/me'),
           apiClient.get('/dashboard/tasks/deadline'),
           apiClient.get('/dashboard/tasks/completed'),
+          apiClient.get('/dashboard/projects/status'),
         ]);
 
-        const newDashboardData = { ...dummyDashboardData };
+        const newDashboardData = {
+          projects: [],
+          urgentTasks: [],
+          completedTasks: [],
+          projectStatuses: [],
+        };
 
         if (projectsRes.data.isSuccess) {
           newDashboardData.projects = projectsRes.data.data.map((project) => ({
@@ -78,11 +67,19 @@ function DashboardPage() {
           }));
         }
 
+        if (projectStatusesRes.data.isSuccess) {
+          newDashboardData.projectStatuses = projectStatusesRes.data.data.map((status) => ({
+            id: status.projectId,
+            title: status.title,
+            dueDate: status.endDate.replace(/-/g, '.'),
+            currentStep: status.completedTaskCount,
+            totalStep: status.totalTaskCount,
+          }));
+        }
+
         setDashboardData(newDashboardData);
       } catch (error) {
         console.error('대시보드 데이터 조회 실패:', error);
-        // 실패 시 UI를 확인하기 위해 기존 더미 데이터 세팅
-        setDashboardData(dummyDashboardData);
       } finally {
         setIsLoading(false);
       }
@@ -154,7 +151,7 @@ function DashboardPage() {
             </div>
 
             <div className="status-list">
-              {dashboardData.projects.slice(0, visibleStatusCount).map((project) => (
+              {dashboardData.projectStatuses.slice(0, visibleStatusCount).map((project) => (
                 <ProjectBox
                   key={project.id}
                   title={project.title}
@@ -168,7 +165,7 @@ function DashboardPage() {
               ))}
             </div>
 
-            {visibleStatusCount < dashboardData.projects.length ? (
+            {visibleStatusCount < dashboardData.projectStatuses.length ? (
               <button 
                 className="more-btn" 
                 onClick={handleShowMoreStatus} 
@@ -177,7 +174,7 @@ function DashboardPage() {
                 더보기
                 <img src={moreIcon} alt="moreIcon" />
               </button>
-            ) : dashboardData.projects.length > 3 ? (
+            ) : dashboardData.projectStatuses.length > 3 ? (
               <button 
                 className="more-btn" 
                 onClick={() => setVisibleStatusCount(3)} 

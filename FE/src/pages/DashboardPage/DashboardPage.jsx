@@ -151,18 +151,24 @@ function DashboardPage() {
             </div>
 
             <div className="status-list">
-              {dashboardData.projectStatuses.slice(0, visibleStatusCount).map((project) => (
-                <ProjectBox
-                  key={project.id}
-                  title={project.title}
-                  dueDate={project.dueDate}
-                  currentStep={project.currentStep}
-                  totalStep={project.totalStep}
-                  avatarSize="52px"
-                  onClick={() => navigate(`/project/${project.id}`)}
-                  hidePcLabel
-                />
-              ))}
+              {dashboardData.projectStatuses.length === 0 ? (
+                <div className="empty-state">
+                  진행 중인 프로젝트가 없습니다.
+                </div>
+              ) : (
+                dashboardData.projectStatuses.slice(0, visibleStatusCount).map((project) => (
+                  <ProjectBox
+                    key={project.id}
+                    title={project.title}
+                    dueDate={project.dueDate}
+                    currentStep={project.currentStep}
+                    totalStep={project.totalStep}
+                    avatarSize="52px"
+                    onClick={() => navigate(`/project/${project.id}`)}
+                    hidePcLabel
+                  />
+                ))
+              )}
             </div>
 
             {visibleStatusCount < dashboardData.projectStatuses.length ? (

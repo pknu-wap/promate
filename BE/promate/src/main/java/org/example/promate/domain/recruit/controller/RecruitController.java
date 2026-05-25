@@ -79,9 +79,10 @@ public class RecruitController {
     @GetMapping
     public ResponseEntity<ApiResponse<RecruitPageResponse<RecruitResponse>>> getRecruitList(
             @ModelAttribute RecruitSearchCondition condition,
+            @AuthenticationPrincipal Long userId,
             @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        RecruitPageResponse<RecruitResponse> response = recruitService.getRecruitments(condition, pageable);
+        RecruitPageResponse<RecruitResponse> response = recruitService.getRecruitments(condition, pageable,userId);
 
         return ResponseEntity
                 .status(RecruitSuccessCode.RECRUITMENT_FILTERED.getStatus())
@@ -97,5 +98,24 @@ public class RecruitController {
     ) {
         RecruitStatusResponse response = recruitService.changeRecruitStatus(recruitmentId, userId, request);
         return ApiResponse.onSuccess(RecruitSuccessCode.APPLY_STATUS_UPDATED, response);
+    }
+
+    @PostMapping("/{recruitmentId}/bookmark")
+    public ApiResponse<BookmarkResponse> toggleBookmark(
+            @PathVariable Long recruitmentId,
+            @AuthenticationPrincipal Long userId
+    ) {
+        BookmarkResponse data = recruitService.toggleBookmark(recruitmentId, userId);
+        return ApiResponse.onSuccess(RecruitSuccessCode.RECRUITMENT_BOOKMARKED,data);
+    }
+
+    @GetMapping("/bookmark")
+    public ApiResponse<RecruitPageResponse<RecruitResponse>> getBookmarkList(
+            @AuthenticationPrincipal Long userId,
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+    )
+    {
+        RecruitPageResponse<RecruitResponse> response = recruitService.getBookmarkedRecruitments(userId, pageable);
+        return ApiResponse.onSuccess(RecruitSuccessCode.RECRUITMENT_BOOKMARKED_LIST_FETCHED,response);
     }
 }

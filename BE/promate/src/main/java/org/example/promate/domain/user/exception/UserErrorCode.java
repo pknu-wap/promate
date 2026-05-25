@@ -1,12 +1,10 @@
 package org.example.promate.domain.user.exception;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.example.promate.global.ApiPayload.code.BaseErrorCode;
 import org.springframework.http.HttpStatus;
 
 @Getter
-@AllArgsConstructor
 public enum UserErrorCode implements BaseErrorCode {
 
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER_E001", "사용자를 찾을 수 없습니다."),
@@ -21,4 +19,9 @@ public enum UserErrorCode implements BaseErrorCode {
     private final String code;
     private final String message;
 
+    UserErrorCode(HttpStatus status, String code, String message) {
+        this.status = status;
+        this.code = code;
+        this.message = message;
+    }
 }

@@ -1,12 +1,10 @@
 package org.example.promate.domain.recruit.repository;
-
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.example.promate.domain.recruit.dto.request.RecruitSearchCondition;
-import org.example.promate.domain.recruit.dto.response.RecruitResponse;
+import org.example.promate.domain.recruit.entity.Recruit;
 import org.example.promate.domain.recruit.enums.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,29 +23,19 @@ public class RecruitRepositoryImpl implements RecruitRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<RecruitResponse> searchRecruits(RecruitSearchCondition condition, Pageable pageable) {
+    public Page<Recruit> searchRecruits(RecruitSearchCondition condition, Pageable pageable) {
 
-        // 데이터 조회 쿼리
-        List<RecruitResponse> content = queryFactory
-                .select(Projections.constructor(RecruitResponse.class,
-                        recruit.id,
-                        recruit.title,
-                        recruit.category,
-                        recruit.createdAt,
-                        recruit.deadline,
-                        recruit.status,
-                        recruit.totalSlots,
-                        recruit.joinedCount
-                ))
+        List<Recruit> content = queryFactory
+                .select(recruit)
                 .from(recruit)
                 .where(
-                        recruit.isDeleted.isFalse(),
+                        recruit.isDeleted.isFalse(), // 삭제되지 않은 게시글만
                         containsSearch(condition.search()),
                         eqCategory(condition.category())
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(recruit.createdAt.desc()) //기본값: 최신순
+                .orderBy(recruit.createdAt.desc()) // 최신순 정렬
                 .fetch();
 
         // 전체 카운트 쿼리
@@ -55,6 +43,7 @@ public class RecruitRepositoryImpl implements RecruitRepositoryCustom {
                 .select(recruit.count())
                 .from(recruit)
                 .where(
+                        recruit.isDeleted.isFalse(), // 카운트 쿼리에도 삭제 플래그 조건
                         containsSearch(condition.search()),
                         eqCategory(condition.category())
                 );

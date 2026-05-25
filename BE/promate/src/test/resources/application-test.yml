@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    # 테스트는 메모리 DB(H2)를 사용하므로 실제 Azure/GCP 주소가 필요 없습니다.
+    url: jdbc:h2:mem:testdb;MODE=MySQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        show_sql: true
+
+# 아래는 에러를 뱉던 환경 변수들을 위한 테스트 전용 가짜 값들입니다.
+JWT_SECRET: "test-secret-key-at-least-32-characters-long"
+KAKAO_REST_API_KEY: "test-kakao-api-key"
+KAKAO_CLIENT_SECRET: "test-kakao-client-secret"
+KAKAO_REDIRECT_URI: "http://localhost:8080/auth/kakao/callback"

@@ -57,25 +57,12 @@ function Calendar() {
 
   const days = useMemo(() => getCalendarDays(year, month), [year, month]);
 
-  const visibleEvents = useMemo(
-    () => getVisibleEvents(events, year, month),
-    [events, year, month]
-  );
-
   const handlePrevMonth = () => {
     setCurrentDate(new Date(year, month - 1, 1));
   };
 
   const handleNextMonth = () => {
     setCurrentDate(new Date(year, month + 1, 1));
-  };
-
-  const handleToggleTodo = (id) => {
-    setEvents((prevEvents) =>
-      prevEvents.map((event) =>
-        event.id === id ? { ...event, checked: !event.checked } : event
-      )
-    );
   };
 
   const handleOpenModal = () => {
@@ -98,26 +85,37 @@ function Calendar() {
   return (
     <section className="calendar-section">
       <div className="calendar-header-row">
-        <div className="calendar-title-group">
-          <img
-            className="calendar-icon"
-            src={calendarIcon}
-            alt="캘린더 아이콘"
-          />
-          <h2 className="calendar-title">캘린더</h2>
+        <div className="calendar-header-left">
+          <div className="calendar-title-group">
+            <img
+              className="calendar-icon"
+              src={calendarIcon}
+              alt="캘린더 아이콘"
+            />
+            <h2 className="calendar-title">캘린더</h2>
+          </div>
+
+          <div className="calendar-nav">
+            <button className="nav-btn" type="button" onClick={handlePrevMonth}>
+              &lt;
+            </button>
+
+            <span className="nav-date">
+              {year}.{String(month + 1).padStart(2, '0')}
+            </span>
+
+            <button className="nav-btn" type="button" onClick={handleNextMonth}>
+              &gt;
+            </button>
+          </div>
         </div>
 
-        <div className="calendar-nav">
-          <button className="nav-btn" type="button" onClick={handlePrevMonth}>
-            &lt;
-          </button>
-
-          <span className="nav-date">
-            {year}.{String(month + 1).padStart(2, '0')}
-          </span>
-
-          <button className="nav-btn" type="button" onClick={handleNextMonth}>
-            &gt;
+        <div className="calendar-header-right">
+          <button className="add-event-btn-header" type="button" onClick={handleOpenModal}>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 3.33334V12.6667M3.33334 8H12.6667" stroke="#FF6600" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <span>일정 추가</span>
           </button>
         </div>
       </div>
@@ -221,49 +219,6 @@ function Calendar() {
             })}
           </div>
         </div>
-
-        <aside className="calendar-sidebar">
-          <div className="calendar-todo-list">
-            {visibleEvents.map((event) => (
-              <button
-                key={event.id}
-                className="todo-item"
-                type="button"
-                onClick={() => handleToggleTodo(event.id)}
-              >
-                <span
-                  className={`todo-checkbox ${
-                    event.checked ? 'checked' : ''
-                  }`}
-                >
-                  {event.checked && (
-                    <svg
-                      width="8"
-                      height="6"
-                      viewBox="0 0 8 6"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M1 3L3 5L7 1"
-                        stroke="white"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  )}
-                </span>
-
-                <span className="todo-text">{event.text}</span>
-              </button>
-            ))}
-          </div>
-
-          <button className="add-event-btn" type="button" onClick={handleOpenModal}>
-            + 일정 추가
-          </button>
-        </aside>
       </div>
 
       <AddEventModal
@@ -356,26 +311,6 @@ function getEventSpan(event, year, month, day, index) {
 
   // 일정이 현재 주 안에서 차지할 칸 수만 계산
   return Math.min(daysUntilWeekEnd, remainingEventDays);
-}
-
-function getVisibleEvents(events, year, month) {
-  const monthStart = new Date(year, month, 1).getTime();
-  const monthEnd = new Date(year, month + 1, 0).getTime();
-
-  return events
-    .filter(
-      (event) =>
-        event.start.getTime() <= monthEnd && event.end.getTime() >= monthStart
-    )
-    .sort((a, b) => {
-      const startDiff = a.start.getTime() - b.start.getTime();
-
-      if (startDiff !== 0) {
-        return startDiff;
-      }
-
-      return a.id - b.id;
-    });
 }
 
 export default Calendar;

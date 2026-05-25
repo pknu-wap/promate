@@ -3,7 +3,7 @@ import "./ProfileAvatar.css";
 import profileIcon from "../../assets/icons/profileIcon.svg";
 import imageIcon from "../../assets/icons/imageIcon.svg";
 
-function ProfileAvatar({ src, alt = "프로필 이미지", className = "", onClick, style, onImageChange }) {
+function ProfileAvatar({ src, alt = "프로필 이미지", className = "", onClick, style, onImageChange, size }) {
   const fileInputRef = useRef(null);
   const displaySrc = src || profileIcon;
   const imageClass = src ? "user-image" : "default-icon";
@@ -41,7 +41,7 @@ function ProfileAvatar({ src, alt = "프로필 이미지", className = "", onCli
           handleClick(e);
         }
       }}
-      style={style}
+      style={{ width: size, height: size, ...style }}
       role={isClickable ? "button" : undefined}
       tabIndex={isClickable ? 0 : undefined}
       aria-label={isEditable ? "프로필 이미지 변경" : alt}

@@ -98,21 +98,6 @@
   font-size: 16px;
 }
 
-.header-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background-color: #FF6600;
-  color: #FFFFFF;
-  font-family: 'Pretendard', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
 @media (max-width: 768px) {
   .hamburger-btn {
     display: flex;

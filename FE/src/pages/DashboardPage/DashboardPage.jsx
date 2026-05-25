@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './DashboardPage.css';
 import Calendar from '../../components/Calendar/Calendar';
 import projectMenuIcon from '../../assets/projectMenuIcon.svg';
-import SummaryCard from './components/SummaryCard';
+import SummaryCard from '../../components/SummaryCard/SummaryCard';
 import ProjectBox from '../../components/ProjectBox/ProjectBox';
 import moreIcon from '../../assets/moreIcon.svg';
 
@@ -100,6 +100,7 @@ function DashboardPage() {
               count={items.length}
               items={items}
               showDot={showDot}
+              onItemClick={(item) => navigate(`/project/${item.id}`)}
             />
           ))}
         </div>

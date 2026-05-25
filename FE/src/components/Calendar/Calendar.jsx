@@ -1,56 +1,46 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import './Calendar.css';
 import calendarIcon from '../../assets/CalendarIcon.svg';
+import plusIcon from '../../assets/icons/plusIcon.svg';
 import AddEventModal from '../AddEventModal/AddEventModal';
+import apiClient from '../../api/apiClient';
 
 const WEEKDAYS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
-const today = new Date();
-const currentYear = today.getFullYear();
-const currentMonth = today.getMonth();
-
-const initialEvents = [
-  {
-    id: 1,
-    text: '회의',
-    start: new Date(currentYear, currentMonth, 6),
-    end: new Date(currentYear, currentMonth, 6),
-    checked: false,
-  },
-  {
-    id: 2,
-    text: '왑 중간 발표',
-    start: new Date(currentYear, currentMonth, 6),
-    end: new Date(currentYear, currentMonth, 7),
-    checked: true,
-  },
-  {
-    id: 3,
-    text: '왑 부스팅 데이',
-    start: new Date(currentYear, currentMonth, 9),
-    end: new Date(currentYear, currentMonth, 9),
-    checked: false,
-  },
-  {
-    id: 4,
-    text: '대동제',
-    start: new Date(currentYear, currentMonth, 12),
-    end: new Date(currentYear, currentMonth, 14),
-    checked: false,
-  },
-  {
-    id: 5,
-    text: '왑 홈커밍 데이',
-    start: new Date(currentYear, currentMonth, 16),
-    end: new Date(currentYear, currentMonth, 16),
-    checked: false,
-  },
-];
-
 function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [events, setEvents] = useState(initialEvents);
+  const [events, setEvents] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await apiClient.get('/dashboard/calendar');
+        if (response.data.isSuccess) {
+          const fetchedEvents = response.data.data.map((item) => {
+            const [startYear, startMonth, startDay] = item.startAt.split('-').map(Number);
+            const [endYear, endMonth, endDay] = item.endAt.split('-').map(Number);
+            
+            return {
+              id: item.scheduleId,
+              text: item.title,
+              start: new Date(startYear, startMonth - 1, startDay),
+              end: new Date(endYear, endMonth - 1, endDay),
+              checked: false,
+              projectId: item.projectId,
+              projectTitle: item.projectTitle,
+              content: item.content,
+            };
+          });
+          setEvents(fetchedEvents);
+        }
+      } catch (error) {
+        console.error('캘린더 일정 조회 실패:', error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -112,9 +102,7 @@ function Calendar() {
 
         <div className="calendar-header-right">
           <button className="add-event-btn-header" type="button" onClick={handleOpenModal}>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8 3.33334V12.6667M3.33334 8H12.6667" stroke="#FF6600" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+            <img src={plusIcon} alt="일정 추가 아이콘" />
             <span>일정 추가</span>
           </button>
         </div>

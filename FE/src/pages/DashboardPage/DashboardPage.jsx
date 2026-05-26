@@ -20,6 +20,10 @@ function DashboardPage() {
   const [visibleStatusCount, setVisibleStatusCount] = useState(3);
   const navigate = useNavigate();
 
+  const formatDate = (date) => date?.replace(/-/g, '.') ?? '';
+
+  const getProjectInfo = (item) => item.project ?? item;
+
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
@@ -29,7 +33,7 @@ function DashboardPage() {
           apiClient.get('/dashboard/projects/me'),
           apiClient.get('/dashboard/tasks/deadline'),
           apiClient.get('/dashboard/tasks/completed'),
-          apiClient.get('/dashboard/projects/status'),
+          apiClient.get('/dashboard/projects/ACTIVE'),
         ]);
 
         const newDashboardData = {
@@ -40,13 +44,17 @@ function DashboardPage() {
         };
 
         if (projectsRes.data.isSuccess) {
-          newDashboardData.projects = projectsRes.data.data.map((project) => ({
-            id: project.projectId,
-            title: project.title,
-            dueDate: project.endDate.replace(/-/g, '.'),
-            currentStep: 0,
-            totalStep: 0,
-          }));
+          newDashboardData.projects = projectsRes.data.data.map((item) => {
+            const project = getProjectInfo(item);
+
+            return {
+              id: project.projectId,
+              title: project.title,
+              dueDate: formatDate(project.endDate),
+              currentStep: 0,
+              totalStep: 0,
+            };
+          });
         }
 
         if (urgentTasksRes.data.isSuccess) {
@@ -54,7 +62,7 @@ function DashboardPage() {
             id: task.taskId,
             projectId: task.projectId, // 나중에 태스크 클릭 시 해당 프로젝트로 이동하기 위해 추가
             title: `${task.projectTitle} - ${task.title}`,
-            dueDate: task.dueDate.replace(/-/g, '.'),
+            dueDate: formatDate(task.dueDate),
           }));
         }
 
@@ -63,18 +71,22 @@ function DashboardPage() {
             id: task.taskId,
             projectId: task.projectId,
             title: `${task.projectTitle} - ${task.title}`,
-            dueDate: task.dueDate.replace(/-/g, '.'),
+            dueDate: formatDate(task.dueDate),
           }));
         }
 
         if (projectStatusesRes.data.isSuccess) {
-          newDashboardData.projectStatuses = projectStatusesRes.data.data.map((status) => ({
-            id: status.projectId,
-            title: status.title,
-            dueDate: status.endDate.replace(/-/g, '.'),
-            currentStep: status.completedTaskCount,
-            totalStep: status.totalTaskCount,
-          }));
+          newDashboardData.projectStatuses = projectStatusesRes.data.data.map((status) => {
+            const project = getProjectInfo(status);
+
+            return {
+              id: project.projectId,
+              title: project.title,
+              dueDate: formatDate(project.endDate),
+              currentStep: status.completedTaskCount ?? 0,
+              totalStep: status.totalTaskCount ?? 0,
+            };
+          });
         }
 
         setDashboardData(newDashboardData);

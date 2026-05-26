@@ -29,7 +29,7 @@ function DashboardPage() {
       try {
         setIsLoading(true);
         
-        const [projectsRes, urgentTasksRes, completedTasksRes, projectStatusesRes] = await Promise.all([
+        const results = await Promise.allSettled([
           apiClient.get('/dashboard/projects/me'),
           apiClient.get('/dashboard/tasks/deadline'),
           apiClient.get('/dashboard/tasks/completed'),
@@ -43,7 +43,12 @@ function DashboardPage() {
           projectStatuses: [],
         };
 
-        if (projectsRes.data.isSuccess) {
+        const projectsRes = results[0].status === 'fulfilled' ? results[0].value : null;
+        const urgentTasksRes = results[1].status === 'fulfilled' ? results[1].value : null;
+        const completedTasksRes = results[2].status === 'fulfilled' ? results[2].value : null;
+        const projectStatusesRes = results[3].status === 'fulfilled' ? results[3].value : null;
+
+        if (projectsRes?.data?.isSuccess) {
           newDashboardData.projects = projectsRes.data.data.map((item) => {
             const project = getProjectInfo(item);
 
@@ -57,7 +62,7 @@ function DashboardPage() {
           });
         }
 
-        if (urgentTasksRes.data.isSuccess) {
+        if (urgentTasksRes?.data?.isSuccess) {
           newDashboardData.urgentTasks = urgentTasksRes.data.data.map((task) => ({
             id: task.taskId,
             projectId: task.projectId, // 나중에 태스크 클릭 시 해당 프로젝트로 이동하기 위해 추가
@@ -66,7 +71,7 @@ function DashboardPage() {
           }));
         }
 
-        if (completedTasksRes.data.isSuccess) {
+        if (completedTasksRes?.data?.isSuccess) {
           newDashboardData.completedTasks = completedTasksRes.data.data.map((task) => ({
             id: task.taskId,
             projectId: task.projectId,
@@ -75,7 +80,7 @@ function DashboardPage() {
           }));
         }
 
-        if (projectStatusesRes.data.isSuccess) {
+        if (projectStatusesRes?.data?.isSuccess) {
           newDashboardData.projectStatuses = projectStatusesRes.data.data.map((status) => {
             const project = getProjectInfo(status);
 

@@ -30,4 +30,6 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 
     Optional<Schedule> findByIdAndIsDeletedFalse(Long id);
 
+    List<Schedule> findByProjectIdInAndIsDeletedFalse(List<Long> projectIds); // dashboard에서 사용
+
 }

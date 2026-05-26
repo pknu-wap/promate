@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,5 +29,18 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     int countByProjectIdAndStatus(Long projectId, TaskStatus status);
     int countByProjectIdAndStatusIn(Long projectId, List<TaskStatus> statuses); // 완료, 미완료 task 조회
 
+    // dashboard에서 사용
+    List<Task> findByMemberUserIdAndDueDateBetweenAndIsDeletedFalse(
+            Long userId,
+            LocalDate startDate,
+            LocalDate endDate
+    );
+
+    List<Task> findByMemberUserIdAndStatusAndIsDeletedFalse(
+            Long userId,
+            TaskStatus status
+    );
+
     List<Task> findAllByProjectIdAndMemberId(Long projectId, Long memberId);
+
 }

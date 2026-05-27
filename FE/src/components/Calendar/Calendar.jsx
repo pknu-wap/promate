@@ -17,9 +17,11 @@ function Calendar() {
       try {
         const response = await apiClient.get('/dashboard/calendar');
         if (response.data.isSuccess) {
-          const fetchedEvents = response.data.data.map((item) => {
-            const [startYear, startMonth, startDay] = item.startAt.split('-').map(Number);
-            const [endYear, endMonth, endDay] = item.endAt.split('-').map(Number);
+          const fetchedEvents = (response.data.data || []).map((item) => {
+            const startAt = item.startAt || '';
+            const endAt = item.endAt || '';
+            const [startYear, startMonth, startDay] = startAt.split('-').map(Number);
+            const [endYear, endMonth, endDay] = endAt.split('-').map(Number);
             
             return {
               id: item.scheduleId,

@@ -22,8 +22,6 @@ function DashboardPage() {
 
   const formatDate = (date) => date?.replace(/-/g, '.') ?? '';
 
-  const getProjectInfo = (item) => item.project ?? item;
-
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
@@ -33,7 +31,7 @@ function DashboardPage() {
           apiClient.get('/dashboard/projects/me'),
           apiClient.get('/dashboard/tasks/deadline'),
           apiClient.get('/dashboard/tasks/completed'),
-          apiClient.get('/dashboard/projects/ACTIVE'),
+          apiClient.get('/dashboard/projects/status'),
         ]);
 
         const newDashboardData = {
@@ -49,13 +47,11 @@ function DashboardPage() {
         const projectStatusesRes = results[3].status === 'fulfilled' ? results[3].value : null;
 
         if (projectsRes?.data?.isSuccess) {
-          newDashboardData.projects = projectsRes.data.data.map((item) => {
-            const project = getProjectInfo(item);
-
+          newDashboardData.projects = (projectsRes.data.data || []).map((item) => {
             return {
-              id: project.projectId,
-              title: project.title,
-              dueDate: formatDate(project.endDate),
+              id: item.projectId,
+              title: item.title,
+              dueDate: formatDate(item.endDate),
               currentStep: 0,
               totalStep: 0,
             };
@@ -63,7 +59,7 @@ function DashboardPage() {
         }
 
         if (urgentTasksRes?.data?.isSuccess) {
-          newDashboardData.urgentTasks = urgentTasksRes.data.data.map((task) => ({
+          newDashboardData.urgentTasks = (urgentTasksRes.data.data || []).map((task) => ({
             id: task.taskId,
             projectId: task.projectId, // 나중에 태스크 클릭 시 해당 프로젝트로 이동하기 위해 추가
             title: `${task.projectTitle} - ${task.title}`,
@@ -72,7 +68,7 @@ function DashboardPage() {
         }
 
         if (completedTasksRes?.data?.isSuccess) {
-          newDashboardData.completedTasks = completedTasksRes.data.data.map((task) => ({
+          newDashboardData.completedTasks = (completedTasksRes.data.data || []).map((task) => ({
             id: task.taskId,
             projectId: task.projectId,
             title: `${task.projectTitle} - ${task.title}`,
@@ -81,13 +77,11 @@ function DashboardPage() {
         }
 
         if (projectStatusesRes?.data?.isSuccess) {
-          newDashboardData.projectStatuses = projectStatusesRes.data.data.map((status) => {
-            const project = getProjectInfo(status);
-
+          newDashboardData.projectStatuses = (projectStatusesRes.data.data || []).map((status) => {
             return {
-              id: project.projectId,
-              title: project.title,
-              dueDate: formatDate(project.endDate),
+              id: status.projectId,
+              title: status.title,
+              dueDate: formatDate(status.endDate),
               currentStep: status.completedTaskCount ?? 0,
               totalStep: status.totalTaskCount ?? 0,
             };

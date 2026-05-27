@@ -7,6 +7,7 @@ const apiClient = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  timeout: 5000,
 });
 
 // Request 인터셉터
@@ -25,7 +26,12 @@ apiClient.interceptors.request.use(
 
 // Response 인터셉터
 apiClient.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    if (response.data && response.data.isSuccess === false) {
+      return Promise.reject(new Error(response.data.message || "API 요청 처리 중 문제가 발생했습니다."));
+    }
+    return response;
+  },
   (error) => Promise.reject(error)
 );
 

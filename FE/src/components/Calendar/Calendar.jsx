@@ -11,33 +11,34 @@ function Calendar({ showAddButton = true }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [events, setEvents] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     const fetchEvents = async () => {
       try {
+        setHasError(false);
         const response = await apiClient.get('/dashboard/calendar');
-        if (response.data.isSuccess) {
-          const fetchedEvents = (response.data.data || []).map((item) => {
-            const startAt = item.startAt || '';
-            const endAt = item.endAt || '';
-            const [startYear, startMonth, startDay] = startAt.split('-').map(Number);
-            const [endYear, endMonth, endDay] = endAt.split('-').map(Number);
-            
-            return {
-              id: item.scheduleId,
-              text: item.title,
-              start: new Date(startYear, startMonth - 1, startDay),
-              end: new Date(endYear, endMonth - 1, endDay),
-              checked: false,
-              projectId: item.projectId,
-              projectTitle: item.projectTitle,
-              content: item.content,
-            };
-          });
-          setEvents(fetchedEvents);
-        }
+        const fetchedEvents = (response.data.data || []).map((item) => {
+          const startAt = item.startAt || '';
+          const endAt = item.endAt || '';
+          const [startYear, startMonth, startDay] = startAt.split('-').map(Number);
+          const [endYear, endMonth, endDay] = endAt.split('-').map(Number);
+          
+          return {
+            id: item.scheduleId,
+            text: item.title,
+            start: new Date(startYear, startMonth - 1, startDay),
+            end: new Date(endYear, endMonth - 1, endDay),
+            checked: false,
+            projectId: item.projectId,
+            projectTitle: item.projectTitle,
+            content: item.content,
+          };
+        });
+        setEvents(fetchedEvents);
       } catch (error) {
         console.error('캘린더 일정 조회 실패:', error);
+        setHasError(true);
       }
     };
 
@@ -114,6 +115,12 @@ function Calendar({ showAddButton = true }) {
 
       <div className="calendar-body">
         <div className="calendar-main">
+          {hasError && (
+            <div style={{ color: '#E53E3E', textAlign: 'center', padding: '10px 0', fontSize: '14px', fontWeight: '500' }}>
+              일정을 불러오는 데 실패했습니다.
+            </div>
+          )}
+
           <div className="calendar-weekdays">
             {WEEKDAYS.map((day, index) => (
               <div

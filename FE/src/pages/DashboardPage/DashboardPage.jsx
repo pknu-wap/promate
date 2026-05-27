@@ -16,6 +16,13 @@ function DashboardPage() {
     projectStatuses: [],
   });
 
+  const [fetchErrors, setFetchErrors] = useState({
+    projects: false,
+    urgentTasks: false,
+    completedTasks: false,
+    projectStatuses: false,
+  });
+
   const [isLoading, setIsLoading] = useState(true);
   const [visibleStatusCount, setVisibleStatusCount] = useState(3);
   const navigate = useNavigate();
@@ -46,7 +53,14 @@ function DashboardPage() {
         const completedTasksRes = results[2].status === 'fulfilled' ? results[2].value : null;
         const projectStatusesRes = results[3].status === 'fulfilled' ? results[3].value : null;
 
-        if (projectsRes?.data?.isSuccess) {
+        setFetchErrors({
+          projects: results[0].status === 'rejected',
+          urgentTasks: results[1].status === 'rejected',
+          completedTasks: results[2].status === 'rejected',
+          projectStatuses: results[3].status === 'rejected',
+        });
+
+        if (projectsRes) {
           newDashboardData.projects = (projectsRes.data.data || []).map((item) => {
             return {
               id: item.projectId,
@@ -58,7 +72,7 @@ function DashboardPage() {
           });
         }
 
-        if (urgentTasksRes?.data?.isSuccess) {
+        if (urgentTasksRes) {
           newDashboardData.urgentTasks = (urgentTasksRes.data.data || []).map((task) => ({
             id: task.taskId,
             projectId: task.projectId, // 나중에 태스크 클릭 시 해당 프로젝트로 이동하기 위해 추가
@@ -67,7 +81,7 @@ function DashboardPage() {
           }));
         }
 
-        if (completedTasksRes?.data?.isSuccess) {
+        if (completedTasksRes) {
           newDashboardData.completedTasks = (completedTasksRes.data.data || []).map((task) => ({
             id: task.taskId,
             projectId: task.projectId,
@@ -76,7 +90,7 @@ function DashboardPage() {
           }));
         }
 
-        if (projectStatusesRes?.data?.isSuccess) {
+        if (projectStatusesRes) {
           newDashboardData.projectStatuses = (projectStatusesRes.data.data || []).map((status) => {
             return {
               id: status.projectId,
@@ -106,19 +120,22 @@ function DashboardPage() {
         title: '참여 중인 프로젝트',
         items: dashboardData.projects,
         showDot: true,
+        isError: fetchErrors.projects,
       },
       {
         id: 2,
         title: '마감 임박 테스크',
         items: dashboardData.urgentTasks,
+        isError: fetchErrors.urgentTasks,
       },
       {
         id: 3,
         title: '완료한 테스크',
         items: dashboardData.completedTasks,
+        isError: fetchErrors.completedTasks,
       },
     ],
-    [dashboardData]
+    [dashboardData, fetchErrors]
   );
 
   const handleShowMoreStatus = () => {
@@ -140,13 +157,14 @@ function DashboardPage() {
 
       <div className="dashboard-content">
         <div className="dashboard-summary-row">
-          {summaryCards.map(({ id, title, items, showDot }) => (
+          {summaryCards.map(({ id, title, items, showDot, isError }) => (
             <SummaryCard
               key={id}
               title={title}
               count={items.length}
               items={items}
               showDot={showDot}
+              isError={isError}
               onItemClick={(item) => navigate(`/project/${item.projectId || item.id}`)}
             />
           ))}
@@ -162,7 +180,11 @@ function DashboardPage() {
             </div>
 
             <div className="status-list">
-              {dashboardData.projectStatuses.length === 0 ? (
+            {fetchErrors.projectStatuses ? (
+              <div className="empty-state error-state" style={{ color: '#E53E3E' }}>
+                프로젝트 현황을 불러오는 데 실패했습니다.
+              </div>
+            ) : dashboardData.projectStatuses.length === 0 ? (
                 <div className="empty-state">
                   진행 중인 프로젝트가 없습니다.
                 </div>

@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProjectBox from '../../components/ProjectBox/ProjectBox';
 import ApplicantBox from '../../components/ApplicantBox/ApplicantBox';
+import ApplyModal from '../../components/ApplyModal/ApplyModal';
 import './ProjectPage.css';
 
 const mockProjects = [
@@ -24,6 +25,10 @@ function ProjectPage() {
   const [activeTab, setActiveTab] = useState('bookmarked');
   const [projects, setProjects] = useState(mockProjects);
   const navigate = useNavigate();
+  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
+  const [selectedProjectForApply, setSelectedProjectForApply] = useState(null);
+  const [applyJob, setApplyJob] = useState('');
+  const [applyMotivation, setApplyMotivation] = useState('');
 
   const handleToggleBookmark = (id) => {
     setProjects((prev) => prev.map((p) => (p.id === id ? { ...p, bookmarked: !p.bookmarked } : p)));
@@ -45,6 +50,13 @@ function ProjectPage() {
       }
     });
   }, [activeTab, projects]);
+
+  const handleCloseApplyModal = () => {
+    setIsApplyModalOpen(false);
+    setSelectedProjectForApply(null);
+    setApplyJob('');
+    setApplyMotivation('');
+  };
 
   return (
     <div className="project-container">
@@ -120,7 +132,14 @@ function ProjectPage() {
                   buttonText={buttonText}
                   buttonColor={buttonColor}
                   buttonTextColor={buttonTextColor}
-                  onButtonClick={() => navigate(`/project/${project.id}`)}
+                  onButtonClick={() => {
+                    if (buttonText === '지원하기') {
+                      setSelectedProjectForApply(project);
+                      setIsApplyModalOpen(true);
+                    } else {
+                      navigate(`/project/${project.id}`);
+                    }
+                  }}
                   onBookmarkClick={() => handleToggleBookmark(project.id)}
                 />
               );
@@ -130,6 +149,20 @@ function ProjectPage() {
           )}
         </div>
       </div>
+
+      <ApplyModal
+        isOpen={isApplyModalOpen}
+        onClose={handleCloseApplyModal}
+        onSubmit={() => {
+          console.log('지원하기 제출:', selectedProjectForApply?.title, applyJob, applyMotivation);
+          handleCloseApplyModal();
+        }}
+        projectName={selectedProjectForApply?.title || ''}
+        job={applyJob}
+        motivation={applyMotivation}
+        setJob={setApplyJob}
+        setMotivation={setApplyMotivation}
+      />
     </div>
   );
 }

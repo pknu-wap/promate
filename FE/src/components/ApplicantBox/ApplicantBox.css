@@ -135,12 +135,12 @@
   font-size: 15px;
   line-height: 19px;
   cursor: pointer;
-  transition: filter 0.2s ease-in-out;
+  transition: color 0.2s ease-in-out;
   box-sizing: border-box;
 }
 
-.applicant-action-btn:hover {
-  filter: brightness(0.94);
+.applicant-action-btn.hover-active:hover {
+  background-color: #F58B45 !important;
 }
 
 @media (max-width: 768px) {

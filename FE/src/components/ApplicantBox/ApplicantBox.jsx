@@ -47,7 +47,7 @@ function ApplicantBox({
           )}
           <button
             type="button"
-            className="applicant-action-btn"
+            className={`applicant-action-btn ${buttonColor === '#FE9A57' ? 'hover-active' : ''}`}
             style={{ backgroundColor: buttonColor, color: buttonTextColor }}
             onClick={onButtonClick}
           >

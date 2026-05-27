@@ -101,6 +101,12 @@ function Calendar({ showAddButton = true }) {
               &gt;
             </button>
           </div>
+          
+          {hasError && (
+            <span style={{ color: '#E53E3E', fontSize: '14px', fontWeight: '500', marginLeft: '16px', display: 'flex', alignItems: 'center' }}>
+              일정을 불러오는 데 실패했습니다.
+            </span>
+          )}
         </div>
 
         {showAddButton && (
@@ -115,12 +121,6 @@ function Calendar({ showAddButton = true }) {
 
       <div className="calendar-body">
         <div className="calendar-main">
-          {hasError && (
-            <div style={{ color: '#E53E3E', textAlign: 'center', padding: '10px 0', fontSize: '14px', fontWeight: '500' }}>
-              일정을 불러오는 데 실패했습니다.
-            </div>
-          )}
-
           <div className="calendar-weekdays">
             {WEEKDAYS.map((day, index) => (
               <div

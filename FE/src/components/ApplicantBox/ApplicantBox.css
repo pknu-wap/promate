@@ -108,11 +108,11 @@
   border-radius: 5px;
   cursor: pointer;
   padding: 0;
-  transition: opacity 0.2s ease-in-out;
+  transition: filter 0.2s ease-in-out;
 }
 
 .applicant-bookmark-btn:hover {
-  opacity: 0.8;
+  filter: brightness(0.94);
 }
 
 .applicant-bookmark-btn img {
@@ -135,28 +135,27 @@
   font-size: 15px;
   line-height: 19px;
   cursor: pointer;
-  transition: opacity 0.2s ease-in-out;
+  transition: filter 0.2s ease-in-out;
   box-sizing: border-box;
 }
 
 .applicant-action-btn:hover {
-  opacity: 0.8;
+  filter: brightness(0.94);
 }
 
 @media (max-width: 768px) {
   .applicant-box {
     padding: 12px 14px;
-    gap: 3px;
     width: 100%;
   }
 
   .applicant-box-left {
-    gap: 3px;
+    gap: 13px;
     min-width: 0;
   }
 
   .applicant-box-right {
     align-items: flex-end;
-    margin-top: -15px;
+    margin-top: 0;
   }
 }

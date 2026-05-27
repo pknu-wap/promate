@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Avatar from '../../components/Avatar/Avatar';
 import ProjectCard from '../../components/ProjectCard/ProjectCard';
-import logoIcon from '../../assets/logoIcon.svg';
 import './Applicant.css';
 
 const applicantList = [
@@ -68,9 +67,7 @@ const ApplicantDetail = () => {
           {applicantList.map((person) => (
             <div key={person.id} className="ad-row">
               <div className="ad-name-cell">
-                <div className="al-logo-box">
-                  <img src={logoIcon} alt="avatar" />
-                </div>
+                <div className="ad-avatar" />
                 <span className="ad-name-text">{person.name}</span>
               </div>
               <div className="ad-cell ad-task-stat">

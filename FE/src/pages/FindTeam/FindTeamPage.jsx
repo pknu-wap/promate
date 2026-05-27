@@ -1,8 +1,7 @@
 import { useMemo, useState } from "react";
-import logoIcon from "../../assets/logoIcon.svg";
 import ApplyModal from "../../components/ApplyModal/ApplyModal.jsx";
 import Badge from "../../components/Badge/Badge.jsx";
-import MainButton from "../../components/MainButton/MainButton.jsx";
+import ApplicantBox from "../../components/ApplicantBox/ApplicantBox.jsx";
 import "./FindTeamPage.css";
 
 const KOREAN_INITIALS = [
@@ -52,7 +51,8 @@ const mockTeamPosts = [
     summary: "인공지능 프로젝트에 참여할 팀원을 모집합니다",
     capacity: 4,
     bookmarked: false,
-    applied: false,
+    applied: true,
+    applyStatus: "reviewing",
   },
   {
     id: 3,
@@ -61,7 +61,8 @@ const mockTeamPosts = [
     summary: "안녕하세요. WAP 화이팅",
     capacity: 4,
     bookmarked: false,
-    applied: false,
+    applied: true,
+    applyStatus: "accepted",
   },
   {
     id: 4,
@@ -70,7 +71,8 @@ const mockTeamPosts = [
     summary: "안녕하세요. WAP 화이팅",
     capacity: 4,
     bookmarked: false,
-    applied: false,
+    applied: true,
+    applyStatus: "rejected",
   },
   {
     id: 5,
@@ -162,7 +164,9 @@ function FindTeamPage() {
 
     setTeamPosts((prevTeamPosts) =>
       prevTeamPosts.map((team) =>
-        team.id === selectedTeamId ? { ...team, applied: true } : team,
+        team.id === selectedTeamId
+          ? { ...team, applied: true, applyStatus: "reviewing" }
+          : team,
       ),
     );
     handleCloseApplyModal();
@@ -198,42 +202,47 @@ function FindTeamPage() {
 
       <section className="find-team-list" aria-label="팀 목록">
         {filteredTeamPosts.length > 0 ? (
-          filteredTeamPosts.map((team) => (
-            <article className="find-team-card" key={team.id}>
-              <div className="find-team-logo-box">
-                <img src={logoIcon} alt={`${team.title} 로고`} />
-              </div>
+          filteredTeamPosts.map((team) => {
+            let buttonText = "지원하기";
+            let buttonColor = "#FE9A57";
+            let buttonTextColor = "#FFFFFF";
 
-              <div className="find-team-content">
-                <div className="find-team-heading">
-                  <h2>{team.title}</h2>
-                </div>
-                <p>{team.summary}</p>
-              </div>
+            if (team.applied) {
+              switch (team.applyStatus) {
+                case "accepted":
+                  buttonText = "합격";
+                  buttonColor = "#FFEBDE";
+                  buttonTextColor = "#FE9A57";
+                  break;
+                case "rejected":
+                  buttonText = "불합격";
+                  buttonColor = "#D9D9D9";
+                  break;
+                case "reviewing":
+                default:
+                  buttonText = "심사중";
+                  buttonColor = "#D9D9D9";
+                  break;
+              }
+            }
 
-              <div className="find-team-actions">
-                <span>모집인원: {team.capacity}명</span>
-                <div className="find-team-action-row">
-                  <button
-                    type="button"
-                    className={`find-team-bookmark ${team.bookmarked ? "is-active" : ""}`}
-                    aria-label={team.bookmarked ? "즐겨찾기 해제" : "즐겨찾기 추가"}
-                    aria-pressed={team.bookmarked}
-                    onClick={() => handleToggleBookmark(team.id)}
-                  >
-                    <span aria-hidden="true" />
-                  </button>
-                  <MainButton
-                    className={`find-team-apply-button ${team.applied ? "is-applied" : ""}`}
-                    onClick={() => handleOpenApplyModal(team.id)}
-                    aria-pressed={team.applied}
-                  >
-                    {team.applied ? "지원 완료" : "지원하기"}
-                  </MainButton>
-                </div>
-              </div>
-            </article>
-          ))
+            return (
+              <ApplicantBox
+                key={team.id}
+                title={team.title}
+                summary={team.summary}
+                capacity={team.capacity}
+                isBookmarked={team.bookmarked}
+                buttonText={buttonText}
+                buttonColor={buttonColor}
+                buttonTextColor={buttonTextColor}
+                onButtonClick={() => {
+                  if (!team.applied) handleOpenApplyModal(team.id);
+                }}
+                onBookmarkClick={() => handleToggleBookmark(team.id)}
+              />
+            );
+          })
         ) : (
           <div className="find-team-empty">해당 카테고리에 모집 중인 팀이 없습니다.</div>
         )}

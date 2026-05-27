@@ -7,7 +7,7 @@ import apiClient from '../../api/apiClient';
 
 const WEEKDAYS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
-function Calendar() {
+function Calendar({ showAddButton = true }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [events, setEvents] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -102,12 +102,14 @@ function Calendar() {
           </div>
         </div>
 
-        <div className="calendar-header-right">
-          <button className="add-event-btn-header" type="button" onClick={handleOpenModal}>
-            <img src={plusIcon} alt="일정 추가 아이콘" />
-            <span>일정 추가</span>
-          </button>
-        </div>
+        {showAddButton && (
+          <div className="calendar-header-right">
+            <button className="add-event-btn-header" type="button" onClick={handleOpenModal}>
+              <img src={plusIcon} alt="일정 추가 아이콘" />
+              <span>일정 추가</span>
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="calendar-body">

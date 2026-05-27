@@ -92,6 +92,12 @@
   overflow-y: auto;
 }
 
+.empty-state {
+  text-align: center;
+  color: #888;
+  padding: 40px 0;
+}
+
 @media (max-width: 768px) {
   .dashboard-container {
     padding: 20px 16px;

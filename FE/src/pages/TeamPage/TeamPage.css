@@ -24,6 +24,10 @@
   max-width: 1360px;
 }
 
+.team-page-grid.team-task-expanded {
+  grid-template-rows: 86px 58px 340px minmax(320px, 1fr);
+}
+
 .team-card {
   background: #ffffff;
   border-radius: 8px;
@@ -43,16 +47,14 @@
 }
 
 .team-progress-header,
-.team-task-header,
-.team-metric-card {
+.team-task-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
 .team-progress-header h2,
-.team-task-header h2,
-.team-metric-card h2 {
+.team-task-header h2 {
   margin: 0;
   font-family: 'Pretendard', sans-serif;
   font-size: 16px;
@@ -69,8 +71,7 @@
 }
 
 .team-progress-header strong,
-.team-task-header strong,
-.team-metric-card strong {
+.team-task-header strong {
   font-family: 'Pretendard', sans-serif;
   font-size: 28px;
   line-height: 1;
@@ -78,8 +79,7 @@
 }
 
 .team-progress-header strong span,
-.team-task-header strong span,
-.team-metric-card strong span {
+.team-task-header strong span {
   margin-left: 5px;
   font-size: 16px;
   color: #000000;
@@ -102,8 +102,13 @@
   grid-row: 1 / 4;
   display: flex;
   flex-direction: column;
-  position: relative;
   padding: 22px 38px 12px;
+  min-height: 222px;
+  transition: min-height 0.2s ease;
+}
+
+.team-task-board.team-card-expanded {
+  min-height: 504px;
 }
 
 .team-task-list {
@@ -142,24 +147,63 @@
 }
 
 .team-task-board .team-more-button {
-  position: absolute;
-  left: 50%;
-  bottom: 12px;
-  margin: 0;
-  transform: translateX(-50%);
+  margin: auto auto 0;
 }
 
 .team-metric-card {
   grid-column: 1;
+  align-self: start;
+  height: 58px;
   min-height: 58px;
-  padding: 0 32px;
+  padding: 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
 }
 
-.team-metric-card:nth-of-type(3) {
+.team-metric-card > .summary-card {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  padding: 0 32px;
+  border-top: 0;
+  border-radius: 8px;
+  box-shadow: none;
+  justify-content: center;
+}
+
+.team-metric-card > .summary-card .summary-header {
+  width: 100%;
+  margin: 0;
+  align-items: center;
+}
+
+.team-metric-card > .summary-card .summary-list,
+.team-metric-card > .summary-card .more-btn {
+  display: none;
+}
+
+.team-metric-card .summary-title {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.team-metric-card .summary-count {
+  font-size: 16px;
+  font-weight: 600;
+  color: #000000;
+}
+
+.team-metric-card .count-number {
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.team-metric-card-urgent {
   grid-row: 2;
 }
 
-.team-metric-card:nth-of-type(4) {
+.team-metric-card-completed {
   grid-row: 3;
 }
 
@@ -239,11 +283,15 @@
 
 .team-board-card {
   align-self: start;
-  height: 190px;
+  min-height: 190px;
   margin-top: 139px;
   padding: 20px 32px 12px;
   display: flex;
   flex-direction: column;
+}
+
+.team-board-card.team-card-expanded {
+  min-height: 270px;
 }
 
 .team-panel-title {
@@ -335,6 +383,11 @@
   object-fit: contain;
   flex: 0 0 8px;
   display: block;
+  transition: transform 0.2s ease;
+}
+
+.team-more-button[aria-expanded="true"] img {
+  transform: rotate(180deg);
 }
 
 @media (max-width: 1180px) {

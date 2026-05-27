@@ -74,15 +74,6 @@ const mockTeamPosts = [
     applied: true,
     applyStatus: "rejected",
   },
-  {
-    id: 5,
-    category: "assignment",
-    title: "캡스톤 디자인",
-    summary: "안녕하세요. WAP 화이팅",
-    capacity: 4,
-    bookmarked: false,
-    applied: false,
-  },
 ];
 
 const getInitialConsonants = (text) =>

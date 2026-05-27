@@ -19,7 +19,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: min(864px, calc(100vw - 260px));
+  width: 100%;
+  max-width: 1000px;
   margin-bottom: 12px;
 }
 
@@ -105,8 +106,9 @@
 .find-team-list {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  width: min(864px, calc(100vw - 260px));
+  gap: 10px;
+  width: 100%;
+  max-width: 1000px;
 }
 
 .find-team-empty {

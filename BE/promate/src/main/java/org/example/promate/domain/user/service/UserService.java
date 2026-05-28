@@ -110,13 +110,15 @@ public class UserService {
                 .map(member -> {
                     Project project = member.getProject();
 
-                    int completedCount = taskRepository.countByProjectIdAndStatus(
+                    int completedCount = taskRepository.countByProjectIdAndMemberIdAndStatus(
                             project.getId(),
+                            member.getId(),
                             TaskStatus.DONE
                     );
 
-                    int incompleteCount = taskRepository.countByProjectIdAndStatusIn(
+                    int incompleteCount = taskRepository.countByProjectIdAndMemberIdAndStatusIn(
                             project.getId(),
+                            member.getId(),
                             List.of(TaskStatus.TODO, TaskStatus.IN_PROGRESS)
                     );
 

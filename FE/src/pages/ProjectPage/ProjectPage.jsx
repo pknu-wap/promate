@@ -96,7 +96,7 @@ function ProjectPage() {
               let buttonTextColor;
               let isButtonDisabled = false;
 
-              if (activeTab === 'completed') {
+              if (activeTab === 'completed' || (activeTab === 'bookmarked' && project.status === 'completed')) {
                 if (project.isEvaluated) {
                   buttonText = '완료';
                   buttonColor = '#D9D9D9';
@@ -105,7 +105,7 @@ function ProjectPage() {
                   buttonText = '상호평가';
                   buttonColor = '#FE9A57';
                 }
-              } else if (activeTab === 'applied') {
+              } else if (activeTab === 'applied' || (activeTab === 'bookmarked' && project.applied)) {
                 isButtonDisabled = true;
                 switch (project.applyStatus) {
                   case 'accepted':

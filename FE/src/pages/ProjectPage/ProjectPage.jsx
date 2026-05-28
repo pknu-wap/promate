@@ -18,6 +18,7 @@ function ProjectPage() {
   const [projects, setProjects] = useState([]);
   const [appliedProjects, setAppliedProjects] = useState([]);
   const [activeProjects, setActiveProjects] = useState([]);
+  const [completedProjects, setCompletedProjects] = useState([]);
   const navigate = useNavigate();
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
   const [selectedProjectForApply, setSelectedProjectForApply] = useState(null);
@@ -129,9 +130,31 @@ function ProjectPage() {
       }
     };
 
+    const fetchCompletedProjects = async () => {
+      try {
+        const response = await apiClient.get('/projects/activity/me');
+        if (response.data && response.data.isSuccess) {
+          const fetchedData = response.data.data.map((item) => ({
+            id: `completed-${item.projectId}`,
+            projectId: item.projectId,
+            title: item.title,
+            summary: item.description,
+            status: 'completed',
+            applyStatus: 'accepted',
+            bookmarked: false,
+            isEvaluated: false,
+          }));
+          setCompletedProjects(fetchedData);
+        }
+      } catch (error) {
+        console.error('완료된 프로젝트 조회 실패:', error);
+      }
+    };
+
     fetchAppliedProjects();
     fetchBookmarkedProjects();
     fetchActiveProjects();
+    fetchCompletedProjects();
   }, [navigate]);
 
   const handleToggleBookmark = (id) => {
@@ -146,18 +169,19 @@ function ProjectPage() {
     if (activeTab === 'active') {
       return activeProjects;
     }
+    if (activeTab === 'completed') {
+      return completedProjects;
+    }
 
     return projects.filter((project) => {
       switch (activeTab) {
         case 'bookmarked':
           return project.bookmarked;
-        case 'completed':
-          return project.applied && project.status === 'completed';
         default:
           return true;
       }
     });
-  }, [activeTab, projects, appliedProjects, activeProjects]);
+  }, [activeTab, projects, appliedProjects, activeProjects, completedProjects]);
 
   const handleCloseApplyModal = () => {
     setIsApplyModalOpen(false);

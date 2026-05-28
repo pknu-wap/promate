@@ -168,7 +168,9 @@ body {
 }
 
 .btn-cancel {
-  width: 63px;
+  
+
+    width: 101px;
   height: 38px;
   padding: 0;
   border-radius: 5px;
@@ -178,9 +180,8 @@ body {
   font-size: 15px;
   font-weight: 800;
   cursor: pointer;
-  transition: background-color 0.18s ease;
+  transition: background-color 0.18s ease, transform 0.1s ease;
   font-family: inherit;
-  white-space: nowrap;
 }
 
 .btn-cancel:hover {
@@ -203,7 +204,7 @@ body {
 }
 
 .btn-submit:hover {
-  background-color: #ee8846;
+  background-color: #f08040;
 }
 
 .btn-submit:disabled {

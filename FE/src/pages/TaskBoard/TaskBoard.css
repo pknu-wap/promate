@@ -174,7 +174,8 @@
 }
 
 .task-board__action-button:hover {
-  transform: translateY(-1px);
+  
+  
 }
 
 .task-board__action-button--cancel {
@@ -182,8 +183,17 @@
   color: #ffffff;
 }
 
+.task-board__action-button--cancel:hover {
+  background: #b0b0b0;
+  color: #ffffff;
+}
+
 .task-board__action-button--complete {
   background: #fe9a57;
+}
+
+.task-board__action-button--complete:hover {
+  background-color: #f08040;
 }
 
 .task-board__status {

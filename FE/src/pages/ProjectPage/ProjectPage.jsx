@@ -141,6 +141,8 @@ function ProjectPage() {
                     if (buttonText === '지원하기') {
                       setSelectedProjectForApply(project);
                       setIsApplyModalOpen(true);
+                    } else if (buttonText === '상호평가') {
+                      navigate('/member-review', { state: { projectId: project.id } });
                     } else {
                       navigate(`/project/${project.id}`);
                     }

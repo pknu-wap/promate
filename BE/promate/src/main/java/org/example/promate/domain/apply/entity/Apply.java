@@ -50,6 +50,9 @@ public class Apply extends BaseEntity {
     public void updateStatus(Status status){
         this.status = status;
     }
+
+    public void updateObjective(String objective){this.objective = objective; }
+
     public void updateprContent(String prContent){
         this.prContent = prContent;
     }

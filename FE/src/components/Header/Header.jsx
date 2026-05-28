@@ -11,8 +11,8 @@ function Header({ onMenuClick }) {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await getUserInfo(); 
-        const name = response.data.name;
+        const response = await getUserInfo();
+        const name = response?.data?.userName || "사용자";
         
         setUserData({
           userName: name,

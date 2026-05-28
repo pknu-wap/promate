@@ -17,6 +17,7 @@ function ProjectPage() {
   const [activeTab, setActiveTab] = useState('bookmarked');
   const [projects, setProjects] = useState([]);
   const [appliedProjects, setAppliedProjects] = useState([]);
+  const [activeProjects, setActiveProjects] = useState([]);
   const navigate = useNavigate();
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
   const [selectedProjectForApply, setSelectedProjectForApply] = useState(null);
@@ -109,8 +110,28 @@ function ProjectPage() {
       }
     };
 
+    const fetchActiveProjects = async () => {
+      try {
+        const response = await apiClient.get('/projects/me');
+        if (response.data && response.data.isSuccess) {
+          const fetchedData = response.data.data.map((item) => ({
+            id: `active-${item.projectId}`,
+            projectId: item.projectId,
+            title: item.title,
+            dueDate: item.endDate ? item.endDate.replace(/-/g, '.') : '',
+            currentStep: item.completedTaskCount,
+            totalStep: item.completedTaskCount + item.incompleteTaskCount,
+          }));
+          setActiveProjects(fetchedData);
+        }
+      } catch (error) {
+        console.error('진행중인 프로젝트 조회 실패:', error);
+      }
+    };
+
     fetchAppliedProjects();
     fetchBookmarkedProjects();
+    fetchActiveProjects();
   }, [navigate]);
 
   const handleToggleBookmark = (id) => {
@@ -122,11 +143,12 @@ function ProjectPage() {
     if (activeTab === 'applied') {
       return appliedProjects;
     }
+    if (activeTab === 'active') {
+      return activeProjects;
+    }
 
     return projects.filter((project) => {
       switch (activeTab) {
-        case 'active':
-          return project.applied && project.status === 'active';
         case 'bookmarked':
           return project.bookmarked;
         case 'completed':
@@ -135,7 +157,7 @@ function ProjectPage() {
           return true;
       }
     });
-  }, [activeTab, projects, appliedProjects]);
+  }, [activeTab, projects, appliedProjects, activeProjects]);
 
   const handleCloseApplyModal = () => {
     setIsApplyModalOpen(false);
@@ -175,13 +197,7 @@ function ProjectPage() {
                     dueDate={project.dueDate}
                     currentStep={project.currentStep}
                     totalStep={project.totalStep}
-                    onClick={() => {
-                      if (project.applyStatus === 'rejected') {
-                        alert('불합격한 프로젝트는 상세 내역에 접근할 수 없습니다.');
-                        return;
-                      }
-                      navigate(`/project/${targetId}`);
-                    }}
+                    onClick={() => navigate(`/project/${project.projectId}`)}
                   />
                 );
               }

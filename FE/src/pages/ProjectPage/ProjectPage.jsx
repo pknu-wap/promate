@@ -136,6 +136,7 @@ function ProjectPage() {
                   buttonColor={buttonColor}
                   buttonTextColor={buttonTextColor}
                   disabled={isButtonDisabled}
+                  onClick={() => navigate(`/project/${project.id}`)}
                   onButtonClick={() => {
                     if (isButtonDisabled) return;
                     if (buttonText === '지원하기') {

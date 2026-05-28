@@ -9,4 +9,5 @@ public class MyActivityResponseDTO {
     private Long projectId;
     private String title;
     private Double averageReviewScore;
+    private String description; // 프로젝트 설명
 }

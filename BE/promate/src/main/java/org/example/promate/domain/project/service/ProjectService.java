@@ -47,6 +47,8 @@ public class ProjectService {
                         .applicationId(apply.getId())
                         .recruitmentId(apply.getRecruit().getId())
                         .title(apply.getRecruit().getTitle())
+                        .description(apply.getRecruit().getDescription())
+                        .recruitCount(apply.getRecruit().getTotalSlots())
                         .status(apply.getStatus())
                         .createdAt(apply.getCreatedAt())
                         .build())
@@ -124,6 +126,7 @@ public class ProjectService {
                     return MyActivityResponseDTO.builder()
                             .projectId(member.getProject().getId())
                             .title(member.getProject().getTitle())
+                            .description(member.getProject().getDescription())
                             .averageReviewScore(averageReviewScore)
                             .build();
                 })

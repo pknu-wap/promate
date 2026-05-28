@@ -14,4 +14,6 @@ public class MyApplicationResponseDTO {
     private String title;
     private Status status;
     private LocalDateTime createdAt;
+    private String description; // 프로젝트 설명
+    private Integer recruitCount; // 모집인원 반환
 }

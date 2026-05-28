@@ -1,8 +1,6 @@
 package org.example.promate.domain.apply.dto;
 
 import org.example.promate.domain.apply.enums.Status;
-
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,8 +14,9 @@ public record ApplicantListResponse(
             Long applicationId,
             Long applicantId,
             String name,
-            BigDecimal mannerTemp,
-            BigDecimal diligenceTemp,
+            double peerEvaluationScore,
+            int totalTasks,
+            int completedTasks,
             LocalDateTime appliedAt,
             Status status
     ) {}

@@ -14,7 +14,13 @@ public class CorsConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(List.of("https://promate-kappa.vercel.app", "https://promate.duckdns.org","http://localhost:3000"));
+        config.setAllowedOrigins(List.of(
+                "https://promate-kappa.vercel.app",
+                "https://promate.duckdns.org",
+                "http://localhost:3000",
+                "http://localhost:8082",
+                "http://localhost:5173"
+        ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);

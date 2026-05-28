@@ -64,14 +64,36 @@ public class ApplyController {
     }
 
 
-    @GetMapping("/applications")
-    public ApiResponse<ApplicantListResponse> getApplicants(
+    @GetMapping("/applications/pending")
+    public ApiResponse<ApplicantListResponse> getPendingApplicants(
             @PathVariable Long recruitmentsId,
             @AuthenticationPrincipal Long userId // 현재 로그인한 팀장
     ) {
         return ApiResponse.onSuccess(
-                RecruitSuccessCode.APPLY_LIST_FETCHED,
-                applyService.getApplicantList(recruitmentsId, userId)
+                RecruitSuccessCode.APPLY_PENDING_LIST_FETCHED,
+                applyService.getPendingApplicantList(recruitmentsId, userId)
+        );
+    }
+
+    @GetMapping("/applications/rejected")
+    public ApiResponse<ApplicantListResponse> getRejectedApplicants(
+            @PathVariable Long recruitmentsId,
+            @AuthenticationPrincipal Long userId // 현재 로그인한 팀장
+    ) {
+        return ApiResponse.onSuccess(
+                RecruitSuccessCode.APPLY_REJECTED_LIST_FETCHED,
+                applyService.getRejectedApplicantList(recruitmentsId, userId)
+        );
+    }
+
+    @GetMapping("/applications/accepted")
+    public ApiResponse<ApplicantListResponse> getAcceptedApplicants(
+            @PathVariable Long recruitmentsId,
+            @AuthenticationPrincipal Long userId // 현재 로그인한 팀장
+    ) {
+        return ApiResponse.onSuccess(
+                RecruitSuccessCode.APPLY_ACCEPTED_LIST_FETCHED,
+                applyService.getAcceptedApplicantList(recruitmentsId, userId)
         );
     }
 

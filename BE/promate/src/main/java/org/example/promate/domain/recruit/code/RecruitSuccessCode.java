@@ -22,9 +22,13 @@ public enum RecruitSuccessCode implements BaseSuccessCode {
     APPLY_FORM_UPDATED(HttpStatus.OK, "RECRUIT_S010", "팀 지원글 수정을 성공했습니다."),
     APPLY_FORM_DELETED(HttpStatus.NO_CONTENT, "RECRUIT_S011", "팀 지원글 삭제를 성공했습니다."),
 
-    APPLY_LIST_FETCHED(HttpStatus.OK,"RECRUIT_S012", "팀 지원서 리스트 불러오기를 성공했습니다."),
-    APPLY_DETAIL_FETCHED(HttpStatus.OK, "RECRUIT_S013", "팀 지원서 상세 조회를 성공했습니다."),
-    APPLY_STATUS_UPDATED(HttpStatus.OK, "RECRUIT_S014", "팀 모집이 완료되었습니다.")
+    APPLY_PENDING_LIST_FETCHED(HttpStatus.OK,"RECRUIT_S012", "대기 중인 팀 지원서 리스트 불러오기를 성공했습니다."),
+    APPLY_REJECTED_LIST_FETCHED(HttpStatus.OK,"RECRUIT_S013", "거절된 팀 지원서 리스트 불러오기를 성공했습니다."),
+    APPLY_ACCEPTED_LIST_FETCHED(HttpStatus.OK,"RECRUIT_S014", "수락된 팀 지원서 리스트 불러오기를 성공했습니다."),
+    APPLY_DETAIL_FETCHED(HttpStatus.OK, "RECRUIT_S015", "팀 지원서 상세 조회를 성공했습니다."),
+    APPLY_STATUS_UPDATED(HttpStatus.OK, "RECRUIT_S016", "지원서 상태 수정을 완료되었습니다."),
+
+    RECRUITMENT_COMPLETED(HttpStatus.NO_CONTENT,"RECRUIT_S0017", "모집 종료 상태로 변경 완료했습니다.")
     ;
 
     private final HttpStatus status;

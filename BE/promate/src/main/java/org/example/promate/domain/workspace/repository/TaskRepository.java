@@ -41,8 +41,41 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             TaskStatus status
     );
 
-    List<Task> findAllByProjectIdAndMemberId(Long projectId, Long memberId);
 
+    // 1.특정 프로젝트 내부의 상세 내역을 긁어올 때 사용
+    @Query("SELECT t FROM Task t " +
+            "WHERE t.project.id = :projectId " +
+            "AND t.member.user.id = :userId")
+    List<Task> findAllByProjectIdAndApplicantUserId(
+            @Param("projectId") Long projectId,
+            @Param("userId") Long userId
+    );
+
+    // 지원서 프로필용: 완료된 모든 프로젝트에서의 총 태스크 수 (User ID 기반)
+    @Query("SELECT COUNT(t) FROM Task t " +
+            "JOIN t.member m JOIN t.project p " +
+            "WHERE m.user.id = :userId AND p.status = 'COMPLETED'")
+    int countTotalTasksByUserIdInCompletedProjects(@Param("userId") Long userId);
+
+    // 지원서 프로필용: 완료된 모든 프로젝트에서의 DONE 태스크 수 (User ID 기반)
+    @Query("SELECT COUNT(t) FROM Task t " +
+            "JOIN t.member m JOIN t.project p " +
+            "WHERE m.user.id = :userId AND p.status = 'COMPLETED' AND t.status = 'DONE'")
+    int countCompletedTasksByUserIdInCompletedProjects(@Param("userId") Long userId);
+
+
+    // 지원서 묶음 조회용
+    @Query("SELECT m.user.id, COUNT(t) FROM Task t " +
+            "JOIN t.member m JOIN t.project p " +
+            "WHERE m.user.id IN :userIds AND p.status = 'COMPLETED' " +
+            "GROUP BY m.user.id")
+    List<Object[]> countTotalTasksByUserIdsInCompletedProjects(@Param("userIds") List<Long> userIds);
+
+    @Query("SELECT m.user.id, COUNT(t) FROM Task t " +
+            "JOIN t.member m JOIN t.project p " +
+            "WHERE m.user.id IN :userIds AND p.status = 'COMPLETED' AND t.status = 'DONE' " +
+            "GROUP BY m.user.id")
+    List<Object[]> countCompletedTasksByUserIdsInCompletedProjects(@Param("userIds") List<Long> userIds);
     // 프로필페이지 특정 user의 테스크 개수 반환
     int countByProjectIdAndMemberIdAndStatus(
             Long projectId,

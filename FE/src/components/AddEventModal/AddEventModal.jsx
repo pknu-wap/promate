@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import './AddEventModal.css';
-
-const timeOptions = [];
-for (let i = 0; i < 24; i++) {
-  const hour = String(i).padStart(2, '0');
-  timeOptions.push(`${hour}:00`);
-  timeOptions.push(`${hour}:30`);
-}
+import apiClient from '../../api/apiClient';
 
 const getTodayString = () => {
   const today = new Date();
@@ -18,13 +12,11 @@ const getTodayString = () => {
   return `${year}-${month}-${day}`;
 };
 
-function AddEventModal({ isOpen, onClose, onAddEvent }) {
+function AddEventModal({ isOpen, onClose, onAddEvent, projectId }) {
   const [title, setTitle] = useState('');
-  const [isAllDay, setIsAllDay] = useState(false);
+  const [content, setContent] = useState('');
   const [startDate, setStartDate] = useState(getTodayString());
   const [endDate, setEndDate] = useState(getTodayString());
-  const [startTime, setStartTime] = useState('12:00');
-  const [endTime, setEndTime] = useState('13:00');
 
   const formatDateWithDay = (dateString) => {
     const [year, month, day] = dateString.split('-').map(Number);
@@ -40,36 +32,55 @@ function AddEventModal({ isOpen, onClose, onAddEvent }) {
 
   const handleClose = () => {
     setTitle('');
-    setIsAllDay(false);
+    setContent('');
     setStartDate(getTodayString());
     setEndDate(getTodayString());
-    setStartTime('12:00');
-    setEndTime('13:00');
     onClose();
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!title.trim()) {
       alert('제목을 입력해주세요.');
       return;
     }
 
-    const start = new Date(`${startDate}T${isAllDay ? '00:00' : startTime}`);
-    const end = new Date(`${endDate}T${isAllDay ? '23:59' : endTime}`);
-
-    if (start > end) {
-      alert('종료 시간이 시작 시간보다 빠를 수 없습니다.');
+    if (startDate > endDate) {
+      alert('종료 날짜가 시작 날짜보다 빠를 수 없습니다.');
       return;
     }
 
-    onAddEvent({
-      text: title.trim(),
-      start,
-      end,
-      isAllDay,
-    });
+    if (!projectId) {
+      alert('프로젝트가 지정되지 않았습니다.');
+      return;
+    }
 
-    handleClose();
+    try {
+      const response = await apiClient.post(`/projects/${projectId}/schedules`, {
+        title: title.trim(),
+        content: content.trim(),
+        startDate,
+        endDate,
+      });
+
+      if (response.data.isSuccess) {
+        const newSchedule = response.data.data;
+        const [startYear, startMonth, startDay] = newSchedule.startDate.split('-').map(Number);
+        const [endYear, endMonth, endDay] = newSchedule.endDate.split('-').map(Number);
+        
+        onAddEvent({
+          id: newSchedule.scheduleId,
+          text: newSchedule.title,
+          content: newSchedule.content,
+          start: new Date(startYear, startMonth - 1, startDay),
+          end: new Date(endYear, endMonth - 1, endDay),
+        });
+
+        handleClose();
+      }
+    } catch (error) {
+      console.error('일정 추가 에러:', error);
+      alert(error.message || '일정 추가에 실패했습니다.');
+    }
   };
 
   if (!isOpen) {
@@ -93,6 +104,17 @@ function AddEventModal({ isOpen, onClose, onAddEvent }) {
             />
           </div>
 
+          <div className="input-group">
+            <label className="input-label">내용</label>
+            <input
+              type="text"
+              className="title-input"
+              placeholder="내용을 적어주세요."
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+            />
+          </div>
+
           <div className="date-group">
             <label className="input-label">날짜</label>
 
@@ -109,20 +131,6 @@ function AddEventModal({ isOpen, onClose, onAddEvent }) {
                   onChange={(e) => setStartDate(e.target.value)}
                 />
               </div>
-
-              {!isAllDay && (
-                <select
-                  className="time-input"
-                  value={startTime}
-                  onChange={(e) => setStartTime(e.target.value)}
-                >
-                  {timeOptions.map((time) => (
-                    <option key={time} value={time}>
-                      {time}
-                    </option>
-                  ))}
-                </select>
-              )}
             </div>
 
             <div className="date-row">
@@ -138,32 +146,6 @@ function AddEventModal({ isOpen, onClose, onAddEvent }) {
                   onChange={(e) => setEndDate(e.target.value)}
                 />
               </div>
-
-              {!isAllDay && (
-                <select
-                  className="time-input"
-                  value={endTime}
-                  onChange={(e) => setEndTime(e.target.value)}
-                >
-                  {timeOptions.map((time) => (
-                    <option key={time} value={time}>
-                      {time}
-                    </option>
-                  ))}
-                </select>
-              )}
-            </div>
-
-            <div className="date-row all-day-row">
-              <span className="row-label">종일</span>
-              <label className="switch">
-                <input
-                  type="checkbox"
-                  checked={isAllDay}
-                  onChange={(e) => setIsAllDay(e.target.checked)}
-                />
-                <span className="slider"></span>
-              </label>
             </div>
           </div>
 

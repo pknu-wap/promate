@@ -131,6 +131,7 @@ function ProjectPage() {
                   title={project.title}
                   summary={project.summary}
                   capacity={project.capacity}
+                  showCapacity={project.status !== 'completed'}
                   isBookmarked={project.bookmarked}
                   buttonText={buttonText}
                   buttonColor={buttonColor}

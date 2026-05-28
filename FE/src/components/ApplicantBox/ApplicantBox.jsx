@@ -17,7 +17,8 @@ function ApplicantBox({
   isBookmarked = false,
   onBookmarkClick,
   disabled = false,
-  onClick
+  onClick,
+  showCapacity = true
 }) {
   return (
     <div className="applicant-box" onClick={onClick} style={{ cursor: onClick ? 'pointer' : undefined }}>
@@ -34,7 +35,9 @@ function ApplicantBox({
       </div>
 
       <div className="applicant-box-right">
-        <span className="applicant-box-capacity">모집인원: {capacity}명</span>
+        <span className="applicant-box-capacity" style={{ visibility: showCapacity ? 'visible' : 'hidden' }}>
+          모집인원: {capacity}명
+        </span>
         <div className="applicant-box-actions">
           {showBookmark && (
             <button

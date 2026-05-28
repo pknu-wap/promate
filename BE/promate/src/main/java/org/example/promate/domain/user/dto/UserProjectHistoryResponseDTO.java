@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import org.example.promate.domain.user.entity.UserProjectHistory;
 
+import java.time.LocalDate;
+
 @Getter
 @Builder
 public class UserProjectHistoryResponseDTO {
@@ -11,7 +13,8 @@ public class UserProjectHistoryResponseDTO {
     private Long historyId;
     private String projectName;
     private String role;
-    private String period;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private String description;
     private Boolean editable;
 
@@ -20,7 +23,8 @@ public class UserProjectHistoryResponseDTO {
                 .historyId(history.getId())
                 .projectName(history.getProjectName())
                 .role(history.getRole())
-                .period(history.getPeriod())
+                .startDate(history.getStartDate())
+                .endDate(history.getEndDate())
                 .description(history.getDescription())
                 .editable(true)
                 .build();

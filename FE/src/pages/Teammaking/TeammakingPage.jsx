@@ -4,6 +4,7 @@ import DomainSelector from "./components/DomainSelector.jsx";
 import FormActions from "./components/FormActions.jsx";
 import ProjectDescriptionField from "./components/ProjectDescriptionField.jsx";
 import ProjectNameField from "./components/ProjectNameField.jsx";
+import ProjectPeriodField from "./components/ProjectPeriodField.jsx";
 import "./TeammakingPage.css";
 
 const domainOptions = [
@@ -14,16 +15,38 @@ const domainOptions = [
   { id: "etc", label: "기타" },
 ];
 
+const getTodayValue = () => {
+  const today = new Date();
+  const timezoneOffset = today.getTimezoneOffset() * 60000;
+
+  return new Date(today.getTime() - timezoneOffset).toISOString().slice(0, 10);
+};
+
 function TeammakingPage() {
+  const todayValue = getTodayValue();
   const [projectName, setProjectName] = useState("");
   const [selectedDomain, setSelectedDomain] = useState("assignment");
+  const [recruitCount, setRecruitCount] = useState("1");
+  const [startDate, setStartDate] = useState(todayValue);
+  const [endDate, setEndDate] = useState(todayValue);
   const [description, setDescription] = useState("");
   const isSubmitEnabled = projectName.trim() !== "" && description.trim() !== "";
 
   const handleCancel = () => {
     setProjectName("");
     setSelectedDomain("assignment");
+    setRecruitCount("1");
+    setStartDate(todayValue);
+    setEndDate(todayValue);
     setDescription("");
+  };
+
+  const handleStartDateChange = (value) => {
+    setStartDate(value);
+
+    if (endDate < value) {
+      setEndDate(value);
+    }
   };
 
   const handleSubmit = () => {
@@ -33,7 +56,7 @@ function TeammakingPage() {
       domainOptions.find((option) => option.id === selectedDomain)?.label ?? selectedDomain;
 
     alert(
-      `프로젝트 생성!\n이름: ${projectName}\n분야: ${selectedDomainLabel}\n설명: ${description}`,
+      `프로젝트 생성!\n이름: ${projectName}\n분야: ${selectedDomainLabel}\n모집 인원: ${recruitCount}명\n기간: ${startDate} ~ ${endDate}\n설명: ${description}`,
     );
   };
 
@@ -52,6 +75,29 @@ function TeammakingPage() {
           domainOptions={domainOptions}
           selectedDomain={selectedDomain}
           onDomainChange={setSelectedDomain}
+        />
+        <div className="form-field recruit-count-field">
+          <label className="form-label" htmlFor="recruit-count">
+            모집 인원
+          </label>
+          <select
+            id="recruit-count"
+            className="recruit-count-select"
+            value={recruitCount}
+            onChange={(event) => setRecruitCount(event.target.value)}
+          >
+            {Array.from({ length: 10 }, (_, index) => String(index + 1)).map((count) => (
+              <option key={count} value={count}>
+                {count}명
+              </option>
+            ))}
+          </select>
+        </div>
+        <ProjectPeriodField
+          startDate={startDate}
+          endDate={endDate}
+          onStartDateChange={handleStartDateChange}
+          onEndDateChange={setEndDate}
         />
         <ProjectDescriptionField
           description={description}

@@ -35,7 +35,7 @@ body {
   border-radius: 9px;
   width: 864px;
   max-width: 100%;
-  height: 506px;
+  height: 560px;
   padding: 27px 33px;
   margin: 0;
   position: relative;
@@ -48,7 +48,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
   border-radius: 4px;
   background-color: #f0f0f0;
 }
@@ -61,7 +61,7 @@ body {
 }
 
 .form-field {
-  margin-bottom: 27px;
+  margin-bottom: 16px;
 }
 
 .form-label {
@@ -76,7 +76,7 @@ body {
 .text-input {
   width: 507px;
   max-width: 100%;
-  height: 35px;
+  height: 32px;
   padding: 0 11px;
   border: 1px solid #bcbcbc;
   border-radius: 3px;
@@ -126,10 +126,209 @@ body {
   box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.08);
 }
 
+.project-period-field {
+  margin-bottom: 16px;
+}
+
+.project-period-row {
+  width: 507px;
+  max-width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 18px;
+}
+
+.period-date-picker {
+  position: relative;
+  display: block;
+  min-width: 0;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+}
+
+.period-date-display {
+  width: 100%;
+  height: 100%;
+  padding: 6px 10px;
+  border: 2px solid #bcbcbc;
+  border-radius: 9px;
+  background: #f3f3f3;
+  color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  white-space: pre-line;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: 0;
+  box-sizing: border-box;
+}
+
+.period-date-picker:focus-visible .period-date-display {
+  background-color: #e8e8e8;
+  box-shadow: 0 0 0 2px rgba(243, 132, 30, 0.25);
+}
+
+.period-separator {
+  color: #1a1a1a;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.date-picker-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.date-picker-dialog {
+  width: min(100%, 430px);
+  overflow: hidden;
+  border-radius: 4px;
+  background: #fbf9ff;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.26);
+}
+
+.date-picker-hero {
+  min-height: 112px;
+  padding: 22px 34px 20px;
+  background: #4f67a3;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.date-picker-hero span {
+  margin-bottom: 8px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.date-picker-hero strong {
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.date-picker-calendar {
+  padding: 24px 34px 20px;
+}
+
+.date-picker-monthbar {
+  display: grid;
+  grid-template-columns: 40px 1fr 40px;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.date-picker-monthbar strong {
+  color: #1a1a1a;
+  font-size: 20px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.date-picker-monthbar button {
+  width: 34px;
+  height: 34px;
+  border: 0;
+  background: transparent;
+  color: #1a1a1a;
+  font-family: inherit;
+  font-size: 34px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.date-picker-weekdays,
+.date-picker-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.date-picker-weekdays {
+  margin-bottom: 16px;
+}
+
+.date-picker-weekdays span {
+  color: #444444;
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.date-picker-days {
+  row-gap: 8px;
+}
+
+.date-picker-days > span,
+.date-picker-day {
+  width: 34px;
+  height: 34px;
+  margin: 0 auto;
+}
+
+.date-picker-day {
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #222222;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.date-picker-day:hover {
+  background: rgba(79, 103, 163, 0.12);
+}
+
+.date-picker-day--selected {
+  background: #4f67a3;
+  color: #ffffff;
+}
+
+.date-picker-day--selected:hover {
+  background: #4f67a3;
+}
+
+.date-picker-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 22px;
+}
+
+.date-picker-actions button {
+  height: 32px;
+  border: 0;
+  background: transparent;
+  color: #4b5575;
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .textarea-input {
   width: 507px;
   max-width: 100%;
-  height: 84px;
+  height: 72px;
   padding: 11px;
   border: 1px solid #bcbcbc;
   border-radius: 3px;
@@ -141,6 +340,26 @@ body {
   line-height: 1.4;
   font-family: inherit;
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.recruit-count-select {
+  width: 160px;
+  height: 32px;
+  padding: 0 34px 0 11px;
+  border: 1px solid #bcbcbc;
+  border-radius: 3px;
+  background-color: #f3f3f3;
+  color: #1a1a1a;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.recruit-count-select:focus {
+  background-color: #e8e8e8;
+  box-shadow: 0 0 0 2px rgba(243, 132, 30, 0.25);
 }
 
 .textarea-input:focus {
@@ -167,21 +386,23 @@ body {
   gap: 15px;
 }
 
-.btn-cancel {
-  
-
-    width: 101px;
+.btn-cancel,
+.btn-submit {
+  width: 101px;
   height: 38px;
   padding: 0;
   border-radius: 5px;
   border: none;
-  background-color: #e0e0e0;
   color: #ffffff;
   font-size: 15px;
   font-weight: 800;
   cursor: pointer;
   transition: background-color 0.18s ease, transform 0.1s ease;
   font-family: inherit;
+}
+
+.btn-cancel {
+  background-color: #e0e0e0;
 }
 
 .btn-cancel:hover {
@@ -189,18 +410,7 @@ body {
 }
 
 .btn-submit {
-  width: 101px;
-  height: 38px;
-  padding: 0;
-  border-radius: 5px;
-  border: none;
   background-color: #fe9a57;
-  color: #ffffff;
-  font-size: 15px;
-  font-weight: 800;
-  cursor: pointer;
-  transition: background-color 0.18s ease, transform 0.1s ease;
-  font-family: inherit;
 }
 
 .btn-submit:hover {
@@ -217,6 +427,7 @@ body {
   background-color: #d9d9d9;
 }
 
+.btn-cancel:active,
 .btn-submit:active {
   transform: scale(0.98);
 }
@@ -225,7 +436,7 @@ body {
   transform: none;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .page-wrapper {
     padding: 16px 14px 0;
   }
@@ -240,17 +451,17 @@ body {
 
   .card {
     width: 100%;
-    height: min(506px, calc(100dvh - 105px));
+    height: min(560px, calc(100dvh - 105px));
     border-radius: 9px;
     padding: 27px 18px;
   }
 
   .teammaking-logo-box {
-    margin-bottom: 18px;
+    margin-bottom: 14px;
   }
 
   .form-field {
-    margin-bottom: 24px;
+    margin-bottom: 14px;
   }
 
   .form-label {
@@ -265,18 +476,102 @@ body {
   }
 
   .text-input {
-    height: 35px;
+    height: 32px;
     font-size: 14px;
   }
 
   .textarea-input {
-    min-height: 84px;
-    height: 84px;
+    min-height: 66px;
+    height: 66px;
     font-size: 14px;
+  }
+
+  .recruit-count-select {
+    width: 140px;
+    height: 32px;
   }
 
   .domain-tags {
     gap: 8px;
+  }
+
+  .project-period-row {
+    width: 100%;
+    gap: 10px;
+  }
+
+  .period-date-picker {
+    height: 42px;
+  }
+
+  .period-date-display {
+    padding: 6px 8px;
+    border-radius: 8px;
+    font-size: 15px;
+  }
+
+  .period-separator {
+    font-size: 18px;
+  }
+
+  .date-picker-backdrop {
+    align-items: center;
+    padding: 0 34px;
+  }
+
+  .date-picker-dialog {
+    width: 100%;
+  }
+
+  .date-picker-hero {
+    min-height: 104px;
+    padding: 20px 30px 18px;
+  }
+
+  .date-picker-hero span {
+    font-size: 18px;
+  }
+
+  .date-picker-hero strong {
+    font-size: 30px;
+  }
+
+  .date-picker-calendar {
+    padding: 22px 26px 18px;
+  }
+
+  .date-picker-monthbar {
+    margin-bottom: 20px;
+  }
+
+  .date-picker-monthbar strong {
+    font-size: 18px;
+  }
+
+  .date-picker-weekdays span {
+    font-size: 14px;
+  }
+
+  .date-picker-days {
+    row-gap: 7px;
+  }
+
+  .date-picker-days > span,
+  .date-picker-day {
+    width: 32px;
+    height: 32px;
+  }
+
+  .date-picker-day {
+    font-size: 15px;
+  }
+
+  .date-picker-actions {
+    margin-top: 20px;
+  }
+
+  .date-picker-actions button {
+    font-size: 17px;
   }
 
   .bottom-bar {

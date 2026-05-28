@@ -76,4 +76,17 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "WHERE m.user.id IN :userIds AND p.status = 'COMPLETED' AND t.status = 'DONE' " +
             "GROUP BY m.user.id")
     List<Object[]> countCompletedTasksByUserIdsInCompletedProjects(@Param("userIds") List<Long> userIds);
+    // 프로필페이지 특정 user의 테스크 개수 반환
+    int countByProjectIdAndMemberIdAndStatus(
+            Long projectId,
+            Long memberId,
+            TaskStatus status
+    );
+
+    int countByProjectIdAndMemberIdAndStatusIn(
+            Long projectId,
+            Long memberId,
+            List<TaskStatus> statuses
+    );
+
 }

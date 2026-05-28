@@ -30,6 +30,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -55,7 +57,7 @@ public class RecruitService {
                 .description(request.description())
                 .category(request.category())
                 .totalSlots(request.totalSlots())
-                .deadline(request.deadline())
+                .deadline(LocalDateTime.now().plusDays(7)) //모집 기한 일주일 고정
                 .user(writer)
                 .build();
 
@@ -64,6 +66,7 @@ public class RecruitService {
                 .title(request.title()) // 일단 모집글 제목을 프로젝트명으로 사용
                 .description(request.description())
                 .status(ProjectStatus.PREPARING) // 아직 시작 전 상태
+                .endDate(request.endDate().toLocalDate())
                 .recruit(recruit)
                 .user(writer)
                 .build();
@@ -181,15 +184,16 @@ public class RecruitService {
         return new RecruitStatusResponse(null, recruit.getStatus());
     }
 
-    private RecruitStatusResponse processCompletion(Recruit recruit) {
+    public RecruitStatusResponse processCompletion(Recruit recruit) {
         // 임시 프로젝트 상태 변경 (PREPARING -> ACTIVE)
         Project project = recruit.getProject();
         if (project == null) {
             throw new GeneralException(RecruitErrorCode.PROJECT_NOT_FOUND);
         }
+        project.updateStartDate(LocalDate.now());
         project.updateStatus(ProjectStatus.ACTIVE);
 
-        // 모집글 + 지원서 데이터 청소 (일단 Hard Delete를 채택함) <- 추후 개발 진도에 따라 수정 고려
+        /* 모집글 + 지원서 데이터 청소 (일단 Hard Delete를 채택함) <- 추후 개발 진도에 따라 수정 고려
         // 두 객체 간 매핑 관계 부터 해제하기
         project.disconnectRecruit();
 
@@ -197,7 +201,7 @@ public class RecruitService {
         applyRepository.deleteAllByRecruitId(recruit.getId());
 
         // 모집글 삭제
-        recruitRepository.delete(recruit);
+        recruitRepository.delete(recruit);*/
 
         return new RecruitStatusResponse(project.getId(), RecruitStatus.COMPLETED);
     }
@@ -268,8 +272,25 @@ public class RecruitService {
             return RecruitResponse.of(
                     recruit,
                     myApply != null ? myApply.getStatus() : null,
-                    myApply != null ? myApply.getId() : null
+                    myApply != null ? myApply.getId() : null,
+                    userId
             );
         }).toList();
+    }
+
+    //모집글 만료 로직
+    public void processExpiration(Recruit recruit) {
+
+        recruit.updateStatus(RecruitStatus.EXPIRED);
+
+        // 임시 프로젝트 데이터 청소 (Hard Delete)
+        // 팀 빌딩에 실패했으므로 가동되지 못한 임시 프로젝트와 팀장 멤버 데이터는 제거
+        Project project = recruit.getProject();
+        if (project != null) {
+            recruit.disconnectProject();
+            projectRepository.delete(project);
+        }
+        //지원서 청소
+        applyRepository.deleteAllByRecruitId(recruit.getId());
     }
 }

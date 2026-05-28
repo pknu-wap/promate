@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 public record RecruitResponse(
         Long recruitmentId,
         String title,
+        String description,     // 추가 <- 북마크된 모집글용
         Category category,
         LocalDateTime createdAt,
         LocalDateTime deadline,
@@ -20,10 +21,24 @@ public record RecruitResponse(
         Status myApplyStatus,   // 본인의 지원 상태 (PENDING, ACCEPTED, REJECTED / 지원 안 했으면 null)
         Long myApplicationId    // 본인의 지원서 ID (지원 안 했으면 null)
 ) {
-    public static RecruitResponse of(Recruit recruit, Status myApplyStatus, Long myApplicationId) {
+    public static RecruitResponse of(Recruit recruit, Status myApplyStatus, Long myApplicationId, Long userId) {
+
+        Long targetProjectId = null;
+
+        // 1. 현재 유저가 이 모집글을 쓴 팀장(Leader)이거나
+        // 2. 지원 상태가 최종 수락(ACCEPTED)된 합격자인 경우
+        boolean isLeader = recruit.getUser() != null && recruit.getUser().getId().equals(userId);
+        boolean isAccepted = (myApplyStatus == Status.ACCEPTED);
+
+        // 둘 중 하나라도 해당하고, 프로젝트가 존재할 때만 ID를 열어줍니다.
+        if ((isLeader || isAccepted) && recruit.getProject() != null) {
+            targetProjectId = recruit.getProject().getId();
+        }
+
         return new RecruitResponse(
                 recruit.getId(),
                 recruit.getTitle(),
+                recruit.getDescription(),
                 recruit.getCategory(),
                 recruit.getCreatedAt(),
                 recruit.getDeadline(),
@@ -31,7 +46,7 @@ public record RecruitResponse(
                 recruit.getTotalSlots(),
                 recruit.getJoinedCount(),
                 // Project 엔티티 연관관계가 있다면 ID 추출, 없으면 null
-                recruit.getProject() != null ? recruit.getProject().getId() : null,
+                targetProjectId,
                 myApplyStatus,
                 myApplicationId
         );

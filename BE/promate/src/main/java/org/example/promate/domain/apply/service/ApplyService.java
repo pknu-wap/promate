@@ -14,6 +14,7 @@ import org.example.promate.domain.project.repository.ProjectRepository;
 import org.example.promate.domain.recruit.entity.Recruit;
 import org.example.promate.domain.recruit.enums.RecruitStatus;
 import org.example.promate.domain.recruit.repository.RecruitRepository;
+import org.example.promate.domain.recruit.service.RecruitService;
 import org.example.promate.domain.review.repository.MemberReviewRepository;
 import org.example.promate.domain.user.entity.User;
 import org.example.promate.domain.user.entity.UserProjectHistory;
@@ -47,6 +48,7 @@ public class ApplyService {
     private final TaskRepository taskRepository;
     private final UserProjectHistoryRepository userProjectHistoryRepository;
     private final MemberReviewRepository memberReviewRepository;
+    private final RecruitService recruitService;
 
 
     public ApplyFormResponse getApplyForm(Long recruitmentId, Long userId) {
@@ -316,6 +318,14 @@ public class ApplyService {
         // 바꾸려는 상태에 따른 비즈니스 로직 분기
         if (targetStatus == Status.ACCEPTED) {
             handleAccept(recruit, apply);
+            //  수락 처리 직후, 현재 프로젝트에 채워진 멤버 수 확인
+            int currentMemberCount = memberRepository.countByProjectId(recruit.getProject().getId());
+            int maxMemberCount = recruit.getTotalSlots();
+
+            // 목표 인원이 다 찼다면 자동으로 모집글 마감 및 프로젝트 ACTIVE 전환 프로세스 실행
+            if (currentMemberCount >= maxMemberCount) {
+                recruitService.processCompletion(recruit);
+            }
         } else if (targetStatus == Status.REJECTED) {
             handleReject(recruit, apply, currentStatus);
         }

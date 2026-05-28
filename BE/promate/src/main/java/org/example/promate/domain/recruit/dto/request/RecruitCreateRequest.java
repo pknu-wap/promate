@@ -15,5 +15,5 @@ public record RecruitCreateRequest(
         Category category,
         @Min(value = 1, message = "최소 1명 이상이어야 합니다")
         int totalSlots,
-        LocalDateTime deadline
+        LocalDateTime endDate
 ){}

@@ -94,16 +94,19 @@ function ProjectPage() {
               let buttonText = '지원하기';
               let buttonColor = '#FE9A57';
               let buttonTextColor;
+              let isButtonDisabled = false;
 
               if (activeTab === 'completed') {
                 if (project.isEvaluated) {
                   buttonText = '완료';
                   buttonColor = '#D9D9D9';
+                  isButtonDisabled = true;
                 } else {
-                  buttonText = '상호 평가';
+                  buttonText = '상호평가';
                   buttonColor = '#FE9A57';
                 }
               } else if (activeTab === 'applied') {
+                isButtonDisabled = true;
                 switch (project.applyStatus) {
                   case 'accepted':
                     buttonText = '합격';
@@ -132,7 +135,9 @@ function ProjectPage() {
                   buttonText={buttonText}
                   buttonColor={buttonColor}
                   buttonTextColor={buttonTextColor}
+                  disabled={isButtonDisabled}
                   onButtonClick={() => {
+                    if (isButtonDisabled) return;
                     if (buttonText === '지원하기') {
                       setSelectedProjectForApply(project);
                       setIsApplyModalOpen(true);

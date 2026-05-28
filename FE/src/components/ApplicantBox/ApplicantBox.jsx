@@ -15,7 +15,8 @@ function ApplicantBox({
   onButtonClick,
   showBookmark = true,
   isBookmarked = false,
-  onBookmarkClick
+  onBookmarkClick,
+  disabled = false
 }) {
   return (
     <div className="applicant-box">
@@ -47,9 +48,10 @@ function ApplicantBox({
           )}
           <button
             type="button"
-            className={`applicant-action-btn ${buttonColor === '#FE9A57' ? 'hover-active' : ''}`}
-            style={{ backgroundColor: buttonColor, color: buttonTextColor }}
+            className={`applicant-action-btn ${buttonColor === '#FE9A57' && !disabled ? 'hover-active' : ''}`}
+            style={{ backgroundColor: buttonColor, color: buttonTextColor, cursor: disabled ? 'default' : 'pointer' }}
             onClick={onButtonClick}
+            disabled={disabled}
           >
             {buttonText}
           </button>

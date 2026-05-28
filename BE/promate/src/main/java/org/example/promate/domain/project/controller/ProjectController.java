@@ -2,13 +2,13 @@ package org.example.promate.domain.project.controller;
 
 import lombok.RequiredArgsConstructor;
 
+import org.example.promate.domain.project.code.ProjectSuccessCode;
 import org.example.promate.domain.project.dto.MyActivityResponseDTO;
 import org.example.promate.domain.project.dto.MyApplicationResponseDTO;
 import org.example.promate.domain.project.dto.MyProjectResponseDTO;
 import org.example.promate.domain.project.dto.ProjectMemberResponseDTO;
 import org.example.promate.domain.project.service.ProjectService;
 import org.example.promate.global.ApiPayload.ApiResponse;
-import org.example.promate.global.ApiPayload.code.GeneralSuccessCode;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +27,7 @@ public class ProjectController {
             @AuthenticationPrincipal Long userId
     ) {
         return ApiResponse.onSuccess(
-                GeneralSuccessCode.OK,
+                ProjectSuccessCode.MY_PROJECTS_FOUND,
                 projectService.getMyProjects(userId)
         );
     }
@@ -37,7 +37,7 @@ public class ProjectController {
             @AuthenticationPrincipal Long userId
     ) {
         return ApiResponse.onSuccess(
-                GeneralSuccessCode.OK,
+                ProjectSuccessCode.MY_APPLICATIONS_FOUND,
                 projectService.getMyApplications(userId)
         );
     }
@@ -47,7 +47,7 @@ public class ProjectController {
             @AuthenticationPrincipal Long userId
     ) {
         return ApiResponse.onSuccess(
-                GeneralSuccessCode.OK,
+                ProjectSuccessCode.MY_ACTIVITIES_FOUND,
                 projectService.getMyActivities(userId)
         );
     }
@@ -58,7 +58,7 @@ public class ProjectController {
             @PathVariable Long projectId
     ) {
         return ApiResponse.onSuccess(
-                GeneralSuccessCode.OK,
+                ProjectSuccessCode.PROJECT_MEMBER_FOUND,
                 projectService.getProjectMembers(userId, projectId)
         );
     }

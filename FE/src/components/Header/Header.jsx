@@ -6,7 +6,7 @@ import ProfileAvatar from '../ProfileAvatar/ProfileAvatar';
 import './Header.css';
 
 function Header({ onMenuClick }) {
-  const [userData, setUserData] = useState({ userName: "...", userInitial: "" });
+  const [userData, setUserData] = useState({ userName: "..." });
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -15,8 +15,7 @@ function Header({ onMenuClick }) {
         const name = response?.data?.userName || "사용자";
         
         setUserData({
-          userName: name,
-          userInitial: name.charAt(0).toUpperCase() 
+          userName: name
         });
       } catch (error) {
         console.error("유저 정보 로드 실패", error);

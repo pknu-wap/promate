@@ -81,6 +81,8 @@ public class ProjectService {
                             .projectId(project.getId())
                             .title(project.getTitle())
                             .projectStatus(project.getStatus())
+                            .startDate(project.getStartDate())
+                            .endDate(project.getEndDate())
                             .completedTaskCount(completedTaskCount)
                             .incompleteTaskCount(incompleteTaskCount)
                             .build();

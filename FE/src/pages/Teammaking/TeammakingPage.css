@@ -388,14 +388,20 @@ body {
 
 .btn-cancel,
 .btn-submit {
-  width: 101px;
-  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 126px;
+  height: 54px;
   padding: 0;
-  border-radius: 5px;
+  border-radius: 8px;
   border: none;
+  appearance: none;
+  
   color: #ffffff;
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 800;
+  line-height: 1;
   cursor: pointer;
   transition: background-color 0.18s ease, transform 0.1s ease;
   font-family: inherit;
@@ -403,6 +409,7 @@ body {
 
 .btn-cancel {
   background-color: #e0e0e0;
+  color: #333333;
 }
 
 .btn-cancel:hover {
@@ -419,6 +426,7 @@ body {
 
 .btn-submit:disabled {
   background-color: #d9d9d9;
+  color: #ffffff;
   cursor: not-allowed;
   opacity: 1;
 }
@@ -427,14 +435,7 @@ body {
   background-color: #d9d9d9;
 }
 
-.btn-cancel:active,
-.btn-submit:active {
-  transform: scale(0.98);
-}
 
-.btn-submit:disabled:active {
-  transform: none;
-}
 
 @media (max-width: 768px) {
   .page-wrapper {
@@ -586,8 +587,9 @@ body {
 
   .btn-cancel,
   .btn-submit {
-    flex: 0 0 auto;
-    height: 38px;
-    font-size: 15px;
+    flex: 0 0 126px;
+    width: 126px;
+    height: 54px;
+    font-size: 18px;
   }
 }

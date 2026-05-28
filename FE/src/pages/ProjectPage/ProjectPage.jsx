@@ -1,8 +1,9 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProjectBox from '../../components/ProjectBox/ProjectBox';
 import ApplicantBox from '../../components/ApplicantBox/ApplicantBox';
 import ApplyModal from '../../components/ApplyModal/ApplyModal';
+import apiClient from '../../api/apiClient';
 import './ProjectPage.css';
 
 const mockProjects = [
@@ -24,23 +25,65 @@ const tabs = [
 function ProjectPage() {
   const [activeTab, setActiveTab] = useState('bookmarked');
   const [projects, setProjects] = useState(mockProjects);
+  const [appliedProjects, setAppliedProjects] = useState([]);
   const navigate = useNavigate();
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
   const [selectedProjectForApply, setSelectedProjectForApply] = useState(null);
   const [applyJob, setApplyJob] = useState('');
   const [applyMotivation, setApplyMotivation] = useState('');
 
+  useEffect(() => {
+    const fetchAppliedProjects = async () => {
+      try {
+        const response = await apiClient.get('/projects/applications/me');
+        if (response.data && response.data.isSuccess) {
+          const fetchedData = response.data.data.map((item) => {
+            let mappedStatus;
+            switch (item.status) {
+              case 'ACCEPTED': mappedStatus = 'accepted'; break;
+              case 'REJECTED': mappedStatus = 'rejected'; break;
+              case 'PENDING':
+              default:
+                mappedStatus = 'reviewing';
+                break;
+            }
+
+            return {
+              id: item.recruitmentId,
+              applicationId: item.applicationId,
+              title: item.title,
+              summary: item.description,
+              capacity: item.recruitCount,
+              applied: true,
+              applyStatus: mappedStatus,
+              status: 'active',
+              bookmarked: false,
+            };
+          });
+          setAppliedProjects(fetchedData);
+        }
+      } catch (error) {
+        console.error('지원 현황 조회 실패:', error);
+      }
+    };
+
+    fetchAppliedProjects();
+  }, []);
+
   const handleToggleBookmark = (id) => {
     setProjects((prev) => prev.map((p) => (p.id === id ? { ...p, bookmarked: !p.bookmarked } : p)));
+    setAppliedProjects((prev) => prev.map((p) => (p.id === id ? { ...p, bookmarked: !p.bookmarked } : p)));
   };
 
   const filteredProjects = useMemo(() => {
+    if (activeTab === 'applied') {
+      return appliedProjects;
+    }
+
     return projects.filter((project) => {
       switch (activeTab) {
         case 'active':
           return project.applied && project.status === 'active';
-        case 'applied':
-          return project.applied;
         case 'bookmarked':
           return project.bookmarked;
         case 'completed':
@@ -49,7 +92,7 @@ function ProjectPage() {
           return true;
       }
     });
-  }, [activeTab, projects]);
+  }, [activeTab, projects, appliedProjects]);
 
   const handleCloseApplyModal = () => {
     setIsApplyModalOpen(false);

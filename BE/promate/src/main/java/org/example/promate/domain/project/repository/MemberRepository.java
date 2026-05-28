@@ -32,4 +32,8 @@ public interface MemberRepository extends JpaRepository<Member,Long> {
     );
 
     Optional<Member> findByUserId(Long userId);
+
+    List<Member> findAllByProjectIdAndIsDeletedFalse(Long projectId);
+
+    boolean existsByProjectIdAndUserIdAndIsDeletedFalse(Long projectId, Long userId);
 }

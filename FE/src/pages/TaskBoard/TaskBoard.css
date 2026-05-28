@@ -178,11 +178,12 @@
 }
 
 .task-board__action-button--cancel {
-  background: #9c9c9c;
+  background: #e0e0e0;
+  color: #ffffff;
 }
 
 .task-board__action-button--complete {
-  background: #ff6600;
+  background: #fe9a57;
 }
 
 .task-board__status {

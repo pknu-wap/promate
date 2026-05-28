@@ -1,10 +1,19 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import './TaskBoard.css';
 
 const taskTabs = [
   { key: 'all', label: '전체' },
   { key: 'progress', label: '진행중인 태스크' },
   { key: 'done', label: '완료된 태스크' }
+];
+
+const projects = [
+  { id: 1, title: '프로그래밍 팀플' },
+  { id: 2, title: 'WAP 프로젝트' },
+  { id: 3, title: '캡스톤 디자인' },
+  { id: 4, title: '알고리즘 스터디' },
+  { id: 5, title: '인공지능 개발' }
 ];
 
 const initialTasks = [
@@ -18,8 +27,19 @@ const initialTasks = [
 ];
 
 function TaskBoard() {
-  const [activeTab, setActiveTab] = useState('all');
+  const [searchParams] = useSearchParams();
+  const projectId = Number(searchParams.get('projectId'));
+  const projectTitle =
+    projects.find((project) => project.id === projectId)?.title ?? '프로젝트';
+  const initialTab = taskTabs.some((tab) => tab.key === searchParams.get('status'))
+    ? searchParams.get('status')
+    : 'all';
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [tasks, setTasks] = useState(initialTasks);
+
+  useEffect(() => {
+    setActiveTab(initialTab);
+  }, [initialTab]);
 
   const filteredTasks = useMemo(() => {
     const visibleTasks = tasks.filter((task) => task.status !== 'cancelled');
@@ -49,7 +69,7 @@ function TaskBoard() {
     <section className="task-board" aria-labelledby="task-board-title">
       <div className="task-board__content">
         <h1 id="task-board-title" className="task-board__title">
-          캡스톤 디자인 - 태스크 보드
+          {projectTitle} - 태스크 보드
         </h1>
 
         <div className="task-board__toolbar">
@@ -87,14 +107,14 @@ function TaskBoard() {
                     className="task-board__action-button task-board__action-button--cancel"
                     onClick={() => updateTaskStatus(task.id, 'cancelled')}
                   >
-                    취소하기
+                    삭제하기
                   </button>
                   <button
                     type="button"
                     className="task-board__action-button task-board__action-button--complete"
                     onClick={() => updateTaskStatus(task.id, 'done')}
                   >
-                    완료
+                    완료하기
                   </button>
                 </div>
               ) : (

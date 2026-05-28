@@ -35,6 +35,22 @@
   box-sizing: border-box;
 }
 
+.team-card-clickable {
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.team-card-clickable:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+}
+
+.team-card-clickable:focus-visible,
+.team-metric-card > .summary-card .summary-header:focus-visible {
+  outline: 2px solid #ff6600;
+  outline-offset: 3px;
+}
+
 .team-progress-card,
 .team-task-board {
   border-top: 3px solid #fe9a57;

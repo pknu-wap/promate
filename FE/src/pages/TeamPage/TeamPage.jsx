@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ClipboardList, Users } from 'lucide-react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Calendar from '../../components/Calendar/Calendar';
 import ProgressBar from '../../components/ProgressBar/ProgressBar';
 import SummaryCard from '../../components/SummaryCard/SummaryCard';
@@ -46,6 +46,7 @@ const INITIAL_VISIBLE_COUNT = 3;
 
 function TeamPage() {
   const { projectId } = useParams();
+  const navigate = useNavigate();
   const [isTaskExpanded, setIsTaskExpanded] = useState(false);
   const [isBoardExpanded, setIsBoardExpanded] = useState(false);
   const projectData = projects.find((project) => project.id === Number(projectId)) ?? projects[0];
@@ -53,13 +54,27 @@ function TeamPage() {
   const visiblePosts = isBoardExpanded ? boardPosts : boardPosts.slice(0, INITIAL_VISIBLE_COUNT);
   const canToggleTasks = teamTasks.length > INITIAL_VISIBLE_COUNT;
   const canTogglePosts = boardPosts.length > INITIAL_VISIBLE_COUNT;
+  const openTaskBoard = (status) => {
+    navigate(`/task-board?projectId=${projectData.id}&status=${status}`);
+  };
 
   return (
     <div className="team-page-container">
       <h1 className="team-page-title">{projectData.title}</h1>
 
       <div className={`team-page-grid ${isTaskExpanded ? 'team-task-expanded' : ''}`}>
-        <section className="team-card team-progress-card">
+        <section
+          className="team-card team-progress-card team-card-clickable"
+          role="button"
+          tabIndex={0}
+          onClick={() => openTaskBoard('progress')}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              openTaskBoard('progress');
+            }
+          }}
+        >
           <div className="team-progress-header">
             <div>
               <h2>프로젝트 현황</h2>
@@ -104,7 +119,7 @@ function TeamPage() {
           <SummaryCard title="마감 임박 테스크" count={12} />
         </div>
         <div className="team-card team-metric-card team-metric-card-completed">
-          <SummaryCard title="완료한 테스크" count={18} />
+          <SummaryCard title="완료한 테스크" count={18} onHeaderClick={() => openTaskBoard('done')} />
         </div>
 
         <div className="team-calendar">

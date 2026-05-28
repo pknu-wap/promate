@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.promate.domain.project.dto.MyActivityResponseDTO;
 import org.example.promate.domain.project.dto.MyApplicationResponseDTO;
 import org.example.promate.domain.project.dto.MyProjectResponseDTO;
+import org.example.promate.domain.project.dto.ProjectMemberResponseDTO;
 import org.example.promate.domain.project.service.ProjectService;
 import org.example.promate.global.ApiPayload.ApiResponse;
 import org.example.promate.global.ApiPayload.code.GeneralSuccessCode;
@@ -48,6 +49,17 @@ public class ProjectController {
         return ApiResponse.onSuccess(
                 GeneralSuccessCode.OK,
                 projectService.getMyActivities(userId)
+        );
+    }
+
+    @GetMapping("/{projectId}/members")
+    public ApiResponse<List<ProjectMemberResponseDTO>> getProjectMembers(
+            @AuthenticationPrincipal Long userId,
+            @PathVariable Long projectId
+    ) {
+        return ApiResponse.onSuccess(
+                GeneralSuccessCode.OK,
+                projectService.getProjectMembers(userId, projectId)
         );
     }
 

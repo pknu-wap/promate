@@ -2,11 +2,16 @@ package org.example.promate.domain.project.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.promate.domain.apply.repository.ApplyRepository;
+import org.example.promate.domain.project.code.MemberErrorCode;
+import org.example.promate.domain.project.code.ProjectErrorCode;
 import org.example.promate.domain.project.dto.MyActivityResponseDTO;
 import org.example.promate.domain.project.dto.MyApplicationResponseDTO;
 import org.example.promate.domain.project.dto.MyProjectResponseDTO;
+import org.example.promate.domain.project.dto.ProjectMemberResponseDTO;
 import org.example.promate.domain.project.entity.Project;
 import org.example.promate.domain.project.enums.ProjectStatus;
+import org.example.promate.domain.project.exception.MemberException;
+import org.example.promate.domain.project.exception.ProjectException;
 import org.example.promate.domain.project.repository.MemberRepository;
 import org.example.promate.domain.project.repository.ProjectRepository;
 import org.example.promate.domain.recruit.repository.RecruitRepository;
@@ -122,6 +127,33 @@ public class ProjectService {
                             .averageReviewScore(averageReviewScore)
                             .build();
                 })
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProjectMemberResponseDTO> getProjectMembers(
+            Long userId,
+            Long projectId
+    ) {
+        projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectException(ProjectErrorCode.ID_NOT_FOUND));
+
+        boolean isProjectMember =
+                memberRepository.existsByProjectIdAndUserIdAndIsDeletedFalse(
+                        projectId,
+                        userId
+                );
+
+        if (!isProjectMember) {
+            throw new MemberException(MemberErrorCode.MEMBER_FORBIDDEN_NOT_PROJECT_MEMBER);
+        }
+
+        return memberRepository.findAllByProjectIdAndIsDeletedFalse(projectId)
+                .stream()
+                .map(member -> ProjectMemberResponseDTO.builder()
+                        .userId(member.getUser().getId())
+                        .name(member.getUser().getName())
+                        .build())
                 .toList();
     }
 }

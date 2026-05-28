@@ -24,6 +24,13 @@ function ProjectPage() {
   const [applyMotivation, setApplyMotivation] = useState('');
 
   useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      alert('로그인이 필요한 서비스입니다.');
+      navigate('/login');
+      return;
+    }
+
     const fetchAppliedProjects = async () => {
       try {
         const response = await apiClient.get('/projects/applications/me');
@@ -104,7 +111,7 @@ function ProjectPage() {
 
     fetchAppliedProjects();
     fetchBookmarkedProjects();
-  }, []);
+  }, [navigate]);
 
   const handleToggleBookmark = (id) => {
     setProjects((prev) => prev.map((p) => (p.id === id ? { ...p, bookmarked: !p.bookmarked } : p)));

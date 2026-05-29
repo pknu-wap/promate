@@ -6,7 +6,7 @@ import projectMenuIcon from '../../assets/projectMenuIcon.svg';
 import SummaryCard from '../../components/SummaryCard/SummaryCard';
 import ProjectBox from '../../components/ProjectBox/ProjectBox';
 import moreIcon from '../../assets/moreIcon.svg';
-import apiClient from '../../api/apiClient';
+import { getDashboardProjects, getDashboardUrgentTasks, getDashboardCompletedTasks, getDashboardProjectStatuses } from '../../api/Dashboard/dashboardApi';
 
 function DashboardPage() {
   const [dashboardData, setDashboardData] = useState({
@@ -35,10 +35,10 @@ function DashboardPage() {
         setIsLoading(true);
         
         const results = await Promise.allSettled([
-          apiClient.get('/dashboard/projects/me'),
-          apiClient.get('/dashboard/tasks/deadline'),
-          apiClient.get('/dashboard/tasks/completed'),
-          apiClient.get('/dashboard/projects/status'),
+          getDashboardProjects(),
+          getDashboardUrgentTasks(),
+          getDashboardCompletedTasks(),
+          getDashboardProjectStatuses(),
         ]);
 
         const newDashboardData = {

@@ -1,15 +1,11 @@
-// 서버가 없을 때 사용하는 테스트용 함수
+import apiClient from "../apiClient";
+
 export const getUserInfo = async () => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        data: {
-          id: 1,
-          name: "사용자",
-          email: "user@example.com",
-          profileImageUrl: null
-        }
-      });
-    }, 500);
-  });
+  try {
+    const response = await apiClient.get("/user/me");
+    return response.data;
+  } catch (error) {
+    console.error("유저 정보 조회 실패:", error);
+    throw error;
+  }
 };

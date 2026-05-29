@@ -9,6 +9,8 @@ function SummaryCard({ title, count, items = [], showDot, onItemClick }) {
 
   //카드 헤더 클릭 시 리스트를 접거나 펼쳐짐, 접을 때 표시 개수를 초기값으로 리셋
   const toggleExpand = () => {
+    if (items.length === 0) return;
+
     setIsExpanded((prevIsExpanded) => {
       if (prevIsExpanded) {
         setVisibleCount(3);
@@ -33,17 +35,18 @@ function SummaryCard({ title, count, items = [], showDot, onItemClick }) {
   };
 
   const visibleItems = items.slice(0, visibleCount);
+  const effectivelyExpanded = isExpanded && items.length > 0;
 
   return (
-    <div className={`summary-card ${isExpanded ? '' : 'collapsed'}`}>
-      <div className="summary-header" onClick={toggleExpand}>
+    <div className={`summary-card ${effectivelyExpanded ? '' : 'collapsed'}`}>
+      <div className="summary-header" onClick={toggleExpand} style={items.length === 0 ? { cursor: 'default' } : undefined}>
         <h3 className="summary-title">{title}</h3>
         <div className="summary-count">
           <span className="count-number">{count}</span>개
         </div>
       </div>
 
-      {isExpanded && (
+      {effectivelyExpanded && (
         <>
           <ul className="summary-list">
             {visibleItems.map((item) => (

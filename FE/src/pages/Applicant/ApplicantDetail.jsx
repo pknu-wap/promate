@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Avatar from '../../components/Avatar/Avatar';
 import ProjectCard from '../../components/ProjectCard/ProjectCard';
+<<<<<<< HEAD
 import logoIcon from '../../assets/logoIcon.svg';
 import { getApplicationList, getApplicationDetail, updateApplicationStatus } from '../../api/RecruitApi';
+=======
+>>>>>>> 19327204d060a659d32a68bbcbf6a228058b3427
 import './Applicant.css';
 
 const tabs = [
@@ -88,9 +91,7 @@ const ApplicantDetail = () => {
           {!loading && filtered.map((person) => (
             <div key={person.applicationId} className="ad-row">
               <div className="ad-name-cell">
-                <div className="al-logo-box">
-                  <img src={logoIcon} alt="avatar" />
-                </div>
+                <div className="ad-avatar" />
                 <span className="ad-name-text">{person.name}</span>
               </div>
               <div className="ad-cell ad-task-stat">

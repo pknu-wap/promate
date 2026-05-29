@@ -26,21 +26,21 @@ const ProfilePage = () => {
 
   useEffect(() => {
     const fetchProfileData = async () => {
-      const [userRes, taskRes, manualProjectRes, autoProjectRes] = await Promise.allSettled([
+      const [userRes, manualProjectRes, autoProjectRes] = await Promise.allSettled([
         apiClient.get('/user/me'),
-        apiClient.get('/user/me/projects/task-counts'),
         apiClient.get('/user/me/projectHistories'),
         apiClient.get('/projects/activity/me'),
       ]);
 
       if (userRes.status === 'fulfilled') {
         const userData = userRes.value.data.data;
-        const taskData = taskRes.status === 'fulfilled' ? taskRes.value.data.data : null;
+        const completed = userData.completedTaskCount ?? 0;
+        const incomplete = userData.incompleteTaskCount ?? 0;
         setUserInfo({
           name: userData.name,
           taskStats: {
-            completed: taskData?.completedCount ?? userData.completedTaskCount ?? 0,
-            total: taskData?.totalCount ?? userData.totalTaskCount ?? 0,
+            completed,
+            total: completed + incomplete,
           },
         });
         setProfileImageUrl(userData.profileImageUrl || null);
@@ -52,8 +52,8 @@ const ProfilePage = () => {
         ? (autoProjectRes.value.data.data || []) : [];
 
       setProjects([
-        ...autoProjectsData.map((p) => ({ ...p, isManual: false })),
-        ...manualProjectsData.map((p) => ({ ...p, isManual: true })),
+        ...autoProjectsData.map((p) => ({ ...p, title: p.projectName ?? p.title, isManual: false })),
+        ...manualProjectsData.map((p) => ({ ...p, title: p.projectName ?? p.title, isManual: true })),
       ]);
     };
     fetchProfileData();
@@ -87,7 +87,7 @@ const ProfilePage = () => {
     try {
       const res = await apiClient.post('/user/me/projectHistories', newProject);
       const added = res.data.data;
-      setProjects((prev) => [...prev, { ...added, isManual: true }]);
+      setProjects((prev) => [...prev, { ...added, title: added.projectName ?? added.title, isManual: true }]);
     } catch (error) {
       console.error('프로젝트 추가 중 오류 발생:', error);
     }

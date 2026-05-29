@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect, useRef } from 'react';
+import apiClient from '../../api/apiClient';
 import MainButton from '../../components/MainButton/MainButton';
 import Avatar from '../../components/Avatar/Avatar';
 import AddProjectModal from './components/AddProjectModal';
 import './ProfilePage.css';
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
-
 const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [profileImageUrl, setProfileImageUrl] = useState(null);
+  const fileInputRef = useRef(null);
 
   const [userInfo, setUserInfo] = useState({
     name: '로딩 중...',
@@ -25,67 +25,83 @@ const ProfilePage = () => {
   };
 
   useEffect(() => {
-    setUserInfo({ name: '김아무개', taskStats: { completed: 3, total: 5 } });
-    setProjects([
-      { id: 1, title: '동아리 프로젝트', role: 'PM', startDate: '2025-03-20', endDate: null, score: null, isManual: false },
-      { id: 2, title: 'WAP 해커톤', role: 'FE', startDate: '2025-03-20', endDate: '2025-07-20', score: 4.7, isManual: false },
-    ]);
+    const fetchProfileData = async () => {
+      const [userRes, taskRes, manualProjectRes, autoProjectRes] = await Promise.allSettled([
+        apiClient.get('/user/me'),
+        apiClient.get('/user/me/projects/task-counts'),
+        apiClient.get('/user/me/projectHistories'),
+        apiClient.get('/projects/activity/me'),
+      ]);
 
-    // TODO: 백엔드 연동 시 아래 코드로 교체
-    // const fetchProfileData = async () => {
-    //   try {
-    //     const [userRes, taskRes, manualProjectRes, autoProjectRes] = await Promise.all([
-    //       axios.get(`${BASE_URL}/user/me`),
-    //       axios.get(`${BASE_URL}/user/me/projects/task-counts`),
-    //       axios.get(`${BASE_URL}/user/me/projectHistories`),
-    //       axios.get(`${BASE_URL}/projects/activity/me`),
-    //     ]);
-    //     const userData = userRes.data.data;
-    //     const taskData = taskRes.data.data;
-    //     const manualProjectsData = manualProjectRes.data.data || [];
-    //     const autoProjectsData = autoProjectRes.data.data || [];
-    //     setUserInfo({
-    //       name: userData.name,
-    //       taskStats: {
-    //         completed: taskData.completedCount || 0,
-    //         total: taskData.totalCount || 0,
-    //       },
-    //     });
-    //     setProjects([
-    //       ...autoProjectsData.map((p) => ({ ...p, isManual: false })),
-    //       ...manualProjectsData.map((p) => ({ ...p, isManual: true })),
-    //     ]);
-    //   } catch (error) {
-    //     console.error('프로필 데이터를 불러오는 중 오류 발생:', error);
-    //   }
-    // };
-    // fetchProfileData();
+      if (userRes.status === 'fulfilled') {
+        const userData = userRes.value.data.data;
+        const taskData = taskRes.status === 'fulfilled' ? taskRes.value.data.data : null;
+        setUserInfo({
+          name: userData.name,
+          taskStats: {
+            completed: taskData?.completedCount ?? userData.completedTaskCount ?? 0,
+            total: taskData?.totalCount ?? userData.totalTaskCount ?? 0,
+          },
+        });
+        setProfileImageUrl(userData.profileImageUrl || null);
+      }
+
+      const manualProjectsData = manualProjectRes.status === 'fulfilled'
+        ? (manualProjectRes.value.data.data || []) : [];
+      const autoProjectsData = autoProjectRes.status === 'fulfilled'
+        ? (autoProjectRes.value.data.data || []) : [];
+
+      setProjects([
+        ...autoProjectsData.map((p) => ({ ...p, isManual: false })),
+        ...manualProjectsData.map((p) => ({ ...p, isManual: true })),
+      ]);
+    };
+    fetchProfileData();
   }, []);
 
-  const handleAddProject = (newProject) => {
-    setProjects((prev) => [...prev, { id: Date.now(), ...newProject, isManual: true }]);
-
-    // TODO: 백엔드 연동 시 아래 코드로 교체
-    // try {
-    //   const res = await axios.post(`${BASE_URL}/user/me/projectHistories`, newProject);
-    //   const added = res.data.data;
-    //   setProjects((prev) => [...prev, { ...added, isManual: true }]);
-    // } catch (error) {
-    //   console.error('프로젝트 추가 중 오류 발생:', error);
-    // }
+  const handleImageClick = () => {
+    if (isEditing) fileInputRef.current?.click();
   };
 
-  const handleDeleteProject = (proj) => {
-    if (!proj.isManual) return;
-    setProjects((prev) => prev.filter((p) => p.id !== proj.id));
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-    // TODO: 백엔드 연동 시 아래 코드로 교체
-    // try {
-    //   await axios.delete(`${BASE_URL}/user/me/projectHistories/${proj.id}`);
-    //   setProjects((prev) => prev.filter((p) => p.id !== proj.id));
-    // } catch (error) {
-    //   console.error('프로젝트 삭제 중 오류 발생:', error);
-    // }
+    const previewUrl = URL.createObjectURL(file);
+    setProfileImageUrl(previewUrl);
+
+    const formData = new FormData();
+    formData.append('profileImage', file);
+
+    try {
+      const res = await apiClient.patch('/user/me', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      const updated = res.data.data;
+      if (updated?.profileImageUrl) setProfileImageUrl(updated.profileImageUrl);
+    } catch (error) {
+      console.error('프로필 이미지 업로드 실패:', error);
+    }
+  };
+
+  const handleAddProject = async (newProject) => {
+    try {
+      const res = await apiClient.post('/user/me/projectHistories', newProject);
+      const added = res.data.data;
+      setProjects((prev) => [...prev, { ...added, isManual: true }]);
+    } catch (error) {
+      console.error('프로젝트 추가 중 오류 발생:', error);
+    }
+  };
+
+  const handleDeleteProject = async (proj) => {
+    if (!proj.isManual) return;
+    try {
+      await apiClient.delete(`/user/me/projectHistories/${proj.id}`);
+      setProjects((prev) => prev.filter((p) => p.id !== proj.id));
+    } catch (error) {
+      console.error('프로젝트 삭제 중 오류 발생:', error);
+    }
   };
 
   return (

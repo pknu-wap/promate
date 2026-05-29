@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ProjectBox from '../../components/ProjectBox/ProjectBox';
 import ApplicantBox from '../../components/ApplicantBox/ApplicantBox';
 import ApplyModal from '../../components/ApplyModal/ApplyModal';
-import apiClient from '../../api/apiClient';
+import { getAppliedProjects, getBookmarkedProjects, getActiveProjects, getCompletedProjects } from '../../api/Project/projectApi';
 import './ProjectPage.css';
 
 const tabs = [
@@ -35,7 +35,7 @@ function ProjectPage() {
 
     const fetchAppliedProjects = async () => {
       try {
-        const response = await apiClient.get('/projects/applications/me');
+        const response = await getAppliedProjects();
         if (response.data && response.data.isSuccess) {
           const fetchedData = response.data.data.map((item) => {
             let mappedStatus;
@@ -69,9 +69,7 @@ function ProjectPage() {
 
     const fetchBookmarkedProjects = async () => {
       try {
-        const response = await apiClient.get('/recruitments/bookmark', {
-          params: { page: 0, size: 10 }
-        });
+        const response = await getBookmarkedProjects(0, 10);
         if (response.data && response.data.isSuccess) {
           const fetchedData = response.data.data.content.map((item) => {
             let mappedStatus = null;
@@ -113,7 +111,7 @@ function ProjectPage() {
 
     const fetchActiveProjects = async () => {
       try {
-        const response = await apiClient.get('/projects/me');
+        const response = await getActiveProjects();
         if (response.data && response.data.isSuccess) {
           const fetchedData = response.data.data.map((item) => ({
             id: `active-${item.projectId}`,
@@ -132,7 +130,7 @@ function ProjectPage() {
 
     const fetchCompletedProjects = async () => {
       try {
-        const response = await apiClient.get('/projects/activity/me');
+        const response = await getCompletedProjects();
         if (response.data && response.data.isSuccess) {
           const fetchedData = response.data.data.map((item) => ({
             id: `completed-${item.projectId}`,

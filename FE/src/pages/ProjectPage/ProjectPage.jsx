@@ -82,9 +82,9 @@ function ProjectPage() {
               default: mappedStatus = null; break;
             }
 
-            let pStatus = 'active';
+            let projectStatus = 'active';
             if (['COMPLETED', 'CANCELLED', 'EXPIRED'].includes(item.status)) {
-              pStatus = 'completed';
+              projectStatus = 'completed';
             }
 
             return {
@@ -100,7 +100,7 @@ function ProjectPage() {
               bookmarked: true,
               applied: item.myApplyStatus !== null,
               applyStatus: mappedStatus,
-              status: pStatus,
+              status: projectStatus,
               isEvaluated: false
             };
           });

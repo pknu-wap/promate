@@ -1,22 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect, useRef } from 'react';
 import MainButton from '../../components/MainButton/MainButton';
 import Avatar from '../../components/Avatar/Avatar';
 import AddProjectModal from './components/AddProjectModal';
 import './ProfilePage.css';
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
-
 const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [profileImageUrl, setProfileImageUrl] = useState(null);
+  const fileInputRef = useRef(null);
 
   const [userInfo, setUserInfo] = useState({
-    name: '로딩 중...',
-    taskStats: { completed: 0, total: 0 },
+    name: '김아무개',
+    taskStats: { completed: 3, total: 5 },
   });
 
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState([
+    { id: 1, title: '동아리 프로젝트', role: 'PM', startDate: '2025-03-20', endDate: null, score: null, isManual: false },
+    { id: 2, title: 'WAP 해커톤', role: 'FE', startDate: '2025-03-20', endDate: '2025-07-20', score: 4.7, isManual: false },
+  ]);
 
   const formatDate = (dateStr) => {
     if (!dateStr) return '';
@@ -24,68 +26,23 @@ const ProfilePage = () => {
     return `${y}.${m}.${d}`;
   };
 
-  useEffect(() => {
-    setUserInfo({ name: '김아무개', taskStats: { completed: 3, total: 5 } });
-    setProjects([
-      { id: 1, title: '동아리 프로젝트', role: 'PM', startDate: '2025-03-20', endDate: null, score: null, isManual: false },
-      { id: 2, title: 'WAP 해커톤', role: 'FE', startDate: '2025-03-20', endDate: '2025-07-20', score: 4.7, isManual: false },
-    ]);
+  const handleImageClick = () => {
+    if (isEditing) fileInputRef.current?.click();
+  };
 
-    // TODO: 백엔드 연동 시 아래 코드로 교체
-    // const fetchProfileData = async () => {
-    //   try {
-    //     const [userRes, taskRes, manualProjectRes, autoProjectRes] = await Promise.all([
-    //       axios.get(`${BASE_URL}/user/me`),
-    //       axios.get(`${BASE_URL}/user/me/projects/task-counts`),
-    //       axios.get(`${BASE_URL}/user/me/projectHistories`),
-    //       axios.get(`${BASE_URL}/projects/activity/me`),
-    //     ]);
-    //     const userData = userRes.data.data;
-    //     const taskData = taskRes.data.data;
-    //     const manualProjectsData = manualProjectRes.data.data || [];
-    //     const autoProjectsData = autoProjectRes.data.data || [];
-    //     setUserInfo({
-    //       name: userData.name,
-    //       taskStats: {
-    //         completed: taskData.completedCount || 0,
-    //         total: taskData.totalCount || 0,
-    //       },
-    //     });
-    //     setProjects([
-    //       ...autoProjectsData.map((p) => ({ ...p, isManual: false })),
-    //       ...manualProjectsData.map((p) => ({ ...p, isManual: true })),
-    //     ]);
-    //   } catch (error) {
-    //     console.error('프로필 데이터를 불러오는 중 오류 발생:', error);
-    //   }
-    // };
-    // fetchProfileData();
-  }, []);
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setProfileImageUrl(URL.createObjectURL(file));
+  };
 
   const handleAddProject = (newProject) => {
     setProjects((prev) => [...prev, { id: Date.now(), ...newProject, isManual: true }]);
-
-    // TODO: 백엔드 연동 시 아래 코드로 교체
-    // try {
-    //   const res = await axios.post(`${BASE_URL}/user/me/projectHistories`, newProject);
-    //   const added = res.data.data;
-    //   setProjects((prev) => [...prev, { ...added, isManual: true }]);
-    // } catch (error) {
-    //   console.error('프로젝트 추가 중 오류 발생:', error);
-    // }
   };
 
   const handleDeleteProject = (proj) => {
     if (!proj.isManual) return;
     setProjects((prev) => prev.filter((p) => p.id !== proj.id));
-
-    // TODO: 백엔드 연동 시 아래 코드로 교체
-    // try {
-    //   await axios.delete(`${BASE_URL}/user/me/projectHistories/${proj.id}`);
-    //   setProjects((prev) => prev.filter((p) => p.id !== proj.id));
-    // } catch (error) {
-    //   console.error('프로젝트 삭제 중 오류 발생:', error);
-    // }
   };
 
   return (
@@ -97,7 +54,27 @@ const ProfilePage = () => {
       <section className="profile-main-card">
         <div className="profile-header-row">
           <div className="profile-user-info">
-            <Avatar alt="프로필" size="lg" />
+            <div
+              className={`profile-avatar-wrap${isEditing ? ' profile-avatar-wrap--editable' : ''}`}
+              onClick={handleImageClick}
+            >
+              <Avatar src={profileImageUrl} alt="프로필" size="lg" />
+              {isEditing && (
+                <div className="profile-avatar-overlay">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 20H21" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                    <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+              )}
+            </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              style={{ display: 'none' }}
+              onChange={handleImageChange}
+            />
             <div className="profile-name-block">
               <h2 className="user-name-text">{userInfo.name}</h2>
             </div>

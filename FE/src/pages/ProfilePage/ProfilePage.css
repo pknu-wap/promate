@@ -371,6 +371,23 @@
 }
 .proj-delete-btn:hover { background: #ffe0d0; color: #e05a20; }
 
+.proj-edit-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: #ABABAB;
+  font-size: 14px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+.proj-edit-btn:hover { background: #e0edff; color: #3a7bd5; }
+
 .proj-add-row-btn {
   display: flex;
   flex-direction: row;

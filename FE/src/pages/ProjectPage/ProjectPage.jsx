@@ -1,18 +1,10 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProjectBox from '../../components/ProjectBox/ProjectBox';
 import ApplicantBox from '../../components/ApplicantBox/ApplicantBox';
 import ApplyModal from '../../components/ApplyModal/ApplyModal';
+import { getAppliedProjects, getBookmarkedProjects, getActiveProjects, getCompletedProjects } from '../../api/Project/projectApi';
 import './ProjectPage.css';
-
-const mockProjects = [
-  { id: 1, title: '프로그래밍 팀플', summary: '안녕하세요. 팀플 화이팅', capacity: 4, dueDate: '2026.05.17', currentStep: 12, totalStep: 18, bookmarked: true, applied: true, applyStatus: 'accepted', status: 'active' },
-  { id: 2, title: 'WAP 프로젝트', summary: '대시보드 기획 및 FE/BE 개발', capacity: 6, dueDate: '2026.06.05', currentStep: 125, totalStep: 150, bookmarked: true, applied: true, applyStatus: 'reviewing', status: 'active' },
-  { id: 3, title: '캡스톤 디자인', summary: '캡스톤 디자인 프로젝트 팀원 모집합니다.', capacity: 4, dueDate: '2026.07.07', currentStep: 51, totalStep: 100, bookmarked: false, applied: true, applyStatus: 'rejected', status: 'active' },
-  { id: 4, title: '알고리즘 스터디', summary: '매주 1회 알고리즘 문제 풀이 스터디', capacity: 8, dueDate: '2023.05.10', currentStep: 93, totalStep: 100, bookmarked: false, applied: true, applyStatus: 'accepted', status: 'completed', isEvaluated: false },
-  { id: 6, title: '웹 서비스 클론코딩', summary: 'React를 이용한 프론트엔드 스터디', capacity: 5, dueDate: '2023.08.20', currentStep: 100, totalStep: 100, bookmarked: false, applied: true, applyStatus: 'accepted', status: 'completed', isEvaluated: true },
-  { id: 5, title: '인공지능 개발', summary: 'AI 모델링 및 데이터 전처리 팀원 모집', capacity: 3, dueDate: '2026.12.05', currentStep: 0, totalStep: 0, bookmarked: true, applied: false, applyStatus: null, status: 'active' }
-];
 
 const tabs = [
   { key: 'bookmarked', label: '북마크' },
@@ -23,33 +15,171 @@ const tabs = [
 
 function ProjectPage() {
   const [activeTab, setActiveTab] = useState('bookmarked');
-  const [projects, setProjects] = useState(mockProjects);
+  const [projects, setProjects] = useState([]);
+  const [appliedProjects, setAppliedProjects] = useState([]);
+  const [activeProjects, setActiveProjects] = useState([]);
+  const [completedProjects, setCompletedProjects] = useState([]);
   const navigate = useNavigate();
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
   const [selectedProjectForApply, setSelectedProjectForApply] = useState(null);
   const [applyJob, setApplyJob] = useState('');
   const [applyMotivation, setApplyMotivation] = useState('');
 
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      alert('로그인이 필요한 서비스입니다.');
+      navigate('/login');
+      return;
+    }
+
+    const fetchAppliedProjects = async () => {
+      try {
+        const response = await getAppliedProjects();
+        if (response.data && response.data.isSuccess) {
+          const fetchedData = response.data.data.map((item) => {
+            let mappedStatus;
+            switch (item.status) {
+              case 'ACCEPTED': mappedStatus = 'accepted'; break;
+              case 'REJECTED': mappedStatus = 'rejected'; break;
+              case 'PENDING':
+              default:
+                mappedStatus = 'reviewing';
+                break;
+            }
+
+            return {
+              id: item.recruitmentId,
+              applicationId: item.applicationId,
+              title: item.title,
+              summary: item.description,
+              capacity: item.recruitCount,
+              applied: true,
+              applyStatus: mappedStatus,
+              status: 'active',
+              bookmarked: false,
+            };
+          });
+          setAppliedProjects(fetchedData);
+        }
+      } catch (error) {
+        console.error('지원 현황 조회 실패:', error);
+      }
+    };
+
+    const fetchBookmarkedProjects = async () => {
+      try {
+        const response = await getBookmarkedProjects(0, 10);
+        if (response.data && response.data.isSuccess) {
+          const fetchedData = response.data.data.content.map((item) => {
+            let mappedStatus = null;
+            switch (item.myApplyStatus) {
+              case 'ACCEPTED': mappedStatus = 'accepted'; break;
+              case 'REJECTED': mappedStatus = 'rejected'; break;
+              case 'PENDING': mappedStatus = 'reviewing'; break;
+              default: mappedStatus = null; break;
+            }
+
+            let projectStatus = 'active';
+            if (['COMPLETED', 'CANCELLED', 'EXPIRED'].includes(item.status)) {
+              projectStatus = 'completed';
+            }
+
+            return {
+              id: item.recruitmentId,
+              projectId: item.projectId,
+              applicationId: item.myApplicationId,
+              title: item.title,
+              summary: item.description,
+              capacity: item.maxMember,
+              dueDate: item.deadline ? item.deadline.split('T')[0].replace(/-/g, '.') : '',
+              currentStep: item.currentMember,
+              totalStep: item.maxMember,
+              bookmarked: true,
+              applied: item.myApplyStatus !== null,
+              applyStatus: mappedStatus,
+              status: projectStatus,
+              isEvaluated: false
+            };
+          });
+          setProjects(fetchedData);
+        }
+      } catch (error) {
+        console.error('북마크 내역 조회 실패:', error);
+      }
+    };
+
+    const fetchActiveProjects = async () => {
+      try {
+        const response = await getActiveProjects();
+        if (response.data && response.data.isSuccess) {
+          const fetchedData = response.data.data.map((item) => ({
+            id: `active-${item.projectId}`,
+            projectId: item.projectId,
+            title: item.title,
+            dueDate: item.endDate ? item.endDate.replace(/-/g, '.') : '',
+            currentStep: item.completedTaskCount,
+            totalStep: item.completedTaskCount + item.incompleteTaskCount,
+          }));
+          setActiveProjects(fetchedData);
+        }
+      } catch (error) {
+        console.error('진행중인 프로젝트 조회 실패:', error);
+      }
+    };
+
+    const fetchCompletedProjects = async () => {
+      try {
+        const response = await getCompletedProjects();
+        if (response.data && response.data.isSuccess) {
+          const fetchedData = response.data.data.map((item) => ({
+            id: `completed-${item.projectId}`,
+            projectId: item.projectId,
+            title: item.title,
+            summary: item.description,
+            status: 'completed',
+            applyStatus: 'accepted',
+            bookmarked: false,
+            isEvaluated: false,
+          }));
+          setCompletedProjects(fetchedData);
+        }
+      } catch (error) {
+        console.error('완료된 프로젝트 조회 실패:', error);
+      }
+    };
+
+    fetchAppliedProjects();
+    fetchBookmarkedProjects();
+    fetchActiveProjects();
+    fetchCompletedProjects();
+  }, [navigate]);
+
   const handleToggleBookmark = (id) => {
     setProjects((prev) => prev.map((p) => (p.id === id ? { ...p, bookmarked: !p.bookmarked } : p)));
+    setAppliedProjects((prev) => prev.map((p) => (p.id === id ? { ...p, bookmarked: !p.bookmarked } : p)));
   };
 
   const filteredProjects = useMemo(() => {
+    if (activeTab === 'applied') {
+      return appliedProjects;
+    }
+    if (activeTab === 'active') {
+      return activeProjects;
+    }
+    if (activeTab === 'completed') {
+      return completedProjects;
+    }
+
     return projects.filter((project) => {
       switch (activeTab) {
-        case 'active':
-          return project.applied && project.status === 'active';
-        case 'applied':
-          return project.applied;
         case 'bookmarked':
           return project.bookmarked;
-        case 'completed':
-          return project.applied && project.status === 'completed';
         default:
           return true;
       }
     });
-  }, [activeTab, projects]);
+  }, [activeTab, projects, appliedProjects, activeProjects, completedProjects]);
 
   const handleCloseApplyModal = () => {
     setIsApplyModalOpen(false);
@@ -78,6 +208,9 @@ function ProjectPage() {
         <div className="project-list">
           {filteredProjects.length > 0 ? (
             filteredProjects.map((project) => {
+              // 합격한 경우에 한해 존재하는 projectId로 이동 처리. 대기 중/탈락은 기존 id 활용
+              const targetId = (project.applyStatus === 'accepted' && project.projectId) ? project.projectId : project.id;
+
               if (activeTab === 'active') {
                 return (
                   <ProjectBox 
@@ -86,7 +219,7 @@ function ProjectPage() {
                     dueDate={project.dueDate}
                     currentStep={project.currentStep}
                     totalStep={project.totalStep}
-                    onClick={() => navigate(`/project/${project.id}`)}
+                    onClick={() => navigate(`/project/${project.projectId}`)}
                   />
                 );
               }
@@ -125,6 +258,26 @@ function ProjectPage() {
                 }
               }
 
+              const handleBoxClick = () => {
+                if (project.applyStatus === 'rejected') {
+                  alert('불합격한 프로젝트는 상세 내역에 접근할 수 없습니다.');
+                  return;
+                }
+                navigate(`/project/${targetId}`);
+              };
+
+              const handleButtonClick = () => {
+                if (isButtonDisabled) return;
+                if (buttonText === '지원하기') {
+                  setSelectedProjectForApply(project);
+                  setIsApplyModalOpen(true);
+                } else if (buttonText === '상호평가') {
+                  navigate('/member-review', { state: { projectId: project.projectId || project.id } });
+                } else {
+                  handleBoxClick();
+                }
+              };
+
               return (
                 <ApplicantBox
                   key={project.id}
@@ -137,18 +290,8 @@ function ProjectPage() {
                   buttonColor={buttonColor}
                   buttonTextColor={buttonTextColor}
                   disabled={isButtonDisabled}
-                  onClick={() => navigate(`/project/${project.id}`)}
-                  onButtonClick={() => {
-                    if (isButtonDisabled) return;
-                    if (buttonText === '지원하기') {
-                      setSelectedProjectForApply(project);
-                      setIsApplyModalOpen(true);
-                    } else if (buttonText === '상호평가') {
-                      navigate('/member-review', { state: { projectId: project.id } });
-                    } else {
-                      navigate(`/project/${project.id}`);
-                    }
-                  }}
+                  onClick={handleBoxClick}
+                  onButtonClick={handleButtonClick}
                   onBookmarkClick={() => handleToggleBookmark(project.id)}
                 />
               );

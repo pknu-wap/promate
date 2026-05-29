@@ -1,9 +1,11 @@
 .find-team-page {
+  width: 100%;
   min-height: 100%;
   padding: 19px 50px 20px 30px;
   background: linear-gradient(180deg, #F0F0F0 0%, #FFFFFF 100%);
   color: #111111;
   font-family: "Pretendard", "Noto Sans KR", sans-serif;
+  box-sizing: border-box;
 }
 
 .find-team-title {

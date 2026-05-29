@@ -8,7 +8,7 @@ const mockTeammates = [
   { id: 4, name: '박민수' },
 ];
 
-function TaskModal({ isOpen, onClose, onSubmit, projectId }) {
+function NewTaskModal({ isOpen, onClose, onSubmit, projectId }) {
   const [title, setTitle] = useState('');
   const [assigneeId, setAssigneeId] = useState('');
   const [description, setDescription] = useState('');
@@ -105,4 +105,4 @@ function TaskModal({ isOpen, onClose, onSubmit, projectId }) {
   );
 }
 
-export default TaskModal;
+export default NewTaskModal;

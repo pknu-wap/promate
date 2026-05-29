@@ -1,9 +1,11 @@
 .find-team-page {
+  width: 100%;
   min-height: 100%;
   padding: 19px 50px 20px 30px;
   background: linear-gradient(180deg, #F0F0F0 0%, #FFFFFF 100%);
   color: #111111;
   font-family: "Pretendard", "Noto Sans KR", sans-serif;
+  box-sizing: border-box;
 }
 
 .find-team-title {
@@ -19,7 +21,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: min(864px, calc(100vw - 260px));
+  width: 100%;
+  max-width: 1000px;
   margin-bottom: 12px;
 }
 
@@ -105,8 +108,9 @@
 .find-team-list {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  width: min(864px, calc(100vw - 260px));
+  gap: 10px;
+  width: 100%;
+  max-width: 1000px;
 }
 
 .find-team-empty {
@@ -119,129 +123,6 @@
   color: #8a8a8a;
   font-size: 14px;
   font-weight: 600;
-}
-
-.find-team-card {
-  display: grid;
-  grid-template-columns: 36px minmax(0, 1fr) 114px;
-  align-items: center;
-  column-gap: 12px;
-  min-height: 78px;
-  padding: 14px 20px 14px 18px;
-  border-left: 2px solid #fe9a57;
-  border-radius: 0 8px 8px 0;
-  background-color: #ffffff;
-  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.03);
-}
-
-.find-team-logo-box {
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  background-color: #f0f0f0;
-}
-
-.find-team-logo-box img {
-  width: 28px;
-  height: 28px;
-  filter: grayscale(1);
-  opacity: 0.24;
-}
-
-.find-team-content {
-  min-width: 0;
-}
-
-.find-team-heading {
-  margin-bottom: 4px;
-}
-
-.find-team-heading h2 {
-  margin: 0;
-  color: #050505;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0;
-}
-
-.find-team-content p {
-  margin: 0;
-  color: #8f8f8f;
-  font-size: 12px;
-  font-weight: 400;
-  letter-spacing: 0;
-}
-
-.find-team-actions {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
-}
-
-.find-team-actions > span {
-  color: #8e8e8e;
-  font-size: 11px;
-  font-weight: 500;
-}
-
-.find-team-action-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.find-team-bookmark {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border: 0;
-  border-radius: 5px;
-  background-color: #eeeeee;
-  cursor: pointer;
-}
-
-.find-team-bookmark span {
-  width: 10px;
-  height: 15px;
-  background-color: #9c9c9c;
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 72%, 0 100%);
-}
-
-.find-team-bookmark.is-active {
-  background-color: #ffd9c5;
-}
-
-.find-team-bookmark.is-active span {
-  background-color: #fe9a57;
-}
-
-.main-btn.find-team-apply-button {
-  width: 68px;
-  height: 28px;
-  padding: 0;
-  border-radius: 4px;
-  background-color: #fe9a57;
-  font-size: 12px;
-  font-weight: 800;
-}
-
-.main-btn.find-team-apply-button:hover {
-  background-color: #ee8846;
-}
-
-.main-btn.find-team-apply-button.is-applied {
-  background-color: #ffd9c5;
-  color: #fe9a57;
-}
-
-.main-btn.find-team-apply-button.is-applied:hover {
-  background-color: #ffd9c5;
 }
 
 @media (max-width: 480px) {
@@ -268,14 +149,4 @@
     align-self: flex-end;
   }
 
-  .find-team-card {
-    grid-template-columns: 36px minmax(0, 1fr);
-    row-gap: 10px;
-    padding: 14px 12px;
-  }
-
-  .find-team-actions {
-    grid-column: 2;
-    align-items: flex-start;
-  }
 }

@@ -21,6 +21,17 @@
   height: 24px;
 }
 
+.calendar-header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.calendar-header-right {
+  display: flex;
+  align-items: center;
+}
+
 .calendar-title-group {
   display: flex;
   align-items: center;
@@ -59,6 +70,31 @@
   border: none;
   color: #909090;
   cursor: pointer;
+}
+
+.add-event-btn-header {
+  display: flex;
+  align-items: center;
+  padding: 0px 10px 0px 5px;
+  gap: 7px;
+  border-radius: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.add-event-btn-header:hover {
+  background-color: #FFEBDE;
+  height: 29px;
+}
+
+.add-event-btn-header span {
+  font-family: 'Pretendard';
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 19px;
+  color: #ff6600;
 }
 
 .calendar-body {
@@ -170,8 +206,6 @@
 .calendar-event {
   position: relative;
   z-index: 6;
-  display: flex;
-  align-items: center;
   min-height: 14px;
   height: auto;
   flex-shrink: 0;
@@ -196,110 +230,28 @@
   border-left: none;
 }
 
-.calendar-sidebar {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: stretch;
-  width: 105px;
-  flex-shrink: 0;
-  padding: 5px 0;
-}
-
-.calendar-todo-list {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  width: 100%;
-  padding: 10px 0;
-  gap: 4px;
-}
-
-.todo-item {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  min-height: 32px;
-  padding: 6px;
-  gap: 8px;
-  background: #ffffff;
-  border: none;
-  border-radius: 6px;
-  box-sizing: border-box;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
-}
-
-.todo-item:hover {
-  background: #f8f9fa;
-}
-
-.todo-checkbox {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex: none;
-  width: 14px;
-  height: 14px;
-  background: #f1f1f1;
-  border: 1px solid #ababab;
-  border-radius: 2px;
-  box-sizing: border-box;
-}
-
-.todo-checkbox.checked {
-  background: #fe9a57;
-  border-color: #fe9a57;
-}
-
-.todo-text {
-  font-family: 'Pretendard';
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 14px;
-  color: #000000;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.add-event-btn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 29px;
-  flex-shrink: 0;
-  padding: 6px;
-  gap: 10px;
-  background: #ffebde;
-  border: none;
-  border-radius: 5px;
-  box-sizing: border-box;
-  font-family: 'Pretendard';
-  font-weight: 700;
-  font-size: 14px;
-  line-height: 17px;
-  color: #ff6600;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
-}
-
-.add-event-btn:hover {
-  background: #ffe0cc;
-}
-
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .calendar-section {
-    flex: 1;
+    flex: none;
     width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    min-height: auto;
     padding: 20px 16px;
+    overflow: hidden;
   }
 
   .calendar-header-row {
     height: auto;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .calendar-header-left {
+    min-width: 0;
+    flex-wrap: wrap;
+    gap: 10px;
   }
 
   .calendar-title {
@@ -313,34 +265,54 @@
 
   .calendar-body {
     flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
     height: auto;
+    overflow: hidden;
+  }
+
+  .calendar-main {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .calendar-weekdays,
+  .calendar-grid {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
   }
 
   .calendar-grid {
-    grid-auto-rows: minmax(40px, 1fr);
-    grid-auto-rows: minmax(30px, 1fr);
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    grid-auto-rows: minmax(50px, auto);
+    overflow: hidden;
   }
 
   .calendar-cell {
-    min-height: 30px;
-  }
-
-  .calendar-sidebar {
     width: 100%;
-    height: auto;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    min-width: 0;
+    min-height: 50px;
+    overflow: hidden;
   }
 
-  .calendar-todo-list {
-    flex: 1;
-    width: auto;
-    padding: 10px 0;
+  .day-number {
+    padding: 0 3px;
+    font-size: 12px;
   }
 
-  .add-event-btn {
-    width: 105px;
-    align-self: flex-end;
+  .calendar-event {
+    width: 100% !important;
+    max-width: 100%;
+    min-width: 0;
+    padding: 1px 2px;
+    font-size: 9px;
+    line-height: 11px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }

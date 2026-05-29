@@ -6,42 +6,103 @@ import projectMenuIcon from '../../assets/projectMenuIcon.svg';
 import SummaryCard from '../../components/SummaryCard/SummaryCard';
 import ProjectBox from '../../components/ProjectBox/ProjectBox';
 import moreIcon from '../../assets/moreIcon.svg';
-
-// 임시 데이터
-const dummyDashboardData = {
-  projects: [
-    { id: 1, title: 'WAP 프로젝트', dueDate: '2026.06.05', currentStep: 125, totalStep: 150 },
-    { id: 2, title: '프로그래밍 팀플', dueDate: '2026.06.17', currentStep: 12, totalStep: 18 },
-  ],
-  urgentTasks: [
-    { id: 1, title: '캡스톤 디자인 - 자료 조사하기', dueDate: '2026.05.05' },
-    { id: 2, title: 'WAP 프로젝트 - 중간 발표', dueDate: '2026.05.06' },
-  ],
-  completedTasks: [
-    { id: 1, title: 'WAP 프로젝트 - 대시보드 개발', dueDate: '2025.11.28' },
-    { id: 2, title: '프로그래밍 팀플 - 오류 수정', dueDate: '2026.04.01' },
-    { id: 3, title: '프로그래밍 팀플 - PPT 제작', dueDate: '2026.04.17' },
-    { id: 4, title: '캡스톤 디자인 - 프로젝트 계획서 작성', dueDate: '2026.05.01' },
-  ],
-};
+import { getDashboardProjects, getDashboardUrgentTasks, getDashboardCompletedTasks, getDashboardProjectStatuses } from '../../api/Dashboard/dashboardApi';
 
 function DashboardPage() {
   const [dashboardData, setDashboardData] = useState({
     projects: [],
     urgentTasks: [],
     completedTasks: [],
+    projectStatuses: [],
+  });
+
+  const [fetchErrors, setFetchErrors] = useState({
+    projects: false,
+    urgentTasks: false,
+    completedTasks: false,
+    projectStatuses: false,
   });
 
   const [isLoading, setIsLoading] = useState(true);
   const [visibleStatusCount, setVisibleStatusCount] = useState(3);
   const navigate = useNavigate();
 
+  const formatDate = (date) => date?.replace(/-/g, '.') ?? '';
+
   useEffect(() => {
-    // 백엔드 API 연결 시 이 부분 수정
     const fetchDashboardData = async () => {
       try {
         setIsLoading(true);
-        setDashboardData(dummyDashboardData);
+        
+        const results = await Promise.allSettled([
+          getDashboardProjects(),
+          getDashboardUrgentTasks(),
+          getDashboardCompletedTasks(),
+          getDashboardProjectStatuses(),
+        ]);
+
+        const newDashboardData = {
+          projects: [],
+          urgentTasks: [],
+          completedTasks: [],
+          projectStatuses: [],
+        };
+
+        const projectsRes = results[0].status === 'fulfilled' ? results[0].value : null;
+        const urgentTasksRes = results[1].status === 'fulfilled' ? results[1].value : null;
+        const completedTasksRes = results[2].status === 'fulfilled' ? results[2].value : null;
+        const projectStatusesRes = results[3].status === 'fulfilled' ? results[3].value : null;
+
+        setFetchErrors({
+          projects: results[0].status === 'rejected',
+          urgentTasks: results[1].status === 'rejected',
+          completedTasks: results[2].status === 'rejected',
+          projectStatuses: results[3].status === 'rejected',
+        });
+
+        if (projectsRes) {
+          newDashboardData.projects = (projectsRes.data.data || []).map((item) => {
+            return {
+              id: item.projectId,
+              title: item.title,
+              dueDate: formatDate(item.endDate),
+              currentStep: 0,
+              totalStep: 0,
+            };
+          });
+        }
+
+        if (urgentTasksRes) {
+          newDashboardData.urgentTasks = (urgentTasksRes.data.data || []).map((task) => ({
+            id: task.taskId,
+            projectId: task.projectId, // 나중에 태스크 클릭 시 해당 프로젝트로 이동하기 위해 추가
+            title: `${task.projectTitle} - ${task.title}`,
+            dueDate: formatDate(task.dueDate),
+          }));
+        }
+
+        if (completedTasksRes) {
+          newDashboardData.completedTasks = (completedTasksRes.data.data || []).map((task) => ({
+            id: task.taskId,
+            projectId: task.projectId,
+            title: `${task.projectTitle} - ${task.title}`,
+            dueDate: formatDate(task.dueDate),
+          }));
+        }
+
+        if (projectStatusesRes) {
+          newDashboardData.projectStatuses = (projectStatusesRes.data.data || []).map((status) => {
+            return {
+              id: status.projectId,
+              title: status.title,
+              dueDate: formatDate(status.endDate),
+              currentStep: status.completedTaskCount ?? 0,
+              totalStep: status.totalTaskCount ?? 0,
+            };
+          });
+        }
+
+        setDashboardData(newDashboardData);
       } catch (error) {
         console.error('대시보드 데이터 조회 실패:', error);
       } finally {
@@ -59,19 +120,22 @@ function DashboardPage() {
         title: '참여 중인 프로젝트',
         items: dashboardData.projects,
         showDot: true,
+        isError: fetchErrors.projects,
       },
       {
         id: 2,
         title: '마감 임박 테스크',
         items: dashboardData.urgentTasks,
+        isError: fetchErrors.urgentTasks,
       },
       {
         id: 3,
         title: '완료한 테스크',
         items: dashboardData.completedTasks,
+        isError: fetchErrors.completedTasks,
       },
     ],
-    [dashboardData]
+    [dashboardData, fetchErrors]
   );
 
   const handleShowMoreStatus = () => {
@@ -93,20 +157,21 @@ function DashboardPage() {
 
       <div className="dashboard-content">
         <div className="dashboard-summary-row">
-          {summaryCards.map(({ id, title, items, showDot }) => (
+          {summaryCards.map(({ id, title, items, showDot, isError }) => (
             <SummaryCard
               key={id}
               title={title}
               count={items.length}
               items={items}
               showDot={showDot}
-              onItemClick={(item) => navigate(`/project/${item.id}`)}
+              isError={isError}
+              onItemClick={(item) => navigate(`/project/${item.projectId || item.id}`)}
             />
           ))}
         </div>
 
         <div className="dashboard-detail-row">
-          <Calendar />
+          <Calendar showAddButton={false} />
 
           <div className="status-section">
             <div className="section-header">
@@ -115,21 +180,31 @@ function DashboardPage() {
             </div>
 
             <div className="status-list">
-              {dashboardData.projects.slice(0, visibleStatusCount).map((project) => (
-                <ProjectBox
-                  key={project.id}
-                  title={project.title}
-                  dueDate={project.dueDate}
-                  currentStep={project.currentStep}
-                  totalStep={project.totalStep}
-                  avatarSize="52px"
-                  onClick={() => navigate(`/project/${project.id}`)}
-                  hidePcLabel
-                />
-              ))}
+            {fetchErrors.projectStatuses ? (
+              <div className="empty-state error-state" style={{ color: '#E53E3E' }}>
+                프로젝트 현황을 불러오는 데 실패했습니다.
+              </div>
+            ) : dashboardData.projectStatuses.length === 0 ? (
+                <div className="empty-state">
+                  진행 중인 프로젝트가 없습니다.
+                </div>
+              ) : (
+                dashboardData.projectStatuses.slice(0, visibleStatusCount).map((project) => (
+                  <ProjectBox
+                    key={project.id}
+                    title={project.title}
+                    dueDate={project.dueDate}
+                    currentStep={project.currentStep}
+                    totalStep={project.totalStep}
+                    avatarSize="52px"
+                    onClick={() => navigate(`/project/${project.id}`)}
+                    hidePcLabel
+                  />
+                ))
+              )}
             </div>
 
-            {visibleStatusCount < dashboardData.projects.length ? (
+            {visibleStatusCount < dashboardData.projectStatuses.length ? (
               <button 
                 className="more-btn" 
                 onClick={handleShowMoreStatus} 
@@ -138,7 +213,7 @@ function DashboardPage() {
                 더보기
                 <img src={moreIcon} alt="moreIcon" />
               </button>
-            ) : dashboardData.projects.length > 3 ? (
+            ) : dashboardData.projectStatuses.length > 3 ? (
               <button 
                 className="more-btn" 
                 onClick={() => setVisibleStatusCount(3)} 

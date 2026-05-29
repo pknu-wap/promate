@@ -1,66 +1,54 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import './Calendar.css';
 import calendarIcon from '../../assets/CalendarIcon.svg';
+import plusIcon from '../../assets/icons/plusIcon.svg';
 import AddEventModal from '../AddEventModal/AddEventModal';
+import apiClient from '../../api/apiClient';
 
 const WEEKDAYS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
-const today = new Date();
-const currentYear = today.getFullYear();
-const currentMonth = today.getMonth();
-
-const initialEvents = [
-  {
-    id: 1,
-    text: '회의',
-    start: new Date(currentYear, currentMonth, 6),
-    end: new Date(currentYear, currentMonth, 6),
-    checked: false,
-  },
-  {
-    id: 2,
-    text: '왑 중간 발표',
-    start: new Date(currentYear, currentMonth, 6),
-    end: new Date(currentYear, currentMonth, 7),
-    checked: true,
-  },
-  {
-    id: 3,
-    text: '왑 부스팅 데이',
-    start: new Date(currentYear, currentMonth, 9),
-    end: new Date(currentYear, currentMonth, 9),
-    checked: false,
-  },
-  {
-    id: 4,
-    text: '대동제',
-    start: new Date(currentYear, currentMonth, 12),
-    end: new Date(currentYear, currentMonth, 14),
-    checked: false,
-  },
-  {
-    id: 5,
-    text: '왑 홈커밍 데이',
-    start: new Date(currentYear, currentMonth, 16),
-    end: new Date(currentYear, currentMonth, 16),
-    checked: false,
-  },
-];
-
-function Calendar() {
+function Calendar({ showAddButton = true }) {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [events, setEvents] = useState(initialEvents);
+  const [events, setEvents] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        setHasError(false);
+        const response = await apiClient.get('/dashboard/calendar');
+        const fetchedEvents = (response.data.data || []).map((item) => {
+          const startAt = item.startAt || '';
+          const endAt = item.endAt || '';
+          const [startYear, startMonth, startDay] = startAt.split('-').map(Number);
+          const [endYear, endMonth, endDay] = endAt.split('-').map(Number);
+          
+          return {
+            id: item.scheduleId,
+            text: item.title,
+            start: new Date(startYear, startMonth - 1, startDay),
+            end: new Date(endYear, endMonth - 1, endDay),
+            checked: false,
+            projectId: item.projectId,
+            projectTitle: item.projectTitle,
+            content: item.content,
+          };
+        });
+        setEvents(fetchedEvents);
+      } catch (error) {
+        console.error('캘린더 일정 조회 실패:', error);
+        setHasError(true);
+      }
+    };
+
+    fetchEvents();
+  }, []);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
 
   const days = useMemo(() => getCalendarDays(year, month), [year, month]);
-
-  const visibleEvents = useMemo(
-    () => getVisibleEvents(events, year, month),
-    [events, year, month]
-  );
 
   const handlePrevMonth = () => {
     setCurrentDate(new Date(year, month - 1, 1));
@@ -68,14 +56,6 @@ function Calendar() {
 
   const handleNextMonth = () => {
     setCurrentDate(new Date(year, month + 1, 1));
-  };
-
-  const handleToggleTodo = (id) => {
-    setEvents((prevEvents) =>
-      prevEvents.map((event) =>
-        event.id === id ? { ...event, checked: !event.checked } : event
-      )
-    );
   };
 
   const handleOpenModal = () => {
@@ -98,28 +78,45 @@ function Calendar() {
   return (
     <section className="calendar-section">
       <div className="calendar-header-row">
-        <div className="calendar-title-group">
-          <img
-            className="calendar-icon"
-            src={calendarIcon}
-            alt="캘린더 아이콘"
-          />
-          <h2 className="calendar-title">캘린더</h2>
+        <div className="calendar-header-left">
+          <div className="calendar-title-group">
+            <img
+              className="calendar-icon"
+              src={calendarIcon}
+              alt="캘린더 아이콘"
+            />
+            <h2 className="calendar-title">캘린더</h2>
+          </div>
+
+          <div className="calendar-nav">
+            <button className="nav-btn" type="button" onClick={handlePrevMonth}>
+              &lt;
+            </button>
+
+            <span className="nav-date">
+              {year}.{String(month + 1).padStart(2, '0')}
+            </span>
+
+            <button className="nav-btn" type="button" onClick={handleNextMonth}>
+              &gt;
+            </button>
+          </div>
+          
+          {hasError && (
+            <span style={{ color: '#E53E3E', fontSize: '14px', fontWeight: '500', marginLeft: '16px', display: 'flex', alignItems: 'center' }}>
+              일정을 불러오는 데 실패했습니다.
+            </span>
+          )}
         </div>
 
-        <div className="calendar-nav">
-          <button className="nav-btn" type="button" onClick={handlePrevMonth}>
-            &lt;
-          </button>
-
-          <span className="nav-date">
-            {year}.{String(month + 1).padStart(2, '0')}
-          </span>
-
-          <button className="nav-btn" type="button" onClick={handleNextMonth}>
-            &gt;
-          </button>
-        </div>
+        {showAddButton && (
+          <div className="calendar-header-right">
+            <button className="add-event-btn-header" type="button" onClick={handleOpenModal}>
+              <img src={plusIcon} alt="일정 추가 아이콘" />
+              <span>일정 추가</span>
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="calendar-body">
@@ -221,49 +218,6 @@ function Calendar() {
             })}
           </div>
         </div>
-
-        <aside className="calendar-sidebar">
-          <div className="calendar-todo-list">
-            {visibleEvents.map((event) => (
-              <button
-                key={event.id}
-                className="todo-item"
-                type="button"
-                onClick={() => handleToggleTodo(event.id)}
-              >
-                <span
-                  className={`todo-checkbox ${
-                    event.checked ? 'checked' : ''
-                  }`}
-                >
-                  {event.checked && (
-                    <svg
-                      width="8"
-                      height="6"
-                      viewBox="0 0 8 6"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M1 3L3 5L7 1"
-                        stroke="white"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  )}
-                </span>
-
-                <span className="todo-text">{event.text}</span>
-              </button>
-            ))}
-          </div>
-
-          <button className="add-event-btn" type="button" onClick={handleOpenModal}>
-            + 일정 추가
-          </button>
-        </aside>
       </div>
 
       <AddEventModal
@@ -356,26 +310,6 @@ function getEventSpan(event, year, month, day, index) {
 
   // 일정이 현재 주 안에서 차지할 칸 수만 계산
   return Math.min(daysUntilWeekEnd, remainingEventDays);
-}
-
-function getVisibleEvents(events, year, month) {
-  const monthStart = new Date(year, month, 1).getTime();
-  const monthEnd = new Date(year, month + 1, 0).getTime();
-
-  return events
-    .filter(
-      (event) =>
-        event.start.getTime() <= monthEnd && event.end.getTime() >= monthStart
-    )
-    .sort((a, b) => {
-      const startDiff = a.start.getTime() - b.start.getTime();
-
-      if (startDiff !== 0) {
-        return startDiff;
-      }
-
-      return a.id - b.id;
-    });
 }
 
 export default Calendar;

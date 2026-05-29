@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import ApplicantBox from '../../components/ApplicantBox/ApplicantBox';
+import logoIcon from '../../assets/logoIcon.svg';
 import './Applicant.css';
 
 const projects = [
@@ -20,7 +20,6 @@ const ApplicantList = () => {
 
       <section className="al-list">
         {projects.map((project) => (
-<<<<<<< HEAD
           <article className="al-card" key={project.recruitmentId}>
             <div className="al-logo-box">
               <img src={logoIcon} alt={`${project.title} 로고`} />
@@ -48,17 +47,6 @@ const ApplicantList = () => {
               </button>
             </div>
           </article>
-=======
-          <ApplicantBox
-            key={project.id}
-            title={project.title}
-            summary={project.summary}
-            capacity={project.capacity}
-            buttonText="지원자 검토"
-            showBookmark={false}
-            onButtonClick={() => navigate('/applicant/detail')}
-          />
->>>>>>> 19327204d060a659d32a68bbcbf6a228058b3427
         ))}
       </section>
     </main>

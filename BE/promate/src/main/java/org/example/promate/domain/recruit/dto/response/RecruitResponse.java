@@ -13,7 +13,7 @@ public record RecruitResponse(
         String description,     // 추가 <- 북마크된 모집글용
         Category category,
         LocalDateTime createdAt,
-        LocalDateTime deadline,
+        LocalDateTime updatedAt,
         RecruitStatus status,
         int maxMember,
         int currentMember,
@@ -41,7 +41,7 @@ public record RecruitResponse(
                 recruit.getDescription(),
                 recruit.getCategory(),
                 recruit.getCreatedAt(),
-                recruit.getDeadline(),
+                recruit.getUpdatedAt(),
                 recruit.getStatus(),
                 recruit.getTotalSlots(),
                 recruit.getJoinedCount(),

@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.promate.domain.user.entity.User;
+import org.example.promate.global.entity.BaseTimeEntity;
 
 @Entity
 @Getter
@@ -14,7 +15,7 @@ import org.example.promate.domain.user.entity.User;
                 @UniqueConstraint(columnNames = {"user_id", "recruit_id"})
         }
 )
-public class Bookmark {
+public class Bookmark extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

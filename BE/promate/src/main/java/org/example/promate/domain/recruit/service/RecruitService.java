@@ -30,8 +30,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -57,16 +55,16 @@ public class RecruitService {
                 .description(request.description())
                 .category(request.category())
                 .totalSlots(request.totalSlots())
-                .deadline(LocalDateTime.now().plusDays(7)) //모집 기한 일주일 고정
                 .user(writer)
                 .build();
 
         // 임시 Project 객체 생성 (팀장이 팀 결정 OR 팀 빌딩 취소 결정)
         Project project = Project.builder()
-                .title(request.title()) // 일단 모집글 제목을 프로젝트명으로 사용
+                .title(request.title() + " - 프로젝트") // 일단 모집글 제목을 프로젝트명으로 사용
                 .description(request.description())
                 .status(ProjectStatus.PREPARING) // 아직 시작 전 상태
-                .endDate(request.endDate().toLocalDate())
+                .startDate(request.startDate())
+                .endDate(request.endDate())
                 .recruit(recruit)
                 .user(writer)
                 .build();
@@ -103,7 +101,6 @@ public class RecruitService {
                 "RECRUITING", // 임시 상태값
                 recruit.getCreatedAt(),
                 recruit.getUpdatedAt(),
-                recruit.getDeadline(),
                 new RecruitDetailResponse.AuthorDto(
                         recruit.getUser().getId(),
                         recruit.getUser().getName(),
@@ -190,7 +187,8 @@ public class RecruitService {
         if (project == null) {
             throw new GeneralException(RecruitErrorCode.PROJECT_NOT_FOUND);
         }
-        project.updateStartDate(LocalDate.now());
+
+        recruit.updateStatus(RecruitStatus.COMPLETED);
         project.updateStatus(ProjectStatus.ACTIVE);
 
         /* 모집글 + 지원서 데이터 청소 (일단 Hard Delete를 채택함) <- 추후 개발 진도에 따라 수정 고려
@@ -278,7 +276,7 @@ public class RecruitService {
         }).toList();
     }
 
-    //모집글 만료 로직
+    /*
     public void processExpiration(Recruit recruit) {
 
         recruit.updateStatus(RecruitStatus.EXPIRED);
@@ -292,5 +290,5 @@ public class RecruitService {
         }
         //지원서 청소
         applyRepository.deleteAllByRecruitId(recruit.getId());
-    }
+    }*/
 }

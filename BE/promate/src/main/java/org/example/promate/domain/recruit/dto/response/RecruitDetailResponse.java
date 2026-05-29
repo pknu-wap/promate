@@ -2,8 +2,6 @@ package org.example.promate.domain.recruit.dto.response;
 
 import lombok.Builder;
 import org.example.promate.domain.recruit.enums.Category;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Builder
@@ -15,7 +13,6 @@ public record RecruitDetailResponse(
         String status,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
-        LocalDateTime deadline,
         AuthorDto author,
         boolean isAuthor,
         boolean hasApplied,

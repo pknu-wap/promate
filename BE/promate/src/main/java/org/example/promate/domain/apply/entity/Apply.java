@@ -59,6 +59,8 @@ public class Apply extends BaseEntity {
 
     public void delete(){ super.performDelete();}
 
+    public void updateStats(Status status){this.status = status;}
+
     public void updatePastProjects(List<Project> newProjects) {
         // 1. 기존 연관관계 제거 (orphanRemoval = true에 의해 DB에서도 삭제됨)
         this.applyProjects.clear();

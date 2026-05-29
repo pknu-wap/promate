@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -315,6 +316,10 @@ public class ApplyService {
         Status currentStatus = apply.getStatus();
         Status targetStatus = request.status();
 
+        if (currentStatus == targetStatus) {
+            return ApplyStatusResponse.of(applicationId, targetStatus, recruit); // 조기 반환
+        }
+
         // 바꾸려는 상태에 따른 비즈니스 로직 분기
         if (targetStatus == Status.ACCEPTED) {
             handleAccept(recruit, apply);
@@ -337,7 +342,11 @@ public class ApplyService {
     private void handleAccept(Recruit recruit, Apply apply) {
         if (apply.getStatus() == Status.ACCEPTED) return; // 이미 합격인 경우 무시
 
-        // 정원 체크 및 인원 증가
+        int current = memberRepository.countByProjectId(recruit.getProject().getId());
+        if (current >= recruit.getTotalSlots()) {
+            throw new GeneralException(RecruitErrorCode.RECRUITMENT_FULL);
+        }
+
         recruit.increaseJoinedCount();
 
         // 임시 프로젝트에 멤버 추가
@@ -363,11 +372,10 @@ public class ApplyService {
                     .orElseThrow(() -> new GeneralException(RecruitErrorCode.MEMBER_NOT_FOUND));
 
             member.delete(); // BaseEntity의 Soft Delete 실행
-            memberRepository.delete(member);
         }
 
-        // CASE 2 : 지원서 불합격 처리
-        applyRepository.delete(apply); // 공통 로직 : 지원서 삭제
+        // CASE 2 : 대기중인 지원자 거절, 지원서 status 변경 <- 공통 로직
+        apply.updateStats(Status.REJECTED);
     }
 
 

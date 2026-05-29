@@ -155,3 +155,31 @@
   font-size: 18px;
   cursor: pointer;
 }
+
+@media (max-width: 480px) {
+  .task-modal-container {
+    width: calc(100% - 32px);
+    min-width: 280px;
+    padding: 24px 20px 20px;
+  }
+
+  .task-modal-header {
+    font-size: 18px;
+  }
+
+  .task-modal-label {
+    font-size: 14px;
+  }
+
+  .task-modal-input,
+  .task-modal-select,
+  .task-modal-textarea {
+    font-size: 14px;
+  }
+
+  .task-btn-cancel,
+  .task-btn-submit {
+    font-size: 16px;
+    height: 38px;
+  }
+}

@@ -65,7 +65,8 @@ public class UserService {
                 .user(user)
                 .projectName(request.getProjectName())
                 .role(request.getRole())
-                .period(request.getPeriod())
+                .startDate(request.getStartDate())
+                .endDate(request.getEndDate())
                 .description(request.getDescription())
                 .build();
 
@@ -86,7 +87,8 @@ public class UserService {
         history.update(
                 request.getProjectName(),
                 request.getRole(),
-                request.getPeriod(),
+                request.getStartDate(),
+                request.getEndDate(),
                 request.getDescription()
         );
 

@@ -5,6 +5,8 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.example.promate.global.entity.BaseEntity;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @SuperBuilder
@@ -23,8 +25,11 @@ public class UserProjectHistory extends BaseEntity {
     @Column(name="role", nullable = true)
     private String role;
 
-    @Column(name="period", nullable = true)
-    private String period;
+    @Column(name = "start_date", nullable = true)
+    private LocalDate startDate;
+
+    @Column(name = "end_date", nullable = true)
+    private LocalDate endDate;
 
     @Column(name="description", columnDefinition = "TEXT", nullable = true)
     private String description;
@@ -33,10 +38,11 @@ public class UserProjectHistory extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public void update(String projectName, String role, String period, String description) {
+    public void update(String projectName, String role, LocalDate startDate, LocalDate endDate, String description) {
         this.projectName = projectName;
         this.role = role;
-        this.period = period;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.description = description;
     }
 }

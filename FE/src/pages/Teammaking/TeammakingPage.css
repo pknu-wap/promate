@@ -11,7 +11,7 @@ body {
 
 .page-wrapper {
   width: 100%;
-  height: 100%;
+  height: calc(100vh - 56px);
   overflow: hidden;
   background-color: #f8f8f8;
   padding: 19px 50px 20px 30px;

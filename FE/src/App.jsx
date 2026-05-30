@@ -68,7 +68,7 @@ function App() {
           <Route path="/project" element={<ProjectPage />} />
           <Route path="/project/:projectId" element={<TeamPage />} />
           <Route path="/task-board" element={<TaskBoardPage />} />
-         
+         {/* 12 */}
           <Route path="*" element={<ComingSoonPage />} />
         </Route>
       </Routes>

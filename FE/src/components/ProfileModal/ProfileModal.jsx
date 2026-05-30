@@ -3,7 +3,7 @@ import "./ProfileModal.css";
 import closeIcon from "../../assets/icons/closeIcon.svg";
 import ProfileAvatar from "../ProfileAvatar/ProfileAvatar";
 
-function ProfileModal({ isOpen, onClose, user }) {
+function ProfileModal({ isOpen, onClose, user, position }) {
   if (!isOpen) return null;
 
   const projects = user?.projects ?? [
@@ -39,11 +39,19 @@ function ProfileModal({ isOpen, onClose, user }) {
     },
   ];
 
+  const popoverStyle = position ? {
+    position: "fixed",
+    top: `${position.top + 48}px`,
+    left: `${position.left + 100}px`,
+    transform: "translate(0, -100%)",
+    margin: 0
+  } : {};
+
   return (
     <>
       <div className="profile-popover-backdrop" onClick={onClose} />
 
-      <div className="profile-popover" onClick={(e) => e.stopPropagation()}>
+      <div className="profile-popover" onClick={(e) => e.stopPropagation()} style={popoverStyle}>
         <button className="profile-close-x-btn" onClick={onClose} aria-label="닫기">
             <img src={closeIcon} alt="닫기 아이콘" />
         </button>

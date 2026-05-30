@@ -105,9 +105,11 @@ function ProjectPeriodField({ startDate, endDate, onStartDateChange, onEndDateCh
     closePicker();
   };
 
+  const todayStr = toDateValue(new Date());
+
   return (
     <div className="form-field project-period-field">
-      <span className="form-label">프로젝트 기간</span>
+      <span className="teammaking-form-label">프로젝트 기간</span>
 
       <div className="project-period-row">
         <button
@@ -176,6 +178,13 @@ function ProjectPeriodField({ startDate, endDate, onStartDateChange, onEndDateCh
 
                   const value = toDateValue(date);
                   const isSelected = value === draftDate;
+                  let isDisabled = false;
+
+                  if (pickerTarget === 'start') {
+                    isDisabled = value < todayStr;
+                  } else if (pickerTarget === 'end') {
+                    isDisabled = value < (startDate || todayStr);
+                  }
 
                   return (
                     <button
@@ -183,6 +192,7 @@ function ProjectPeriodField({ startDate, endDate, onStartDateChange, onEndDateCh
                       type="button"
                       className={isSelected ? 'date-picker-day date-picker-day--selected' : 'date-picker-day'}
                       onClick={() => selectDay(date)}
+                      disabled={isDisabled}
                     >
                       {date.getDate()}
                     </button>

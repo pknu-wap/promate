@@ -1,0 +1,54 @@
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { getUserInfo } from '../../api/User/userProfileApi.js';
+import logoImg from '../../assets/logoOrange.svg';
+import ProfileAvatar from '../ProfileAvatar/ProfileAvatar';
+import './Header.css';
+
+function Header({ onMenuClick }) {
+  const [userData, setUserData] = useState({ userName: "..." });
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await getUserInfo();
+        const name = response?.data?.userName || "사용자";
+        
+        setUserData({
+          userName: name
+        });
+      } catch (error) {
+        console.error("유저 정보 로드 실패", error);
+      }
+    };
+    fetchUserData();
+  }, []);
+
+  return (
+    <header className="header">
+      <div className="header-left">
+        <button className="hamburger-btn" onClick={onMenuClick} aria-label="메뉴 열기">
+          <span></span><span></span><span></span>
+        </button>
+        <div className="header-logo">
+          <Link to="/" className="logo-link">
+            <img src={logoImg} alt="ProMate 로고" className="logo-image" />
+            <span className="logo-text">PRO:MATE</span>
+          </Link>
+          <span className="logo-sub">최고의 팀과 협업하세요.</span>
+        </div>
+      </div>
+
+      <div className="header-right">
+        <Link to="/profile" className="header-greeting">
+          <strong>{userData.userName}</strong> 님 안녕하세요 :)
+        </Link>
+        <Link to="/profile">
+          <ProfileAvatar size="36px" />
+        </Link>
+      </div>
+    </header>
+  );
+}
+
+export default Header;

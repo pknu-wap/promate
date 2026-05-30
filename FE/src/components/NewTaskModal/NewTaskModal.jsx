@@ -30,6 +30,11 @@ function NewTaskModal({ isOpen, onClose, onSubmit, projectId }) {
   if (!isOpen) return null;
 
   const handleSubmit = () => {
+    if (!title.trim() || !assigneeId || !dueDate) {
+      alert('태스크 제목, 담당자, 마감일은 필수 입력 항목입니다.');
+      return;
+    }
+
     const newTask = {
       title,
       assigneeId,
@@ -48,7 +53,7 @@ function NewTaskModal({ isOpen, onClose, onSubmit, projectId }) {
 
         <div className="task-modal-form">
           <div className="task-modal-field">
-            <label className="task-modal-label">태스크 제목</label>
+            <label className="task-modal-label">태스크 제목 <span style={{ color: '#E53E3E' }}>*</span></label>
             <input
               type="text"
               className="task-modal-input"
@@ -59,7 +64,7 @@ function NewTaskModal({ isOpen, onClose, onSubmit, projectId }) {
           </div>
 
           <div className="task-modal-field">
-            <label className="task-modal-label">담당자</label>
+            <label className="task-modal-label">담당자 <span style={{ color: '#E53E3E' }}>*</span></label>
             <select
               className="task-modal-select"
               value={assigneeId}
@@ -86,7 +91,7 @@ function NewTaskModal({ isOpen, onClose, onSubmit, projectId }) {
           </div>
 
           <div className="task-modal-field">
-            <label className="task-modal-label">마감 기한</label>
+            <label className="task-modal-label">마감일 <span style={{ color: '#E53E3E' }}>*</span></label>
             <input
               type="date"
               className="task-modal-input"

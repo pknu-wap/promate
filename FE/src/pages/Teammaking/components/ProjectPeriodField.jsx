@@ -107,7 +107,7 @@ function ProjectPeriodField({ startDate, endDate, onStartDateChange, onEndDateCh
 
   return (
     <div className="form-field project-period-field">
-      <span className="form-label">프로젝트 기간</span>
+      <span className="teammaking-form-label">프로젝트 기간</span>
 
       <div className="project-period-row">
         <button

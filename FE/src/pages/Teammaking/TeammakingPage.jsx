@@ -77,7 +77,7 @@ function TeammakingPage() {
           onDomainChange={setSelectedDomain}
         />
         <div className="form-field recruit-count-field">
-          <label className="form-label" htmlFor="recruit-count">
+          <label className="teammaking-form-label" htmlFor="recruit-count">
             모집 인원
           </label>
           <select

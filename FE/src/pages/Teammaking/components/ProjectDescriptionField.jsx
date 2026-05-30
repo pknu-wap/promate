@@ -1,7 +1,7 @@
 ﻿function ProjectDescriptionField({ description, onDescriptionChange }) {
   return (
     <div className="form-field">
-      <label className="form-label">프로젝트 설명</label>
+      <label className="teammaking-form-label">프로젝트 설명</label>
       <textarea
         className="textarea-input"
         value={description}

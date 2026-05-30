@@ -136,7 +136,7 @@
   justify-content: center;
   align-items: center;
   gap: 8px;
-  margin-top: auto;
+  margin-top: 16px;
 }
 
 .new-project-btn:active {

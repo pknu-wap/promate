@@ -57,6 +57,8 @@ function Sidebar({ isOpen, onClose }) {
           />
         </nav>
 
+        <hr className="divider" />
+
         <button className="new-project-btn">
           + 새 프로젝트 생성
         </button>

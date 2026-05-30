@@ -465,13 +465,13 @@ body {
 
   .card {
     width: 100%;
-    height: 599px;
+    height: 585px;
     border-radius: 9px;
-    padding: 20px 18px;
+    padding: 22px 18px;
   }
 
   .teammaking-logo-box {
-    margin-bottom: 16px;
+    display: none;
   }
 
   .form-field {

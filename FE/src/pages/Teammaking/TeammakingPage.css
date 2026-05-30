@@ -307,6 +307,16 @@ body {
   background: #4f67a3;
 }
 
+.date-picker-day:disabled {
+  color: #d1d1d1;
+  cursor: not-allowed;
+}
+
+.date-picker-day:disabled:hover {
+  background: transparent;
+  color: #d1d1d1;
+}
+
 .date-picker-actions {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

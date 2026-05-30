@@ -47,6 +47,27 @@
   margin-left: auto;
 }
 
+.project-readme-apply-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.project-readme-apply-btn {
+  background-color: #FE9A57;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 36px;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.project-readme-apply-btn:hover {
+  background-color: #F58B45;
+}
+
 .project-readme-tags {
   display: flex;
   gap: 8px;
@@ -119,7 +140,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 15px 30px;
+  gap: 15px 28px;
 }
 
 .project-readme-team-member-name {
@@ -128,7 +149,7 @@
   color: #000000;
   display: flex;
   align-items: center;
-  padding: 4px 10px;
+  padding: 4px 16px;
 }
 
 .project-readme-team-member-name.clickable {
@@ -138,7 +159,7 @@
 }
 
 .project-readme-team-member-name.clickable:hover {
-  background-color: rgba(0, 0, 0, 0.08);
+  background-color: #e0e0e0;
 }
 
 .project-readme-team-member-name.recruiting {

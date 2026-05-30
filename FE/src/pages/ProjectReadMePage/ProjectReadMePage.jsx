@@ -1,30 +1,36 @@
 import React, { useState } from 'react';
 import logoGray from '../../assets/icons/logoGW.svg';
 import ProfileModal from '../../components/ProfileModal/ProfileModal';
+import ApplyModal from '../../components/ApplyModal/ApplyModal';
 import './ProjectReadMePage.css';
 
 function ProjectReadMePage() {
   const projectData = {
     title: "ProMate",
-    createdAt: "2026-03-18T14:30:00",
+    createdAt: "2026-05-30T14:30:00",
     category: "개발",
-    // status: "RECRUITING", // RECRUITING, IN_PROGRESS, COMPLETED
-    status: "COMPLETED",
+    status: "RECRUITING",
     recruitingCount: 6,
     tags: ["조별과제", "스터디", "공모전", "개발", "기타"],
-    description: "ProMate는 팀 프로젝트의 협업 툴로서 과거 데이터 기반 팀빌딩, 협업 지원 웹사이트입니다. FE 3명, BE 3명 모집합니다.",
-    leader: { name: "홍길동", role: "팀장" },
+    description: "FE 3명, BE 3명 모집합니다. ProMate는 팀 프로젝트의 협업 툴로서 과거 데이터 기반 팀빌딩, 협업 지원 웹사이트입니다.",
+    leader: { name: "이찬이", role: "팀장" },
     members: [
-      { name: "김영희", role: "팀원" },
-      { name: "김철수", role: "팀원" },
-      { name: "김영희", role: "팀원" },
-      { name: "김영희", role: "팀원" }
+      { name: "구정아", role: "팀원" },
+      { name: "김수민", role: "팀원" },
+      { name: "김원빈", role: "팀원" },
+      { name: "김재민", role: "팀원" },
+      { name: "백진선", role: "팀원" },
+      { name: "최하진", role: "팀원" }
     ]
   };
 
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [modalPosition, setModalPosition] = useState(null);
+
+  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
+  const [applyJob, setApplyJob] = useState('');
+  const [applyMotivation, setApplyMotivation] = useState('');
 
   const handleMemberClick = (user, event) => {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -35,6 +41,21 @@ function ProjectReadMePage() {
     });
     setSelectedUser(user);
     setIsProfileModalOpen(true);
+  };
+
+  const handleApplyClick = () => {
+    setIsApplyModalOpen(true);
+  };
+
+  const handleCloseApplyModal = () => {
+    setIsApplyModalOpen(false);
+    setApplyJob('');
+    setApplyMotivation('');
+  };
+
+  const handleSubmitApply = () => {
+    console.log('지원 완료:', projectData.title, applyJob, applyMotivation);
+    handleCloseApplyModal();
   };
 
   return (
@@ -99,6 +120,17 @@ function ProjectReadMePage() {
             </div>
           </div>
         </div>
+
+        {projectData.status === "RECRUITING" && (
+          <div className="project-readme-apply-container">
+            <button 
+              className="project-readme-apply-btn" 
+              onClick={handleApplyClick}
+            >
+              지원하기
+            </button>
+          </div>
+        )}
       </div>
 
       <ProfileModal 
@@ -106,6 +138,17 @@ function ProjectReadMePage() {
         onClose={() => setIsProfileModalOpen(false)} 
         user={selectedUser} 
         position={modalPosition}
+      />
+
+      <ApplyModal
+        isOpen={isApplyModalOpen}
+        onClose={handleCloseApplyModal}
+        onSubmit={handleSubmitApply}
+        projectName={projectData.title}
+        job={applyJob}
+        motivation={applyMotivation}
+        setJob={setApplyJob}
+        setMotivation={setApplyMotivation}
       />
     </main>
   );

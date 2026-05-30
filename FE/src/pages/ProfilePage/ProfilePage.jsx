@@ -1,8 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-<<<<<<< HEAD
 import apiClient from '../../api/apiClient';
-=======
->>>>>>> 26553234e1d4739912ac252daf366021a12b0fd9
 import MainButton from '../../components/MainButton/MainButton';
 import Avatar from '../../components/Avatar/Avatar';
 import AddProjectModal from './components/AddProjectModal';
@@ -30,7 +27,6 @@ const ProfilePage = () => {
     return `${y}.${m}.${d}`;
   };
 
-<<<<<<< HEAD
   useEffect(() => {
     const fetchProfileData = async () => {
       const [userRes, taskCountsRes, manualProjectRes, autoProjectRes] = await Promise.allSettled([
@@ -124,25 +120,6 @@ const ProfilePage = () => {
     } catch (error) {
       console.error('프로젝트 삭제 중 오류 발생:', error);
     }
-=======
-  const handleImageClick = () => {
-    if (isEditing) fileInputRef.current?.click();
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    setProfileImageUrl(URL.createObjectURL(file));
-  };
-
-  const handleAddProject = (newProject) => {
-    setProjects((prev) => [...prev, { id: Date.now(), ...newProject, isManual: true }]);
-  };
-
-  const handleDeleteProject = (proj) => {
-    if (!proj.isManual) return;
-    setProjects((prev) => prev.filter((p) => p.id !== proj.id));
->>>>>>> 26553234e1d4739912ac252daf366021a12b0fd9
   };
 
   return (

@@ -18,7 +18,7 @@ body {
   background: linear-gradient(180deg, #f0f0f0 0%, #ffffff 100%);
 }
 
-.page-title {
+.teammaking-page-title {
   width: 864px;
   max-width: 100%;
   margin: 0 0 20px;
@@ -445,7 +445,7 @@ body {
     padding: 16px 14px 0;
   }
 
-  .page-title {
+  .teammaking-page-title {
     width: 100%;
     font-size: 21px;
     line-height: 27px;

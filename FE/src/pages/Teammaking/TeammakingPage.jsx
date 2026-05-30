@@ -62,7 +62,7 @@ function TeammakingPage() {
 
   return (
     <div className="page-wrapper">
-      <h1 className="page-title">프로젝트 생성</h1>
+      <h1 className="teammaking-page-title">프로젝트 생성</h1>
       <div className="card">
         <div className="teammaking-logo-box" aria-hidden="true">
           <img src={logoIcon} alt="" />

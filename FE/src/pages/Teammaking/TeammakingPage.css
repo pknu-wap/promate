@@ -35,7 +35,7 @@ body {
   border-radius: 9px;
   width: 864px;
   max-width: 100%;
-  height: 593px;
+  height: 599px;
   padding: 19px 33px;
   margin: 0;
   position: relative;
@@ -455,7 +455,7 @@ body {
 
   .card {
     width: 100%;
-    height: 585px;
+    height: 599px;
     border-radius: 9px;
     padding: 20px 18px;
   }
@@ -465,13 +465,13 @@ body {
   }
 
   .form-field {
-    margin-bottom: 16px;
+    margin-bottom: 19px;
   }
 
   .teammaking-form-label {
     font-size: 14px;
     line-height: 18px;
-    margin-bottom: 9px;
+    margin-bottom: 0px;
   }
 
   .text-input,

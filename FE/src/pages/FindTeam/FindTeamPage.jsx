@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import ApplyModal from "../../components/ApplyModal/ApplyModal.jsx";
 import Badge from "../../components/Badge/Badge.jsx";
 import ApplicantBox from "../../components/ApplicantBox/ApplicantBox.jsx";
+import Pagination from "../../components/Pagination/Pagination.jsx";
 import "./FindTeamPage.css";
 
 const KOREAN_INITIALS = [
@@ -117,6 +118,12 @@ function FindTeamPage() {
   const [selectedTeamId, setSelectedTeamId] = useState(null);
   const [job, setJob] = useState("");
   const [motivation, setMotivation] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, searchKeyword]);
 
   const filteredTeamPosts = useMemo(() => {
     const keyword = searchKeyword.trim();
@@ -129,6 +136,12 @@ function FindTeamPage() {
         team.applyStatus !== "rejected",
     );
   }, [selectedCategory, searchKeyword, teamPosts]);
+
+  const totalPages = Math.ceil(filteredTeamPosts.length / ITEMS_PER_PAGE) || 1;
+  const currentTeamPosts = filteredTeamPosts.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
   const selectedTeam = teamPosts.find((team) => team.id === selectedTeamId);
   const isApplyModalOpen = selectedTeamId !== null;
@@ -195,8 +208,8 @@ function FindTeamPage() {
       </div>
 
       <section className="find-team-list" aria-label="팀 목록">
-        {filteredTeamPosts.length > 0 ? (
-          filteredTeamPosts.map((team) => {
+        {currentTeamPosts.length > 0 ? (
+          currentTeamPosts.map((team) => {
             let buttonText = "지원하기";
             let buttonColor = "#FE9A57";
             let buttonTextColor = "#FFFFFF";
@@ -227,6 +240,14 @@ function FindTeamPage() {
           <div className="find-team-empty">해당 카테고리에 모집중인 팀이 없습니다.</div>
         )}
       </section>
+
+      {filteredTeamPosts.length > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+      )}
 
       <ApplyModal
         isOpen={isApplyModalOpen}

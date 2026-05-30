@@ -23,7 +23,7 @@ function AppLayout({ isMenuOpen, toggleMenu, closeMenu }) {
       <Header onMenuClick={toggleMenu} />
       <div style={{ display: "flex", flex: 1, backgroundColor: "#F8F9FA" }}>
         <Sidebar isOpen={isMenuOpen} onClose={closeMenu} />
-        <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+        <div className="main-content" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
           <main style={{ flex: 1, padding: "0px", boxSizing: "border-box" }}>
             <Outlet />
           </main>

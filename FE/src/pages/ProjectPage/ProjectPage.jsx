@@ -4,6 +4,7 @@ import ProjectBox from '../../components/ProjectBox/ProjectBox';
 import ApplicantBox from '../../components/ApplicantBox/ApplicantBox';
 import ApplyModal from '../../components/ApplyModal/ApplyModal';
 import { getAppliedProjects, getBookmarkedProjects, getActiveProjects, getCompletedProjects } from '../../api/Project/projectApi';
+import Pagination from '../../components/Pagination/Pagination';
 import './ProjectPage.css';
 
 const tabs = [
@@ -24,6 +25,8 @@ function ProjectPage() {
   const [selectedProjectForApply, setSelectedProjectForApply] = useState(null);
   const [applyJob, setApplyJob] = useState('');
   const [applyMotivation, setApplyMotivation] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
@@ -69,7 +72,7 @@ function ProjectPage() {
 
     const fetchBookmarkedProjects = async () => {
       try {
-        const response = await getBookmarkedProjects(0, 10);
+        const response = await getBookmarkedProjects(0, ITEMS_PER_PAGE);
         if (response.data && response.data.isSuccess) {
           const fetchedData = response.data.data.content.map((item) => {
             let mappedStatus = null;
@@ -181,6 +184,12 @@ function ProjectPage() {
     });
   }, [activeTab, projects, appliedProjects, activeProjects, completedProjects]);
 
+  const totalPages = Math.ceil(filteredProjects.length / ITEMS_PER_PAGE);
+  const currentProjects = filteredProjects.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
   const handleCloseApplyModal = () => {
     setIsApplyModalOpen(false);
     setSelectedProjectForApply(null);
@@ -198,7 +207,10 @@ function ProjectPage() {
             <div 
               key={tab.key} 
               className={`tab-item ${activeTab === tab.key ? 'active' : ''}`}
-              onClick={() => setActiveTab(tab.key)}
+              onClick={() => {
+                setActiveTab(tab.key);
+                setCurrentPage(1);
+              }}
             >
               {tab.label}
             </div>
@@ -207,7 +219,7 @@ function ProjectPage() {
 
         <div className="project-list">
           {filteredProjects.length > 0 ? (
-            filteredProjects.map((project) => {
+            currentProjects.map((project) => {
               // 합격한 경우에 한해 존재하는 projectId로 이동 처리. 대기 중/탈락은 기존 id 활용
               const targetId = (project.applyStatus === 'accepted' && project.projectId) ? project.projectId : project.id;
 
@@ -300,6 +312,14 @@ function ProjectPage() {
             <div className="project-empty">해당하는 프로젝트가 없습니다.</div>
           )}
         </div>
+        
+        {filteredProjects.length > 0 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        )}
       </div>
 
       <ApplyModal

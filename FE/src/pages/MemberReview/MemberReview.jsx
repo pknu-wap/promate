@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import checkIcon from '../../assets/icons/checkIcon.svg';
 import './MemberReview.css';
-import Badge from "../../components/Badge/Badge.jsx";
 
 const questions = [
   'OOO 팀원은 프로젝트 진행 과정에서 원활하게 소통했는가?',
@@ -15,32 +14,11 @@ const defaultScores = [5, 5, 5, 5];
 function MemberReview() {
   const [scores, setScores] = useState(defaultScores);
   const [comment, setComment] = useState('');
-  
-  // 1. 초기값을 option의 id 규격에 맞춰 "1"(김일번)로 수정합니다.
-  const [selectedDomain, setSelectedDomain] = useState("1");
 
-  const domainOptions = [
-    { id: "1", label: "김일번" },
-    { id: "2", label: "김이번" },
-    { id: "3", label: "김삼번" },
-    { id: "4", label: "김사번" },
-    { id: "5", label: "김오번" },
-  ];
-
-  // 라디오 버튼 점수 변경 핸들러
   const handleScoreChange = (questionIndex, score) => {
     setScores((prevScores) =>
       prevScores.map((prevScore, index) => (index === questionIndex ? score : prevScore))
     );
-  };
-
-  
-  const handleDomainChange = (domainId) => {
-    setSelectedDomain(domainId);
-    
-    
-    setScores(defaultScores);
-    setComment('');
   };
 
   return (
@@ -48,21 +26,6 @@ function MemberReview() {
       <h1 className="member-review-title">상호 평가 - 캡스톤 디자인</h1>
 
       <section className="member-review-card" aria-label="상호 평가 작성 폼">
-        <div className="form-field">
-      
-          <div className="domain-tags">
-            {domainOptions.map((option) => (
-              <Badge
-                key={option.id}
-                selected={selectedDomain === option.id}
-                onClick={() => handleDomainChange(option.id)}
-              >
-                {option.label}
-              </Badge>
-            ))}
-          </div>
-        </div>
-
         <div className="member-review-question-list">
           {questions.map((question, questionIndex) => (
             <fieldset className="member-review-question" key={question}>

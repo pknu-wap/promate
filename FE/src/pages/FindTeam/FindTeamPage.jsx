@@ -3,6 +3,7 @@ import ApplyModal from "../../components/ApplyModal/ApplyModal.jsx";
 import Badge from "../../components/Badge/Badge.jsx";
 import ApplicantBox from "../../components/ApplicantBox/ApplicantBox.jsx";
 import Pagination from "../../components/Pagination/Pagination.jsx";
+import apiClient from "../../api/apiClient.js";
 import "./FindTeamPage.css";
 
 const KOREAN_INITIALS = [
@@ -146,12 +147,20 @@ function FindTeamPage() {
   const selectedTeam = teamPosts.find((team) => team.id === selectedTeamId);
   const isApplyModalOpen = selectedTeamId !== null;
 
-  const handleToggleBookmark = (teamId) => {
-    setTeamPosts((prevTeamPosts) =>
-      prevTeamPosts.map((team) =>
-        team.id === teamId ? { ...team, bookmarked: !team.bookmarked } : team,
-      ),
-    );
+  const handleToggleBookmark = async (teamId) => {
+    try {
+      const response = await apiClient.post(`/recruitments/${teamId}/bookmark`);
+      const { isBookmarked } = response.data.data;
+
+      setTeamPosts((prevTeamPosts) =>
+        prevTeamPosts.map((team) =>
+          team.id === teamId ? { ...team, bookmarked: isBookmarked } : team,
+        ),
+      );
+    } catch (error) {
+      console.error("북마크 설정/해제 실패:", error);
+      alert(error.message || "관심 설정 중 오류가 발생했습니다.");
+    }
   };
 
   const handleOpenApplyModal = (teamId) => {

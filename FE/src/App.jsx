@@ -15,6 +15,7 @@ import FindTeamPage from "./pages/FindTeam/FindTeamPage.jsx";
 import ProjectPage from "./pages/ProjectPage/ProjectPage.jsx";
 import TeamPage from "./pages/TeamPage/TeamPage.jsx";
 import TaskBoardPage from "./pages/TaskBoard/TaskBoard.jsx";
+import MemberReviewPage from "./pages/MemberReview/MemberReview.jsx";
 
 function AppLayout({ isMenuOpen, toggleMenu, closeMenu }) {
   return (
@@ -68,6 +69,7 @@ function App() {
           <Route path="/project" element={<ProjectPage />} />
           <Route path="/project/:projectId" element={<TeamPage />} />
           <Route path="/task-board" element={<TaskBoardPage />} />
+          <Route path="/member-review" element={<MemberReviewPage />} />
          {/* 12 */}
           <Route path="*" element={<ComingSoonPage />} />
         </Route>

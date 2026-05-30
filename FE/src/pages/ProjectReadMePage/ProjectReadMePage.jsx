@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import logoGray from '../../assets/icons/logoGW.svg';
 import ProfileModal from '../../components/ProfileModal/ProfileModal';
-import ProfileAvatar from '../../components/ProfileAvatar/ProfileAvatar';
 import './ProjectReadMePage.css';
 
 function ProjectReadMePage() {
@@ -9,7 +8,8 @@ function ProjectReadMePage() {
     title: "ProMate",
     createdAt: "2026-03-18T14:30:00",
     category: "개발",
-    status: "RECRUITING",
+    // status: "RECRUITING", // RECRUITING, IN_PROGRESS, COMPLETED
+    status: "COMPLETED",
     recruitingCount: 6,
     tags: ["조별과제", "스터디", "공모전", "개발", "기타"],
     description: "ProMate는 팀 프로젝트의 협업 툴로서 과거 데이터 기반 팀빌딩, 협업 지원 웹사이트입니다. FE 3명, BE 3명 모집합니다.",
@@ -75,7 +75,6 @@ function ProjectReadMePage() {
               className="project-readme-team-member-name clickable" 
               onClick={(e) => handleMemberClick(projectData.leader, e)}
             >
-              <ProfileAvatar size="25px" src={projectData.leader.profileImage} />
               {projectData.leader.name}
             </div>
           </div>

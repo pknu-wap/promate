@@ -156,7 +156,7 @@ const ProfilePage = () => {
             {[...projects]
               .sort((a, b) => (a.endDate ? 1 : -1) - (b.endDate ? 1 : -1))
               .map((proj) => (
-                <div key={proj.historyId ?? proj.id} className="project-experience-row">
+                <div key={proj.historyId ?? proj.id ?? proj.projectId} className="project-experience-row">
                   <div className="proj-row-inner">
                     <div className="proj-name-group">
                       <span className="proj-title">{proj.title}</span>

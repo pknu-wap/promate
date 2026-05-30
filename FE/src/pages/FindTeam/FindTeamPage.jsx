@@ -123,7 +123,10 @@ function FindTeamPage() {
 
     return teamPosts.filter(
       (team) =>
-        team.category === selectedCategory && isMatchedTeam(team, keyword),
+        team.category === selectedCategory &&
+        isMatchedTeam(team, keyword) &&
+        team.applyStatus !== "accepted" &&
+        team.applyStatus !== "rejected",
     );
   }, [selectedCategory, searchKeyword, teamPosts]);
 
@@ -199,22 +202,8 @@ function FindTeamPage() {
             let buttonTextColor = "#FFFFFF";
 
             if (team.applied) {
-              switch (team.applyStatus) {
-                case "accepted":
-                  buttonText = "합격";
-                  buttonColor = "#FFEBDE";
-                  buttonTextColor = "#FE9A57";
-                  break;
-                case "rejected":
-                  buttonText = "불합격";
-                  buttonColor = "#D9D9D9";
-                  break;
-                case "reviewing":
-                default:
-                  buttonText = "심사중";
-                  buttonColor = "#D9D9D9";
-                  break;
-              }
+              buttonText = "심사중";
+              buttonColor = "#D9D9D9";
             }
 
             return (
@@ -235,7 +224,7 @@ function FindTeamPage() {
             );
           })
         ) : (
-          <div className="find-team-empty">해당 카테고리에 모집 중인 팀이 없습니다.</div>
+          <div className="find-team-empty">해당 카테고리에 모집중인 팀이 없습니다.</div>
         )}
       </section>
 

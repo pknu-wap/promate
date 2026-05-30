@@ -26,22 +26,24 @@ const ProfilePage = () => {
 
   useEffect(() => {
     const fetchProfileData = async () => {
-      const [userRes, manualProjectRes, autoProjectRes] = await Promise.allSettled([
+      const [userRes, taskCountsRes, manualProjectRes, autoProjectRes] = await Promise.allSettled([
         apiClient.get('/user/me'),
+        apiClient.get('/user/me/projects/task-counts'),
         apiClient.get('/user/me/projectHistories'),
         apiClient.get('/projects/activity/me'),
       ]);
 
       if (userRes.status === 'fulfilled') {
         const userData = userRes.value.data.data;
-        const completed = userData.completedTaskCount ?? 0;
-        const incomplete = userData.incompleteTaskCount ?? 0;
+        const taskCountsData = taskCountsRes.status === 'fulfilled'
+          ? (taskCountsRes.value.data.data ?? []) : [];
+
+        const completed = taskCountsData.reduce((sum, p) => sum + (p.completedTaskCount ?? 0), 0);
+        const total = taskCountsData.reduce((sum, p) => sum + (p.completedTaskCount ?? 0) + (p.incompleteTaskCount ?? 0), 0);
+
         setUserInfo({
           name: userData.name,
-          taskStats: {
-            completed,
-            total: completed + incomplete,
-          },
+          taskStats: { completed, total },
         });
         setProfileImageUrl(userData.profileImageUrl || null);
       }
@@ -52,7 +54,7 @@ const ProfilePage = () => {
         ? (autoProjectRes.value.data.data || []) : [];
 
       setProjects([
-        ...autoProjectsData.map((p) => ({ ...p, title: p.projectName ?? p.title, isManual: false })),
+        ...autoProjectsData.map((p) => ({ ...p, title: p.projectName ?? p.title, score: p.averageReviewScore ?? p.score ?? null, isManual: false })),
         ...manualProjectsData.map((p) => ({ ...p, title: p.projectName ?? p.title, isManual: true })),
       ]);
     };

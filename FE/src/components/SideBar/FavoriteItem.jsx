@@ -1,13 +1,16 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-function FavoriteItem({ name, dueDate, dotColor }) {
+function FavoriteItem({ id, name, dueDate, dotColor, onClick }) {
   return (
     <li className="favorite-list-item">
-      <div className="favorite-item-header">
-        <span className={`dot ${dotColor}`}></span> 
-        {name}
-      </div>
-      <span className="date">마감일: {dueDate}</span>
+      <Link to={`/projects/${id}`} className="favorite-item-link" onClick={onClick}>
+        <div className="favorite-item-header">
+          <span className={`dot ${dotColor}`}></span> 
+          {name}
+        </div>
+        <span className="date">마감일: {dueDate}</span>
+      </Link>
     </li>
   );
 }

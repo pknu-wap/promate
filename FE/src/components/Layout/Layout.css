@@ -8,11 +8,12 @@
 .layout-body {
   display: flex;
   flex: 1;
+  min-height: calc(100vh - 56px);
 }
 
 .layout-main {
   flex: 1;
-  background-color: #F5F5F5;
+  background: linear-gradient(180deg, #f0f0f0 0%, #ffffff 100%);
   padding: 32px;
   box-sizing: border-box;
 }

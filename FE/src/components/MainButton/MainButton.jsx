@@ -7,12 +7,13 @@ function MainButton({
   type = "button",
   size = "md",
   fullWidth = false,
+  className = "",
   ...props
 }) {
   return (
     <button
       type={type}
-      className={`main-btn ${size} ${fullWidth ? "full-width" : ""}`}
+      className={`main-btn ${size} ${fullWidth ? "full-width" : ""} ${className}`.trim()}
       onClick={onClick}
       disabled={disabled}
       {...props}

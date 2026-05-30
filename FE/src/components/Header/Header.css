@@ -10,7 +10,7 @@
   box-sizing: border-box;
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000;
 }
 
 .header-left {
@@ -44,19 +44,28 @@
 .header-logo {
   display: flex;
   align-items: center;
-  gap: 6px;
 }
 
-.logo-icon {
-  font-size: 20px;
-  line-height: 1;
+.logo-image {
+  width: 25px;
 }
 
 .logo-text {
-  font-family: 'Pretendard', sans-serif;
-  font-size: 18px;
-  font-weight: 800;
-  color: #FF6600;
+  font-family: 'YSpotlightOTF', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 32px;
+  letter-spacing: -0.005em;
+  color: #000000;
+  margin-left: 5px;
+  margin-right: 8px;
+}
+
+.logo-link {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
 }
 
 .logo-sub {
@@ -64,12 +73,18 @@
   font-size: 13px;
   font-weight: 400;
   color: #ABABAB;
+  margin-top: 7px;
+  margin-left: 2px;
 }
 
 .header-right {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.header-right a {
+  text-decoration: none;
 }
 
 .header-greeting {
@@ -80,21 +95,7 @@
 
 .header-greeting strong {
   font-weight: 700;
-}
-
-.header-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background-color: #FF6600;
-  color: #FFFFFF;
-  font-family: 'Pretendard', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  font-size: 16px;
 }
 
 @media (max-width: 768px) {

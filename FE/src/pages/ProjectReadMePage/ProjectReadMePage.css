@@ -17,6 +17,7 @@
   position: relative;
   padding-left: 40px;
   padding-top: 10px;
+  box-sizing: border-box;
 }
 
 .project-readme-info-section {
@@ -25,6 +26,8 @@
   padding: 50px 40px 10px;
   gap: 17px;
   max-width: 1100px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .project-readme-header-row {
@@ -106,7 +109,8 @@
 }
 
 .project-readme-info-divider {
-  width: 300px;
+  width: 100%;
+  max-width: 300px;
   height: 2px;
   background: #D9D9D9;
   border: none;
@@ -143,7 +147,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 15px 28px;
+  gap: 5px 28px;
 }
 
 .project-readme-team-member-name {
@@ -168,4 +172,26 @@
 .project-readme-team-member-name.recruiting {
   color: #FF6600;
   font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .project-readme-banner {
+    padding-left: 20px;
+  }
+  .project-readme-info-section {
+    padding: 30px 20px 10px;
+  }
+  .project-readme-header-row {
+    gap: 8px;
+  }
+  .project-readme-created-at {
+    margin-left: 0;
+    margin-top: 7px;
+  }
+  .project-readme-team-section {
+    gap: 15px;
+  }
+  .project-readme-team-group {
+    gap: 15px;
+  }
 }

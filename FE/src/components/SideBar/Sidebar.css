@@ -1,10 +1,15 @@
 .sidebar {
   width: 220px;
-  background-color: #FFFFFF; 
+  background-color: #FFFFFF;
   border-right: 1px solid #D9D9D9;
   padding: 20px 20px;
   display: flex;
   flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: calc(100vh - 56px);
+  overflow-y: auto;
+  flex-shrink: 0;
 }
 
 .menu-section {
@@ -119,18 +124,19 @@
 .dot.green { background-color: #80D366; }
 
 .new-project-btn {
-  background-color: #FE9A57; 
+  background-color: #FE9A57;
   color: #FFFFFF;
   border: none;
   padding: 10px;
   border-radius: 5px;
-  font-size: 18px; 
-  font-weight: 700; 
+  font-size: 18px;
+  font-weight: 700;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 8px;
+  margin-top: 16px;
 }
 
 .new-project-btn:active {

@@ -1,9 +1,6 @@
-import React, { useState, useEffect } from 'react'; 
-import { useNavigate } from 'react-router-dom';
-import './Sidebar.css'; 
+import React from 'react';
+import './Sidebar.css';
 import SidebarItem from "./SidebarItem";
-import FavoriteItem from "./FavoriteItem";
-import { getMyProjectList } from '../../api/DashboardApi';
 
 import dashboardIcon from "../../assets/icons/dashboardIcon.svg";
 import teamFindIcon from "../../assets/icons/teamFindIcon.svg";
@@ -17,24 +14,6 @@ import projectOrangeIcon from "../../assets/icons/projectOrangeIcon.svg";
 import profileOrangeIcon from "../../assets/icons/profileOrangeIcon.svg";
 
 function Sidebar({ isOpen, onClose }) {
-  const [favoriteList, setFavoriteList] = useState([]); 
-  const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate();
-  
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const response = await getMyProjectList(); 
-        setFavoriteList(response.data); 
-      } catch (error) {
-        console.error("데이터 로드 실패", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchProjects();
-  }, []);
-
   return (
     <>
       {isOpen && <div className="sidebar-overlay" onClick={onClose}></div>}
@@ -79,31 +58,8 @@ function Sidebar({ isOpen, onClose }) {
         </nav>
 
         <hr className="divider" />
-        <div className="favorite-section">
-          <p className="favorite-title">★ 현재 진행중인 프로젝트</p>
-          <ul className="favorite-list">
-            {isLoading ? (
-              <p>로딩 중...</p>
-            ) : (
-              favoriteList.map((item) => (
-                <FavoriteItem 
-                  key={item.id} 
-                  id={item.id}
-                  name={item.projectName} 
-                  dueDate={item.deadLine} 
-                  dotColor={item.colorTag || 'red'} 
-                  onClick={onClose}
-                />
-              ))
-            )}
-          </ul>
-        </div>
-        <hr className="divider" />
 
-        <button className="new-project-btn" onClick={() => {
-          navigate('/teammaking');
-          if (onClose) onClose();
-        }}>
+        <button className="new-project-btn">
           + 새 프로젝트 생성
         </button>
 

@@ -4,11 +4,14 @@
   justify-content: center;
   gap: 3px;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   min-height: 113px;
   padding: 14px 20px;
   background: #FFFFFF;
   border-radius: 10px;
   box-sizing: border-box;
+  overflow: hidden;
   transition: background-color 0.2s ease-in-out;
 }
 
@@ -19,17 +22,23 @@
 .project-box-upper {
   display: flex;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   align-items: flex-start;
   gap: 16px;
   margin-top: 1px;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .project-box-content {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  flex: 1 1 0;
+  width: 0;
   min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .project-box-top {
@@ -37,16 +46,23 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  min-width: 0;
+  max-width: 100%;
   min-height: 42px;
+  gap: 8px;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .project-box-info {
   display: flex;
   align-items: center;
   gap: 16px;
-  flex: 1;
+  flex: 1 1 0;
+  width: 0;
   min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .project-box-text {
@@ -54,11 +70,17 @@
   flex-direction: column;
   gap: 5px;
   margin-top: 1px;
-  flex: 1;
+  flex: 1 1 0;
+  width: 0;
   min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .project-box-title {
+  display: block;
+  width: 100%;
+  max-width: 100%;
   font-family: 'Pretendard', sans-serif;
   font-weight: 600;
   line-height: 19px;
@@ -70,11 +92,17 @@
 }
 
 .project-due-date {
+  display: block;
+  width: 100%;
+  max-width: 100%;
   font-family: 'Pretendard', sans-serif;
   font-weight: 400;
   font-size: 14px;
   line-height: 17px;
   color: #909090;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .project-box-status {
@@ -120,12 +148,16 @@
   display: flex;
   align-items: center;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   gap: 12px;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .progress-header .progress-bar {
-  flex: 1;
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 .progress-label,
@@ -135,6 +167,7 @@
   font-size: 12px;
   line-height: 14px;
   color: #909090;
+  flex-shrink: 0;
 }
 
 .mobile-only {
@@ -146,7 +179,10 @@
   align-items: baseline;
   justify-content: flex-end;
   gap: 8px;
+  max-width: 100%;
+  min-width: 0;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .progress-percent {
@@ -155,11 +191,13 @@
   font-size: 20px;
   line-height: 26px;
   color: #FF6600;
+  flex-shrink: 0;
 }
 
 .progress-bar {
   position: relative;
   width: 100%;
+  min-width: 0;
   height: 8px;
   background: #F1F1F1;
   border: 1px solid #D9D9D9;
@@ -180,22 +218,28 @@
   .project-box {
     padding: 12px 14px;
     gap: 5px;
+    width: 100%;
+    max-width: 100%;
     overflow: hidden;
   }
 
   .project-box-upper {
     gap: 3px;
     min-width: 0;
+    max-width: 100%;
   }
 
   .project-box-top {
     flex: 1;
     min-width: 0;
+    max-width: 100%;
     gap: 8px;
   }
 
   .project-box-text {
     margin-left: 8px;
+    width: 0;
+    min-width: 0;
   }
 
   .project-box-title {
@@ -203,8 +247,14 @@
     min-width: 0;
   }
 
+  .project-due-date {
+    font-size: 14px;
+    min-width: 0;
+  }
+
   .progress-stats {
     width: 100%;
+    max-width: 100%;
     min-width: 0;
   }
 }

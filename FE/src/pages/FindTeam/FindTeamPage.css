@@ -30,6 +30,8 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .find-team-filter .find-team-category {
@@ -44,6 +46,7 @@
   font-size: 12px;
   font-weight: 800;
   box-shadow: none;
+  box-sizing: border-box;
 }
 
 .find-team-filter .find-team-category.badge--selected {
@@ -68,6 +71,7 @@
   outline: 0;
   background: transparent;
   font: inherit;
+  box-sizing: border-box;
 }
 
 .find-team-search::before {
@@ -143,6 +147,7 @@
 
   .find-team-filter {
     gap: 6px;
+    width: 100%;
   }
 
   .find-team-search {

@@ -6,6 +6,9 @@
   align-items: stretch;
   padding: 14px 20px;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
   background: #FFFFFF;
   border-left: 3px solid #FE9A57;
   border-radius: 0px 10px 10px 0px;
@@ -20,20 +23,14 @@
   display: flex;
   flex-direction: row;
   width: 100%;
+  max-width: 100%;
   align-items: flex-start;
   gap: 16px;
   margin-top: 1px;
   box-sizing: border-box;
   flex: 1;
   min-width: 0;
-}
-
-.applicant-box-avatar {
-  flex-shrink: 0;
-  width: 46px;
-  height: 46px;
-  background: #F1F1F1;
-  border-radius: 5px;
+  overflow: hidden;
 }
 
 .applicant-box-text {
@@ -42,7 +39,8 @@
   align-items: flex-start;
   gap: 5px;
   margin-top: 1px;
-  flex: 1;
+  flex: 1 1 0;
+  width: 0;
   min-width: 0;
 }
 
@@ -54,9 +52,6 @@
   color: #000000;
   margin: 0;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 100%;
 }
 
 .applicant-box-summary {
@@ -65,11 +60,13 @@
   font-size: 14px;
   line-height: 17px;
   color: #909090;
+  display: block;
+  width: 100%;
+  max-width: 100%;
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 100%;
 }
 
 .applicant-box-right {
@@ -96,6 +93,7 @@
   justify-content: flex-end;
   align-items: center;
   gap: 6px;
+  max-width: 100%;
 }
 
 .applicant-bookmark-btn {
@@ -104,6 +102,7 @@
   align-items: center;
   width: 33px;
   height: 33px;
+  flex-shrink: 0;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -137,6 +136,7 @@
   cursor: pointer;
   transition: color 0.2s ease-in-out;
   box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 .applicant-action-btn.hover-active:hover {
@@ -147,15 +147,23 @@
   .applicant-box {
     padding: 12px 14px;
     width: 100%;
+    max-width: 100%;
   }
 
   .applicant-box-left {
     gap: 13px;
     min-width: 0;
+    max-width: 100%;
   }
 
   .applicant-box-right {
     align-items: flex-end;
     margin-top: 0;
+    max-width: 100%;
+  }
+
+  .applicant-action-btn {
+    min-width: 84px;
+    padding: 8px 14px;
   }
 }

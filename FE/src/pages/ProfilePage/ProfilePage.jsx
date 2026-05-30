@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
+<<<<<<< HEAD
 import apiClient from '../../api/apiClient';
+=======
+>>>>>>> 26553234e1d4739912ac252daf366021a12b0fd9
 import MainButton from '../../components/MainButton/MainButton';
 import Avatar from '../../components/Avatar/Avatar';
 import AddProjectModal from './components/AddProjectModal';
@@ -12,11 +15,14 @@ const ProfilePage = () => {
   const fileInputRef = useRef(null);
 
   const [userInfo, setUserInfo] = useState({
-    name: '로딩 중...',
-    taskStats: { completed: 0, total: 0 },
+    name: '김아무개',
+    taskStats: { completed: 3, total: 5 },
   });
 
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState([
+    { id: 1, title: '동아리 프로젝트', role: 'PM', startDate: '2025-03-20', endDate: null, score: null, isManual: false },
+    { id: 2, title: 'WAP 해커톤', role: 'FE', startDate: '2025-03-20', endDate: '2025-07-20', score: 4.7, isManual: false },
+  ]);
 
   const formatDate = (dateStr) => {
     if (!dateStr) return '';
@@ -24,6 +30,7 @@ const ProfilePage = () => {
     return `${y}.${m}.${d}`;
   };
 
+<<<<<<< HEAD
   useEffect(() => {
     const fetchProfileData = async () => {
       const [userRes, taskCountsRes, manualProjectRes, autoProjectRes] = await Promise.allSettled([
@@ -117,6 +124,25 @@ const ProfilePage = () => {
     } catch (error) {
       console.error('프로젝트 삭제 중 오류 발생:', error);
     }
+=======
+  const handleImageClick = () => {
+    if (isEditing) fileInputRef.current?.click();
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setProfileImageUrl(URL.createObjectURL(file));
+  };
+
+  const handleAddProject = (newProject) => {
+    setProjects((prev) => [...prev, { id: Date.now(), ...newProject, isManual: true }]);
+  };
+
+  const handleDeleteProject = (proj) => {
+    if (!proj.isManual) return;
+    setProjects((prev) => prev.filter((p) => p.id !== proj.id));
+>>>>>>> 26553234e1d4739912ac252daf366021a12b0fd9
   };
 
   return (

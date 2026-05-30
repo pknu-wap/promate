@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect, useRef } from 'react';
+import apiClient from '../../api/apiClient';
 import MainButton from '../../components/MainButton/MainButton';
 import Avatar from '../../components/Avatar/Avatar';
 import AddProjectModal from './components/AddProjectModal';
 import './ProfilePage.css';
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
-
 const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [profileImageUrl, setProfileImageUrl] = useState(null);
+  const fileInputRef = useRef(null);
 
   const [userInfo, setUserInfo] = useState({
     name: '로딩 중...',
@@ -25,67 +25,98 @@ const ProfilePage = () => {
   };
 
   useEffect(() => {
-    setUserInfo({ name: '김아무개', taskStats: { completed: 3, total: 5 } });
-    setProjects([
-      { id: 1, title: '동아리 프로젝트', role: 'PM', startDate: '2025-03-20', endDate: null, score: null, isManual: false },
-      { id: 2, title: 'WAP 해커톤', role: 'FE', startDate: '2025-03-20', endDate: '2025-07-20', score: 4.7, isManual: false },
-    ]);
+    const fetchProfileData = async () => {
+      const [userRes, taskCountsRes, manualProjectRes, autoProjectRes] = await Promise.allSettled([
+        apiClient.get('/user/me'),
+        apiClient.get('/user/me/projects/task-counts'),
+        apiClient.get('/user/me/projectHistories'),
+        apiClient.get('/projects/activity/me'),
+      ]);
 
-    // TODO: 백엔드 연동 시 아래 코드로 교체
-    // const fetchProfileData = async () => {
-    //   try {
-    //     const [userRes, taskRes, manualProjectRes, autoProjectRes] = await Promise.all([
-    //       axios.get(`${BASE_URL}/user/me`),
-    //       axios.get(`${BASE_URL}/user/me/projects/task-counts`),
-    //       axios.get(`${BASE_URL}/user/me/projectHistories`),
-    //       axios.get(`${BASE_URL}/projects/activity/me`),
-    //     ]);
-    //     const userData = userRes.data.data;
-    //     const taskData = taskRes.data.data;
-    //     const manualProjectsData = manualProjectRes.data.data || [];
-    //     const autoProjectsData = autoProjectRes.data.data || [];
-    //     setUserInfo({
-    //       name: userData.name,
-    //       taskStats: {
-    //         completed: taskData.completedCount || 0,
-    //         total: taskData.totalCount || 0,
-    //       },
-    //     });
-    //     setProjects([
-    //       ...autoProjectsData.map((p) => ({ ...p, isManual: false })),
-    //       ...manualProjectsData.map((p) => ({ ...p, isManual: true })),
-    //     ]);
-    //   } catch (error) {
-    //     console.error('프로필 데이터를 불러오는 중 오류 발생:', error);
-    //   }
-    // };
-    // fetchProfileData();
+      if (userRes.status === 'fulfilled') {
+        const userData = userRes.value.data.data;
+        const taskCountsData = taskCountsRes.status === 'fulfilled'
+          ? (taskCountsRes.value.data.data ?? []) : [];
+
+        const completed = taskCountsData.reduce((sum, p) => sum + (p.completedTaskCount ?? 0), 0);
+        const total = taskCountsData.reduce((sum, p) => sum + (p.completedTaskCount ?? 0) + (p.incompleteTaskCount ?? 0), 0);
+
+        setUserInfo({
+          name: userData.name,
+          taskStats: { completed, total },
+        });
+        setProfileImageUrl(userData.profileImageUrl || null);
+      }
+
+      const manualProjectsData = manualProjectRes.status === 'fulfilled'
+        ? (manualProjectRes.value.data.data || []) : [];
+      const autoProjectsData = autoProjectRes.status === 'fulfilled'
+        ? (autoProjectRes.value.data.data || []) : [];
+
+      setProjects([
+        ...autoProjectsData.map((p) => ({
+          ...p,
+          title: p.projectName ?? p.title,
+          score: p.averageReviewScore ?? p.score ?? null,
+          isManual: false,
+        })),
+        ...manualProjectsData.map((p) => ({
+          ...p,
+          title: p.projectName ?? p.title,
+          isManual: true,
+        })),
+      ]);
+    };
+    fetchProfileData();
   }, []);
 
-  const handleAddProject = (newProject) => {
-    setProjects((prev) => [...prev, { id: Date.now(), ...newProject, isManual: true }]);
-
-    // TODO: 백엔드 연동 시 아래 코드로 교체
-    // try {
-    //   const res = await axios.post(`${BASE_URL}/user/me/projectHistories`, newProject);
-    //   const added = res.data.data;
-    //   setProjects((prev) => [...prev, { ...added, isManual: true }]);
-    // } catch (error) {
-    //   console.error('프로젝트 추가 중 오류 발생:', error);
-    // }
+  const handleImageClick = () => {
+    if (isEditing) fileInputRef.current?.click();
   };
 
-  const handleDeleteProject = (proj) => {
-    if (!proj.isManual) return;
-    setProjects((prev) => prev.filter((p) => p.id !== proj.id));
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-    // TODO: 백엔드 연동 시 아래 코드로 교체
-    // try {
-    //   await axios.delete(`${BASE_URL}/user/me/projectHistories/${proj.id}`);
-    //   setProjects((prev) => prev.filter((p) => p.id !== proj.id));
-    // } catch (error) {
-    //   console.error('프로젝트 삭제 중 오류 발생:', error);
-    // }
+    setProfileImageUrl(URL.createObjectURL(file));
+
+    const formData = new FormData();
+    formData.append('profileImage', file);
+
+    try {
+      const res = await apiClient.patch('/user/me', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      const updated = res.data.data;
+      if (updated?.profileImageUrl) setProfileImageUrl(updated.profileImageUrl);
+    } catch (error) {
+      console.error('프로필 이미지 업로드 실패:', error);
+    }
+  };
+
+  const handleAddProject = async (newProject) => {
+    try {
+      const res = await apiClient.post('/user/me/projectHistories', newProject);
+      const added = res.data.data;
+      setProjects((prev) => [...prev, {
+        ...added,
+        title: added.projectName ?? added.title,
+        isManual: true,
+      }]);
+    } catch (error) {
+      console.error('프로젝트 추가 중 오류 발생:', error);
+    }
+  };
+
+  const handleDeleteProject = async (proj) => {
+    if (!proj.isManual) return;
+    const historyId = proj.historyId ?? proj.id;
+    try {
+      await apiClient.delete(`/user/me/projectHistories/${historyId}`);
+      setProjects((prev) => prev.filter((p) => (p.historyId ?? p.id) !== historyId));
+    } catch (error) {
+      console.error('프로젝트 삭제 중 오류 발생:', error);
+    }
   };
 
   return (
@@ -97,7 +128,27 @@ const ProfilePage = () => {
       <section className="profile-main-card">
         <div className="profile-header-row">
           <div className="profile-user-info">
-            <Avatar alt="프로필" size="lg" />
+            <div
+              className={`profile-avatar-wrap${isEditing ? ' profile-avatar-wrap--editable' : ''}`}
+              onClick={handleImageClick}
+            >
+              <Avatar src={profileImageUrl} alt="프로필" size="lg" />
+              {isEditing && (
+                <div className="profile-avatar-overlay">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 20H21" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                    <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+              )}
+            </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              style={{ display: 'none' }}
+              onChange={handleImageChange}
+            />
             <div className="profile-name-block">
               <h2 className="user-name-text">{userInfo.name}</h2>
             </div>
@@ -118,7 +169,7 @@ const ProfilePage = () => {
             {[...projects]
               .sort((a, b) => (a.endDate ? 1 : -1) - (b.endDate ? 1 : -1))
               .map((proj) => (
-                <div key={proj.id} className="project-experience-row">
+                <div key={proj.historyId ?? proj.id ?? proj.projectId} className="project-experience-row">
                   <div className="proj-row-inner">
                     <div className="proj-name-group">
                       <span className="proj-title">{proj.title}</span>

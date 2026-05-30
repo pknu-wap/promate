@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Avatar from '../../components/Avatar/Avatar';
-import ProjectCard from '../../components/ProjectCard/ProjectCard';
 import logoIcon from '../../assets/logoIcon.svg';
-import { getApplicationList, getApplicationDetail, updateApplicationStatus } from '../../api/RecruitApi';
+import {
+  getPendingApplications,
+  getAcceptedApplications,
+  getRejectedApplications,
+  getApplicationDetail,
+  updateApplicationStatus,
+} from '../../api/RecruitApi';
 import './Applicant.css';
 
 const tabs = [
@@ -18,44 +23,54 @@ const ApplicantDetail = () => {
   const projectTitle = state?.projectTitle ?? '프로젝트';
 
   const [activeTab, setActiveTab] = useState('PENDING');
-  const [applicantList, setApplicantList] = useState([]);
+  const [applicantMap, setApplicantMap] = useState({ PENDING: [], ACCEPTED: [], REJECTED: [] });
   const [selectedApplicant, setSelectedApplicant] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!recruitmentId) return;
     setLoading(true);
-    getApplicationList(recruitmentId)
-      .then((res) => {
-        console.log('지원자 목록 응답:', res.data);
-        const list = Array.isArray(res.data) ? res.data : res.data.data ?? res.data.content ?? [];
-        setApplicantList(list);
-      })
-      .catch((err) => console.error('지원자 목록 조회 실패', err))
-      .finally(() => setLoading(false));
+
+    Promise.allSettled([
+      getPendingApplications(recruitmentId),
+      getAcceptedApplications(recruitmentId),
+      getRejectedApplications(recruitmentId),
+    ]).then(([pendingRes, acceptedRes, rejectedRes]) => {
+      const extract = (res) =>
+        res.status === 'fulfilled' ? (res.value.data?.data?.applicants ?? []) : [];
+
+      setApplicantMap({
+        PENDING: extract(pendingRes),
+        ACCEPTED: extract(acceptedRes),
+        REJECTED: extract(rejectedRes),
+      });
+    }).finally(() => setLoading(false));
   }, [recruitmentId]);
 
   const handleViewDetail = (person) => {
     getApplicationDetail(recruitmentId, person.applicationId)
-      .then((res) => setSelectedApplicant(res.data))
+      .then((res) => setSelectedApplicant(res.data?.data ?? res.data))
       .catch((err) => console.error('지원서 조회 실패', err));
   };
 
   const handleStatusChange = (applicationId, status) => {
     updateApplicationStatus(recruitmentId, applicationId, status)
       .then(() => {
-        setApplicantList((prev) =>
-          prev.map((p) =>
-            p.applicationId === applicationId ? { ...p, status } : p
-          )
-        );
+        setApplicantMap((prev) => {
+          const updated = { ...prev };
+          Object.keys(updated).forEach((tab) => {
+            updated[tab] = updated[tab].map((p) =>
+              p.applicationId === applicationId ? { ...p, status } : p
+            );
+          });
+          return updated;
+        });
         setSelectedApplicant(null);
       })
       .catch((err) => console.error('상태 변경 실패', err));
   };
 
-  const filtered = applicantList.filter((p) => p.status === activeTab);
-
+  const filtered = applicantMap[activeTab] ?? [];
   const closePanel = () => setSelectedApplicant(null);
 
   return (
@@ -94,12 +109,12 @@ const ApplicantDetail = () => {
                 <span className="ad-name-text">{person.name}</span>
               </div>
               <div className="ad-cell ad-task-stat">
-                <span className="ad-task-num">{person.taskStats?.completed ?? '-'}</span>
+                <span className="ad-task-num">{person.completedTasks ?? '-'}</span>
                 <span className="ad-task-sep">/</span>
-                <span className="ad-task-total">{person.taskStats?.total ?? '-'}</span>
+                <span className="ad-task-total">{person.totalTasks ?? '-'}</span>
               </div>
               <span className="ad-cell ad-cell--date">
-                {person.appliedAt?.replace(/-/g, ' - ')}
+                {person.appliedAt?.slice(0, 10).replace(/-/g, ' - ')}
               </span>
               <button
                 className="ad-view-btn"
@@ -120,29 +135,46 @@ const ApplicantDetail = () => {
             <div className="app-panel-inner">
               <div className="app-panel-top">
                 <div className="app-profile-header">
-                  <Avatar size="lg" className="app-avatar-lg" />
+                  <Avatar
+                    src={selectedApplicant.applicant?.profileImageUrl}
+                    size="lg"
+                    className="app-avatar-lg"
+                  />
                   <div className="app-profile-text">
                     <div className="app-name-row">
-                      <span className="app-name">{selectedApplicant.name}</span>
+                      <span className="app-name">{selectedApplicant.applicant?.name}</span>
                       <div className="app-task-stat">
-                        <span className="app-task-num">{selectedApplicant.taskStats?.completed ?? '-'}</span>
-                        <span className="app-task-denom">/{selectedApplicant.taskStats?.total ?? '-'}</span>
+                        <span className="app-task-num">{selectedApplicant.applicant?.completedTasks ?? '-'}</span>
+                        <span className="app-task-denom">/{selectedApplicant.applicant?.totalTasks ?? '-'}</span>
                       </div>
                     </div>
+                    {selectedApplicant.contributionArea && (
+                      <span className="app-contribution">{selectedApplicant.contributionArea}</span>
+                    )}
+                    {selectedApplicant.introduction && (
+                      <p className="app-introduction">{selectedApplicant.introduction}</p>
+                    )}
                   </div>
                 </div>
 
                 <div className="app-projects-section">
                   <span className="app-projects-title">프로젝트 경험</span>
                   <div className="app-projects-list">
-                    {selectedApplicant.projects?.map((proj, i) => (
-                      <ProjectCard
-                        key={i}
-                        name={proj.name}
-                        role={proj.role}
-                        status={proj.status}
-                        score={proj.score}
-                      />
+                    {selectedApplicant.pastProjects?.map((proj, i) => (
+                      <div key={i} className="app-project-item">
+                        <span className="app-project-title">{proj.title}</span>
+                        <span className="app-project-type">{proj.type === 'PROMATE' ? 'ProMate' : '직접 입력'}</span>
+                        {proj.taskNames && (
+                          <ul className="app-task-list">
+                            {proj.taskNames.map((task, j) => (
+                              <li key={j}>{task}</li>
+                            ))}
+                          </ul>
+                        )}
+                        {proj.selfTaskDescription && (
+                          <p className="app-task-desc">{proj.selfTaskDescription}</p>
+                        )}
+                      </div>
                     ))}
                   </div>
                 </div>

@@ -1,7 +1,7 @@
 ﻿function ProjectNameField({ projectName, onProjectNameChange }) {
   return (
     <div className="form-field">
-      <label className="form-label">프로젝트 이름</label>
+      <label className="teammaking-form-label">프로젝트 이름</label>
       <input
         type="text"
         className="text-input"

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Sidebar.css';
 import SidebarItem from "./SidebarItem";
 
@@ -14,6 +15,13 @@ import projectOrangeIcon from "../../assets/icons/projectOrangeIcon.svg";
 import profileOrangeIcon from "../../assets/icons/profileOrangeIcon.svg";
 
 function Sidebar({ isOpen, onClose }) {
+  const navigate = useNavigate();
+
+  const handleNewProjectClick = () => {
+    navigate('/teammaking');
+    if (onClose) onClose();
+  };
+
   return (
     <>
       {isOpen && <div className="sidebar-overlay" onClick={onClose}></div>}
@@ -59,7 +67,7 @@ function Sidebar({ isOpen, onClose }) {
 
         <hr className="divider" />
 
-        <button className="new-project-btn">
+        <button className="new-project-btn" onClick={handleNewProjectClick}>
           + 새 프로젝트 생성
         </button>
 

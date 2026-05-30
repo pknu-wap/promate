@@ -3,16 +3,13 @@ import moreIcon from '../../assets/moreIcon.svg';
 import './SummaryCard.css';
 import { getDiffDays } from '../../pages/DashboardPage/components/DateUtils';
 
-function SummaryCard({ title, count, items = [], showDot, onItemClick, onHeaderClick }) {
+function SummaryCard({ title, count, items = [], showDot, onItemClick }) {
   const [isExpanded, setIsExpanded] = useState(() => window.innerWidth > 768);
   const [visibleCount, setVisibleCount] = useState(3);
 
   //카드 헤더 클릭 시 리스트를 접거나 펼쳐짐, 접을 때 표시 개수를 초기값으로 리셋
   const toggleExpand = () => {
-    if (onHeaderClick) {
-      onHeaderClick();
-      return;
-    }
+    if (items.length === 0) return;
 
     setIsExpanded((prevIsExpanded) => {
       if (prevIsExpanded) {
@@ -27,13 +24,6 @@ function SummaryCard({ title, count, items = [], showDot, onItemClick, onHeaderC
     setVisibleCount((prevCount) => prevCount + 3);
   };
 
-  const handleHeaderKeyDown = (event) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      toggleExpand();
-    }
-  };
-
   const getDotColor = (date) => {
     if (!date) return '#80D366';
 
@@ -45,23 +35,18 @@ function SummaryCard({ title, count, items = [], showDot, onItemClick, onHeaderC
   };
 
   const visibleItems = items.slice(0, visibleCount);
+  const effectivelyExpanded = isExpanded && items.length > 0;
 
   return (
-    <div className={`summary-card ${isExpanded ? '' : 'collapsed'}`}>
-      <div
-        className="summary-header"
-        role="button"
-        tabIndex={0}
-        onClick={toggleExpand}
-        onKeyDown={handleHeaderKeyDown}
-      >
+    <div className={`summary-card ${effectivelyExpanded ? '' : 'collapsed'}`}>
+      <div className="summary-header" onClick={toggleExpand} style={items.length === 0 ? { cursor: 'default' } : undefined}>
         <h3 className="summary-title">{title}</h3>
         <div className="summary-count">
           <span className="count-number">{count}</span>개
         </div>
       </div>
 
-      {isExpanded && (
+      {effectivelyExpanded && (
         <>
           <ul className="summary-list">
             {visibleItems.map((item) => (

@@ -1,9 +1,60 @@
-import React from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./ProfileModal.css";
 import closeIcon from "../../assets/icons/closeIcon.svg";
 import ProfileAvatar from "../ProfileAvatar/ProfileAvatar";
 
 function ProfileModal({ isOpen, onClose, user, position }) {
+  const [modalPos, setModalPos] = useState({ top: 0, left: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const dragPos = useRef({ startX: 0, startY: 0, initialTop: 0, initialLeft: 0 });
+
+  useEffect(() => {
+    if (position) {
+      setModalPos({
+        top: position.top + 225,
+        left: position.left + 100,
+      });
+    }
+  }, [position]);
+
+  const handleMouseMove = useCallback((e) => {
+    const deltaX = e.clientX - dragPos.current.startX;
+    const deltaY = e.clientY - dragPos.current.startY;
+    
+    setModalPos({
+      top: dragPos.current.initialTop + deltaY,
+      left: dragPos.current.initialLeft + deltaX,
+    });
+  }, []);
+
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false);
+    document.removeEventListener("mousemove", handleMouseMove);
+    document.removeEventListener("mouseup", handleMouseUp);
+  }, [handleMouseMove]);
+
+  const handleMouseDown = (e) => {
+    if (e.target.closest("button") || e.target.closest(".profile-project-list")) return;
+
+    setIsDragging(true);
+    dragPos.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      initialTop: modalPos.top,
+      initialLeft: modalPos.left,
+    };
+
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+  };
+
+  useEffect(() => {
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [handleMouseMove, handleMouseUp]);
+
   if (!isOpen) return null;
 
   const projects = user?.projects ?? [
@@ -41,17 +92,24 @@ function ProfileModal({ isOpen, onClose, user, position }) {
 
   const popoverStyle = position ? {
     position: "fixed",
-    top: `${position.top + 48}px`,
-    left: `${position.left + 100}px`,
+    top: `${modalPos.top}px`,
+    left: `${modalPos.left}px`,
     transform: "translate(0, -100%)",
-    margin: 0
+    margin: 0,
+    cursor: isDragging ? "grabbing" : "grab",
+    userSelect: isDragging ? "none" : "auto",
   } : {};
 
   return (
     <>
       <div className="profile-popover-backdrop" onClick={onClose} />
 
-      <div className="profile-popover" onClick={(e) => e.stopPropagation()} style={popoverStyle}>
+      <div 
+        className="profile-popover" 
+        onClick={(e) => e.stopPropagation()} 
+        onMouseDown={handleMouseDown}
+        style={popoverStyle}
+      >
         <button className="profile-close-x-btn" onClick={onClose} aria-label="닫기">
             <img src={closeIcon} alt="닫기 아이콘" />
         </button>

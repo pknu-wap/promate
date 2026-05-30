@@ -26,7 +26,7 @@ function ApplyModal({
           try {
             const response = await getApplicationForm(recruitmentId);
             if (response.isSuccess) {
-              setFetchedTitle(response.data.RecruitmentTitle);
+              setFetchedTitle(response.data.recruitmentTitle);
             }
           } catch (error) {
             console.error("지원서 작성용 데이터 로드 실패:", error);
@@ -49,8 +49,7 @@ function ApplyModal({
     try {
       const applicationData = {
         objective: job,
-        prContent: motivation,
-        selectedProjectIds: []
+        prContent: motivation
       };
 
       const response = await postApplication(recruitmentId, applicationData);

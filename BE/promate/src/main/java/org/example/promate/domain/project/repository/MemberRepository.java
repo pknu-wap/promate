@@ -31,7 +31,7 @@ public interface MemberRepository extends JpaRepository<Member,Long> {
             @Param("status") ProjectStatus status
     );
 
-    Optional<Member> findByUserId(Long userId);
+    List<Member> findByUserId(Long userId);
 
     List<Member> findAllByProjectIdAndIsDeletedFalse(Long projectId);
 

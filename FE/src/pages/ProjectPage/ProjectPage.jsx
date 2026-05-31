@@ -275,6 +275,12 @@ function ProjectPage() {
                   alert('불합격한 프로젝트는 상세 내역에 접근할 수 없습니다.');
                   return;
                 }
+
+                if (activeTab === 'completed' || project.status === 'completed') {
+                  navigate(`/project/${project.projectId || targetId}`);
+                  return;
+                }
+                
                 navigate(`/readme/${targetId}`, { state: project });
               };
 

@@ -47,9 +47,10 @@ const ApplicantList = () => {
       <section className="al-list">
         {!loading && currentRecruitments.map((recruitment) => {
           const isClosed = recruitment.status === 'COMPLETED' || recruitment.status === 'CANCELLED';
+          const targetId = recruitment.recruitmentId || recruitment.id || recruitment.postId;
           return (
             <ApplicantBox
-              key={recruitment.postId}
+              key={targetId}
               title={recruitment.title}
               summary={CATEGORY_LABEL[recruitment.category] ?? recruitment.category}
               capacity={recruitment.maxMember}
@@ -57,13 +58,14 @@ const ApplicantList = () => {
               buttonText={isClosed ? '모집 마감' : '지원자 검토'}
               buttonColor={isClosed ? '#D9D9D9' : '#FE9A57'}
               disabled={isClosed}
+              onClick={() => navigate(`/readme/${targetId}`, { state: recruitment })}
               onButtonClick={
                 isClosed
                   ? undefined
                   : () =>
                       navigate('/applicant/detail', {
                         state: {
-                          recruitmentId: recruitment.postId,
+                          recruitmentId: targetId,
                           projectTitle: recruitment.title,
                         },
                       })

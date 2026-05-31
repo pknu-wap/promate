@@ -162,7 +162,7 @@ function ProjectReadMePage() {
             <div className="project-readme-team-role">팀원</div>
             <div className="project-readme-team-members-list">
               <span className="project-readme-team-member-name recruiting">
-                {projectData.applicantCount || 0}명 지원 중
+                {projectData.applicantCount || 0}명 모집중
               </span>
             </div>
           </div>

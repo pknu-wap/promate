@@ -45,6 +45,11 @@ apiClient.interceptors.response.use(
     } else if (error.response && error.response.status === 403) {
       console.warn("API 접근 권한이 없습니다 (403 Forbidden). 요청 url:", error.config?.url);
     }
+
+    if (error.response?.data?.message) {
+      return Promise.reject(new Error(error.response.data.message));
+    }
+
     return Promise.reject(error);
   }
 );

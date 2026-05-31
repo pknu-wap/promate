@@ -142,6 +142,8 @@ function DashboardPage() {
     setVisibleStatusCount((prevCount) => prevCount + 3);
   };
 
+  const isAllEmpty = summaryCards.every((card) => card.items.length === 0);
+
   if (isLoading) {
     return (
       <div className="dashboard-container">
@@ -165,6 +167,7 @@ function DashboardPage() {
               items={items}
               showDot={showDot}
               isError={isError}
+            isAllEmpty={isAllEmpty}
               onItemClick={(item) => navigate(`/project/${item.projectId || item.id}`)}
             />
           ))}

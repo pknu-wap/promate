@@ -20,19 +20,6 @@
   box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.14);
 }
 
-.profile-popover::before {
-  content: "";
-  position: absolute;
-  top: -8px;
-  left: 30px;
-
-  width: 16px;
-  height: 16px;
-
-  background: #ffffff;
-  transform: rotate(45deg);
-}
-
 .profile-popover-header {
   display: flex;
   justify-content: space-between;

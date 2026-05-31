@@ -275,7 +275,13 @@ function ProjectPage() {
                   alert('불합격한 프로젝트는 상세 내역에 접근할 수 없습니다.');
                   return;
                 }
-                navigate(`/project/${targetId}`);
+
+                if (activeTab === 'completed' || project.status === 'completed') {
+                  navigate(`/project/${project.projectId || targetId}`);
+                  return;
+                }
+                
+                navigate(`/readme/${targetId}`, { state: project });
               };
 
               const handleButtonClick = () => {
@@ -327,6 +333,7 @@ function ProjectPage() {
         onClose={handleCloseApplyModal}
         onSubmit={() => {
           console.log('지원하기 제출:', selectedProjectForApply?.title, applyJob, applyMotivation);
+          alert('지원이 완료되었습니다.');
           handleCloseApplyModal();
         }}
         projectName={selectedProjectForApply?.title || ''}

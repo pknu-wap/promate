@@ -1,148 +1,112 @@
-import { useMemo, useState } from "react";
-import logoIcon from "../../assets/logoIcon.svg";
+import { useMemo, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import ApplyModal from "../../components/ApplyModal/ApplyModal.jsx";
 import Badge from "../../components/Badge/Badge.jsx";
-import MainButton from "../../components/MainButton/MainButton.jsx";
+import ApplicantBox from "../../components/ApplicantBox/ApplicantBox.jsx";
+import Pagination from "../../components/Pagination/Pagination.jsx";
+import apiClient from "../../api/apiClient.js";
 import "./FindTeamPage.css";
 
-const KOREAN_INITIALS = [
-  "ㄱ",
-  "ㄲ",
-  "ㄴ",
-  "ㄷ",
-  "ㄸ",
-  "ㄹ",
-  "ㅁ",
-  "ㅂ",
-  "ㅃ",
-  "ㅅ",
-  "ㅆ",
-  "ㅇ",
-  "ㅈ",
-  "ㅉ",
-  "ㅊ",
-  "ㅋ",
-  "ㅌ",
-  "ㅍ",
-  "ㅎ",
-];
-
 const categories = [
-  { id: "assignment", label: "조별과제" },
-  { id: "study", label: "스터디" },
-  { id: "contest", label: "공모전" },
-  { id: "development", label: "개발" },
-  { id: "etc", label: "기타" },
+  { id: "PROJECT", label: "조별과제" },
+  { id: "STUDY", label: "스터디" },
+  { id: "CONTEST", label: "공모전" },
+  { id: "DEV", label: "개발" },
+  { id: "ETC", label: "기타" },
 ];
-
-const mockTeamPosts = [
-  {
-    id: 1,
-    category: "assignment",
-    title: "캡스톤 디자인",
-    summary: "안녕하세요. WAP 화이팅",
-    capacity: 4,
-    bookmarked: false,
-    applied: false,
-  },
-  {
-    id: 2,
-    category: "assignment",
-    title: "인공지능 개발",
-    summary: "인공지능 프로젝트에 참여할 팀원을 모집합니다",
-    capacity: 4,
-    bookmarked: false,
-    applied: false,
-  },
-  {
-    id: 3,
-    category: "assignment",
-    title: "캡스톤 디자인",
-    summary: "안녕하세요. WAP 화이팅",
-    capacity: 4,
-    bookmarked: false,
-    applied: false,
-  },
-  {
-    id: 4,
-    category: "assignment",
-    title: "캡스톤 디자인",
-    summary: "안녕하세요. WAP 화이팅",
-    capacity: 4,
-    bookmarked: false,
-    applied: false,
-  },
-  {
-    id: 5,
-    category: "assignment",
-    title: "캡스톤 디자인",
-    summary: "안녕하세요. WAP 화이팅",
-    capacity: 4,
-    bookmarked: false,
-    applied: false,
-  },
-];
-
-const getInitialConsonants = (text) =>
-  Array.from(text)
-    .map((char) => {
-      const code = char.charCodeAt(0);
-
-      if (code < 0xac00 || code > 0xd7a3) {
-        return char;
-      }
-
-      const initialIndex = Math.floor((code - 0xac00) / 588);
-      return KOREAN_INITIALS[initialIndex];
-    })
-    .join("");
-
-const normalizeSearchText = (text) => text.toLowerCase().replace(/\s+/g, "");
-
-const isMatchedTeam = (team, keyword) => {
-  if (keyword.length === 0) {
-    return true;
-  }
-
-  const searchableText = `${team.title} ${team.summary}`;
-  const normalizedKeyword = normalizeSearchText(keyword);
-  const normalizedSearchableText = normalizeSearchText(searchableText);
-  const initialSearchableText = normalizeSearchText(
-    getInitialConsonants(searchableText),
-  );
-
-  return (
-    normalizedSearchableText.includes(normalizedKeyword) ||
-    initialSearchableText.includes(normalizedKeyword)
-  );
-};
 
 function FindTeamPage() {
-  const [selectedCategory, setSelectedCategory] = useState("assignment");
-  const [teamPosts, setTeamPosts] = useState(mockTeamPosts);
+  const navigate = useNavigate();
+  const [selectedCategory, setSelectedCategory] = useState("PROJECT");
+  const [teamPosts, setTeamPosts] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [debouncedKeyword, setDebouncedKeyword] = useState("");
   const [selectedTeamId, setSelectedTeamId] = useState(null);
   const [job, setJob] = useState("");
   const [motivation, setMotivation] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const ITEMS_PER_PAGE = 10;
 
-  const filteredTeamPosts = useMemo(() => {
-    const keyword = searchKeyword.trim();
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedKeyword(searchKeyword);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [searchKeyword]);
 
-    return teamPosts.filter(
-      (team) =>
-        team.category === selectedCategory && isMatchedTeam(team, keyword),
-    );
-  }, [selectedCategory, searchKeyword, teamPosts]);
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, debouncedKeyword]);
+
+  useEffect(() => {
+    const fetchRecruitments = async () => {
+      try {
+        const params = {
+          page: currentPage - 1,
+          size: ITEMS_PER_PAGE,
+          sort: "createdAt,desc",
+        };
+
+        if (selectedCategory) {
+          params.category = selectedCategory;
+        }
+
+        if (debouncedKeyword.trim()) {
+          params.search = debouncedKeyword.trim();
+        }
+
+        const response = await apiClient.get("/recruitments", { params });
+
+        if (response.data && response.data.isSuccess) {
+          const { content, pageInfo } = response.data.data;
+
+          const mappedData = content.map((item) => {
+            let mappedStatus = null;
+            if (item.myApplyStatus === "PENDING") mappedStatus = "reviewing";
+            else if (item.myApplyStatus === "ACCEPTED") mappedStatus = "accepted";
+            else if (item.myApplyStatus === "REJECTED") mappedStatus = "rejected";
+
+            return {
+              id: item.recruitmentId,
+              title: item.title,
+              summary: item.description || "",
+              capacity: item.maxMember,
+              category: item.category,
+              bookmarked: false,
+              applied: item.myApplyStatus !== null,
+              applyStatus: mappedStatus,
+            };
+          });
+
+          setTeamPosts(mappedData);
+          setTotalPages(pageInfo.totalPages === 0 ? 1 : pageInfo.totalPages);
+        }
+      } catch (error) {
+        console.error("모집글 조회 실패:", error);
+      }
+    };
+
+    fetchRecruitments();
+  }, [selectedCategory, debouncedKeyword, currentPage]);
 
   const selectedTeam = teamPosts.find((team) => team.id === selectedTeamId);
   const isApplyModalOpen = selectedTeamId !== null;
 
-  const handleToggleBookmark = (teamId) => {
-    setTeamPosts((prevTeamPosts) =>
-      prevTeamPosts.map((team) =>
-        team.id === teamId ? { ...team, bookmarked: !team.bookmarked } : team,
-      ),
-    );
+  const handleToggleBookmark = async (teamId) => {
+    try {
+      const response = await apiClient.post(`/recruitments/${teamId}/bookmark`);
+      const { isBookmarked } = response.data.data;
+
+      setTeamPosts((prevTeamPosts) =>
+        prevTeamPosts.map((team) =>
+          team.id === teamId ? { ...team, bookmarked: isBookmarked } : team,
+        ),
+      );
+    } catch (error) {
+      console.error("북마크 설정/해제 실패:", error);
+      alert(error.message || "관심 설정 중 오류가 발생했습니다.");
+    }
   };
 
   const handleOpenApplyModal = (teamId) => {
@@ -162,9 +126,12 @@ function FindTeamPage() {
 
     setTeamPosts((prevTeamPosts) =>
       prevTeamPosts.map((team) =>
-        team.id === selectedTeamId ? { ...team, applied: true } : team,
+        team.id === selectedTeamId
+          ? { ...team, applied: true, applyStatus: "reviewing" }
+          : team,
       ),
     );
+    alert('지원이 완료되었습니다.');
     handleCloseApplyModal();
   };
 
@@ -197,47 +164,58 @@ function FindTeamPage() {
       </div>
 
       <section className="find-team-list" aria-label="팀 목록">
-        {filteredTeamPosts.length > 0 ? (
-          filteredTeamPosts.map((team) => (
-            <article className="find-team-card" key={team.id}>
-              <div className="find-team-logo-box">
-                <img src={logoIcon} alt={`${team.title} 로고`} />
-              </div>
+        {teamPosts.length > 0 ? (
+          teamPosts.map((team) => {
+            let buttonText = "지원하기";
+            let buttonColor = "#FE9A57";
+            let buttonTextColor = "#FFFFFF";
+            let isDisabled = false;
 
-              <div className="find-team-content">
-                <div className="find-team-heading">
-                  <h2>{team.title}</h2>
-                </div>
-                <p>{team.summary}</p>
-              </div>
+            if (team.applyStatus === "accepted") {
+              buttonText = "합격";
+              buttonColor = "#FFEBDE";
+              buttonTextColor = "#FE9A57";
+              isDisabled = true;
+            } else if (team.applyStatus === "rejected") {
+              buttonText = "불합격";
+              buttonColor = "#D9D9D9";
+              isDisabled = true;
+            } else if (team.applied) {
+              buttonText = "심사중";
+              buttonColor = "#D9D9D9";
+              isDisabled = true;
+            }
 
-              <div className="find-team-actions">
-                <span>모집인원: {team.capacity}명</span>
-                <div className="find-team-action-row">
-                  <button
-                    type="button"
-                    className={`find-team-bookmark ${team.bookmarked ? "is-active" : ""}`}
-                    aria-label={team.bookmarked ? "즐겨찾기 해제" : "즐겨찾기 추가"}
-                    aria-pressed={team.bookmarked}
-                    onClick={() => handleToggleBookmark(team.id)}
-                  >
-                    <span aria-hidden="true" />
-                  </button>
-                  <MainButton
-                    className={`find-team-apply-button ${team.applied ? "is-applied" : ""}`}
-                    onClick={() => handleOpenApplyModal(team.id)}
-                    aria-pressed={team.applied}
-                  >
-                    {team.applied ? "지원 완료" : "지원하기"}
-                  </MainButton>
-                </div>
-              </div>
-            </article>
-          ))
+            return (
+              <ApplicantBox
+                key={team.id}
+                title={team.title}
+                summary={team.summary}
+                capacity={team.capacity}
+                isBookmarked={team.bookmarked}
+                buttonText={buttonText}
+                buttonColor={buttonColor}
+                buttonTextColor={buttonTextColor}
+                onButtonClick={() => {
+                  if (!isDisabled) handleOpenApplyModal(team.id);
+                }}
+                onBookmarkClick={() => handleToggleBookmark(team.id)}
+              onClick={() => navigate(`/readme/${team.id}`, { state: team })}
+              />
+            );
+          })
         ) : (
-          <div className="find-team-empty">해당 카테고리에 모집 중인 팀이 없습니다.</div>
+          <div className="find-team-empty">해당 카테고리에 모집중인 팀이 없습니다.</div>
         )}
       </section>
+
+      {teamPosts.length > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+      )}
 
       <ApplyModal
         isOpen={isApplyModalOpen}

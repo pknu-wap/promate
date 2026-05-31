@@ -42,7 +42,7 @@ const AddProjectModal = ({ onClose, onAdd }) => {
       return;
     }
     onAdd({
-      title: projectName.trim(),
+      projectName: projectName.trim(),
       description: description.trim(),
       role: role.trim() || null,
       startDate,

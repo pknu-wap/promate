@@ -1,5 +1,25 @@
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css');
 
+.profile-avatar-wrap {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.profile-avatar-wrap--editable {
+  cursor: pointer;
+}
+
+.profile-avatar-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .page-wrapper {
   overflow-x: hidden;
   min-height: 100%;
@@ -370,6 +390,23 @@
   transition: background 0.15s, color 0.15s;
 }
 .proj-delete-btn:hover { background: #ffe0d0; color: #e05a20; }
+
+.proj-edit-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: #ABABAB;
+  font-size: 14px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+.proj-edit-btn:hover { background: #e0edff; color: #3a7bd5; }
 
 .proj-add-row-btn {
   display: flex;

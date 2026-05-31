@@ -7,10 +7,10 @@ import apiClient from '../../api/apiClient';
 import './ProjectReadMePage.css';
 
 const categoryMap = {
-  ASSIGNMENT: "조별과제",
+  PROJECT: "조별과제",
   STUDY: "스터디",
   CONTEST: "공모전",
-  DEVELOPMENT: "개발",
+  DEV: "개발",
   ETC: "기타"
 };
 

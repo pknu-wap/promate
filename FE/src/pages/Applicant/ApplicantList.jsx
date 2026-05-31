@@ -18,6 +18,13 @@ const ApplicantList = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      alert('로그인이 필요한 서비스입니다.');
+      navigate(-1);
+      return;
+    }
+
     setLoading(true);
     getMyRecruitments()
       .then((res) => {
@@ -26,7 +33,7 @@ const ApplicantList = () => {
       })
       .catch((err) => console.error('모집글 목록 조회 실패', err))
       .finally(() => setLoading(false));
-  }, []);
+  }, [navigate]);
 
   return (
     <main className="al-page">

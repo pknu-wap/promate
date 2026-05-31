@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import checkIcon from '../../assets/icons/checkIcon.svg';
 import './MemberReview.css';
-import Badge from "../../components/Badge/Badge.jsx";
+import Tag from "../../components/Tag/Tag.jsx";
 
 const questions = [
   'OOO 팀원은 프로젝트 진행 과정에서 원활하게 소통했는가?',
@@ -52,13 +52,13 @@ function MemberReviewPage() {
       
           <div className="domain-tags">
             {domainOptions.map((option) => (
-              <Badge
+              <Tag
                 key={option.id}
-                selected={selectedDomain === option.id}
+                isActive={selectedDomain === option.id}
                 onClick={() => handleDomainChange(option.id)}
               >
                 {option.label}
-              </Badge>
+              </Tag>
             ))}
           </div>
         </div>

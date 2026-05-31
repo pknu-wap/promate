@@ -131,8 +131,6 @@ function FindTeamPage() {
           : team,
       ),
     );
-    alert('지원이 완료되었습니다.');
-    handleCloseApplyModal();
   };
 
   return (
@@ -221,6 +219,7 @@ function FindTeamPage() {
         isOpen={isApplyModalOpen}
         onClose={handleCloseApplyModal}
         onSubmit={handleSubmitApply}
+        recruitmentId={selectedTeamId}
         projectName={selectedTeam?.title ?? ""}
         job={job}
         motivation={motivation}

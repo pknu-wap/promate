@@ -85,10 +85,10 @@ function TeamPage() {
   ]);
 
   const [members] = useState([
-    { id: 1, name: '홍길동', role: 'PM' },
-    { id: 2, name: '김철수', role: 'UIUX' },
-    { id: 3, name: '김영희', role: 'FE' },
-    { id: 4, name: '김영희', role: 'FE' },
+    { id: 1, name: '홍길동' },
+    { id: 2, name: '김철수' },
+    { id: 3, name: '김영희' },
+    { id: 4, name: '김영희' },
   ]);
 
   const [isTaskExpanded, setIsTaskExpanded] = useState(false);

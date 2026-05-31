@@ -49,10 +49,17 @@
   margin: 0;
 }
 
+.project-readme-date-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  margin-left: auto;
+}
+
 .project-readme-created-at {
   font-size: 13px;
   color: #909090;
-  margin-left: auto;
 }
 
 .project-readme-apply-container {
@@ -222,8 +229,9 @@
     align-items: flex-start;
     gap: 5px;
   }
-  .project-readme-created-at {
+  .project-readme-date-container {
     margin-left: 0;
+    align-items: flex-start;
   }
   .project-readme-tag:not(.active) {
     display: none;

@@ -124,9 +124,16 @@ function ProjectReadMePage() {
       <div className="project-readme-info-section">
         <div className="project-readme-header-row">
           <h1 className="project-readme-title">{projectData.title}</h1>
-          <span className="project-readme-created-at">
-            작성일: {projectData.createdAt?.split('T')[0]}
-          </span>
+          <div className="project-readme-date-container">
+            <span className="project-readme-created-at">
+              작성일: {projectData.createdAt?.split('T')[0]}
+            </span>
+            {projectData.startDate && projectData.endDate && (
+              <span className="project-readme-created-at">
+                프로젝트 기간: {projectData.startDate} ~ {projectData.endDate}
+              </span>
+            )}
+          </div>
         </div>
 
         <div className="project-readme-tags">
@@ -162,7 +169,7 @@ function ProjectReadMePage() {
             <div className="project-readme-team-role">팀원</div>
             <div className="project-readme-team-members-list">
               <span className="project-readme-team-member-name recruiting">
-                {projectData.applicantCount || 0}명 모집중
+                {projectData.totalSlots || 0}명 모집중
               </span>
             </div>
           </div>

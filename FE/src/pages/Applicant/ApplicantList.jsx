@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ApplicantBox from '../../components/ApplicantBox/ApplicantBox';
+import Pagination from '../../components/Pagination/Pagination';
 import { getMyRecruitments } from '../../api/RecruitApi';
 import './Applicant.css';
 
@@ -12,10 +13,13 @@ const CATEGORY_LABEL = {
   ETC: '기타',
 };
 
+const ITEMS_PER_PAGE = 10;
+
 const ApplicantList = () => {
   const navigate = useNavigate();
   const [recruitments, setRecruitments] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     setLoading(true);
@@ -28,6 +32,12 @@ const ApplicantList = () => {
       .finally(() => setLoading(false));
   }, []);
 
+  const totalPages = Math.ceil(recruitments.length / ITEMS_PER_PAGE);
+  const currentRecruitments = recruitments.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
   return (
     <main className="al-page">
       <h1 className="al-title">지원자 검토</h1>
@@ -35,7 +45,7 @@ const ApplicantList = () => {
       {loading && <p style={{ padding: '20px' }}>불러오는 중...</p>}
 
       <section className="al-list">
-        {recruitments.map((recruitment) => {
+        {!loading && currentRecruitments.map((recruitment) => {
           const isClosed = recruitment.status === 'COMPLETED' || recruitment.status === 'CANCELLED';
           return (
             <ApplicantBox
@@ -62,6 +72,14 @@ const ApplicantList = () => {
           );
         })}
       </section>
+
+      {!loading && recruitments.length > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+      )}
     </main>
   );
 };

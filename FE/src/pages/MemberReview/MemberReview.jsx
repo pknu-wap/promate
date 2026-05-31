@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams, useLocation, useSearchParams } from 'react-router-dom';
 import checkIcon from '../../assets/icons/checkIcon.svg';
 import './MemberReview.css';
 import Badge from "../../components/Badge/Badge.jsx";
+import apiClient from '../../api/apiClient';
 
 const questions = [
   'OOO 팀원은 프로젝트 진행 과정에서 원활하게 소통했는가?',
@@ -13,21 +15,52 @@ const questions = [
 const defaultScores = [5, 5, 5, 5];
 
 function MemberReviewPage() {
+  const { projectId: paramProjectId } = useParams();
+  const [searchParams] = useSearchParams();
+  const location = useLocation();
+  
+  const projectId = paramProjectId || searchParams.get('projectId') || location.state?.projectId;
+
   const [scores, setScores] = useState(defaultScores);
   const [comment, setComment] = useState('');
   
-  // 1. 초기값을 option의 id 규격에 맞춰 "1"(김일번)로 수정합니다.
-  const [selectedDomain, setSelectedDomain] = useState("1");
+  const [selectedDomain, setSelectedDomain] = useState("");
+  const [domainOptions, setDomainOptions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const domainOptions = [
-    { id: "1", label: "김일번" },
-    { id: "2", label: "김이번" },
-    { id: "3", label: "김삼번" },
-    { id: "4", label: "김사번" },
-    { id: "5", label: "김오번" },
-  ];
+  useEffect(() => {
+    const fetchReviewTargets = async () => {
+      try {
+        setIsLoading(true);
+        setErrorMessage("");
+        const response = await apiClient.get(`/projects/${projectId}/reviews/targets`);
+        if (response.data && response.data.isSuccess) {
+          const targets = response.data.data.map(target => ({
+            id: String(target.revieweeId),
+            label: target.name || target.nickname || "알 수 없음"
+          }));
+          setDomainOptions(targets);
+          if (targets.length > 0) {
+            setSelectedDomain(targets[0].id);
+          }
+        }
+      } catch (error) {
+        console.error('평가 대상자 조회 실패:', error);
+        setErrorMessage(error.message || '팀원 목록을 불러오는데 실패했습니다.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  // 라디오 버튼 점수 변경 핸들러
+    if (projectId) {
+      fetchReviewTargets();
+    } else {
+      setErrorMessage("프로젝트 정보를 찾을 수 없습니다.");
+      setIsLoading(false);
+    }
+  }, [projectId]);
+
   const handleScoreChange = (questionIndex, score) => {
     setScores((prevScores) =>
       prevScores.map((prevScore, index) => (index === questionIndex ? score : prevScore))
@@ -43,6 +76,20 @@ function MemberReviewPage() {
     setComment('');
   };
 
+  if (isLoading) {
+    return <div className="member-review-page"><div style={{ padding: '40px', textAlign: 'center' }}>데이터를 불러오는 중입니다...</div></div>;
+  }
+
+  if (errorMessage) {
+    return (
+      <div className="member-review-page">
+        <div style={{ padding: '40px', textAlign: 'center', color: '#DE0000', fontWeight: 'bold' }}>{errorMessage}</div>
+      </div>
+    );
+  }
+
+  const selectedTargetName = domainOptions.find(opt => opt.id === selectedDomain)?.label || '해당';
+
   return (
     <div className="member-review-page">
       <h1 className="member-review-title">상호 평가 - 캡스톤 디자인</h1>
@@ -51,15 +98,19 @@ function MemberReviewPage() {
         <div className="form-field">
       
           <div className="domain-tags">
-            {domainOptions.map((option) => (
-              <Badge
-                key={option.id}
-                selected={selectedDomain === option.id}
-                onClick={() => handleDomainChange(option.id)}
-              >
-                {option.label}
-              </Badge>
-            ))}
+            {domainOptions.length > 0 ? (
+              domainOptions.map((option) => (
+                <Badge
+                  key={option.id}
+                  selected={selectedDomain === option.id}
+                  onClick={() => handleDomainChange(option.id)}
+                >
+                  {option.label}
+                </Badge>
+              ))
+            ) : (
+              <span style={{ fontSize: '13px', color: '#909090', padding: '4px 0' }}>평가할 팀원이 없습니다.</span>
+            )}
           </div>
         </div>
 
@@ -67,7 +118,7 @@ function MemberReviewPage() {
           {questions.map((question, questionIndex) => (
             <fieldset className="member-review-question" key={question}>
               <legend>
-                {questionIndex + 1}. {question} <span aria-hidden="true">*</span>
+                {questionIndex + 1}. {question.replace('OOO', selectedTargetName)} <span aria-hidden="true">*</span>
               </legend>
 
               <div className="member-review-scale">

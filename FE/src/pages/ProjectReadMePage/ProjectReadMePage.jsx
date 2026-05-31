@@ -4,6 +4,7 @@ import logoGray from '../../assets/icons/logoGW.svg';
 import ProfileModal from '../../components/ProfileModal/ProfileModal';
 import ApplyModal from '../../components/ApplyModal/ApplyModal';
 import apiClient from '../../api/apiClient';
+import Tag from '../../components/Tag/Tag';
 import './ProjectReadMePage.css';
 
 const categoryMap = {
@@ -138,14 +139,13 @@ function ProjectReadMePage() {
 
         <div className="project-readme-tags">
           {categories.map((category) => (
-            <span
+            <Tag
               key={category.id}
-              className={`project-readme-tag ${
-                projectData.category === category.id ? 'active' : ''
-              }`}
+              isActive={projectData.category === category.id || projectData.category?.toUpperCase() === category.id}
+              hideInactiveOnMobile={true}
             >
               {category.label}
-            </span>
+            </Tag>
           ))}
         </div>
 

@@ -178,6 +178,7 @@ function FindTeamPage() {
           : team,
       ),
     );
+    alert('지원이 완료되었습니다.');
     handleCloseApplyModal();
   };
 

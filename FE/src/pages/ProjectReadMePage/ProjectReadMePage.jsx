@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import logoGray from '../../assets/icons/logoGW.svg';
 import ProfileModal from '../../components/ProfileModal/ProfileModal';
 import ApplyModal from '../../components/ApplyModal/ApplyModal';
@@ -15,6 +15,7 @@ const categoryMap = {
 
 function ProjectReadMePage() {
   const location = useLocation();
+  const navigate = useNavigate();
   const passedData = location.state || {};
 
   const projectData = {
@@ -22,6 +23,7 @@ function ProjectReadMePage() {
     createdAt: passedData.dueDate || "2026-05-30T14:30:00",
     category: categoryMap[passedData.category] || "개발",
     status: passedData.status === 'completed' ? 'COMPLETED' : "RECRUITING",
+    applied: passedData.applied ?? false,
     recruitingCount: passedData.capacity || 6,
     tags: ["조별과제", "스터디", "공모전", "개발", "기타"],
     description: passedData.summary || "FE 3명, BE 3명 모집합니다. ProMate는 팀 프로젝트의 협업 툴로서 과거 데이터 기반 팀빌딩, 협업 지원 웹사이트입니다.",
@@ -43,6 +45,7 @@ function ProjectReadMePage() {
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
   const [applyJob, setApplyJob] = useState('');
   const [applyMotivation, setApplyMotivation] = useState('');
+  const [isApplied, setIsApplied] = useState(passedData.applied || false);
 
   const handleMemberClick = (user, event) => {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -67,7 +70,10 @@ function ProjectReadMePage() {
 
   const handleSubmitApply = () => {
     console.log('지원 완료:', projectData.title, applyJob, applyMotivation);
+    alert('지원이 완료되었습니다.');
+    setIsApplied(true);
     handleCloseApplyModal();
+    navigate(-1);
   };
 
   return (
@@ -140,10 +146,11 @@ function ProjectReadMePage() {
         {projectData.status === "RECRUITING" && (
           <div className="project-readme-apply-container">
             <button 
-              className="project-readme-apply-btn" 
-              onClick={handleApplyClick}
+              className={`project-readme-apply-btn ${isApplied ? 'reviewing' : 'apply'}`}
+              onClick={() => !isApplied && handleApplyClick()}
+              disabled={isApplied}
             >
-              지원하기
+              {isApplied ? '심사중' : '지원하기'}
             </button>
           </div>
         )}

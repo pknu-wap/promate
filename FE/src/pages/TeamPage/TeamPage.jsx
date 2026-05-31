@@ -5,8 +5,8 @@ import Calendar from '../../components/Calendar/Calendar';
 import ProgressBar from '../../components/ProgressBar/ProgressBar';
 import SummaryCard from '../../components/SummaryCard/SummaryCard';
 import moreIcon from '../../assets/moreIcon.svg';
+import NewTaskModal from '../../components/NewTaskModal/NewTaskModal.jsx'; // 👈 새 모달 임포트
 import './TeamPage.css';
-import ApplyModal from '../../components/ApplyModal/ApplyModal';
 
 const projects = [
   { id: 1, title: '프로그래밍 팀플', dueDate: '2026.05.17', currentStep: 12, totalStep: 18 },
@@ -14,24 +14,6 @@ const projects = [
   { id: 3, title: '캡스톤 디자인', dueDate: '2026.07.07', currentStep: 51, totalStep: 100 },
   { id: 4, title: '알고리즘 스터디', dueDate: '2023.05.10', currentStep: 93, totalStep: 100 },
   { id: 5, title: '인공지능 개발', dueDate: '2026.12.05', currentStep: 0, totalStep: 0 },
-];
-
-const teamTasks = [
-  { id: 1, title: '시장조사', dueDate: '2026.03.17' },
-  { id: 2, title: 'PPT 발표 준비', dueDate: '2026.03.31' },
-  { id: 3, title: '와이어 프레임', dueDate: '2026.04.01' },
-  { id: 4, title: '디자인 시스템 정리', dueDate: '2026.04.08' },
-  { id: 5, title: 'API 명세 확인', dueDate: '2026.04.12' },
-  { id: 6, title: '메인 화면 개발', dueDate: '2026.04.18' },
-  { id: 7, title: '사용자 테스트 준비', dueDate: '2026.04.24' },
-  { id: 8, title: '최종 발표 자료 검토', dueDate: '2026.04.30' },
-];
-
-const members = [
-  { id: 1, name: '홍길동', role: 'PM' },
-  { id: 2, name: '김철수', role: 'UIUX' },
-  { id: 3, name: '김영희', role: 'FE' },
-  { id: 4, name: '김영희', role: 'FE' },
 ];
 
 const boardPosts = [
@@ -90,6 +72,26 @@ const INITIAL_VISIBLE_COUNT = 3;
 function TeamPage() {
   const { projectId } = useParams();
   const navigate = useNavigate();
+  
+  // 1. 상태 관리가 필요한 데이터들을 State화 (기존 더미 데이터 -> 상태 데이터로 변환)
+  const [tasks, setTasks] = useState([
+    { id: 1, title: '시장조사', dueDate: '2026.03.17' },
+    { id: 2, title: 'PPT 발표 준비', dueDate: '2026.03.31' },
+    { id: 3, title: '와이어 프레임', dueDate: '2026.04.01' },
+    { id: 4, title: '디자인 시스템 정리', dueDate: '2026.04.08' },
+    { id: 5, title: 'API 명세 확인', dueDate: '2026.04.12' },
+    { id: 6, title: '메인 화면 개발', dueDate: '2026.04.18' },
+    { id: 7, title: '사용자 테스트 준비', dueDate: '2026.04.24' },
+    { id: 8, title: '최종 발표 자료 검토', dueDate: '2026.04.30' },
+  ]);
+
+  const [members] = useState([
+    { id: 1, name: '홍길동', role: 'PM' },
+    { id: 2, name: '김철수', role: 'UIUX' },
+    { id: 3, name: '김영희', role: 'FE' },
+    { id: 4, name: '김영희', role: 'FE' },
+  ]);
+
   const [isTaskExpanded, setIsTaskExpanded] = useState(false);
   const [isBoardExpanded, setIsBoardExpanded] = useState(false);
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
@@ -97,15 +99,15 @@ function TeamPage() {
   const [postTitle, setPostTitle] = useState('');
   const [postContent, setPostContent] = useState('');
 
-  // 1. ApplyModal을 제어하기 위한 독립 상태 추가
-  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
-  const [applyJob, setApplyJob] = useState('');
-  const [applyMotivation, setApplyMotivation] = useState('');
+  // 2. NewTaskModal 전용 열림 스위치 상태
+  const [isNewTaskModalOpen, setIsNewTaskModalOpen] = useState(false);
 
   const projectData = projects.find((project) => project.id === Number(projectId)) ?? projects[0];
-  const visibleTasks = isTaskExpanded ? teamTasks : teamTasks.slice(0, INITIAL_VISIBLE_COUNT);
+  
+  // 가변적인 tasks 배열 상태에 맞춰 리스트 렌더링 범위를 지정합니다.
+  const visibleTasks = isTaskExpanded ? tasks : tasks.slice(0, INITIAL_VISIBLE_COUNT);
   const visiblePosts = isBoardExpanded ? boardPosts : boardPosts.slice(0, INITIAL_VISIBLE_COUNT);
-  const canToggleTasks = teamTasks.length > INITIAL_VISIBLE_COUNT;
+  const canToggleTasks = tasks.length > INITIAL_VISIBLE_COUNT;
   const canTogglePosts = boardPosts.length > INITIAL_VISIBLE_COUNT;
 
   const openTaskBoard = (status) => {
@@ -126,16 +128,21 @@ function TeamPage() {
     closePostModal();
   };
 
-  // 2. ApplyModal 전용 닫기 및 제출 처리 함수
-  const closeApplyModal = () => {
-    setIsApplyModalOpen(false);
-    setApplyJob('');
-    setApplyMotivation('');
-  };
+  // 3. 모달에서 데이터를 들고 올라왔을 때 리스트 상태에 추가하는 콜백 함수
+  const handleAddTaskSubmit = (newTaskData) => {
+    const nextId = tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
+    
+    // 모달창에서 입력 포맷에 맞게 넘어온 데이터(yyyy-mm-dd)를 화면 규격에 맞게 포맷팅
+    const formattedDate = newTaskData.dueDate.replace(/-/g, '.');
 
-  const handleApplySubmit = () => {
-    console.log('지원 정보:', { job: applyJob, motivation: applyMotivation });
-    closeApplyModal();
+    const createdTask = {
+      id: nextId,
+      title: newTaskData.title,
+      dueDate: formattedDate,
+    };
+
+    // 불변성을 유지하며 기존 태스크 배열 최상단(혹은 최하단)에 새 항목 추가
+    setTasks((prevTasks) => [createdTask, ...prevTasks]);
   };
 
   return (
@@ -167,24 +174,23 @@ function TeamPage() {
           <ProgressBar percent={75} />
         </section>
 
+        {/* 테스크 보드 영역 */}
         <section className={`team-card team-task-board ${isTaskExpanded ? 'team-card-expanded' : ''}`}>
           <div className="team-task-header">
             <h2>테스크 보드</h2>
             <div>
               <strong className="team-task-count">
-              {teamTasks.length}<span>개</span>
+                {tasks.length}<span>개</span>
               </strong>
               <button
-              type="button"
-              className="team-board-write-button"
-              onClick={() => setIsApplyModalOpen(true)} // 👈 3. 버튼 클릭 시 모달 스위치를 켭니다.
+                type="button"
+                className="team-board-write-button"
+                onClick={() => setIsNewTaskModalOpen(true)} // 👈 4. 새 태스크 쓰기 스위치 켜기
               >
-              <SquarePen size={12} />
-              <span>테스크쓰기</span>
-            </button>
-
+                <SquarePen size={12} />
+                <span>테스크쓰기</span>
+              </button>
             </div>
-
           </div>
 
           <div className="team-task-list">
@@ -345,16 +351,12 @@ function TeamPage() {
         </div>
       )}
 
-      {/* 4. [추가] 테스크 쓰기 버튼 클릭 시 나타나는 ApplyModal 컴포넌트 마운트 */}
-      <ApplyModal
-        isOpen={isApplyModalOpen}
-        onClose={closeApplyModal}
-        onSubmit={handleApplySubmit}
-        projectName={projectData.title}
-        job={applyJob}
-        motivation={applyMotivation}
-        setJob={setApplyJob}
-        setMotivation={setApplyMotivation}
+      {/* 5. [추가] 변경된 NewTaskModal 컴포넌트 호출 매핑 */}
+      <NewTaskModal
+        isOpen={isNewTaskModalOpen}
+        onClose={() => setIsNewTaskModalOpen(false)}
+        onSubmit={handleAddTaskSubmit}
+        projectId={projectData.id}
       />
     </div>
   );

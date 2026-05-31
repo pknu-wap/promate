@@ -2,14 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getUserInfo } from '../../api/User/userProfileApi.js';
 import logoImg from '../../assets/logoOrange.svg';
+import profileIcon from '../../assets/icons/profileIcon.svg';
+import profileIconHover from '../../assets/icons/profileOrangeIcon.svg';
 import ProfileAvatar from '../ProfileAvatar/ProfileAvatar';
 import './Header.css';
 
 function Header({ onMenuClick }) {
   const [userData, setUserData] = useState({ userName: "..." });
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        setIsLoggedIn(false);
+        return;
+      }
+
       try {
         const response = await getUserInfo();
         const name = response?.data?.userName || "사용자";
@@ -17,8 +26,10 @@ function Header({ onMenuClick }) {
         setUserData({
           userName: name
         });
+        setIsLoggedIn(true);
       } catch (error) {
         console.error("유저 정보 로드 실패", error);
+        setIsLoggedIn(false);
       }
     };
     fetchUserData();
@@ -40,12 +51,22 @@ function Header({ onMenuClick }) {
       </div>
 
       <div className="header-right">
-        <Link to="/profile" className="header-greeting">
-          <strong>{userData.userName}</strong> 님 안녕하세요 :)
-        </Link>
-        <Link to="/profile">
-          <ProfileAvatar size="36px" />
-        </Link>
+        {isLoggedIn ? (
+          <>
+            <Link to="/profile" className="header-greeting">
+              <strong>{userData.userName}</strong> 님 안녕하세요 :)
+            </Link>
+            <Link to="/profile">
+              <ProfileAvatar size="36px" />
+            </Link>
+          </>
+        ) : (
+          <Link to="/login" className="header-login-btn">
+            <img src={profileIcon} alt="" className="header-login-icon default-icon" />
+            <img src={profileIconHover} alt="" className="header-login-icon hover-icon" />
+            로그인
+          </Link>
+        )}
       </div>
     </header>
   );

@@ -98,6 +98,43 @@
   font-size: 16px;
 }
 
+.header-login-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 16px;
+  background-color: #FFFFFF;
+  color: #333333;
+  border: 1px solid #D9D9D9;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 20px;
+}
+
+.header-login-btn:hover {
+  border-color: #FE9A57;
+  color: #FE9A57;
+}
+
+.header-login-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.header-login-icon.hover-icon {
+  display: none;
+}
+
+.header-login-btn:hover .header-login-icon.default-icon {
+  display: none;
+}
+
+.header-login-btn:hover .header-login-icon.hover-icon {
+  display: block;
+}
+
 @media (max-width: 768px) {
   .hamburger-btn {
     display: flex;

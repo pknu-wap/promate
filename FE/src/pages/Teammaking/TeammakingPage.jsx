@@ -1,12 +1,12 @@
-﻿import { useState } from "react";
+﻿﻿import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logoIcon from "../../assets/logoIcon.svg";
-import DomainSelector from "./components/DomainSelector.jsx";
 import FormActions from "./components/FormActions.jsx";
 import ProjectDescriptionField from "./components/ProjectDescriptionField.jsx";
 import ProjectNameField from "./components/ProjectNameField.jsx";
 import ProjectPeriodField from "./components/ProjectPeriodField.jsx";
 import apiClient from "../../api/apiClient.js";
+import Tag from "../../components/Tag/Tag.jsx";
 import "./TeammakingPage.css";
 
 const domainOptions = [
@@ -87,11 +87,20 @@ function TeammakingPage() {
           projectName={projectName}
           onProjectNameChange={setProjectName}
         />
-        <DomainSelector
-          domainOptions={domainOptions}
-          selectedDomain={selectedDomain}
-          onDomainChange={setSelectedDomain}
-        />
+        <div className="form-field">
+          <span className="teammaking-form-label">카테고리</span>
+          <div className="domain-tags">
+            {domainOptions.map((option) => (
+              <Tag
+                key={option.id}
+                isActive={selectedDomain === option.id}
+                onClick={() => setSelectedDomain(option.id)}
+              >
+                {option.label}
+              </Tag>
+            ))}
+          </div>
+        </div>
         <div className="form-field recruit-count-field">
           <label className="teammaking-form-label" htmlFor="recruit-count">
             모집 인원

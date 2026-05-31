@@ -639,7 +639,7 @@
 @media (max-width: 768px) {
   /* ApplicantList */
   .al-page {
-    padding: 16px 16px 20px 16px;
+    padding: 20px 16px;
   }
   .al-list {
     width: 100%;
@@ -647,7 +647,7 @@
 
   /* ApplicantDetail */
   .ad-page {
-    padding: 16px 16px 20px 16px;
+    padding: 20px 16px;
   }
   .ad-card {
     width: 100%;
@@ -710,6 +710,6 @@
 @media (max-width: 480px) {
   .al-page,
   .ad-page {
-    padding: 12px 12px 16px 12px;
+    padding: 20px 14px;
   }
 }

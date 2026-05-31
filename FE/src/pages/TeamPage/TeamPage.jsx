@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ClipboardList, SquarePen, Users } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Calendar from '../../components/Calendar/Calendar';
@@ -6,6 +6,18 @@ import ProgressBar from '../../components/ProgressBar/ProgressBar';
 import SummaryCard from '../../components/SummaryCard/SummaryCard';
 import moreIcon from '../../assets/moreIcon.svg';
 import NewTaskModal from '../../components/NewTaskModal/NewTaskModal.jsx';
+import { 
+  getProjectMembers, 
+  getProjectTasks, 
+  getProjectPosts, 
+  getPostDetail, 
+  createProjectPost,
+  updateProjectPost,
+  deleteProjectPost,
+  getTaskDetail,
+  createProjectTask,
+  updateProjectTask
+} from '../../api/TeamPage';
 import './TeamPage.css';
 
 const projects = [
@@ -16,125 +28,255 @@ const projects = [
   { id: 5, title: '인공지능 개발', dueDate: '2026.12.05', currentStep: 0, totalStep: 0 },
 ];
 
-const boardPosts = [
-  {
-    id: 1,
-    title: '3차 정기회의',
-    date: '26.02.09',
-    author: '김은비',
-    content:
-      '미래를 대비한 기술 학습의 중요성은 최신 기술 트렌드와 학습 방법을 다룹니다. 인공지능, 빅데이터, 블록체인 등 빠르게 발전하는 기술 분야에서 경쟁력을 유지하기 위해 지속적인 학습이 필요합니다. 온라인 강의, 워크숍, 세미나 등을 통해 최신 기술 동향을 파악하고 실무 능력을 향상시킬 수 있습니다. 또한, 프로젝트 기반 학습을 통해 실제 문제를 해결하는 경험을 쌓는 것이 중요합니다. 미래를 대비한 기술 학습은 개인의 경력 발전과 더불어 사회 전반의 혁신을 이끄는 데 기여할 수 있습니다.',
-  },
-  {
-    id: 2,
-    title: '기획서 피드백 공유',
-    date: '26.02.16',
-    author: '김은비',
-    content:
-      '기획서 피드백 내용을 공유합니다. 핵심 기능의 우선순위를 다시 정리하고, 사용자 흐름에서 불필요한 단계를 줄이는 방향으로 보완하면 좋겠습니다.',
-  },
-  {
-    id: 3,
-    title: '역할 분담 안내',
-    date: '26.02.23',
-    author: '김은비',
-    content:
-      '역할 분담 내용을 안내합니다. 각자 맡은 파트를 확인한 뒤 일정에 맞춰 진행 상황을 공유해주세요.',
-  },
-  {
-    id: 4,
-    title: '디자인 초안 확인',
-    date: '26.03.02',
-    author: '김은비',
-    content:
-      '디자인 초안이 업데이트되었습니다. 화면별 컴포넌트 배치와 색상 사용을 확인하고 수정 의견을 남겨주세요.',
-  },
-  {
-    id: 5,
-    title: '중간 점검 일정',
-    date: '26.03.09',
-    author: '김은비',
-    content:
-      '중간 점검 일정은 다음 회의에서 확정합니다. 현재 진행률과 막힌 부분을 미리 정리해주세요.',
-  },
-  {
-    id: 6,
-    title: '최종 제출 체크리스트',
-    date: '26.03.16',
-    author: '김은비',
-    content:
-      '최종 제출 전 체크리스트입니다. 발표 자료, 시연 영상, 문서 파일, 배포 링크를 모두 확인해주세요.',
-  },
-];
-
 const INITIAL_VISIBLE_COUNT = 3;
 
 function TeamPage() {
   const { projectId } = useParams();
   const navigate = useNavigate();
   
-  const [tasks, setTasks] = useState([
-    { id: 1, title: '시장조사', dueDate: '2026.03.17' },
-    { id: 2, title: 'PPT 발표 준비', dueDate: '2026.03.31' },
-    { id: 3, title: '와이어 프레임', dueDate: '2026.04.01' },
-    { id: 4, title: '디자인 시스템 정리', dueDate: '2026.04.08' },
-    { id: 5, title: 'API 명세 확인', dueDate: '2026.04.12' },
-    { id: 6, title: '메인 화면 개발', dueDate: '2026.04.18' },
-    { id: 7, title: '사용자 테스트 준비', dueDate: '2026.04.24' },
-    { id: 8, title: '최종 발표 자료 검토', dueDate: '2026.04.30' },
-  ]);
+  const [tasks, setTasks] = useState([]);
+  const [projectProgress, setProjectProgress] = useState(0);
+  const [isTasksLoading, setIsTasksLoading] = useState(true);
+  const [tasksError, setTasksError] = useState(null);
 
-  const [members] = useState([
-    { id: 1, name: '홍길동' },
-    { id: 2, name: '김철수' },
-    { id: 3, name: '김영희' },
-    { id: 4, name: '김영희' },
-  ]);
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [isTaskDetailLoading, setIsTaskDetailLoading] = useState(false);
+  const [taskDetailError, setTaskDetailError] = useState(null);
+
+  const [members, setMembers] = useState([]);
+  const [isMembersLoading, setIsMembersLoading] = useState(true);
+  const [membersError, setMembersError] = useState(null);
+
+  const [boardPosts, setBoardPosts] = useState([]);
+  const [isBoardLoading, setIsBoardLoading] = useState(true);
+  const [boardError, setBoardError] = useState(null);
+
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [isDetailLoading, setIsDetailLoading] = useState(false);
+  const [detailError, setDetailError] = useState(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const [isTaskExpanded, setIsTaskExpanded] = useState(false);
   const [isBoardExpanded, setIsBoardExpanded] = useState(false);
+  
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
-  const [selectedPost, setSelectedPost] = useState(null);
+  const [isEditMode, setIsEditMode] = useState(false);
   const [postTitle, setPostTitle] = useState('');
   const [postContent, setPostContent] = useState('');
+  const [isPostSubmitting, setIsPostSubmitting] = useState(false);
   const [isNewTaskModalOpen, setIsNewTaskModalOpen] = useState(false);
 
   const projectData = projects.find((project) => project.id === Number(projectId)) ?? projects[0];
+  const idToFetch = projectId ? Number(projectId) : projectData.id;
   
   const visibleTasks = isTaskExpanded ? tasks : tasks.slice(0, INITIAL_VISIBLE_COUNT);
   const visiblePosts = isBoardExpanded ? boardPosts : boardPosts.slice(0, INITIAL_VISIBLE_COUNT);
   const canToggleTasks = tasks.length > INITIAL_VISIBLE_COUNT;
   const canTogglePosts = boardPosts.length > INITIAL_VISIBLE_COUNT;
 
+  const fetchTasks = async () => {
+    try {
+      setIsTasksLoading(true);
+      setTasksError(null);
+      const data = await getProjectTasks(idToFetch);
+      setTasks(data.taskList || []);
+      setProjectProgress(data.projectProgress || 0);
+    } catch (err) {
+      setTasksError(err.message);
+    } finally {
+      setIsTasksLoading(false);
+    }
+  };
+
+  const fetchPosts = async () => {
+    try {
+      setIsBoardLoading(true);
+      setBoardError(null);
+      const data = await getProjectPosts(idToFetch);
+      setBoardPosts(data.postList || []);
+    } catch (err) {
+      setBoardError(err.message);
+    } finally {
+      setIsBoardLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        setIsMembersLoading(true);
+        setMembersError(null);
+        const data = await getProjectMembers(idToFetch);
+        setMembers(data);
+      } catch (err) {
+        setMembersError(err.message);
+      } finally {
+        setIsMembersLoading(false);
+      }
+    };
+
+    fetchMembers();
+  }, [idToFetch]);
+
+  useEffect(() => {
+    fetchTasks();
+  }, [idToFetch]);
+
+  useEffect(() => {
+    fetchPosts();
+  }, [idToFetch]);
+
+  const handleTaskClick = async (taskId) => {
+    try {
+      setIsTaskDetailLoading(true);
+      setTaskDetailError(null);
+      setSelectedTask({ taskId });
+      const data = await getTaskDetail(idToFetch, taskId);
+      setSelectedTask(data);
+    } catch (err) {
+      setTaskDetailError(err.message);
+    } finally {
+      setIsTaskDetailLoading(false);
+    }
+  };
+
+  const handleAddTaskSubmit = async (newTaskData) => {
+    try {
+      const formattedDate = newTaskData.dueDate.replace(/\./g, '-');
+      await createProjectTask(idToFetch, {
+        managerId: newTaskData.managerId,
+        title: newTaskData.title,
+        description: newTaskData.description || '',
+        dueDate: formattedDate,
+      });
+      setIsNewTaskModalOpen(false);
+      await fetchTasks();
+    } catch (err) {
+      alert(`테스크 생성에 실패했습니다: ${err.message}`);
+    }
+  };
+
+  const handleUpdateTaskStatus = async (taskId, currentTask, nextStatus) => {
+    try {
+      await updateProjectTask(idToFetch, taskId, {
+        role: currentTask.role,
+        managerId: currentTask.managerId,
+        description: currentTask.description,
+        dueDate: currentTask.dueDate,
+        status: nextStatus
+      });
+      setSelectedTask((prev) => prev && prev.taskId === taskId ? { ...prev, status: nextStatus } : prev);
+      await fetchTasks();
+    } catch (err) {
+      alert(`테스크 상태 변경에 실패했습니다: ${err.message}`);
+    }
+  };
+
+  const handlePostClick = async (postId) => {
+    try {
+      setIsDetailLoading(true);
+      setDetailError(null);
+      setIsMenuOpen(false);
+      setSelectedPost({ postId });
+      const data = await getPostDetail(idToFetch, postId);
+      setSelectedPost(data);
+    } catch (err) {
+      setDetailError(err.message);
+    } finally {
+      setIsDetailLoading(false);
+    }
+  };
+
+  const handleOpenCreateModal = () => {
+    setIsEditMode(false);
+    setPostTitle('');
+    setPostContent('');
+    setIsPostModalOpen(true);
+  };
+
+  const handleOpenEditModal = () => {
+    if (!selectedPost) return;
+    setIsEditMode(true);
+    setPostTitle(selectedPost.title);
+    setPostContent(selectedPost.content);
+    setIsMenuOpen(false);
+    setIsPostModalOpen(true);
+  };
+
+  const handlePostSubmit = async () => {
+    if (!postTitle.trim() || !postContent.trim() || isPostSubmitting) {
+      return;
+    }
+
+    try {
+      setIsPostSubmitting(true);
+      if (isEditMode) {
+        await updateProjectPost(idToFetch, selectedPost.postId, {
+          title: postTitle.trim(),
+          content: postContent.trim(),
+          postType: selectedPost.postType || 'GENERAL'
+        });
+        setSelectedPost((prev) => ({
+          ...prev,
+          title: postTitle.trim(),
+          content: postContent.trim()
+        }));
+      } else {
+        await createProjectPost(idToFetch, {
+          title: postTitle.trim(),
+          content: postContent.trim(),
+          postType: 'GENERAL'
+        });
+      }
+      closePostModal();
+      if (!isEditMode) closePostDetailModal();
+      await fetchPosts();
+    } catch (err) {
+      alert(`게시글 처리에 실패했습니다: ${err.message}`);
+    } finally {
+      setIsPostSubmitting(false);
+    }
+  };
+
+  const handleDeletePost = async () => {
+    if (!selectedPost) return;
+    if (!window.confirm('정말로 이 게시글을 삭제하시겠습니까?')) return;
+
+    try {
+      setIsDetailLoading(true);
+      await deleteProjectPost(idToFetch, selectedPost.postId);
+      closePostDetailModal();
+      await fetchPosts();
+    } catch (err) {
+      alert(`게시글 삭제에 실패했습니다: ${err.message}`);
+    } finally {
+      setIsDetailLoading(false);
+    }
+  };
+
   const openTaskBoard = (status) => {
     navigate(`/task-board?projectId=${projectData.id}&status=${status}`);
   };
+
   const closePostModal = () => {
     setIsPostModalOpen(false);
     setPostTitle('');
     setPostContent('');
   };
+
   const closePostDetailModal = () => {
     setSelectedPost(null);
-  };
-  const createPost = () => {
-    if (!postTitle.trim() || !postContent.trim()) {
-      return;
-    }
-    closePostModal();
+    setDetailError(null);
+    setIsMenuOpen(false);
   };
 
-  const handleAddTaskSubmit = (newTaskData) => {
-    const nextId = tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
-    const formattedDate = newTaskData.dueDate.replace(/-/g, '.');
-
-    const createdTask = {
-      id: nextId,
-      title: newTaskData.title,
-      dueDate: formattedDate,
-    };
-
-    setTasks((prevTasks) => [createdTask, ...prevTasks]);
+  const formatDate = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const yy = String(date.getFullYear()).slice(-2);
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    return `${yy}.${mm}.${dd}`;
   };
 
   return (
@@ -160,10 +302,10 @@ function TeamPage() {
               <p>마감일: 2026.03.17</p>
             </div>
             <strong>
-              75<span>%</span>
+              {projectProgress}<span>%</span>
             </strong>
           </div>
-          <ProgressBar percent={75} />
+          <ProgressBar percent={projectProgress} />
         </section>
 
         <section className={`team-card team-task-board ${isTaskExpanded ? 'team-card-expanded' : ''}`}>
@@ -185,13 +327,33 @@ function TeamPage() {
           </div>
 
           <div className="team-task-list">
-            {visibleTasks.map((task) => (
-              <article className="team-task-item" key={task.id}>
+            {isTasksLoading && <div className="team-member-status">불러오는 중...</div>}
+            {tasksError && <div className="team-member-status" style={{ color: 'red' }}>{tasksError}</div>}
+            
+            {!isTasksLoading && !tasksError && tasks.length === 0 && (
+              <div className="team-member-status">등록된 테스크가 없습니다.</div>
+            )}
+
+            {!isTasksLoading && !tasksError && visibleTasks.map((task) => (
+              <article 
+                className="team-task-item" 
+                key={task.taskId}
+                role="button"
+                tabIndex={0}
+                onClick={() => handleTaskClick(task.taskId)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    handleTaskClick(task.taskId);
+                  }
+                }}
+                style={{ cursor: 'pointer' }}
+              >
                 <div>
                   <h3>{task.title}</h3>
-                  <p>마감일: {task.dueDate}</p>
+                  <p>마감일: {task.dueDate?.replace(/-/g, '.')}</p>
                 </div>
-                <span>여유</span>
+                <span>{task.status}</span>
               </article>
             ))}
           </div>
@@ -218,10 +380,17 @@ function TeamPage() {
         <section className="team-card team-members-card">
           <PanelTitle icon={<Users size={18} />} title="프로젝트 팀원" />
           <div className="team-members-list">
-            {members.map((member) => (
-              <div className="team-member" key={member.id}>
+            {isMembersLoading && <div className="team-member-status">불러오는 중...</div>}
+            {membersError && <div className="team-member-status" style={{ color: 'red' }}>{membersError}</div>}
+            
+            {!isMembersLoading && !membersError && members.length === 0 && (
+              <div className="team-member-status">참여 중인 팀원이 없습니다.</div>
+            )}
+
+            {!isMembersLoading && !membersError && members.map((member) => (
+              <div className="team-member" key={member.userId}>
                 <strong>{member.name}</strong>
-                <span>{member.role}</span>
+                <span>{member.role || '팀원'}</span>
               </div>
             ))}
           </div>
@@ -233,29 +402,36 @@ function TeamPage() {
             <button
               type="button"
               className="team-board-write-button"
-              onClick={() => setIsPostModalOpen(true)}
+              onClick={handleOpenCreateModal}
             >
               <SquarePen size={12} />
               <span>글쓰기</span>
             </button>
           </div>
           <div className="team-board-list">
-            {visiblePosts.map((post) => (
+            {isBoardLoading && <div className="team-member-status">불러오는 중...</div>}
+            {boardError && <div className="team-member-status" style={{ color: 'red' }}>{boardError}</div>}
+            
+            {!isBoardLoading && !boardError && boardPosts.length === 0 && (
+              <div className="team-member-status">등록된 게시글이 없습니다.</div>
+            )}
+
+            {!isBoardLoading && !boardError && visiblePosts.map((post) => (
               <article
                 className="team-board-post"
-                key={post.id}
+                key={post.postId}
                 role="button"
                 tabIndex={0}
-                onClick={() => setSelectedPost(post)}
+                onClick={() => handlePostClick(post.postId)}
                 onKeyDown={(event) => {
                   if (event.key === 'Enter' || event.key === ' ') {
                     event.preventDefault();
-                    setSelectedPost(post);
+                    handlePostClick(post.postId);
                   }
                 }}
               >
                 <h3>{post.title}</h3>
-                <time>{post.date}</time>
+                <time>{formatDate(post.createdAt)}</time>
               </article>
             ))}
           </div>
@@ -274,10 +450,9 @@ function TeamPage() {
             className="team-post-modal"
             role="dialog"
             aria-modal="true"
-            aria-labelledby="team-post-modal-title"
             onMouseDown={(event) => event.stopPropagation()}
           >
-            <h2 id="team-post-modal-title">게시글 쓰기</h2>
+            <h2>{isEditMode ? '게시글 수정' : '게시글 쓰기'}</h2>
 
             <label className="team-post-field">
               <span>제목</span>
@@ -286,6 +461,7 @@ function TeamPage() {
                 value={postTitle}
                 onChange={(event) => setPostTitle(event.target.value)}
                 placeholder="제목을 적어주세요."
+                disabled={isPostSubmitting}
               />
             </label>
 
@@ -295,20 +471,26 @@ function TeamPage() {
                 value={postContent}
                 onChange={(event) => setPostContent(event.target.value)}
                 placeholder="내용을 적어주세요."
+                disabled={isPostSubmitting}
               />
             </label>
 
             <div className="team-post-modal-actions">
-              <button type="button" className="team-post-cancel-button" onClick={closePostModal}>
+              <button 
+                type="button" 
+                className="team-post-cancel-button" 
+                onClick={closePostModal}
+                disabled={isPostSubmitting}
+              >
                 취소
               </button>
               <button
                 type="button"
                 className="team-post-create-button"
-                onClick={createPost}
-                disabled={!postTitle.trim() || !postContent.trim()}
+                onClick={handlePostSubmit}
+                disabled={!postTitle.trim() || !postContent.trim() || isPostSubmitting}
               >
-                게시글 생성
+                {isPostSubmitting ? '저장 중...' : isEditMode ? '수정 완료' : '게시글 생성'}
               </button>
             </div>
           </div>
@@ -321,23 +503,77 @@ function TeamPage() {
             className="team-post-detail-modal"
             role="dialog"
             aria-modal="true"
-            aria-labelledby="team-post-detail-title"
             onMouseDown={(event) => event.stopPropagation()}
           >
-            <button
-              type="button"
-              className="team-post-detail-menu"
-              aria-label="게시글 메뉴"
-            >
-              ...
-            </button>
+            <div className="team-post-detail-menu-container" style={{ position: 'absolute', top: '20px', right: '20px' }}>
+              <button
+                type="button"
+                className="team-post-detail-menu"
+                aria-label="게시글 메뉴"
+                onClick={() => setIsMenuOpen((prev) => !prev)}
+              >
+                ...
+              </button>
+              {isMenuOpen && (
+                <div className="team-post-dropdown" style={{ position: 'absolute', right: 0, background: '#fff', border: '1px solid #ccc', borderRadius: '4px', zIndex: 10 }}>
+                  <button type="button" onClick={handleOpenEditModal} style={{ display: 'block', width: '100%', padding: '8px 16px', border: 'none', background: 'none', textAlign: 'left', cursor: 'pointer' }}>수정</button>
+                  <button type="button" onClick={handleDeletePost} style={{ display: 'block', width: '100%', padding: '8px 16px', border: 'none', background: 'none', textAlign: 'left', color: 'red', cursor: 'pointer' }}>삭제</button>
+                </div>
+              )}
+            </div>
 
-            <h2 id="team-post-detail-title">{selectedPost.title}</h2>
-            <dl className="team-post-detail-meta">
-              <dt>작성자</dt>
-              <dd>{selectedPost.author}</dd>
-            </dl>
-            <p>{selectedPost.content}</p>
+            {isDetailLoading && <div className="team-member-status">처리 중...</div>}
+            {detailError && <div className="team-member-status" style={{ color: 'red' }}>{detailError}</div>}
+
+            {!isDetailLoading && !detailError && selectedPost.title && (
+              <>
+                <h2 id="team-post-detail-title">{selectedPost.title}</h2>
+                <dl className="team-post-detail-meta">
+                  <dt>작성자</dt>
+                  <dd>{selectedPost.writerName}</dd>
+                </dl>
+                <p>{selectedPost.content}</p>
+              </>
+            )}
+          </article>
+        </div>
+      )}
+
+      {selectedTask && (
+        <div className="team-post-detail-backdrop" role="presentation" onMouseDown={() => setSelectedTask(null)}>
+          <article className="team-post-detail-modal" role="dialog" aria-modal="true" onMouseDown={(e) => e.stopPropagation()}>
+            {isTaskDetailLoading && <div className="team-member-status">태스크 정보 불러오는 중...</div>}
+            {taskDetailError && <div className="team-member-status" style={{ color: 'red' }}>{taskDetailError}</div>}
+            
+            {!isTaskDetailLoading && !taskDetailError && selectedTask.title && (
+              <>
+                <h2>{selectedTask.title}</h2>
+                <dl className="team-post-detail-meta" style={{ marginTop: '12px' }}>
+                  <dt>담당자</dt>
+                  <dd>{selectedTask.managerName} ({selectedTask.role || '역할 지정 없음'})</dd>
+                  <dt>마감일</dt>
+                  <dd>{selectedTask.dueDate}</dd>
+                  <dt>상태</dt>
+                  <dd>
+                    <select 
+                      value={selectedTask.status} 
+                      onChange={(e) => handleUpdateTaskStatus(selectedTask.taskId, selectedTask, e.target.value)}
+                      style={{ padding: '2px 6px', borderRadius: '4px', border: '1px solid #ccc' }}
+                    >
+                      <option value="TODO">TODO</option>
+                      <option value="IN_PROGRESS">IN_PROGRESS</option>
+                      <option value="DONE">DONE</option>
+                    </select>
+                  </dd>
+                </dl>
+                <div style={{ marginTop: '16px', borderTop: '1px solid #eee', paddingTop: '12px' }}>
+                  <p>{selectedTask.description || '상세 설명이 없습니다.'}</p>
+                </div>
+                <div className="team-post-modal-actions" style={{ marginTop: '24px', justifyContent: 'flex-end' }}>
+                  <button type="button" className="team-post-cancel-button" onClick={() => setSelectedTask(null)}>닫기</button>
+                </div>
+              </>
+            )}
           </article>
         </div>
       )}
@@ -346,7 +582,7 @@ function TeamPage() {
         isOpen={isNewTaskModalOpen}
         onClose={() => setIsNewTaskModalOpen(false)}
         onSubmit={handleAddTaskSubmit}
-        projectId={projectData.id}
+        projectId={idToFetch}
       />
     </div>
   );

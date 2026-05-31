@@ -11,17 +11,17 @@ body {
 
 .page-wrapper {
   width: 100%;
-  height: 100%;
+  height: calc(100vh - 56px);
   overflow: hidden;
   background-color: #f8f8f8;
   padding: 19px 50px 20px 30px;
   background: linear-gradient(180deg, #f0f0f0 0%, #ffffff 100%);
 }
 
-.page-title {
+.teammaking-page-title {
   width: 864px;
   max-width: 100%;
-  margin: 0 0 18px;
+  margin: 0 0 20px;
   margin-left: 0;
   font-size: 22px;
   line-height: 27px;
@@ -35,48 +35,48 @@ body {
   border-radius: 9px;
   width: 864px;
   max-width: 100%;
-  height: 560px;
-  padding: 27px 33px;
+  height: 599px;
+  padding: 19px 33px;
   margin: 0;
   position: relative;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.04);
 }
 
 .teammaking-logo-box {
-  width: 36px;
-  height: 36px;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 14px;
-  border-radius: 4px;
+  margin-bottom: 18px;
+  border-radius: 6px;
   background-color: #f0f0f0;
 }
 
 .teammaking-logo-box img {
-  width: 28px;
-  height: 28px;
+  width: 36px;
+  height: 36px;
   filter: grayscale(1);
   opacity: 0.24;
 }
 
 .form-field {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
-.form-label {
+.teammaking-form-label {
   display: block;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 18px;
-  font-weight: 800;
+  font-weight: 600;
   color: #1a1a1a;
-  margin-bottom: 9px;
+  margin-bottom: 2px;
 }
 
 .text-input {
   width: 507px;
   max-width: 100%;
-  height: 32px;
+  height: 33px;
   padding: 0 11px;
   border: 1px solid #bcbcbc;
   border-radius: 3px;
@@ -127,7 +127,7 @@ body {
 }
 
 .project-period-field {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .project-period-row {
@@ -143,7 +143,7 @@ body {
   position: relative;
   display: block;
   min-width: 0;
-  height: 44px;
+  height: 33px;
   padding: 0;
   border: 0;
   background: transparent;
@@ -156,13 +156,13 @@ body {
   width: 100%;
   height: 100%;
   padding: 6px 10px;
-  border: 2px solid #bcbcbc;
-  border-radius: 9px;
+  border: 1px solid #bcbcbc;
+  border-radius: 3px;
   background: #f3f3f3;
   color: #1a1a1a;
   display: flex;
   align-items: center;
-  white-space: pre-line;
+  white-space: nowrap;
   font-size: 16px;
   font-weight: 500;
   line-height: 1.05;
@@ -233,7 +233,7 @@ body {
   display: grid;
   grid-template-columns: 40px 1fr 40px;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 }
 
 .date-picker-monthbar strong {
@@ -262,7 +262,7 @@ body {
 }
 
 .date-picker-weekdays {
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
 .date-picker-weekdays span {
@@ -305,6 +305,16 @@ body {
 
 .date-picker-day--selected:hover {
   background: #4f67a3;
+}
+
+.date-picker-day:disabled {
+  color: #d1d1d1;
+  cursor: not-allowed;
+}
+
+.date-picker-day:disabled:hover {
+  background: transparent;
+  color: #d1d1d1;
 }
 
 .date-picker-actions {
@@ -373,78 +383,81 @@ body {
 
 .bottom-bar {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin-top: 20px;
-  padding: 20px 40px;
+  bottom: 12px;
+  right: 33px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  
-  border-radius: 0 0 16px 16px;
 }
 
-.action-buttons {
+.teammaking-actions {
   display: flex;
   gap: 15px;
 }
 
-.btn-cancel {
-  height: 48px;
-  padding: 0 28px;
-  border-radius: 10px;
+.teammaking-btn-cancel {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 41px;
+  padding: 10px 20px;
+  gap: 10px;
   border: none;
-  background-color: #e0e0e0;
-  color: #555555;
-  font-size: 15px;
-  font-weight: 600;
+  border-radius: 5px;
+  background: #d9d9d9;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 21px;
   cursor: pointer;
-  transition: background-color 0.18s ease;
-  font-family: inherit;
+  font-family: "Pretendard", sans-serif;
+  transition: background 0.15s;
+  white-space: nowrap;
 }
 
-.btn-cancel:hover {
-  background-color: #d4d4d4;
+.teammaking-btn-cancel:hover {
+  background: #c4c4c4;
 }
 
-.btn-submit {
-  height: 48px;
-  padding: 0 28px;
-  border-radius: 10px;
+.teammaking-btn-submit {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 111px;
+  height: 41px;
+  padding: 10px 24px;
+  gap: 10px;
   border: none;
-  background-color: #f3841e;
+  border-radius: 5px;
+  background: #fe9a57;
   color: #ffffff;
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 21px;
   cursor: pointer;
-  transition: background-color 0.18s ease, transform 0.1s ease;
-  font-family: inherit;
+  font-family: "Pretendard", sans-serif;
+  transition: background 0.15s;
+  white-space: nowrap;
 }
 
-.btn-submit:hover {
-  background-color: #e07519;
+.teammaking-btn-submit:hover {
+  background: #f08040;
 }
 
-.btn-submit:disabled {
-  background-color: #d9d9d9;
-  color: #ffffff;
+.teammaking-btn-submit:disabled {
+  background: #d9d9d9;
   cursor: not-allowed;
-  opacity: 1;
 }
-
-.btn-submit:disabled:hover {
-  background-color: #d9d9d9;
-}
-
-
 
 @media (max-width: 768px) {
   .page-wrapper {
     padding: 16px 14px 0;
   }
 
-  .page-title {
+  .teammaking-page-title {
     width: 100%;
     font-size: 21px;
     line-height: 27px;
@@ -454,23 +467,23 @@ body {
 
   .card {
     width: 100%;
-    height: min(560px, calc(100dvh - 105px));
+    height: 585px;
     border-radius: 9px;
-    padding: 27px 18px;
+    padding: 22px 18px;
   }
 
   .teammaking-logo-box {
-    margin-bottom: 14px;
+    display: none;
   }
 
   .form-field {
-    margin-bottom: 14px;
+    margin-bottom: 19px;
   }
 
-  .form-label {
+  .teammaking-form-label {
     font-size: 14px;
     line-height: 18px;
-    margin-bottom: 9px;
+    margin-bottom: 0px;
   }
 
   .text-input,
@@ -498,18 +511,22 @@ body {
     gap: 8px;
   }
 
+  .page-wrapper .badge:not(.badge--selected) {
+    display: none;
+  }
+
   .project-period-row {
     width: 100%;
     gap: 10px;
   }
 
   .period-date-picker {
-    height: 42px;
+    height: 33px;
   }
 
   .period-date-display {
     padding: 6px 8px;
-    border-radius: 8px;
+    border-radius: 3px;
     font-size: 15px;
   }
 
@@ -580,18 +597,17 @@ body {
   .bottom-bar {
     position: absolute;
     right: 18px;
-    bottom: 8px;
+    bottom: 12px;
   }
 
-  .action-buttons {
-    gap: 15px;
+  .teammaking-actions {
+    gap: 10px;
   }
 
-  .btn-cancel,
-  .btn-submit {
-    flex: 0 0 126px;
-    width: 126px;
-    height: 54px;
-    font-size: 18px;
+  .teammaking-btn-cancel,
+  .teammaking-btn-submit {
+    width: auto;
+    height: 36px;
+    font-size: 16px;
   }
 }

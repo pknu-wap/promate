@@ -16,6 +16,7 @@ import ProjectPage from "./pages/ProjectPage/ProjectPage.jsx";
 import TeamPage from "./pages/TeamPage/TeamPage.jsx";
 import TaskBoardPage from "./pages/TaskBoard/TaskBoard.jsx";
 import MemberReviewPage from "./pages/MemberReview/MemberReview.jsx";
+import ProjectReadMePage from "./pages/ProjectReadMePage/ProjectReadMePage.jsx";
 
 function AppLayout({ isMenuOpen, toggleMenu, closeMenu }) {
   return (
@@ -23,7 +24,7 @@ function AppLayout({ isMenuOpen, toggleMenu, closeMenu }) {
       <Header onMenuClick={toggleMenu} />
       <div style={{ display: "flex", flex: 1, backgroundColor: "#F8F9FA" }}>
         <Sidebar isOpen={isMenuOpen} onClose={closeMenu} />
-        <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+        <div className="main-content" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
           <main style={{ flex: 1, padding: "0px", boxSizing: "border-box" }}>
             <Outlet />
           </main>
@@ -62,6 +63,7 @@ function App() {
           <Route path="/" element={<DashboardPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/teammaking" element={<TeammakingPage />} />
+          <Route path="/readme/:postId" element={<ProjectReadMePage />} />
           <Route path="/applicant" element={<ApplicantPage/>} />
           <Route path="/applicant/detail" element={<ApplicantDetail />} />
           <Route path="/profile" element={<ProfilePage />} />

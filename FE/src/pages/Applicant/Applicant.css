@@ -3,14 +3,14 @@
   min-height: 100%;
   padding: 19px 50px 20px 30px;
   background: linear-gradient(180deg, #F0F0F0 0%, #FFFFFF 100%);
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  font-family: 'Pretendard Variable', 'Pretendard', 'Noto Sans KR', sans-serif;
   color: #000000;
   box-sizing: border-box;
 }
 
 .al-title {
   margin: 0 0 20px 0;
-  font-family: 'YSpotlightOTF', 'Pretendard', sans-serif;
+  font-family: 'YSpotlightOTF', 'Pretendard Variable', 'Pretendard', sans-serif;
   font-size: 22px;
   font-weight: 500;
   line-height: 28px;
@@ -39,7 +39,7 @@
 
 .ad-title {
   margin: 0;
-  font-family: 'YSpotlightOTF', 'Pretendard', sans-serif;
+  font-family: 'YSpotlightOTF', 'Pretendard Variable', 'Pretendard', sans-serif;
   font-size: 22px;
   font-weight: 500;
   line-height: 28px;
@@ -82,7 +82,7 @@
   background: none;
   border-radius: 5px;
   cursor: pointer;
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
   font-size: 14px;
   font-weight: 500;
   line-height: 17px;
@@ -121,7 +121,7 @@
 
 .ad-th {
   flex: 1;
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
   font-size: 16px;
   font-weight: 600;
   line-height: 19px;
@@ -170,7 +170,7 @@
 }
 
 .ad-name-text {
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
   font-size: 16px;
   font-weight: 600;
   line-height: 19px;
@@ -225,7 +225,7 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
   font-style: normal;
   font-size: 16px;
   font-weight: 700;
@@ -249,12 +249,14 @@
 
 .app-panel {
   position: fixed;
-  top: 0;
-  right: 0;
-  width: 380px;
-  height: 100vh;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 450px;
+  height: 600px;
   background: #FFFFFF;
-  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 1px 0px rgba(17, 17, 26, 0.1), 0px 8px 24px rgba(17, 17, 26, 0.1), 0px 16px 48px rgba(17, 17, 26, 0.1);
+  border-radius: 10px;
   z-index: 9999;
   overflow-y: auto;
 }
@@ -262,10 +264,10 @@
 .app-panel-inner {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  padding: 60px 36px;
-  gap: 60px;
-  min-height: 100%;
+  padding: 50px;
+  height: 100%;
   box-sizing: border-box;
 }
 
@@ -311,57 +313,98 @@
 }
 
 .app-name {
-  font-family: 'Pretendard', sans-serif;
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 32px;
+  font-family: 'YSpotlightOTF', 'Y SpotlightOTF', 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 26px;
   color: #000000;
 }
 
-/* 패널 태스크 통계 — Figma 기준 */
 .app-task-stat {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 6px;
-  width: 46px;
-  height: 40px;
+  gap: 2px;
+  height: 32px;
 }
 
-/* 숫자 (3) — YSpotlightOTF 30px #FF6600 */
 .app-task-num {
-  font-family: 'YSpotlightOTF', 'Pretendard', sans-serif;
+  font-family: 'YSpotlightOTF', 'Y SpotlightOTF', 'Pretendard Variable', 'Pretendard', sans-serif;
   font-style: normal;
   font-weight: 400;
-  font-size: 30px;
-  line-height: 40px;
+  font-size: 24px;
+  line-height: 32px;
   color: #FF6600;
   text-align: right;
 }
 
-/* 분모 (/4) — Pretendard 600 20px #ABABAB */
 .app-task-denom {
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
   font-style: normal;
-  font-weight: 600;
-  font-size: 20px;
-  line-height: 24px;
+  font-weight: 300;
+  font-size: 24px;
+  line-height: 29px;
   color: #ABABAB;
   text-align: right;
 }
 
-.app-avatar-lg {
-  width: 80px !important;
-  height: 80px !important;
+.app-avatar-md {
+  width: 64px !important;
+  height: 64px !important;
+}
+
+/* 직무/PR 라벨-값 섹션 */
+.app-info-section {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+}
+
+.app-info-labels {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  width: 28px;
+  flex-shrink: 0;
+}
+
+.app-info-label {
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 19px;
+  color: #909090;
+}
+
+.app-info-values {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  flex: 1;
+}
+
+.app-info-value {
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  color: #909090;
+  align-self: stretch;
+  flex-grow: 0;
 }
 
 .app-projects-section {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 30px 10px;
-  gap: 10px;
+  padding: 20px 0px;
+  gap: 0;
   width: 100%;
   border-top: 1px solid #D9D9D9;
   box-sizing: border-box;
@@ -369,7 +412,7 @@
 
 
 .app-projects-title {
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
   font-size: 18px;
   font-weight: 600;
   line-height: 21px;
@@ -381,7 +424,53 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 0;
+  gap: 0;
   width: 100%;
+}
+
+.app-project-item {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: #FFFFFF;
+  border-top: 1px solid #D9D9D9;
+  border-bottom: 1px solid #D9D9D9;
+}
+
+.app-project-item:first-child {
+  border-top: none;
+}
+
+.app-project-item + .app-project-item {
+  border-top: none;
+}
+
+.app-project-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 10px;
+  height: 50px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.app-task-names {
+  margin: 0 10px 10px 20px;
+  padding-left: 10px;
+  border-left: 1px solid #D9D9D9;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.app-task-name-item {
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 14px;
+  color: #909090;
 }
 
 .app-proj-row {
@@ -406,7 +495,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 12px;
+  gap: 24px;
   min-width: 0;
   overflow: hidden;
 }
@@ -424,7 +513,7 @@
 }
 
 .app-proj-role {
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
   font-size: 14px;
   font-weight: 400;
   line-height: 17px;
@@ -437,7 +526,7 @@
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  gap: 12px;
+  gap: 36px;
   flex-shrink: 0;
 }
 
@@ -450,7 +539,7 @@
   height: 21px;
   background: #FFEBDE;
   border-radius: 20px;
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
   font-size: 14px;
   font-weight: 600;
   line-height: 17px;
@@ -468,7 +557,7 @@
   height: 21px;
   background: #D9D9D9;
   border-radius: 20px;
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
   font-size: 14px;
   font-weight: 600;
   line-height: 17px;
@@ -482,20 +571,19 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 6px;
+  gap: 2px;
   height: 26px;
   width: 47px;
   flex-shrink: 0;
 }
 
 .app-score-num {
-  font-family: 'YSpotlightOTF', 'Pretendard', sans-serif;
+  font-family: 'YSpotlightOTF', 'Y SpotlightOTF', 'Pretendard Variable', 'Pretendard', sans-serif;
   font-size: 20px;
   font-weight: 400;
   line-height: 26px;
   color: #FE9A57;
   white-space: nowrap;
-  min-width: 34px;
 }
 
 .app-score-label {
@@ -521,7 +609,7 @@
   height: 32px;
   border: none;
   cursor: pointer;
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
   font-size: 16px;
   font-weight: 700;
   line-height: 19px;

@@ -1,13 +1,13 @@
 function FormActions({ onCancel, onSubmit, isSubmitEnabled }) {
   return (
     <div className="bottom-bar">
-      <div className="action-buttons">
-        <button type="button" className="btn-cancel" onClick={onCancel}>
+      <div className="teammaking-actions">
+        <button type="button" className="teammaking-btn-cancel" onClick={onCancel}>
           취소
         </button>
         <button
           type="button"
-          className="btn-submit"
+          className="teammaking-btn-submit"
           onClick={onSubmit}
           disabled={!isSubmitEnabled}
         >

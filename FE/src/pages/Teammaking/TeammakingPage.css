@@ -509,6 +509,10 @@ body {
     gap: 8px;
   }
 
+  .page-wrapper .badge:not(.badge--selected) {
+    display: none;
+  }
+
   .project-period-row {
     width: 100%;
     gap: 10px;

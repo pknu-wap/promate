@@ -188,6 +188,9 @@
     margin-left: 0;
     margin-top: 7px;
   }
+  .project-readme-tag:not(.active) {
+    display: none;
+  }
   .project-readme-team-section {
     gap: 15px;
   }

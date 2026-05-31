@@ -1,42 +1,27 @@
-import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import logoGray from '../../assets/icons/logoGW.svg';
 import ProfileModal from '../../components/ProfileModal/ProfileModal';
 import ApplyModal from '../../components/ApplyModal/ApplyModal';
+import apiClient from '../../api/apiClient';
 import './ProjectReadMePage.css';
 
 const categoryMap = {
-  assignment: "조별과제",
-  study: "스터디",
-  contest: "공모전",
-  development: "개발",
-  etc: "기타"
+  ASSIGNMENT: "조별과제",
+  STUDY: "스터디",
+  CONTEST: "공모전",
+  DEVELOPMENT: "개발",
+  ETC: "기타"
 };
 
 function ProjectReadMePage() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { id } = useParams(); // recruitmentId
   const passedData = location.state || {};
 
-  const projectData = {
-    title: passedData.title || "ProMate",
-    createdAt: passedData.dueDate || "2026-05-30T14:30:00",
-    category: categoryMap[passedData.category] || "개발",
-    status: passedData.status === 'completed' ? 'COMPLETED' : "RECRUITING",
-    applied: passedData.applied ?? false,
-    recruitingCount: passedData.capacity || 6,
-    tags: ["조별과제", "스터디", "공모전", "개발", "기타"],
-    description: passedData.summary || "FE 3명, BE 3명 모집합니다. ProMate는 팀 프로젝트의 협업 툴로서 과거 데이터 기반 팀빌딩, 협업 지원 웹사이트입니다.",
-    leader: { name: "이찬이", role: "팀장" },
-    members: [
-      { name: "구정아", role: "팀원" },
-      { name: "김수민", role: "팀원" },
-      { name: "김원빈", role: "팀원" },
-      { name: "김재민", role: "팀원" },
-      { name: "백진선", role: "팀원" },
-      { name: "최하진", role: "팀원" }
-    ]
-  };
+  const [projectData, setProjectData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -45,7 +30,28 @@ function ProjectReadMePage() {
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
   const [applyJob, setApplyJob] = useState('');
   const [applyMotivation, setApplyMotivation] = useState('');
-  const [isApplied, setIsApplied] = useState(passedData.applied || false);
+  const [isApplied, setIsApplied] = useState(false);
+
+  useEffect(() => {
+    const fetchProjectDetail = async () => {
+      try {
+        setIsLoading(true);
+        const response = await apiClient.get(`/recruitments/${id}`);
+        if (response.data && response.data.isSuccess) {
+          const data = response.data.data;
+          setProjectData(data);
+          setIsApplied(data.hasApplied);
+        }
+      } catch (error) {
+        console.error('게시글 상세 정보 조회 실패:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (id) fetchProjectDetail();
+    else setIsLoading(false);
+  }, [id]);
 
   const handleMemberClick = (user, event) => {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -76,6 +82,29 @@ function ProjectReadMePage() {
     navigate(-1);
   };
 
+  const handleDelete = async () => {
+    if (window.confirm("정말 이 게시글을 삭제하시겠습니까?")) {
+      try {
+        const response = await apiClient.delete(`/recruitments/${id}`);
+        if (response.data && response.data.isSuccess) {
+          alert("게시글이 삭제되었습니다.");
+          navigate(-1);
+        }
+      } catch (error) {
+        console.error("게시글 삭제 실패:", error);
+        alert("게시글 삭제에 실패했습니다.");
+      }
+    }
+  };
+
+  if (isLoading) {
+    return <main className="project-readme-page"><div style={{ padding: '40px', textAlign: 'center' }}>데이터를 불러오는 중입니다...</div></main>;
+  }
+
+  if (!projectData) {
+    return <main className="project-readme-page"><div style={{ padding: '40px', textAlign: 'center' }}>게시글을 찾을 수 없습니다.</div></main>;
+  }
+
   return (
     <main className="project-readme-page">
       <div className="project-readme-banner">
@@ -87,58 +116,46 @@ function ProjectReadMePage() {
       <div className="project-readme-info-section">
         <div className="project-readme-header-row">
           <h1 className="project-readme-title">{projectData.title}</h1>
-          <span className="project-readme-created-at">
-            {passedData.dueDate 
-              ? `마감일: ${projectData.createdAt}` 
-              : `생성일: ${projectData.createdAt.replace('T', ' ')}`}
-          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+            {projectData.isAuthor && (
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button onClick={handleDelete} style={{ padding: '6px 12px', cursor: 'pointer', borderRadius: '4px', border: '1px solid #f44336', backgroundColor: '#f44336', color: '#fff', fontSize: '14px' }}>삭제</button>
+              </div>
+            )}
+            <span className="project-readme-created-at">
+              작성일: {projectData.createdAt?.split('T')[0]}
+            </span>
+          </div>
         </div>
 
         <div className="project-readme-tags">
-          {projectData.tags.map((tag, index) => (
-            <span 
-              key={index} 
-              className={`project-readme-tag ${projectData.category === tag ? 'active' : ''}`}
-            >
-              {tag}
-            </span>
-          ))}
+          <span className="project-readme-tag active">
+            {categoryMap[projectData.category] || projectData.category}
+          </span>
         </div>
 
         <p className="project-readme-description">
-          {projectData.description}
+          {projectData.content}
         </p>
 
         <hr className="project-readme-info-divider" />
 
         <div className="project-readme-team-section">
           <div className="project-readme-team-group">
-            <div className="project-readme-team-role">{projectData.leader.role}</div>
+            <div className="project-readme-team-role">팀장</div>
             <div 
               className="project-readme-team-member-name clickable" 
-              onClick={(e) => handleMemberClick(projectData.leader, e)}
+              onClick={(e) => handleMemberClick({ name: projectData.author?.nickname, profileImage: projectData.author?.profileImageUrl }, e)}
             >
-              {projectData.leader.name}
+              {projectData.author?.nickname || "알 수 없음"}
             </div>
           </div>
           <div className="project-readme-team-group">
             <div className="project-readme-team-role">팀원</div>
             <div className="project-readme-team-members-list">
-              {projectData.status === "RECRUITING" ? (
-                <span className="project-readme-team-member-name recruiting">
-                  {projectData.recruitingCount}명 모집중
-                </span>
-              ) : (
-                projectData.members.map((member, idx) => (
-                  <span 
-                    key={idx} 
-                    className="project-readme-team-member-name clickable" 
-                    onClick={(e) => handleMemberClick(member, e)}
-                  >
-                    {member.name}
-                  </span>
-                ))
-              )}
+              <span className="project-readme-team-member-name recruiting">
+                {projectData.applicantCount || 0}명 지원 중
+              </span>
             </div>
           </div>
         </div>

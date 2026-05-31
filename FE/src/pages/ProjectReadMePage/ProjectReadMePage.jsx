@@ -69,6 +69,7 @@ function ProjectReadMePage() {
 
   const handleSubmitApply = () => {
     console.log('지원 완료:', projectData.title, applyJob, applyMotivation);
+    alert('지원이 완료되었습니다.');
     setIsApplied(true);
     handleCloseApplyModal();
   };

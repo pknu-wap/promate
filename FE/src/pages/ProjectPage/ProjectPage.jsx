@@ -327,6 +327,7 @@ function ProjectPage() {
         onClose={handleCloseApplyModal}
         onSubmit={() => {
           console.log('지원하기 제출:', selectedProjectForApply?.title, applyJob, applyMotivation);
+          alert('지원이 완료되었습니다.');
           handleCloseApplyModal();
         }}
         projectName={selectedProjectForApply?.title || ''}

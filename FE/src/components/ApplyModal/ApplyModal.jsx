@@ -14,6 +14,7 @@ function ApplyModal({
   setMotivation,
 }) {
   const [fetchedTitle, setFetchedTitle] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
@@ -45,7 +46,9 @@ function ApplyModal({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
 
+    setIsSubmitting(true);
     try {
       const applicationData = {
         objective: job,
@@ -62,6 +65,8 @@ function ApplyModal({
     } catch (error) {
       console.error("지원서 제출 실패:", error);
       alert(error.response?.data?.message || "지원서 제출 중 오류가 발생했습니다.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -114,8 +119,12 @@ function ApplyModal({
             <button type="button" className="apply-modal-cancel-btn" onClick={onClose}>
               취소
             </button>
-            <button type="submit" className="apply-modal-submit-btn">
-              지원하기
+            <button 
+              type="submit" 
+              className="apply-modal-submit-btn"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "지원중..." : "지원하기"}
             </button>
           </div>
         </form>

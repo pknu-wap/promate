@@ -17,8 +17,8 @@ const categories = [
 
 function FindTeamPage() {
   const navigate = useNavigate();
-  const [selectedCategory, setSelectedCategory] = useState("assignment");
-  const [teamPosts, setTeamPosts] = useState(mockTeamPosts);
+  const [selectedCategory, setSelectedCategory] = useState("PROJECT");
+  const [teamPosts, setTeamPosts] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [debouncedKeyword, setDebouncedKeyword] = useState("");
   const [selectedTeamId, setSelectedTeamId] = useState(null);

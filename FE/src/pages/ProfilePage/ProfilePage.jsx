@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import apiClient from '../../api/apiClient';
 import MainButton from '../../components/MainButton/MainButton';
 import Avatar from '../../components/Avatar/Avatar';
 import AddProjectModal from './components/AddProjectModal';
@@ -11,14 +12,11 @@ const ProfilePage = () => {
   const fileInputRef = useRef(null);
 
   const [userInfo, setUserInfo] = useState({
-    name: '김아무개',
-    taskStats: { completed: 3, total: 5 },
+    name: '로딩 중...',
+    taskStats: { completed: 0, total: 0 },
   });
 
-  const [projects, setProjects] = useState([
-    { id: 1, title: '동아리 프로젝트', role: 'PM', startDate: '2025-03-20', endDate: null, score: null, isManual: false },
-    { id: 2, title: 'WAP 해커톤', role: 'FE', startDate: '2025-03-20', endDate: '2025-07-20', score: 4.7, isManual: false },
-  ]);
+  const [projects, setProjects] = useState([]);
 
   const formatDate = (dateStr) => {
     if (!dateStr) return '';
@@ -26,23 +24,86 @@ const ProfilePage = () => {
     return `${y}.${m}.${d}`;
   };
 
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      const [userRes, taskCountsRes, manualProjectRes, autoProjectRes] = await Promise.allSettled([
+        apiClient.get('/user/me'),
+        apiClient.get('/user/me/projects/task-counts'),
+        apiClient.get('/user/me/projectHistories'),
+        apiClient.get('/projects/activity/me'),
+      ]);
+
+      if (userRes.status === 'fulfilled') {
+        const userData = userRes.value.data.data;
+        const taskCountsData = taskCountsRes.status === 'fulfilled'
+          ? (taskCountsRes.value.data.data ?? []) : [];
+
+        const completed = taskCountsData.reduce((sum, p) => sum + (p.completedTaskCount ?? 0), 0);
+        const total = taskCountsData.reduce((sum, p) => sum + (p.completedTaskCount ?? 0) + (p.incompleteTaskCount ?? 0), 0);
+
+        setUserInfo({
+          name: userData.name,
+          taskStats: { completed, total },
+        });
+        setProfileImageUrl(userData.profileImageUrl || null);
+      }
+
+      const manualProjectsData = manualProjectRes.status === 'fulfilled'
+        ? (manualProjectRes.value.data.data || []) : [];
+      const autoProjectsData = autoProjectRes.status === 'fulfilled'
+        ? (autoProjectRes.value.data.data || []) : [];
+
+      setProjects([
+        ...autoProjectsData.map((p) => ({ ...p, title: p.projectName ?? p.title, score: p.averageReviewScore ?? p.score ?? null, isManual: false })),
+        ...manualProjectsData.map((p) => ({ ...p, title: p.projectName ?? p.title, isManual: true })),
+      ]);
+    };
+    fetchProfileData();
+  }, []);
+
   const handleImageClick = () => {
     if (isEditing) fileInputRef.current?.click();
   };
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
     setProfileImageUrl(URL.createObjectURL(file));
+
+    const formData = new FormData();
+    formData.append('profileImage', file);
+
+    try {
+      const res = await apiClient.patch('/user/me', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      const updated = res.data.data;
+      if (updated?.profileImageUrl) setProfileImageUrl(updated.profileImageUrl);
+    } catch (error) {
+      console.error('프로필 이미지 업로드 실패:', error);
+    }
   };
 
-  const handleAddProject = (newProject) => {
-    setProjects((prev) => [...prev, { id: Date.now(), ...newProject, isManual: true }]);
+  const handleAddProject = async (newProject) => {
+    try {
+      const res = await apiClient.post('/user/me/projectHistories', newProject);
+      const added = res.data.data;
+      setProjects((prev) => [...prev, { ...added, title: added.projectName ?? added.title, isManual: true }]);
+    } catch (error) {
+      console.error('프로젝트 추가 중 오류 발생:', error);
+    }
   };
 
-  const handleDeleteProject = (proj) => {
+  const handleDeleteProject = async (proj) => {
     if (!proj.isManual) return;
-    setProjects((prev) => prev.filter((p) => p.id !== proj.id));
+    const historyId = proj.historyId ?? proj.id;
+    try {
+      await apiClient.delete(`/user/me/projectHistories/${historyId}`);
+      setProjects((prev) => prev.filter((p) => (p.historyId ?? p.id) !== historyId));
+    } catch (error) {
+      console.error('프로젝트 삭제 중 오류 발생:', error);
+    }
   };
 
   return (
@@ -95,7 +156,7 @@ const ProfilePage = () => {
             {[...projects]
               .sort((a, b) => (a.endDate ? 1 : -1) - (b.endDate ? 1 : -1))
               .map((proj) => (
-                <div key={proj.id} className="project-experience-row">
+                <div key={proj.historyId ?? proj.id ?? proj.projectId} className="project-experience-row">
                   <div className="proj-row-inner">
                     <div className="proj-name-group">
                       <span className="proj-title">{proj.title}</span>

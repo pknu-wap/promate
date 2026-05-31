@@ -14,6 +14,14 @@ const categoryMap = {
   ETC: "기타"
 };
 
+const categories = [
+  { id: "PROJECT", label: "조별과제" },
+  { id: "STUDY", label: "스터디" },
+  { id: "CONTEST", label: "공모전" },
+  { id: "DEV", label: "개발" },
+  { id: "ETC", label: "기타" },
+];
+
 function ProjectReadMePage() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -116,22 +124,22 @@ function ProjectReadMePage() {
       <div className="project-readme-info-section">
         <div className="project-readme-header-row">
           <h1 className="project-readme-title">{projectData.title}</h1>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-            {projectData.isAuthor && (
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <button onClick={handleDelete} style={{ padding: '6px 12px', cursor: 'pointer', borderRadius: '4px', border: '1px solid #f44336', backgroundColor: '#f44336', color: '#fff', fontSize: '14px' }}>삭제</button>
-              </div>
-            )}
-            <span className="project-readme-created-at">
-              작성일: {projectData.createdAt?.split('T')[0]}
-            </span>
-          </div>
+          <span className="project-readme-created-at">
+            작성일: {projectData.createdAt?.split('T')[0]}
+          </span>
         </div>
 
         <div className="project-readme-tags">
-          <span className="project-readme-tag active">
-            {categoryMap[projectData.category] || projectData.category}
-          </span>
+          {categories.map((category) => (
+            <span
+              key={category.id}
+              className={`project-readme-tag ${
+                projectData.category === category.id ? 'active' : ''
+              }`}
+            >
+              {category.label}
+            </span>
+          ))}
         </div>
 
         <p className="project-readme-description">
@@ -160,16 +168,27 @@ function ProjectReadMePage() {
           </div>
         </div>
 
-        {projectData.status === "RECRUITING" && (
+        {projectData.isAuthor ? (
           <div className="project-readme-apply-container">
             <button 
-              className={`project-readme-apply-btn ${isApplied ? 'reviewing' : 'apply'}`}
-              onClick={() => !isApplied && handleApplyClick()}
-              disabled={isApplied}
+              className="project-readme-delete-btn"
+              onClick={handleDelete}
             >
-              {isApplied ? '심사중' : '지원하기'}
+              삭제
             </button>
           </div>
+        ) : (
+          projectData.status === "RECRUITING" && (
+            <div className="project-readme-apply-container">
+              <button 
+                className={`project-readme-apply-btn ${isApplied ? 'reviewing' : 'apply'}`}
+                onClick={() => !isApplied && handleApplyClick()}
+                disabled={isApplied}
+              >
+                {isApplied ? '심사중' : '지원하기'}
+              </button>
+            </div>
+          )
         )}
       </div>
 

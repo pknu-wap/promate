@@ -86,6 +86,22 @@
   cursor: default;
 }
 
+.project-readme-delete-btn {
+  border: none;
+  border-radius: 5px;
+  padding: 8px 36px;
+  font-size: 17px;
+  font-weight: 600;
+  background-color: #DE0000;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.project-readme-delete-btn:hover {
+  background-color: #d32f2f;
+}
+
 .project-readme-tags {
   display: flex;
   gap: 8px;

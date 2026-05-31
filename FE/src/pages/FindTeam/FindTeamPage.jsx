@@ -1,4 +1,5 @@
 import { useMemo, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import ApplyModal from "../../components/ApplyModal/ApplyModal.jsx";
 import Badge from "../../components/Badge/Badge.jsx";
 import ApplicantBox from "../../components/ApplicantBox/ApplicantBox.jsx";
@@ -112,6 +113,7 @@ const isMatchedTeam = (team, keyword) => {
 };
 
 function FindTeamPage() {
+  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState("assignment");
   const [teamPosts, setTeamPosts] = useState(mockTeamPosts);
   const [searchKeyword, setSearchKeyword] = useState("");
@@ -233,6 +235,7 @@ function FindTeamPage() {
                   if (!team.applied) handleOpenApplyModal(team.id);
                 }}
                 onBookmarkClick={() => handleToggleBookmark(team.id)}
+              onClick={() => navigate(`/readme/${team.id}`, { state: team })}
               />
             );
           })

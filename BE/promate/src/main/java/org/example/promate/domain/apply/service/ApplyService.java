@@ -9,6 +9,7 @@ import org.example.promate.domain.apply.repository.ApplyRepository;
 import org.example.promate.domain.project.entity.Member;
 import org.example.promate.domain.project.entity.Project;
 import org.example.promate.domain.project.enums.Position;
+import org.example.promate.domain.project.enums.ProjectStatus;
 import org.example.promate.domain.project.repository.MemberRepository;
 import org.example.promate.domain.project.repository.ProjectRepository;
 import org.example.promate.domain.recruit.entity.Recruit;
@@ -82,6 +83,7 @@ public class ApplyService {
     }
 
 
+    @Transactional
     public ApplyResponse submit(Long recruitmentId, Long userId, ApplyRequest request) {
 
         // 중복 지원 방지 검증
@@ -98,17 +100,12 @@ public class ApplyService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new GeneralException(UserErrorCode.USER_NOT_FOUND));
 
-        // 모집글 Status가 RECRUITING 아닌 상태라면 지원 차단
-        if (recruit.getStatus() != RecruitStatus.RECRUITING) {
-            throw new GeneralException(RecruitErrorCode.RECRUITMENT_ALREADY_CLOSED);
-        }
-
         // 지원서 생성 및 저장
         Apply application = Apply.builder()
                 .user(user)
                 .recruit(recruit)
-                .objective(request.getPreferredRole())
-                .prContent(request.getIntroduction())
+                .objective(request.getObjective())
+                .prContent(request.getPrContent())
                 .status(Status.PENDING)
                 .build();
         applyRepository.save(application);
@@ -119,7 +116,7 @@ public class ApplyService {
         //ProMate 프로젝트 중 완료(COMPLETED)된 내역 전부 긁어오기
         List<Project> completedPromateProjects = memberRepository.findByUserId(userId).stream()
                 .map(Member::getProject)
-                .filter(project -> "COMPLETED".equals(project.getStatus().name()))
+                .filter(project -> project.getStatus() == ProjectStatus.COMPLETED)
                 .toList();
 
         for (Project project : completedPromateProjects) {
@@ -155,6 +152,7 @@ public class ApplyService {
 
 
     // 지원서 수정
+    @Transactional
     public ApplicationUpdateResponse updateApplication(Long recruitmentId, Long applicationId, Long userId, ApplicationUpdateRequest request) {
         Apply apply = validateApplicationOwner(applicationId, userId);
 
@@ -174,6 +172,7 @@ public class ApplyService {
     }
 
     // 지원서 취소 + 합격 상태였다면 추가 로직
+    @Transactional
     public void deleteApplication(Long recruitmentId, Long applicationId, Long userId) {
 
         Apply apply = validateApplicationOwner(applicationId, userId);
@@ -193,16 +192,15 @@ public class ApplyService {
             // 임시 팀 멤버에서 제거
             Member member = memberRepository.findByProjectIdAndUserId(recruit.getProject().getId(), userId)
                     .orElseThrow(() -> new GeneralException(RecruitErrorCode.MEMBER_NOT_FOUND));
-            member.delete();
             memberRepository.delete(member);
+            memberRepository.flush();
         }
-        apply.delete();
         applyRepository.delete(apply);
     }
 
     // 수정,삭제에서 쓰는 공통 검증 로직
     private Apply validateApplicationOwner(Long applicationId, Long userId) {
-        Apply apply = applyRepository.findById(applicationId)
+        Apply apply = applyRepository.findByIdWithUser(applicationId)
                 .orElseThrow(() -> new GeneralException(RecruitErrorCode.APPLICATION_NOT_FOUND));
 
         if (!apply.getUser().getId().equals(userId)) {
@@ -229,7 +227,7 @@ public class ApplyService {
         }
 
         // 지원서 조회 (Fetch Join으로 User와 ApplyProject, Project까지 가져옴)
-        Apply apply = applyRepository.findByIdWithUserAndProjects(applicationId)
+        Apply apply = applyRepository.findByIdWithUser(applicationId)
                 .orElseThrow(() -> new GeneralException(RecruitErrorCode.RECRUITMENT_NOT_FOUND));
 
         List<ApplicationDetailResponse.PastProjectInfo> pastProjects = apply.getApplyProjects().stream()
@@ -294,12 +292,12 @@ public class ApplyService {
     }
 
 
+    @Transactional
     public ApplyStatusResponse handleApplicationStatus(Long recruitmentId, Long applicationId, Long leaderId, ApplyStatusRequest request) {
         // 객체 조회
         Recruit recruit = recruitRepository.findById(recruitmentId)
                 .orElseThrow(() -> new GeneralException(RecruitErrorCode.RECRUITMENT_NOT_FOUND));
 
-        // 지원서 Status가 PENDING 아닌 상태라면 차단
         if (recruit.getStatus() != RecruitStatus.RECRUITING) {
             throw new GeneralException(RecruitErrorCode.RECRUITMENT_ALREADY_CLOSED);
         }

@@ -20,9 +20,8 @@ public class KakaoAuthController {
     private final KakaoAuthService kakaoAuthService;
 
     @GetMapping("/login")
-    public ApiResponse<Map<String, String>> getKakaoUrl() {
-
-        String url = kakaoAuthService.setKakaoAuthUrl();
+    public ApiResponse<Map<String, String>> getKakaoUrl(@RequestParam(required = false) String redirectUri) {
+        String url = kakaoAuthService.setKakaoAuthUrl(redirectUri);
 
         return ApiResponse.onSuccess(
                 GeneralSuccessCode.OK,
@@ -33,10 +32,11 @@ public class KakaoAuthController {
     @GetMapping("/callback")
     public ApiResponse<KakaoAuthResponseDTO> kakaoCallBack(
             @RequestParam("code") String code,
-            @RequestParam(value = "state", required = false) String state
+            @RequestParam(value = "state", required = false) String state,
+            @RequestParam(required = false) String redirectUri
     ) {
         KakaoAuthResponseDTO authResponse =
-                kakaoAuthService.kakaoLogin(code, state);
+                kakaoAuthService.kakaoLogin(code, state,redirectUri);
 
         return ApiResponse.onSuccess(
                 GeneralSuccessCode.OK,

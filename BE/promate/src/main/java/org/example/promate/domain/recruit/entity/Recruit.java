@@ -68,10 +68,9 @@ public class Recruit extends BaseEntity {
     @Builder.Default
     private List<Apply> applies = new ArrayList<>();
 
-    public void update(String title, String description, RecruitStatus status) {
+    public void update(String title, String description) {
         this.title = title;
         this.description = description;
-        this.status = status;
     }
 
     public void delete(){

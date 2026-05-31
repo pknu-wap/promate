@@ -35,7 +35,11 @@ public class SecurityConfig {
                                 "/actuator/health",
                                 "/api/auth/kakao/**",
                                 "/swagger-ui/**",
-                                "/v3/api-docs/**"
+                                "/v3/api-docs/**",
+
+                                //로그인 필요없는 api 추가
+                                "/recruitments",
+                                "/recruitments/{recruitmentsId}"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

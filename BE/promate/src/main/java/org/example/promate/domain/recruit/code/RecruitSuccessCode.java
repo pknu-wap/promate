@@ -28,7 +28,8 @@ public enum RecruitSuccessCode implements BaseSuccessCode {
     APPLY_DETAIL_FETCHED(HttpStatus.OK, "RECRUIT_S015", "팀 지원서 상세 조회를 성공했습니다."),
     APPLY_STATUS_UPDATED(HttpStatus.OK, "RECRUIT_S016", "지원서 상태 수정을 완료되었습니다."),
 
-    RECRUITMENT_COMPLETED(HttpStatus.NO_CONTENT,"RECRUIT_S0017", "모집이 완료되었으며, 프로젝트 팀이 생성되었습니다.")
+    RECRUITMENT_COMPLETED(HttpStatus.NO_CONTENT,"RECRUIT_S017", "모집이 완료되었으며, 프로젝트 팀이 생성되었습니다."),
+    RECRUITMENT_CREATED_LIST_FETCHED(HttpStatus.OK,"RECRUIT_S018", "내가 생성한 모집글 리스트 불러오기를 성공했습니다.")
     ;
 
     private final HttpStatus status;

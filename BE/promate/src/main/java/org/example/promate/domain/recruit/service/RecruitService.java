@@ -119,10 +119,10 @@ public class RecruitService {
                 .orElseThrow(() -> new GeneralException(RecruitErrorCode.RECRUITMENT_NOT_FOUND));
 
         if (!recruit.getUser().getId().equals(userId)) {
-            throw new SecurityException("수정 권한이 없습니다.");
+            throw new GeneralException(RecruitErrorCode.NOT_RECRUITMENT_AUTHOR);
         }
 
-        recruit.update(request.title(), request.content(), request.status());
+        recruit.update(request.title(), request.content());
     }
 
     @Transactional
@@ -157,6 +157,7 @@ public class RecruitService {
 
 
 
+    @Transactional
     public RecruitStatusResponse changeRecruitStatus(Long recruitmentId, Long userId, RecruitStatusRequest request) {
         // 모집글 조회 및 권한 확인
         Recruit recruit = recruitRepository.findById(recruitmentId)
@@ -204,6 +205,7 @@ public class RecruitService {
         return new RecruitStatusResponse(project.getId(), RecruitStatus.COMPLETED);
     }
 
+    @Transactional
     public BookmarkResponse toggleBookmark(Long recruitmentId, Long userId) {
         // 게시글 존재 확인
         Recruit recruit = recruitRepository.findById(recruitmentId)
@@ -291,4 +293,25 @@ public class RecruitService {
         //지원서 청소
         applyRepository.deleteAllByRecruitId(recruit.getId());
     }*/
+
+
+    //내가 생성한 모집글들 불러오기
+    public RecruitPageResponse<MyRecruitResponse> getMyRecruitments(Long userId, String status, Pageable pageable) {
+        RecruitStatus recruitStatus = null;
+
+        // 쿼리 스트링으로 status가 넘어왔을 경우 대소문자 구분 없이 매핑 (null이면 전체 조회)
+        if (status != null && !status.isBlank()) {
+            try {
+                recruitStatus = RecruitStatus.valueOf(status.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new GeneralException(RecruitErrorCode.INVALID_RECRUIT_STATUS);
+            }
+        }
+
+        Page<Recruit> recruitPage = recruitRepository.findByUserIdAndStatus(userId, recruitStatus, pageable);
+
+        Page<MyRecruitResponse> mappedPage = recruitPage.map(MyRecruitResponse::from);
+
+        return RecruitPageResponse.of(mappedPage);
+    }
 }

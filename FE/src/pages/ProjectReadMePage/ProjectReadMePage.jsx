@@ -17,7 +17,7 @@ const categoryMap = {
 function ProjectReadMePage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { id } = useParams(); // recruitmentId
+  const { postId } = useParams();
   const passedData = location.state || {};
 
   const [projectData, setProjectData] = useState(null);
@@ -36,7 +36,7 @@ function ProjectReadMePage() {
     const fetchProjectDetail = async () => {
       try {
         setIsLoading(true);
-        const response = await apiClient.get(`/recruitments/${id}`);
+        const response = await apiClient.get(`/recruitments/${postId}`);
         if (response.data && response.data.isSuccess) {
           const data = response.data.data;
           setProjectData(data);
@@ -49,9 +49,9 @@ function ProjectReadMePage() {
       }
     };
 
-    if (id) fetchProjectDetail();
+    if (postId) fetchProjectDetail();
     else setIsLoading(false);
-  }, [id]);
+  }, [postId]);
 
   const handleMemberClick = (user, event) => {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -85,7 +85,7 @@ function ProjectReadMePage() {
   const handleDelete = async () => {
     if (window.confirm("정말 이 게시글을 삭제하시겠습니까?")) {
       try {
-        const response = await apiClient.delete(`/recruitments/${id}`);
+        const response = await apiClient.delete(`/recruitments/${postId}`);
         if (response.data && response.data.isSuccess) {
           alert("게시글이 삭제되었습니다.");
           navigate(-1);

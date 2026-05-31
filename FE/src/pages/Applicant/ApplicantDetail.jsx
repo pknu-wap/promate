@@ -1,55 +1,96 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import Avatar from '../../components/Avatar/Avatar';
+import logoIcon from '../../assets/logoIcon.svg';
+import {
+  getPendingApplications,
+  getAcceptedApplications,
+  getRejectedApplications,
+  getApplicationDetail,
+  updateApplicationStatus,
+} from '../../api/RecruitApi';
 import './Applicant.css';
 
-const applicantList = [
-  {
-    id: 1, name: '김은비', taskStats: { completed: 3, total: 5 }, date: '2026-05-02',
-    peerEvaluationScore: 4.6,
-    contributionArea: '프론트엔드 개발자',
-    introduction: '함께 성장하고 배우겠습니다.',
-    projects: [
-      { name: '동아리 프로젝트', role: 'PM', status: '진행중', score: null, taskNames: ['시작발표 PPT 제작', '프로젝트 기획', '최종발표 PT'] },
-      { name: 'WAP 해커톤', role: 'FE', status: '완료', score: 4.7, taskNames: [] },
-      { name: '교양 팀플', role: null, status: '완료', score: 4.2, taskNames: null },
-    ],
-  },
-  {
-    id: 2, name: '김은비', taskStats: { completed: 3, total: 5 }, date: '2026-05-02',
-    peerEvaluationScore: 3.8,
-    contributionArea: '백엔드 개발자',
-    introduction: '열심히 하겠습니다.',
-    projects: [
-      { name: '동아리 프로젝트', role: 'PM', status: '진행중', score: null, taskNames: [] },
-      { name: 'WAP 해커톤', role: 'FE', status: '완료', score: 4.5, taskNames: [] },
-    ],
-  },
-  {
-    id: 3, name: '김은비', taskStats: { completed: 3, total: 5 }, date: '2026-05-02',
-    peerEvaluationScore: 4.2,
-    contributionArea: 'UI/UX 디자이너',
-    introduction: '최선을 다하겠습니다.',
-    projects: [
-      { name: '동아리 프로젝트', role: 'PM', status: '진행중', score: null, taskNames: [] },
-    ],
-  },
-];
-
 const tabs = [
-  { key: 'applicant', label: '현재 지원자' },
-  { key: 'member', label: '현재 팀원' },
-  { key: 'rejected', label: '거절한 지원자' },
+  { key: 'PENDING', label: '현재 지원자' },
+  { key: 'ACCEPTED', label: '현재 팀원' },
+  { key: 'REJECTED', label: '거절한 지원자' },
 ];
 
 const ApplicantDetail = () => {
-  const [activeTab, setActiveTab] = useState('applicant');
-  const [selectedApplicant, setSelectedApplicant] = useState(null);
+  const { state } = useLocation();
+  const recruitmentId = state?.recruitmentId;
+  const projectTitle = state?.projectTitle ?? '프로젝트';
 
+  const [activeTab, setActiveTab] = useState('PENDING');
+  const [applicantMap, setApplicantMap] = useState({ PENDING: [], ACCEPTED: [], REJECTED: [] });
+  const [selectedApplicant, setSelectedApplicant] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!recruitmentId) return;
+    setLoading(true);
+
+    Promise.allSettled([
+      getPendingApplications(recruitmentId),
+      getAcceptedApplications(recruitmentId),
+      getRejectedApplications(recruitmentId),
+    ]).then(([pendingRes, acceptedRes, rejectedRes]) => {
+      const extract = (res) =>
+        res.status === 'fulfilled' ? (res.value.data?.data?.applicants ?? []) : [];
+
+      setApplicantMap({
+        PENDING: extract(pendingRes),
+        ACCEPTED: extract(acceptedRes),
+        REJECTED: extract(rejectedRes),
+      });
+    }).finally(() => setLoading(false));
+  }, [recruitmentId]);
+
+  const handleViewDetail = (person) => {
+    getApplicationDetail(recruitmentId, person.applicationId)
+      .then((res) => setSelectedApplicant(res.data?.data ?? res.data))
+      .catch((err) => console.error('지원서 조회 실패', err));
+  };
+
+  const handleStatusChange = (applicationId, status) => {
+    updateApplicationStatus(recruitmentId, applicationId, status)
+      .then((res) => {
+        const resData = res.data?.data;
+
+        setApplicantMap((prev) => {
+          let person = null;
+          let fromTab = null;
+
+          Object.keys(prev).forEach((tab) => {
+            const found = prev[tab].find((p) => p.applicationId === applicationId);
+            if (found) { person = found; fromTab = tab; }
+          });
+
+          if (!person || !fromTab) return prev;
+
+          const updated = { ...prev };
+          updated[fromTab] = updated[fromTab].filter((p) => p.applicationId !== applicationId);
+          updated[status] = [...updated[status], { ...person, status }];
+          return updated;
+        });
+
+        // 현재 합격자 == 최대 인원 → 프로젝트 자동 시작
+        if (resData?.currentParticipants === resData?.maxParticipants) {
+          alert('모집 인원이 다 찼습니다! 프로젝트가 자동으로 시작됩니다.');
+        }
+
+      })
+      .catch((err) => console.error('상태 변경 실패', err))
+      .finally(() => setSelectedApplicant(null));
+  };
+
+  const filtered = applicantMap[activeTab] ?? [];
   const closePanel = () => setSelectedApplicant(null);
 
   return (
     <div className="ad-page">
-      <h1 className="ad-title">지원자 검토 - 캡스톤 디자인</h1>
+      <h1 className="ad-title">지원자 검토 - {projectTitle}</h1>
 
       <div className="ad-card">
         <div className="ad-tab-bar">
@@ -72,21 +113,27 @@ const ApplicantDetail = () => {
             <span />
           </div>
 
-          {applicantList.map((person) => (
-            <div key={person.id} className="ad-row">
+          {loading && <p style={{ padding: '20px' }}>불러오는 중...</p>}
+
+          {!loading && filtered.map((person) => (
+            <div key={person.applicationId} className="ad-row">
               <div className="ad-name-cell">
-                <div className="ad-avatar" />
+                <div className="al-logo-box">
+                  <img src={logoIcon} alt="avatar" />
+                </div>
                 <span className="ad-name-text">{person.name}</span>
               </div>
               <div className="ad-cell ad-task-stat">
-                <span className="ad-task-num">{person.taskStats.completed}</span>
+                <span className="ad-task-num">{person.completedTasks ?? '-'}</span>
                 <span className="ad-task-sep">/</span>
-                <span className="ad-task-total">{person.taskStats.total}</span>
+                <span className="ad-task-total">{person.totalTasks ?? '-'}</span>
               </div>
-              <span className="ad-cell ad-cell--date">{person.date.replace(/-/g, ' - ')}</span>
+              <span className="ad-cell ad-cell--date">
+                {person.appliedAt?.slice(0, 10).replace(/-/g, ' - ')}
+              </span>
               <button
                 className="ad-view-btn"
-                onClick={() => setSelectedApplicant(person)}
+                onClick={() => handleViewDetail(person)}
               >
                 지원서 보기
               </button>
@@ -105,13 +152,17 @@ const ApplicantDetail = () => {
 
                 {/* 프로필 헤더 */}
                 <div className="app-profile-header">
-                  <Avatar size="md" className="app-avatar-md" />
+                  <Avatar
+                    src={selectedApplicant.applicant?.profileImageUrl}
+                    size="lg"
+                    className="app-avatar-lg"
+                  />
                   <div className="app-profile-text">
                     <div className="app-name-row">
-                      <span className="app-name">{selectedApplicant.name}</span>
+                      <span className="app-name">{selectedApplicant.applicant?.name}</span>
                       <div className="app-task-stat">
-                        <span className="app-task-num">{selectedApplicant.taskStats.completed}</span>
-                        <span className="app-task-denom">/{selectedApplicant.taskStats.total}</span>
+                        <span className="app-task-num">{selectedApplicant.applicant?.completedTasks ?? '-'}</span>
+                        <span className="app-task-denom">/{selectedApplicant.applicant?.totalTasks ?? '-'}</span>
                       </div>
                     </div>
 
@@ -132,32 +183,28 @@ const ApplicantDetail = () => {
                 {/* 프로젝트 경험 */}
                 <div className="app-projects-section">
                   <div className="app-projects-list">
-                    {selectedApplicant.projects.map((proj, i) => (
+                    {selectedApplicant.pastProjects?.map((proj, i) => (
                       <div key={i} className="app-project-item">
                         <div className="app-project-header">
                           <div className="app-proj-left">
-                            <span className="app-proj-name">{proj.name}</span>
-                            {proj.role && <span className="app-proj-role">{proj.role}</span>}
-                          </div>
-                          <div className="app-proj-right">
-                            <span className={proj.status === '진행중' ? 'app-status-badge--active' : 'app-status-badge--done'}>
-                              {proj.status}
+                            <span className="app-proj-name">{proj.title}</span>
+                            <span className="app-proj-role">
+                              {proj.type === 'PROMATE' ? 'ProMate' : '직접 입력'}
                             </span>
-                            {proj.score != null ? (
-                              <div className="app-score">
-                                <span className="app-score-num">{proj.score.toFixed(1)}</span>
-                                <span className="app-score-label">점</span>
-                              </div>
-                            ) : (
-                              <div style={{ width: 47 }} />
-                            )}
                           </div>
                         </div>
+                        {/* PROMATE: 완료한 태스크 목록 */}
                         {proj.taskNames && proj.taskNames.length > 0 && (
                           <div className="app-task-names">
                             {proj.taskNames.map((task, j) => (
                               <span key={j} className="app-task-name-item">- {task}</span>
                             ))}
+                          </div>
+                        )}
+                        {/* MANUAL: 직접 입력한 설명 */}
+                        {proj.selfTaskDescription && (
+                          <div className="app-task-names">
+                            <span className="app-task-name-item">{proj.selfTaskDescription}</span>
                           </div>
                         )}
                       </div>
@@ -168,8 +215,40 @@ const ApplicantDetail = () => {
 
               {/* 수락/거절 버튼 */}
               <div className="app-panel-actions">
-                <button className="app-btn-reject" onClick={closePanel}>거절</button>
-                <button className="app-btn-accept">수락</button>
+                {selectedApplicant.status === 'PENDING' && (
+                  <>
+                    <button
+                      className="app-btn-reject"
+                      onClick={() => handleStatusChange(selectedApplicant.applicationId, 'REJECTED')}
+                    >
+                      거절
+                    </button>
+                    <button
+                      className="app-btn-accept"
+                      onClick={() => handleStatusChange(selectedApplicant.applicationId, 'ACCEPTED')}
+                    >
+                      수락
+                    </button>
+                  </>
+                )}
+                {selectedApplicant.status === 'ACCEPTED' && (
+                  <button
+                    className="app-btn-reject"
+                    style={{ width: '100%' }}
+                    onClick={() => handleStatusChange(selectedApplicant.applicationId, 'REJECTED')}
+                  >
+                    팀에서 제외
+                  </button>
+                )}
+                {selectedApplicant.status === 'REJECTED' && (
+                  <button
+                    className="app-btn-accept"
+                    style={{ width: '100%' }}
+                    onClick={() => handleStatusChange(selectedApplicant.applicationId, 'ACCEPTED')}
+                  >
+                    수락
+                  </button>
+                )}
               </div>
             </div>
           </div>

@@ -116,28 +116,6 @@
   flex-wrap: wrap;
 }
 
-.project-readme-tag {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 4px 15px;
-  height: 29px;
-  border-radius: 90px;
-  font-family: 'YSpotlightOTF', sans-serif;
-  font-size: 16px;
-  font-weight: 500;
-  border: 1px solid #909090;
-  color: #909090;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.project-readme-tag.active {
-  background: #FE9A57;
-  border: 1px solid #FF6600;
-  color: #FFFFFF;
-}
-
 .project-readme-description {
   font-weight: 500;
   font-size: 16px;
@@ -233,7 +211,7 @@
     margin-left: 0;
     align-items: flex-start;
   }
-  .project-readme-tag:not(.active) {
+  .common-tag.hide-inactive:not(.active) {
     display: none;
   }
   .project-readme-team-section {

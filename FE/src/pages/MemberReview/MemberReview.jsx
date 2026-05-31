@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useLocation, useSearchParams } from 'react-router-dom';
 import checkIcon from '../../assets/icons/checkIcon.svg';
 import './MemberReview.css';
-import Badge from "../../components/Badge/Badge.jsx";
 import apiClient from '../../api/apiClient';
+import Tag from "../../components/Tag/Tag.jsx";
 
 const questions = [
   'OOO 팀원은 프로젝트 진행 과정에서 원활하게 소통했는가?',
@@ -100,13 +100,13 @@ function MemberReviewPage() {
           <div className="domain-tags">
             {domainOptions.length > 0 ? (
               domainOptions.map((option) => (
-                <Badge
-                  key={option.id}
-                  selected={selectedDomain === option.id}
-                  onClick={() => handleDomainChange(option.id)}
-                >
-                  {option.label}
-                </Badge>
+              <Tag
+                key={option.id}
+                isActive={selectedDomain === option.id}
+                onClick={() => handleDomainChange(option.id)}
+              >
+                {option.label}
+              </Tag>
               ))
             ) : (
               <span style={{ fontSize: '13px', color: '#909090', padding: '4px 0' }}>평가할 팀원이 없습니다.</span>

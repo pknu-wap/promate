@@ -1,0 +1,22 @@
+.common-tag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 15px;
+  height: 29px;
+  border-radius: 90px;
+  font-family: 'YSpotlightOTF', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  border: 1px solid #909090;
+  color: #909090;
+  white-space: nowrap;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.common-tag.active {
+  background: #FE9A57;
+  border: 1px solid #FF6600;
+  color: #FFFFFF;
+}

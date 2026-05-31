@@ -5,6 +5,7 @@ import Calendar from '../../components/Calendar/Calendar';
 import ProgressBar from '../../components/ProgressBar/ProgressBar';
 import SummaryCard from '../../components/SummaryCard/SummaryCard';
 import moreIcon from '../../assets/moreIcon.svg';
+import NewTaskModal from '../../components/NewTaskModal/NewTaskModal.jsx';
 import './TeamPage.css';
 
 const projects = [
@@ -13,24 +14,6 @@ const projects = [
   { id: 3, title: '캡스톤 디자인', dueDate: '2026.07.07', currentStep: 51, totalStep: 100 },
   { id: 4, title: '알고리즘 스터디', dueDate: '2023.05.10', currentStep: 93, totalStep: 100 },
   { id: 5, title: '인공지능 개발', dueDate: '2026.12.05', currentStep: 0, totalStep: 0 },
-];
-
-const teamTasks = [
-  { id: 1, title: '시장조사', dueDate: '2026.03.17' },
-  { id: 2, title: 'PPT 발표 준비', dueDate: '2026.03.31' },
-  { id: 3, title: '와이어 프레임', dueDate: '2026.04.01' },
-  { id: 4, title: '디자인 시스템 정리', dueDate: '2026.04.08' },
-  { id: 5, title: 'API 명세 확인', dueDate: '2026.04.12' },
-  { id: 6, title: '메인 화면 개발', dueDate: '2026.04.18' },
-  { id: 7, title: '사용자 테스트 준비', dueDate: '2026.04.24' },
-  { id: 8, title: '최종 발표 자료 검토', dueDate: '2026.04.30' },
-];
-
-const members = [
-  { id: 1, name: '홍길동', role: 'PM' },
-  { id: 2, name: '김철수', role: 'UIUX' },
-  { id: 3, name: '김영희', role: 'FE' },
-  { id: 4, name: '김영희', role: 'FE' },
 ];
 
 const boardPosts = [
@@ -89,17 +72,40 @@ const INITIAL_VISIBLE_COUNT = 3;
 function TeamPage() {
   const { projectId } = useParams();
   const navigate = useNavigate();
+  
+  const [tasks, setTasks] = useState([
+    { id: 1, title: '시장조사', dueDate: '2026.03.17' },
+    { id: 2, title: 'PPT 발표 준비', dueDate: '2026.03.31' },
+    { id: 3, title: '와이어 프레임', dueDate: '2026.04.01' },
+    { id: 4, title: '디자인 시스템 정리', dueDate: '2026.04.08' },
+    { id: 5, title: 'API 명세 확인', dueDate: '2026.04.12' },
+    { id: 6, title: '메인 화면 개발', dueDate: '2026.04.18' },
+    { id: 7, title: '사용자 테스트 준비', dueDate: '2026.04.24' },
+    { id: 8, title: '최종 발표 자료 검토', dueDate: '2026.04.30' },
+  ]);
+
+  const [members] = useState([
+    { id: 1, name: '홍길동' },
+    { id: 2, name: '김철수' },
+    { id: 3, name: '김영희' },
+    { id: 4, name: '김영희' },
+  ]);
+
   const [isTaskExpanded, setIsTaskExpanded] = useState(false);
   const [isBoardExpanded, setIsBoardExpanded] = useState(false);
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
   const [postTitle, setPostTitle] = useState('');
   const [postContent, setPostContent] = useState('');
+  const [isNewTaskModalOpen, setIsNewTaskModalOpen] = useState(false);
+
   const projectData = projects.find((project) => project.id === Number(projectId)) ?? projects[0];
-  const visibleTasks = isTaskExpanded ? teamTasks : teamTasks.slice(0, INITIAL_VISIBLE_COUNT);
+  
+  const visibleTasks = isTaskExpanded ? tasks : tasks.slice(0, INITIAL_VISIBLE_COUNT);
   const visiblePosts = isBoardExpanded ? boardPosts : boardPosts.slice(0, INITIAL_VISIBLE_COUNT);
-  const canToggleTasks = teamTasks.length > INITIAL_VISIBLE_COUNT;
+  const canToggleTasks = tasks.length > INITIAL_VISIBLE_COUNT;
   const canTogglePosts = boardPosts.length > INITIAL_VISIBLE_COUNT;
+
   const openTaskBoard = (status) => {
     navigate(`/task-board?projectId=${projectData.id}&status=${status}`);
   };
@@ -115,8 +121,20 @@ function TeamPage() {
     if (!postTitle.trim() || !postContent.trim()) {
       return;
     }
-
     closePostModal();
+  };
+
+  const handleAddTaskSubmit = (newTaskData) => {
+    const nextId = tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
+    const formattedDate = newTaskData.dueDate.replace(/-/g, '.');
+
+    const createdTask = {
+      id: nextId,
+      title: newTaskData.title,
+      dueDate: formattedDate,
+    };
+
+    setTasks((prevTasks) => [createdTask, ...prevTasks]);
   };
 
   return (
@@ -151,9 +169,19 @@ function TeamPage() {
         <section className={`team-card team-task-board ${isTaskExpanded ? 'team-card-expanded' : ''}`}>
           <div className="team-task-header">
             <h2>테스크 보드</h2>
-            <strong>
-              {teamTasks.length}<span>개</span>
-            </strong>
+            <div>
+              <strong className="team-task-count">
+                {tasks.length}<span>개</span>
+              </strong>
+              <button
+                type="button"
+                className="team-board-write-button"
+                onClick={() => setIsNewTaskModalOpen(true)}
+              >
+                <SquarePen size={12} />
+                <span>테스크쓰기</span>
+              </button>
+            </div>
           </div>
 
           <div className="team-task-list">
@@ -313,6 +341,13 @@ function TeamPage() {
           </article>
         </div>
       )}
+
+      <NewTaskModal
+        isOpen={isNewTaskModalOpen}
+        onClose={() => setIsNewTaskModalOpen(false)}
+        onSubmit={handleAddTaskSubmit}
+        projectId={projectData.id}
+      />
     </div>
   );
 }

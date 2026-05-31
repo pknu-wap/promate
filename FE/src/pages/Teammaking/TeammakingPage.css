@@ -414,6 +414,7 @@ body {
   cursor: pointer;
   font-family: "Pretendard", sans-serif;
   transition: background 0.15s;
+  white-space: nowrap;
 }
 
 .teammaking-btn-cancel:hover {
@@ -439,6 +440,7 @@ body {
   cursor: pointer;
   font-family: "Pretendard", sans-serif;
   transition: background 0.15s;
+  white-space: nowrap;
 }
 
 .teammaking-btn-submit:hover {
@@ -594,4 +596,14 @@ body {
     bottom: 12px;
   }
 
+  .teammaking-actions {
+    gap: 10px;
+  }
+
+  .teammaking-btn-cancel,
+  .teammaking-btn-submit {
+    width: auto;
+    height: 36px;
+    font-size: 16px;
+  }
 }

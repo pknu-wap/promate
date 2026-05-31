@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import logoIcon from '../../assets/logoIcon.svg';
+import ApplicantBox from '../../components/ApplicantBox/ApplicantBox';
 import { getMyRecruitments } from '../../api/RecruitApi';
 import './Applicant.css';
 
@@ -10,12 +10,6 @@ const CATEGORY_LABEL = {
   CONTEST: '공모전',
   DEV: '개발',
   ETC: '기타',
-};
-
-const STATUS_LABEL = {
-  RECRUITING: '모집 중',
-  COMPLETED: '모집 완료',
-  CANCELLED: '모집 취소',
 };
 
 const ApplicantList = () => {
@@ -41,36 +35,32 @@ const ApplicantList = () => {
       {loading && <p style={{ padding: '20px' }}>불러오는 중...</p>}
 
       <section className="al-list">
-        {recruitments.map((recruitment) => (
-          <article className="al-card" key={recruitment.postId}>
-            <div className="al-logo-box">
-              <img src={logoIcon} alt={`${recruitment.title} 로고`} />
-            </div>
-
-            <div className="al-content">
-              <h2 className="al-project-title">{recruitment.title}</h2>
-              <p className="al-project-summary">{CATEGORY_LABEL[recruitment.category] ?? recruitment.category}</p>
-            </div>
-
-            <div className="al-actions">
-              <span className="al-status">{STATUS_LABEL[recruitment.status] ?? recruitment.status}</span>
-              <span className="al-capacity">{recruitment.currentMember} / {recruitment.maxMember}명</span>
-              <button
-                className="al-review-btn"
-                onClick={() =>
-                  navigate('/applicant/detail', {
-                    state: {
-                      recruitmentId: recruitment.postId,
-                      projectTitle: recruitment.title,
-                    },
-                  })
-                }
-              >
-                지원자 검토
-              </button>
-            </div>
-          </article>
-        ))}
+        {recruitments.map((recruitment) => {
+          const isClosed = recruitment.status === 'COMPLETED' || recruitment.status === 'CANCELLED';
+          return (
+            <ApplicantBox
+              key={recruitment.postId}
+              title={recruitment.title}
+              summary={CATEGORY_LABEL[recruitment.category] ?? recruitment.category}
+              capacity={recruitment.maxMember}
+              showBookmark={false}
+              buttonText={isClosed ? '모집 마감' : '지원자 검토'}
+              buttonColor={isClosed ? '#D9D9D9' : '#FE9A57'}
+              disabled={isClosed}
+              onButtonClick={
+                isClosed
+                  ? undefined
+                  : () =>
+                      navigate('/applicant/detail', {
+                        state: {
+                          recruitmentId: recruitment.postId,
+                          projectTitle: recruitment.title,
+                        },
+                      })
+              }
+            />
+          );
+        })}
       </section>
     </main>
   );

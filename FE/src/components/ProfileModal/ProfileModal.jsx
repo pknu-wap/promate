@@ -6,6 +6,7 @@ import ProfileAvatar from "../ProfileAvatar/ProfileAvatar";
 function ProfileModal({ isOpen, onClose, user, position }) {
   const [modalPos, setModalPos] = useState({ top: 0, left: 0 });
   const [isDragging, setIsDragging] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const dragPos = useRef({ startX: 0, startY: 0, initialTop: 0, initialLeft: 0 });
 
   useEffect(() => {
@@ -16,6 +17,13 @@ function ProfileModal({ isOpen, onClose, user, position }) {
       });
     }
   }, [position]);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const handleMouseMove = useCallback((e) => {
     const deltaX = e.clientX - dragPos.current.startX;
@@ -34,6 +42,7 @@ function ProfileModal({ isOpen, onClose, user, position }) {
   }, [handleMouseMove]);
 
   const handleMouseDown = (e) => {
+    if (isMobile) return; // 모바일에서는 드래그 비활성화
     if (e.target.closest("button") || e.target.closest(".profile-project-list")) return;
 
     setIsDragging(true);
@@ -90,15 +99,25 @@ function ProfileModal({ isOpen, onClose, user, position }) {
     },
   ];
 
-  const popoverStyle = position ? {
-    position: "fixed",
-    top: `${modalPos.top}px`,
-    left: `${modalPos.left}px`,
-    transform: "translate(0, -100%)",
-    margin: 0,
-    cursor: isDragging ? "grabbing" : "grab",
-    userSelect: isDragging ? "none" : "auto",
-  } : {};
+  const popoverStyle = isMobile
+    ? {
+        position: "fixed",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        margin: 0,
+      }
+    : position
+    ? {
+        position: "fixed",
+        top: `${modalPos.top}px`,
+        left: `${modalPos.left}px`,
+        transform: "translate(0, -100%)",
+        margin: 0,
+        cursor: isDragging ? "grabbing" : "grab",
+        userSelect: isDragging ? "none" : "auto",
+      }
+    : {};
 
   return (
     <>

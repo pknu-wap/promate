@@ -20,6 +20,11 @@
   box-sizing: border-box;
 }
 
+.project-readme-banner-logo {
+  width: 180px;
+  height: 180px;
+}
+
 .project-readme-info-section {
   display: flex;
   flex-direction: column;
@@ -177,6 +182,11 @@
 @media (max-width: 768px) {
   .project-readme-banner {
     padding-left: 20px;
+    height: 140px;
+  }
+  .project-readme-banner-logo {
+    width: 135px;
+    height: 135px;
   }
   .project-readme-info-section {
     padding: 30px 20px 10px;

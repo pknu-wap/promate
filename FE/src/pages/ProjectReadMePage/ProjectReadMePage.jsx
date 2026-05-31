@@ -74,7 +74,7 @@ function ProjectReadMePage() {
     <main className="project-readme-page">
       <div className="project-readme-banner">
         <div className="project-readme-banner-logo-wrapper">
-          <img src={logoGray} alt="프로젝트 로고" width="180" height="180" />
+          <img className='project-readme-banner-logo' src={logoGray} alt="프로젝트 로고" />
         </div>
       </div>
       

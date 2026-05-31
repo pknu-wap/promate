@@ -326,6 +326,7 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  margin-right: 4px;
   min-width: 52px;
   height: 18px;
   padding: 0;
@@ -338,6 +339,11 @@
   line-height: 1;
   cursor: pointer;
   white-space: nowrap;
+}
+
+.team-task-count{
+
+  padding-right: 15px;
 }
 
 .team-board-write-button svg {

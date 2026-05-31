@@ -6,6 +6,7 @@ import ProgressBar from '../../components/ProgressBar/ProgressBar';
 import SummaryCard from '../../components/SummaryCard/SummaryCard';
 import moreIcon from '../../assets/moreIcon.svg';
 import './TeamPage.css';
+import ApplyModal from '../../components/ApplyModal/ApplyModal';
 
 const projects = [
   { id: 1, title: '프로그래밍 팀플', dueDate: '2026.05.17', currentStep: 12, totalStep: 18 },
@@ -95,11 +96,18 @@ function TeamPage() {
   const [selectedPost, setSelectedPost] = useState(null);
   const [postTitle, setPostTitle] = useState('');
   const [postContent, setPostContent] = useState('');
+
+  // 1. ApplyModal을 제어하기 위한 독립 상태 추가
+  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
+  const [applyJob, setApplyJob] = useState('');
+  const [applyMotivation, setApplyMotivation] = useState('');
+
   const projectData = projects.find((project) => project.id === Number(projectId)) ?? projects[0];
   const visibleTasks = isTaskExpanded ? teamTasks : teamTasks.slice(0, INITIAL_VISIBLE_COUNT);
   const visiblePosts = isBoardExpanded ? boardPosts : boardPosts.slice(0, INITIAL_VISIBLE_COUNT);
   const canToggleTasks = teamTasks.length > INITIAL_VISIBLE_COUNT;
   const canTogglePosts = boardPosts.length > INITIAL_VISIBLE_COUNT;
+
   const openTaskBoard = (status) => {
     navigate(`/task-board?projectId=${projectData.id}&status=${status}`);
   };
@@ -115,8 +123,19 @@ function TeamPage() {
     if (!postTitle.trim() || !postContent.trim()) {
       return;
     }
-
     closePostModal();
+  };
+
+  // 2. ApplyModal 전용 닫기 및 제출 처리 함수
+  const closeApplyModal = () => {
+    setIsApplyModalOpen(false);
+    setApplyJob('');
+    setApplyMotivation('');
+  };
+
+  const handleApplySubmit = () => {
+    console.log('지원 정보:', { job: applyJob, motivation: applyMotivation });
+    closeApplyModal();
   };
 
   return (
@@ -151,9 +170,21 @@ function TeamPage() {
         <section className={`team-card team-task-board ${isTaskExpanded ? 'team-card-expanded' : ''}`}>
           <div className="team-task-header">
             <h2>테스크 보드</h2>
-            <strong>
+            <div>
+              <strong className="team-task-count">
               {teamTasks.length}<span>개</span>
-            </strong>
+              </strong>
+              <button
+              type="button"
+              className="team-board-write-button"
+              onClick={() => setIsApplyModalOpen(true)} // 👈 3. 버튼 클릭 시 모달 스위치를 켭니다.
+              >
+              <SquarePen size={12} />
+              <span>테스크쓰기</span>
+            </button>
+
+            </div>
+
           </div>
 
           <div className="team-task-list">
@@ -313,6 +344,18 @@ function TeamPage() {
           </article>
         </div>
       )}
+
+      {/* 4. [추가] 테스크 쓰기 버튼 클릭 시 나타나는 ApplyModal 컴포넌트 마운트 */}
+      <ApplyModal
+        isOpen={isApplyModalOpen}
+        onClose={closeApplyModal}
+        onSubmit={handleApplySubmit}
+        projectName={projectData.title}
+        job={applyJob}
+        motivation={applyMotivation}
+        setJob={setApplyJob}
+        setMotivation={setApplyMotivation}
+      />
     </div>
   );
 }

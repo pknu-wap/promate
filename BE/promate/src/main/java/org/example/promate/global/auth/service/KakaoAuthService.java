@@ -47,10 +47,11 @@ public class KakaoAuthService {
     @Value("${KAKAO_CLIENT_SECRET}")
     private String kakaoClientSecret;
 
-    public String setKakaoAuthUrl() {
+    public String setKakaoAuthUrl(String redirectUri) {
         String state = UUID.randomUUID().toString();
 
-        String encodedRedirectUri = URLEncoder.encode(kakaoRedirectUri, StandardCharsets.UTF_8);
+        String effectiveUri = (redirectUri != null && !redirectUri.isBlank()) ? redirectUri : kakaoRedirectUri;
+        String encodedRedirectUri = URLEncoder.encode(effectiveUri, StandardCharsets.UTF_8);
 
         return "https://kauth.kakao.com/oauth/authorize?client_id="
                 + kakaoClientId
@@ -62,11 +63,15 @@ public class KakaoAuthService {
     }
 
     @Transactional
-    public KakaoAuthResponseDTO kakaoLogin(String code, String state) {
+    public KakaoAuthResponseDTO kakaoLogin(String code, String state, String redirectUri) {
 
         if (code == null || code.isBlank()) {
             throw new AuthException(AuthErrorCode.KAKAO_TOKEN_REQUEST_FAILED);
         }
+
+        String effectiveRedirectUri = (redirectUri != null && !redirectUri.isBlank())
+                ? redirectUri
+                : kakaoRedirectUri;
 
         // access token 요청
         String tokenUrl = "https://kauth.kakao.com/oauth/token";
@@ -77,7 +82,7 @@ public class KakaoAuthService {
         MultiValueMap<String, String> tokenBody = new LinkedMultiValueMap<>();
         tokenBody.add("grant_type", "authorization_code");
         tokenBody.add("client_id", kakaoClientId);
-        tokenBody.add("redirect_uri", kakaoRedirectUri);
+        tokenBody.add("redirect_uri", effectiveRedirectUri);
         tokenBody.add("code", code);
         tokenBody.add("client_secret", kakaoClientSecret);
 

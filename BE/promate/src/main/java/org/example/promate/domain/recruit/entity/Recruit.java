@@ -8,11 +8,8 @@ import org.example.promate.domain.project.entity.Project;
 import org.example.promate.domain.recruit.enums.Category;
 import org.example.promate.domain.recruit.enums.RecruitStatus;
 import org.example.promate.domain.user.entity.User;
-import org.example.promate.domain.recruit.code.RecruitErrorCode;
-import org.example.promate.global.ApiPayload.exception.GeneralException;
 import org.example.promate.global.entity.BaseEntity;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,8 +46,9 @@ public class Recruit extends BaseEntity {
     @Column(name="total_slots", nullable = false)
     private int totalSlots;
 
+    /* 모집글은 마감일 없는 걸로..
     @Column(name="deadline", nullable = false)
-    private LocalDateTime deadline;
+    private LocalDateTime deadline;*/
 
     //mapping
     @OneToMany(mappedBy = "recruit", fetch = FetchType.LAZY)
@@ -70,10 +68,9 @@ public class Recruit extends BaseEntity {
     @Builder.Default
     private List<Apply> applies = new ArrayList<>();
 
-    public void update(String title, String description, RecruitStatus status) {
+    public void update(String title, String description) {
         this.title = title;
         this.description = description;
-        this.status = status;
     }
 
     public void delete(){
@@ -81,9 +78,6 @@ public class Recruit extends BaseEntity {
     }
 
     public void increaseJoinedCount() {
-        if (this.joinedCount >= this.totalSlots) {
-            throw new GeneralException(RecruitErrorCode.RECRUITMENT_FULL);
-        }
         this.joinedCount++;
     }
 

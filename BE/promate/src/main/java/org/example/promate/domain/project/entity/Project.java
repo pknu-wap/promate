@@ -69,6 +69,8 @@ public class Project extends BaseTimeEntity {
         this.status = status;
     }
 
+    public void updateStartDate(LocalDate date){this.startDate = date;}
+
     public void disconnectRecruit() {
         if (this.recruit != null) {
             // 1. 반대편(Recruit) 객체의 참조를 먼저 제거

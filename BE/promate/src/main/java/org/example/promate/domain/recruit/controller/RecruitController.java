@@ -10,6 +10,7 @@ import org.example.promate.domain.recruit.dto.response.*;
 import org.example.promate.domain.recruit.service.RecruitService;
 import org.example.promate.global.ApiPayload.ApiResponse;
 import org.example.promate.domain.recruit.code.RecruitSuccessCode;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -116,6 +117,20 @@ public class RecruitController {
     )
     {
         RecruitPageResponse<RecruitResponse> response = recruitService.getBookmarkedRecruitments(userId, pageable);
+        return ApiResponse.onSuccess(RecruitSuccessCode.RECRUITMENT_BOOKMARKED_LIST_FETCHED,response);
+    }
+
+    @GetMapping("/me")
+    public ApiResponse<RecruitPageResponse<MyRecruitResponse>> getMyRecruitments(
+            @AuthenticationPrincipal Long userId, 
+            @RequestParam(required = false) String status,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+
+        RecruitPageResponse<MyRecruitResponse> response = recruitService.getMyRecruitments(userId, status, pageable);
+
         return ApiResponse.onSuccess(RecruitSuccessCode.RECRUITMENT_BOOKMARKED_LIST_FETCHED,response);
     }
 }

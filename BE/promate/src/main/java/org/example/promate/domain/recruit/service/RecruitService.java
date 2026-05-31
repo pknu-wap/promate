@@ -55,15 +55,16 @@ public class RecruitService {
                 .description(request.description())
                 .category(request.category())
                 .totalSlots(request.totalSlots())
-                .deadline(request.deadline())
                 .user(writer)
                 .build();
 
         // 임시 Project 객체 생성 (팀장이 팀 결정 OR 팀 빌딩 취소 결정)
         Project project = Project.builder()
-                .title(request.title()) // 일단 모집글 제목을 프로젝트명으로 사용
+                .title(request.title() + " - 프로젝트") // 일단 모집글 제목을 프로젝트명으로 사용
                 .description(request.description())
                 .status(ProjectStatus.PREPARING) // 아직 시작 전 상태
+                .startDate(request.startDate())
+                .endDate(request.endDate())
                 .recruit(recruit)
                 .user(writer)
                 .build();
@@ -100,7 +101,6 @@ public class RecruitService {
                 "RECRUITING", // 임시 상태값
                 recruit.getCreatedAt(),
                 recruit.getUpdatedAt(),
-                recruit.getDeadline(),
                 new RecruitDetailResponse.AuthorDto(
                         recruit.getUser().getId(),
                         recruit.getUser().getName(),
@@ -119,10 +119,10 @@ public class RecruitService {
                 .orElseThrow(() -> new GeneralException(RecruitErrorCode.RECRUITMENT_NOT_FOUND));
 
         if (!recruit.getUser().getId().equals(userId)) {
-            throw new SecurityException("수정 권한이 없습니다.");
+            throw new GeneralException(RecruitErrorCode.NOT_RECRUITMENT_AUTHOR);
         }
 
-        recruit.update(request.title(), request.content(), request.status());
+        recruit.update(request.title(), request.content());
     }
 
     @Transactional
@@ -157,6 +157,7 @@ public class RecruitService {
 
 
 
+    @Transactional
     public RecruitStatusResponse changeRecruitStatus(Long recruitmentId, Long userId, RecruitStatusRequest request) {
         // 모집글 조회 및 권한 확인
         Recruit recruit = recruitRepository.findById(recruitmentId)
@@ -181,15 +182,17 @@ public class RecruitService {
         return new RecruitStatusResponse(null, recruit.getStatus());
     }
 
-    private RecruitStatusResponse processCompletion(Recruit recruit) {
+    public RecruitStatusResponse processCompletion(Recruit recruit) {
         // 임시 프로젝트 상태 변경 (PREPARING -> ACTIVE)
         Project project = recruit.getProject();
         if (project == null) {
             throw new GeneralException(RecruitErrorCode.PROJECT_NOT_FOUND);
         }
+
+        recruit.updateStatus(RecruitStatus.COMPLETED);
         project.updateStatus(ProjectStatus.ACTIVE);
 
-        // 모집글 + 지원서 데이터 청소 (일단 Hard Delete를 채택함) <- 추후 개발 진도에 따라 수정 고려
+        /* 모집글 + 지원서 데이터 청소 (일단 Hard Delete를 채택함) <- 추후 개발 진도에 따라 수정 고려
         // 두 객체 간 매핑 관계 부터 해제하기
         project.disconnectRecruit();
 
@@ -197,11 +200,12 @@ public class RecruitService {
         applyRepository.deleteAllByRecruitId(recruit.getId());
 
         // 모집글 삭제
-        recruitRepository.delete(recruit);
+        recruitRepository.delete(recruit);*/
 
         return new RecruitStatusResponse(project.getId(), RecruitStatus.COMPLETED);
     }
 
+    @Transactional
     public BookmarkResponse toggleBookmark(Long recruitmentId, Long userId) {
         // 게시글 존재 확인
         Recruit recruit = recruitRepository.findById(recruitmentId)
@@ -268,8 +272,46 @@ public class RecruitService {
             return RecruitResponse.of(
                     recruit,
                     myApply != null ? myApply.getStatus() : null,
-                    myApply != null ? myApply.getId() : null
+                    myApply != null ? myApply.getId() : null,
+                    userId
             );
         }).toList();
+    }
+
+    /*
+    public void processExpiration(Recruit recruit) {
+
+        recruit.updateStatus(RecruitStatus.EXPIRED);
+
+        // 임시 프로젝트 데이터 청소 (Hard Delete)
+        // 팀 빌딩에 실패했으므로 가동되지 못한 임시 프로젝트와 팀장 멤버 데이터는 제거
+        Project project = recruit.getProject();
+        if (project != null) {
+            recruit.disconnectProject();
+            projectRepository.delete(project);
+        }
+        //지원서 청소
+        applyRepository.deleteAllByRecruitId(recruit.getId());
+    }*/
+
+
+    //내가 생성한 모집글들 불러오기
+    public RecruitPageResponse<MyRecruitResponse> getMyRecruitments(Long userId, String status, Pageable pageable) {
+        RecruitStatus recruitStatus = null;
+
+        // 쿼리 스트링으로 status가 넘어왔을 경우 대소문자 구분 없이 매핑 (null이면 전체 조회)
+        if (status != null && !status.isBlank()) {
+            try {
+                recruitStatus = RecruitStatus.valueOf(status.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new GeneralException(RecruitErrorCode.INVALID_RECRUIT_STATUS);
+            }
+        }
+
+        Page<Recruit> recruitPage = recruitRepository.findByUserIdAndStatus(userId, recruitStatus, pageable);
+
+        Page<MyRecruitResponse> mappedPage = recruitPage.map(MyRecruitResponse::from);
+
+        return RecruitPageResponse.of(mappedPage);
     }
 }

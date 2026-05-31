@@ -26,8 +26,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "and t.isDeleted = false")
     Optional<Task> findByIdAndIsDeletedFalse(@Param("taskId")Long id);
 
-    int countByProjectIdAndStatus(Long projectId, TaskStatus status);
-    int countByProjectIdAndStatusIn(Long projectId, List<TaskStatus> statuses); // 완료, 미완료 task 조회
 
     // dashboard에서 사용
     List<Task> findByMemberUserIdAndDueDateBetweenAndIsDeletedFalse(
@@ -77,6 +75,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "GROUP BY m.user.id")
     List<Object[]> countCompletedTasksByUserIdsInCompletedProjects(@Param("userIds") List<Long> userIds);
     // 프로필페이지 특정 user의 테스크 개수 반환
+
     int countByProjectIdAndMemberIdAndStatus(
             Long projectId,
             Long memberId,

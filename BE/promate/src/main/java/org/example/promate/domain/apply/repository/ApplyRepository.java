@@ -25,13 +25,11 @@ public interface ApplyRepository extends JpaRepository<Apply, Long> {
     @Query("select a from Apply a join fetch a.user where a.recruit.id = :recruitId")
     List<Apply> findAllByRecruitIdWithUser(@Param("recruitId") Long recruitId);
 
-    //left join을 통해서 프로젝트 이력이 없는 최초 사용자에 대해서 이력이 없어도 테이블 내용을 살림
+
     @Query("select a from Apply a " +
             "join fetch a.user " +
-            "left join fetch a.applyProjects ap " +
-            "left join fetch ap.project " +
             "where a.id = :applicationId")
-    Optional<Apply> findByIdWithUserAndProjects(@Param("applicationId") Long applicationId);
+    Optional<Apply> findByIdWithUser(@Param("applicationId") Long applicationId);
 
     // 특정 사용자의 지원 목록 조회 (N+1 문제 방지)
     @Query("select a from Apply a join fetch a.recruit where a.user.id = :userId")

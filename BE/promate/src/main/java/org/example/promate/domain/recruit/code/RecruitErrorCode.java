@@ -27,7 +27,9 @@ public enum RecruitErrorCode implements BaseErrorCode {
     // 프로젝트/멤버 관련
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "RECRUIT_E011", "해당 프로젝트의 멤버가 아닙니다."),
     INSUFFICIENT_PARTICIPANTS(HttpStatus.BAD_REQUEST, "RECRUIT_E012", "최소 참여 인원이 부족하여 모집을 완료할 수 없습니다."),
-    PROJECT_NOT_FOUND(HttpStatus.NOT_FOUND, "RECRUIT_E013", "연결된 프로젝트 정보를 찾을 수 없습니다.")
+    PROJECT_NOT_FOUND(HttpStatus.NOT_FOUND, "RECRUIT_E013", "연결된 프로젝트 정보를 찾을 수 없습니다."),
+
+    INVALID_RECRUIT_STATUS(HttpStatus.BAD_REQUEST, "RECRUIT_E014", "유효하지 않은 모집 상태 필터 값입니다.")
     ;
 
     private final HttpStatus status;

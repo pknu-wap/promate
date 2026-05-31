@@ -8,6 +8,7 @@ import org.example.promate.domain.project.entity.Project;
 import org.example.promate.domain.recruit.entity.Recruit;
 import org.example.promate.domain.user.entity.User;
 import org.example.promate.global.entity.BaseEntity;
+import org.hibernate.annotations.BatchSize;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,8 +43,11 @@ public class Apply extends BaseEntity {
     @JoinColumn(name="user_id")
     private User user;
 
-    //매핑 클래스의 리스트를 추가
-    @OneToMany(mappedBy = "apply", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "apply",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
+    @BatchSize(size = 100)
     @Builder.Default
     private List<ApplyProject> applyProjects = new ArrayList<>();
 
@@ -59,6 +63,9 @@ public class Apply extends BaseEntity {
 
     public void delete(){ super.performDelete();}
 
+    public void updateStats(Status status){this.status = status;}
+
+    /*
     public void updatePastProjects(List<Project> newProjects) {
         // 1. 기존 연관관계 제거 (orphanRemoval = true에 의해 DB에서도 삭제됨)
         this.applyProjects.clear();
@@ -73,6 +80,6 @@ public class Apply extends BaseEntity {
                 this.applyProjects.add(applyProject);
             });
         }
-    }
+    }*/
 
 }

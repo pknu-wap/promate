@@ -95,12 +95,12 @@ function ProjectReadMePage() {
       try {
         const response = await apiClient.delete(`/recruitments/${postId}`);
         if (response.data && response.data.isSuccess) {
-          alert("게시글이 삭제되었습니다.");
-          navigate(-1);
+          alert(response.data.message || "성공적으로 삭제되었습니다.");
+          navigate(-1, { replace: true });
         }
       } catch (error) {
         console.error("게시글 삭제 실패:", error);
-        alert("게시글 삭제에 실패했습니다.");
+        alert(error.message || "게시글 삭제에 실패했습니다.");
       }
     }
   };

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import logoGray from '../../assets/icons/logoGW.svg';
 import ProfileModal from '../../components/ProfileModal/ProfileModal';
 import ApplyModal from '../../components/ApplyModal/ApplyModal';
@@ -15,6 +15,7 @@ const categoryMap = {
 
 function ProjectReadMePage() {
   const location = useLocation();
+  const navigate = useNavigate();
   const passedData = location.state || {};
 
   const projectData = {
@@ -72,6 +73,7 @@ function ProjectReadMePage() {
     alert('지원이 완료되었습니다.');
     setIsApplied(true);
     handleCloseApplyModal();
+    navigate(-1);
   };
 
   return (

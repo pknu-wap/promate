@@ -55,7 +55,7 @@ function ApplyModal({
       const response = await postApplication(recruitmentId, applicationData);
       
       if (response.isSuccess) {
-        alert(response.message);
+        alert("지원이 완료되었습니다.");
         onSubmit?.();
         onClose?.();
       }

@@ -3,13 +3,13 @@ import moreIcon from '../../assets/moreIcon.svg';
 import './SummaryCard.css';
 import { getDiffDays } from '../../pages/DashboardPage/components/DateUtils';
 
-function SummaryCard({ title, count, items = [], showDot, onItemClick }) {
+function SummaryCard({ title, count, items = [], showDot, isError, onItemClick, isAllEmpty }) {
   const [isExpanded, setIsExpanded] = useState(() => window.innerWidth > 768);
   const [visibleCount, setVisibleCount] = useState(3);
 
   //카드 헤더 클릭 시 리스트를 접거나 펼쳐짐, 접을 때 표시 개수를 초기값으로 리셋
   const toggleExpand = () => {
-    if (items.length === 0) return;
+    if (isAllEmpty) return;
 
     setIsExpanded((prevIsExpanded) => {
       if (prevIsExpanded) {
@@ -35,11 +35,11 @@ function SummaryCard({ title, count, items = [], showDot, onItemClick }) {
   };
 
   const visibleItems = items.slice(0, visibleCount);
-  const effectivelyExpanded = isExpanded && items.length > 0;
+  const effectivelyExpanded = isExpanded && !isAllEmpty;
 
   return (
     <div className={`summary-card ${effectivelyExpanded ? '' : 'collapsed'}`}>
-      <div className="summary-header" onClick={toggleExpand} style={items.length === 0 ? { cursor: 'default' } : undefined}>
+      <div className="summary-header" onClick={toggleExpand} style={isAllEmpty ? { cursor: 'default' } : undefined}>
         <h3 className="summary-title">{title}</h3>
         <div className="summary-count">
           <span className="count-number">{count}</span>개

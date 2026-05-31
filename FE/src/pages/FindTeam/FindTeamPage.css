@@ -23,7 +23,7 @@
   justify-content: space-between;
   width: 100%;
   max-width: 1000px;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .find-team-filter {
@@ -34,25 +34,10 @@
   max-width: 100%;
 }
 
-.find-team-filter .find-team-category {
-  min-width: 58px;
-  width: auto;
-  height: 24px;
-  padding: 0 12px;
-  border: 1px solid #D9D9D9;
-  border-radius: 999px;
-  background-color: #D9D9D9;
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: 800;
-  box-shadow: none;
-  box-sizing: border-box;
-}
-
-.find-team-filter .find-team-category.badge--selected {
-  border-color: #FE9A57;
-  background-color: #FE9A57;
-  color: #ffffff;
+.find-team-filter .find-team-category:not(.active) {
+  background: #D9D9D9;
+  border: 1px solid #ABABAB;
+  color: #FFFFFF;
 }
 
 .find-team-search {

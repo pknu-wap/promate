@@ -1,7 +1,7 @@
 import { useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ApplyModal from "../../components/ApplyModal/ApplyModal.jsx";
-import Badge from "../../components/Badge/Badge.jsx";
+import Tag from "../../components/Tag/Tag.jsx";
 import ApplicantBox from "../../components/ApplicantBox/ApplicantBox.jsx";
 import Pagination from "../../components/Pagination/Pagination.jsx";
 import apiClient from "../../api/apiClient.js";
@@ -140,14 +140,14 @@ function FindTeamPage() {
       <div className="find-team-toolbar">
         <section className="find-team-filter" aria-label="팀 카테고리">
           {categories.map((category) => (
-            <Badge
+            <Tag
               key={category.id}
-              selected={selectedCategory === category.id}
+              isActive={selectedCategory === category.id}
               className="find-team-category"
               onClick={() => setSelectedCategory(category.id)}
             >
               {category.label}
-            </Badge>
+            </Tag>
           ))}
         </section>
 

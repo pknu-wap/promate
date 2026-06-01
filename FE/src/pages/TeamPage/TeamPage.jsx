@@ -364,7 +364,16 @@ function TeamPage() {
                   <h3>{task.title}</h3>
                   <p>마감일: {task.dueDate?.replace(/-/g, '.')}</p>
                 </div>
-                <span>{task.status}</span>
+                <span
+                  style={{
+                    backgroundColor:
+                      task.status === 'TODO' ? '#80D366' :
+                      task.status === 'IN_PROGRESS' ? '#FFD748' :
+                      '#D9D9D9'
+                  }}
+                >
+                  {task.status}
+                </span>
               </article>
             ))}
           </div>

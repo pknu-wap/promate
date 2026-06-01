@@ -28,16 +28,15 @@
 
 .edm-header {
   display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 0px 20px;
   width: 100%;
   height: 40px;
   margin-top: 10px;
 }
 
 .edm-close-btn {
+  position: absolute;
+  top: 18px;
+  right: 24px;
   width: 24px;
   height: 24px;
   background: transparent;
@@ -148,8 +147,8 @@
     gap: 20px;
   }
 
-  .edm-header {
-    padding: 0px 4px;
+  .edm-close-btn {
+    right: 16px;
   }
 
   .edm-body {

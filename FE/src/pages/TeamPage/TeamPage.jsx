@@ -306,35 +306,36 @@ function TeamPage() {
             }
           }}
         >
-          <div className="team-progress-header">
-            <div>
-              <h2>프로젝트 현황</h2>
-            <p>마감일: {projectDueDate}</p>
-            </div>
-            <strong>
-              {projectProgress}<span>%</span>
-            </strong>
-          </div>
+        <SummaryCard 
+          title="프로젝트 현황" 
+          count={projectProgress} 
+          unit="%"
+          subtitle={`마감일: ${projectDueDate}`}
+          isAllEmpty={true}
+        />
           <ProgressBar percent={projectProgress} />
         </section>
 
         <section className={`team-card team-task-board ${isTaskExpanded ? 'team-card-expanded' : ''}`}>
-          <div className="team-task-header">
-            <h2>테스크 보드</h2>
-            <div>
-              <strong className="team-task-count">
-                {tasks.length}<span>개</span>
-              </strong>
-              <button
-                type="button"
-                className="team-board-write-button"
-                onClick={() => setIsNewTaskModalOpen(true)}
-              >
-                <SquarePen size={12} />
-                <span>테스크쓰기</span>
-              </button>
-            </div>
-          </div>
+        <SummaryCard 
+          title="테스크 보드" 
+          count={tasks.length}
+          unit="개"
+          isAllEmpty={true}
+          actionButton={
+            <button
+              type="button"
+              className="team-board-write-button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsNewTaskModalOpen(true);
+              }}
+            >
+              <SquarePen size={12} />
+              <span>테스크 쓰기</span>
+            </button>
+          }
+        />
 
           <div className="team-task-list">
             {isTasksLoading && <div className="team-member-status">불러오는 중...</div>}

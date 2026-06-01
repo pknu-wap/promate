@@ -13,19 +13,20 @@
   font-size: 22px;
   font-weight: 500;
   color: #000000;
+  margin-bottom: 20px;
 }
 
 .team-page-grid {
   display: grid;
   grid-template-columns: minmax(280px, 430px) minmax(360px, 1fr) minmax(260px, 320px);
-  grid-template-rows: 86px 58px 58px minmax(320px, 1fr);
+  grid-template-rows: 86px 58px 58px auto minmax(190px, 1fr);
   gap: 10px 16px;
   width: 100%;
   max-width: 1360px;
 }
 
 .team-page-grid.team-task-expanded {
-  grid-template-rows: 86px 58px 340px minmax(320px, 1fr);
+  grid-template-rows: 86px 58px 340px auto minmax(190px, 1fr);
 }
 
 .team-card {
@@ -41,8 +42,7 @@
 }
 
 .team-card-clickable:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+  background-color: #f8f9fa;
 }
 
 .team-card-clickable:focus-visible,
@@ -54,6 +54,7 @@
 .team-progress-card,
 .team-task-board {
   border-top: 3px solid #fe9a57;
+  border-radius: 0 0 8px 8px;
 }
 
 .team-progress-card {
@@ -62,43 +63,30 @@
   padding: 14px 32px;
 }
 
-.team-progress-header,
-.team-task-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.team-progress-card > .summary-card,
+.team-task-board > .summary-card {
+  flex: none;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  min-width: 0;
+  background: transparent;
+  align-self: stretch;
 }
 
-.team-progress-header h2,
-.team-task-header h2 {
+.team-progress-card > .summary-card .summary-header,
+.team-task-board > .summary-card .summary-header {
+  margin-bottom: 0;
+  align-items: center;
+}
+
+.team-task-item p {
   margin: 0;
   font-family: 'Pretendard', sans-serif;
-  font-size: 16px;
-  font-weight: 800;
-  color: #000000;
-}
-
-.team-progress-header p,
-.team-task-item p {
-  margin: 5px 0 0;
-  font-family: 'Pretendard', sans-serif;
-  font-size: 10px;
+  font-size: 12px;
+  font-weight: 400;
   color: #909090;
-}
-
-.team-progress-header strong,
-.team-task-header strong {
-  font-family: 'Pretendard', sans-serif;
-  font-size: 28px;
-  line-height: 1;
-  color: #ff6600;
-}
-
-.team-progress-header strong span,
-.team-task-header strong span {
-  margin-left: 5px;
-  font-size: 16px;
-  color: #000000;
 }
 
 .team-progress-card .progress-bar {
@@ -118,7 +106,7 @@
   grid-row: 1 / 4;
   display: flex;
   flex-direction: column;
-  padding: 22px 38px 12px;
+  padding: 13px 30px 20px;
   min-height: 222px;
   transition: min-height 0.2s ease;
 }
@@ -130,7 +118,7 @@
 .team-task-list {
   display: flex;
   flex-direction: column;
-  gap: 11px;
+  gap: 0;
   margin-top: 18px;
 }
 
@@ -138,13 +126,29 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 8px 10px;
+  margin: 0 -10px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.team-task-item:hover {
+  background-color: #f8f9fa;
+}
+
+.team-task-item > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-left: 10px;
+
 }
 
 .team-task-item h3 {
   margin: 0;
   font-family: 'Pretendard', sans-serif;
-  font-size: 12px;
-  font-weight: 800;
+  font-size: 15px;
+  font-weight: 600;
   color: #000000;
 }
 
@@ -152,12 +156,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 42px;
-  height: 22px;
+  min-width: 50px;
+  height: 25px;
   border-radius: 999px;
   background: #d9d9d9;
   font-family: 'Pretendard', sans-serif;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 700;
   color: #ffffff;
 }
@@ -199,22 +203,6 @@
   display: none;
 }
 
-.team-metric-card .summary-title {
-  font-size: 16px;
-  font-weight: 800;
-}
-
-.team-metric-card .summary-count {
-  font-size: 16px;
-  font-weight: 600;
-  color: #000000;
-}
-
-.team-metric-card .count-number {
-  font-size: 28px;
-  font-weight: 600;
-}
-
 .team-metric-card-urgent {
   grid-row: 2;
 }
@@ -225,7 +213,7 @@
 
 .team-calendar {
   grid-column: 1 / 3;
-  grid-row: 4;
+  grid-row: 4 / 6;
   min-width: 0;
   min-height: 0;
 }
@@ -237,8 +225,8 @@
 }
 
 .team-calendar .calendar-title {
-  font-size: 17px;
-  font-weight: 800;
+  font-size: 18px;
+  font-weight: 600;
 }
 
 .team-calendar .nav-date {
@@ -288,20 +276,22 @@
 .team-members-card,
 .team-board-card {
   grid-column: 3;
-  grid-row: 4;
   z-index: 2;
 }
 
 .team-members-card {
-  height: 125px;
-  padding: 20px 32px;
+  grid-row: 4;
+  align-self: start;
+  min-height: 125px;
+  height: auto;
+  padding: 22px 32px;
 }
 
 .team-board-card {
+  grid-row: 5;
   align-self: start;
   min-height: 190px;
-  margin-top: 139px;
-  padding: 20px 32px 12px;
+  padding: 22px 32px 12px;
   display: flex;
   flex-direction: column;
 }
@@ -334,16 +324,11 @@
   background: transparent;
   color: #ff6600;
   font-family: 'Pretendard', sans-serif;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   line-height: 1;
   cursor: pointer;
   white-space: nowrap;
-}
-
-.team-task-count{
-
-  padding-right: 15px;
 }
 
 .team-board-write-button svg {
@@ -361,8 +346,8 @@
 .team-panel-title h2 {
   margin: 0;
   font-family: 'Pretendard', sans-serif;
-  font-size: 16px;
-  font-weight: 800;
+  font-size: 18px;
+  font-weight: 600;
   color: #000000;
 }
 
@@ -381,10 +366,10 @@
 
 .team-member strong,
 .team-board-post h3 {
-  margin: 0;
+  padding: 5px 0 5px 10px;
   font-family: 'Pretendard', sans-serif;
-  font-size: 12px;
-  font-weight: 800;
+  font-size: 15px;
+  font-weight: 600;
   color: #000000;
   white-space: nowrap;
 }
@@ -392,7 +377,7 @@
 .team-member span,
 .team-board-post time {
   font-family: 'Pretendard', sans-serif;
-  font-size: 11px;
+  font-size: 12px;
   color: #909090;
   white-space: nowrap;
 }
@@ -400,7 +385,7 @@
 .team-board-list {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 5px;
 }
 
 .team-board-card .team-more-button {
@@ -414,13 +399,13 @@
   border: 0;
   background: transparent;
   cursor: pointer;
-  border-radius: 6px;
+  border-radius: 8px;
   transition: background-color 0.18s ease;
 }
 
 .team-board-post:hover,
 .team-board-post:focus-visible {
-  background: rgba(255, 102, 0, 0.05);
+  background-color: #f8f9fa;
   outline: none;
 }
 
@@ -684,11 +669,6 @@
     margin: 0;
   }
   
-  
-  .team-card.team-board-card {
-    margin-top: 0;
-  }
-
   .team-calendar .calendar-body {
     flex-direction: column;
   }

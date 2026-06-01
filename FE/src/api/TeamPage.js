@@ -54,3 +54,8 @@ export const updateTaskStatus = async (projectId, taskId, statusObj) => {
   const response = await apiClient.patch(`/projects/${projectId}/tasks/${taskId}/status`, statusObj);
   return response.data.data;
 };
+
+export const deleteProjectTask = async (projectId, taskId) => {
+  const response = await apiClient.delete(`/projects/${projectId}/tasks/${taskId}`);
+  return response.data.data;
+};

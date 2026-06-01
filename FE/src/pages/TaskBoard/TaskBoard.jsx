@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { deleteProjectTask } from '../../api/TeamPage';
 import './TaskBoard.css';
 
 const taskTabs = [
@@ -57,6 +58,18 @@ function TaskBoard() {
     );
   };
 
+  const handleDeleteTask = async (taskId) => {
+    if (!projectId) return alert("프로젝트 ID가 유효하지 않습니다.");
+    if (!window.confirm('정말로 이 테스크를 삭제하시겠습니까?')) return;
+    
+    try {
+      await deleteProjectTask(projectId, taskId);
+      setTasks((currentTasks) => currentTasks.filter((task) => task.id !== taskId));
+    } catch (error) {
+      alert(`테스크 삭제에 실패했습니다: ${error.message}`);
+    }
+  };
+
   const getStatusLabel = (status) => {
     if (status === 'done') {
       return '완료';
@@ -105,7 +118,7 @@ function TaskBoard() {
                   <button
                     type="button"
                     className="task-board__action-button task-board__action-button--cancel"
-                    onClick={() => updateTaskStatus(task.id, 'cancelled')}
+                    onClick={() => handleDeleteTask(task.id)}
                   >
                     삭제하기
                   </button>

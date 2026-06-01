@@ -17,7 +17,8 @@ import {
   getTaskDetail,
   createProjectTask,
   updateProjectTask,
-  updateTaskStatus
+  updateTaskStatus,
+  deleteProjectTask
 } from '../../api/TeamPage';
 import './TeamPage.css';
 
@@ -165,6 +166,22 @@ function TeamPage() {
       await fetchTasks();
     } catch (err) {
       alert(`테스크 상태 변경에 실패했습니다: ${err.message}`);
+    }
+  };
+
+  const handleDeleteTask = async () => {
+    if (!selectedTask) return;
+    if (!window.confirm('정말로 이 테스크를 삭제하시겠습니까?')) return;
+
+    try {
+      setIsTaskDetailLoading(true);
+      await deleteProjectTask(idToFetch, selectedTask.taskId);
+      setSelectedTask(null);
+      await fetchTasks();
+    } catch (err) {
+      alert(`테스크 삭제에 실패했습니다: ${err.message}`);
+    } finally {
+      setIsTaskDetailLoading(false);
     }
   };
 
@@ -565,7 +582,8 @@ function TeamPage() {
                 <div style={{ marginTop: '16px', borderTop: '1px solid #eee', paddingTop: '12px' }}>
                   <p>{selectedTask.description || '상세 설명이 없습니다.'}</p>
                 </div>
-                <div className="team-post-modal-actions" style={{ marginTop: '24px', justifyContent: 'flex-end' }}>
+                <div className="team-post-modal-actions" style={{ marginTop: '24px', display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+                  <button type="button" onClick={handleDeleteTask} style={{ padding: '8px 16px', border: 'none', background: '#ff4d4f', color: '#fff', borderRadius: '4px', cursor: 'pointer' }}>삭제</button>
                   <button type="button" className="team-post-cancel-button" onClick={() => setSelectedTask(null)}>닫기</button>
                 </div>
               </>

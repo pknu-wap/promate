@@ -3,15 +3,17 @@ import './Calendar.css';
 import calendarIcon from '../../assets/CalendarIcon.svg';
 import plusIcon from '../../assets/icons/plusIcon.svg';
 import AddEventModal from '../AddEventModal/AddEventModal';
+import EventDetailModal from '../EventDetailModal/EventDetailModal';
 import apiClient from '../../api/apiClient';
 
 const WEEKDAYS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
-function Calendar({ showAddButton = true, projectId }) {
+function Calendar({ showAddButton = true, projectId, projectTitle: fallbackProjectTitle }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [events, setEvents] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -61,7 +63,7 @@ function Calendar({ showAddButton = true, projectId }) {
             end: new Date(endYear, endMonth - 1, endDay),
             checked: false,
             projectId: item.projectId,
-            projectTitle: item.projectTitle,
+            projectTitle: item.projectTitle || fallbackProjectTitle,
             content: item.content,
           };
         }).filter(Boolean);
@@ -255,9 +257,14 @@ function Calendar({ showAddButton = true, projectId }) {
                                 width: `calc(${eventSpan * 100}% + ${
                                   eventSpan - 1
                                 }px)`,
+                                cursor: 'pointer',
                               }
-                            : undefined
+                            : { cursor: 'pointer' }
                         }
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedEvent(event);
+                        }}
                       >
                         {isSegmentStart ? event.text : ''}
                       </div>
@@ -274,6 +281,11 @@ function Calendar({ showAddButton = true, projectId }) {
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         onAddEvent={handleAddEvent}
+      />
+
+      <EventDetailModal
+        event={selectedEvent}
+        onClose={() => setSelectedEvent(null)}
       />
     </section>
   );

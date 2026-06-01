@@ -19,10 +19,14 @@ import org.example.promate.domain.recruit.entity.Recruit;
 import org.example.promate.domain.recruit.enums.RecruitStatus;
 import org.example.promate.domain.recruit.repository.BookmarkRepository;
 import org.example.promate.domain.recruit.repository.RecruitRepository;
+import org.example.promate.domain.review.entity.MemberReview;
+import org.example.promate.domain.review.repository.MemberReviewRepository;
 import org.example.promate.domain.user.entity.User;
 import org.example.promate.domain.user.exception.UserErrorCode;
 import org.example.promate.domain.user.repository.UserRepository;
 import org.example.promate.domain.recruit.code.RecruitErrorCode;
+import org.example.promate.domain.workspace.enums.TaskStatus;
+import org.example.promate.domain.workspace.repository.TaskRepository;
 import org.example.promate.global.ApiPayload.exception.GeneralException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -45,6 +49,8 @@ public class RecruitService {
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
     private final BookmarkRepository bookmarkRepository;
+    private final MemberReviewRepository memberReviewRepository;
+    private final TaskRepository taskRepository;
 
     @Transactional
     public RecruitCreateResponse createRecruitment(
@@ -313,5 +319,92 @@ public class RecruitService {
         Page<MyRecruitResponse> mappedPage = recruitPage.map(MyRecruitResponse::from);
 
         return RecruitPageResponse.of(mappedPage);
+    }
+
+    public RecruitLeaderProfileResponse getRecruitLeaderProfile(Long recruitmentId) {
+
+        Recruit recruit = recruitRepository.findByIdAndIsDeletedFalse(recruitmentId)
+                .orElseThrow(() -> new GeneralException(RecruitErrorCode.RECRUITMENT_NOT_FOUND));
+
+        User leader = recruit.getUser();
+        Long leaderId = leader.getId();
+
+        List<Member> members = memberRepository.findByUserIdWithProject(leaderId);
+
+        List<RecruitLeaderProfileResponse.ProjectHistoryDTO> projects = members.stream()
+                .map(member -> {
+                    Project project = member.getProject();
+
+                    List<MemberReview> reviews =
+                            memberReviewRepository.findByProjectIdAndRevieweeId(
+                                    project.getId(),
+                                    leaderId
+                            );
+
+                    double averageReviewScore = reviews.stream()
+                            .mapToDouble(review ->
+                                    (review.getCommunicationScore()
+                                            + review.getProactivenessScore()
+                                            + review.getResponsibilityScore()
+                                            + review.getProblemSolvingScore()) / 4.0
+                            )
+                            .average()
+                            .orElse(0.0);
+
+                    int completedTaskCount =
+                            taskRepository.countByProjectIdAndMemberIdAndStatus(
+                                    project.getId(),
+                                    member.getId(),
+                                    TaskStatus.DONE
+                            );
+
+                    int incompleteTaskCount =
+                            taskRepository.countByProjectIdAndMemberIdAndStatusIn(
+                                    project.getId(),
+                                    member.getId(),
+                                    List.of(TaskStatus.TODO, TaskStatus.IN_PROGRESS)
+                            );
+
+                    return RecruitLeaderProfileResponse.ProjectHistoryDTO.builder()
+                            .projectId(project.getId())
+                            .projectTitle(project.getTitle())
+                            .role(member.getRole())
+                            .position(member.getPosition().name())
+                            .projectStatus(project.getStatus())
+                            .startDate(project.getStartDate())
+                            .endDate(project.getEndDate())
+                            .averageReviewScore(averageReviewScore)
+                            .reviewCount((long) reviews.size())
+                            .completedTaskCount(completedTaskCount)
+                            .incompleteTaskCount(incompleteTaskCount)
+                            .build();
+                })
+                .toList();
+
+        Double totalAverageReviewScore =
+                memberReviewRepository.getGlobalAverageScoreByUserId(leaderId);
+
+        int totalCompletedTaskCount = projects.stream()
+                .mapToInt(RecruitLeaderProfileResponse.ProjectHistoryDTO::getCompletedTaskCount)
+                .sum();
+
+        int totalIncompleteTaskCount = projects.stream()
+                .mapToInt(RecruitLeaderProfileResponse.ProjectHistoryDTO::getIncompleteTaskCount)
+                .sum();
+
+        long totalReviewCount = projects.stream()
+                .mapToLong(RecruitLeaderProfileResponse.ProjectHistoryDTO::getReviewCount)
+                .sum();
+
+        return RecruitLeaderProfileResponse.builder()
+                .leaderId(leader.getId())
+                .leaderName(leader.getName())
+                .profileImageUrl(leader.getProfileImageUrl())
+                .averageReviewScore(totalAverageReviewScore != null ? totalAverageReviewScore : 0.0)
+                .reviewCount(totalReviewCount)
+                .completedTaskCount(totalCompletedTaskCount)
+                .incompleteTaskCount(totalIncompleteTaskCount)
+                .projects(projects)
+                .build();
     }
 }

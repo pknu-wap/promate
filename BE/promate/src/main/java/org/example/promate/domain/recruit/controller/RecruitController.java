@@ -133,4 +133,14 @@ public class RecruitController {
 
         return ApiResponse.onSuccess(RecruitSuccessCode.RECRUITMENT_BOOKMARKED_LIST_FETCHED,response);
     }
+
+    @GetMapping("/{recruitmentId}/leader-profile")
+    public ApiResponse<RecruitLeaderProfileResponse> getRecruitLeaderProfile(
+            @PathVariable Long recruitmentId
+    ) {
+        return ApiResponse.onSuccess(
+                RecruitSuccessCode.RECRUIT_LEADER_PROFILE_FOUND,
+                recruitService.getRecruitLeaderProfile(recruitmentId)
+        );
+    }
 }

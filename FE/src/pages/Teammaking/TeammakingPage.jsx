@@ -1,4 +1,4 @@
-﻿﻿import { useState } from "react";
+﻿﻿import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import logoIcon from "../../assets/logoIcon.svg";
 import FormActions from "./components/FormActions.jsx";
@@ -26,6 +26,16 @@ const getTodayValue = () => {
 
 function TeammakingPage() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      alert('로그인이 필요한 서비스입니다.');
+      navigate(-1);
+      return;
+    }
+  }, [navigate]);
+
   const todayValue = getTodayValue();
   const [projectName, setProjectName] = useState("");
   const [selectedDomain, setSelectedDomain] = useState("PROJECT");

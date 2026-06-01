@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import apiClient from '../../api/apiClient';
 import MainButton from '../../components/MainButton/MainButton';
 import Avatar from '../../components/Avatar/Avatar';
@@ -10,6 +11,7 @@ const ProfilePage = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [profileImageUrl, setProfileImageUrl] = useState(null);
   const fileInputRef = useRef(null);
+  const navigate = useNavigate();
 
   const [userInfo, setUserInfo] = useState({
     name: '로딩 중...',
@@ -25,6 +27,13 @@ const ProfilePage = () => {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      alert('로그인이 필요한 서비스입니다.');
+      navigate(-1);
+      return;
+    }
+
     const fetchProfileData = async () => {
       const [userRes, taskCountsRes, manualProjectRes, autoProjectRes] = await Promise.allSettled([
         apiClient.get('/user/me'),
@@ -59,7 +68,7 @@ const ProfilePage = () => {
       ]);
     };
     fetchProfileData();
-  }, []);
+  }, [navigate]);
 
   const handleImageClick = () => {
     if (isEditing) fileInputRef.current?.click();

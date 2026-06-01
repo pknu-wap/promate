@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ClipboardList, SquarePen, Users } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import Calendar from '../../components/Calendar/Calendar';
 import ProgressBar from '../../components/ProgressBar/ProgressBar';
 import SummaryCard from '../../components/SummaryCard/SummaryCard';
@@ -22,19 +22,13 @@ import {
 } from '../../api/TeamPage';
 import './TeamPage.css';
 
-const projects = [
-  { id: 1, title: '프로그래밍 팀플', dueDate: '2026.05.17', currentStep: 12, totalStep: 18 },
-  { id: 2, title: 'WAP 프로젝트', dueDate: '2026.06.05', currentStep: 125, totalStep: 150 },
-  { id: 3, title: '캡스톤 디자인', dueDate: '2026.07.07', currentStep: 51, totalStep: 100 },
-  { id: 4, title: '알고리즘 스터디', dueDate: '2023.05.10', currentStep: 93, totalStep: 100 },
-  { id: 5, title: '인공지능 개발', dueDate: '2026.12.05', currentStep: 0, totalStep: 0 },
-];
 
 const INITIAL_VISIBLE_COUNT = 3;
 
 function TeamPage() {
   const { projectId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   
   const [tasks, setTasks] = useState([]);
   const [projectProgress, setProjectProgress] = useState(0);
@@ -68,8 +62,12 @@ function TeamPage() {
   const [isPostSubmitting, setIsPostSubmitting] = useState(false);
   const [isNewTaskModalOpen, setIsNewTaskModalOpen] = useState(false);
 
-  const projectData = projects.find((project) => project.id === Number(projectId)) ?? projects[0];
-  const idToFetch = projectId ? Number(projectId) : projectData.id;
+  const idToFetch = Number(projectId);
+  const projectTitle = location.state?.projectTitle || '프로젝트';
+  const projectDueDate = location.state?.dueDate || '마감일 미정';
+
+  const completedTasksCount = tasks.filter(task => task.status === 'DONE').length;
+  const pendingTasksCount = tasks.filter(task => task.status !== 'DONE').length;
   
   const visibleTasks = isTaskExpanded ? tasks : tasks.slice(0, INITIAL_VISIBLE_COUNT);
   const visiblePosts = isBoardExpanded ? boardPosts : boardPosts.slice(0, INITIAL_VISIBLE_COUNT);
@@ -268,7 +266,7 @@ function TeamPage() {
   };
 
   const openTaskBoard = (status) => {
-    navigate(`/task-board?projectId=${projectData.id}&status=${status}`);
+    navigate(`/task-board?projectId=${idToFetch}&status=${status}`, { state: { projectTitle, dueDate: projectDueDate } });
   };
 
   const closePostModal = () => {
@@ -294,25 +292,25 @@ function TeamPage() {
 
   return (
     <div className="team-page-container">
-      <h1 className="team-page-title">{projectData.title}</h1>
+      <h1 className="team-page-title">{projectTitle}</h1>
 
       <div className={`team-page-grid ${isTaskExpanded ? 'team-task-expanded' : ''}`}>
         <section
           className="team-card team-progress-card team-card-clickable"
           role="button"
           tabIndex={0}
-          onClick={() => openTaskBoard('progress')}
+          onClick={() => openTaskBoard('IN_PROGRESS')}
           onKeyDown={(event) => {
             if (event.key === 'Enter' || event.key === ' ') {
               event.preventDefault();
-              openTaskBoard('progress');
+              openTaskBoard('IN_PROGRESS');
             }
           }}
         >
           <div className="team-progress-header">
             <div>
               <h2>프로젝트 현황</h2>
-              <p>마감일: 2026.03.17</p>
+            <p>마감일: {projectDueDate}</p>
             </div>
             <strong>
               {projectProgress}<span>%</span>
@@ -380,10 +378,10 @@ function TeamPage() {
         </section>
 
         <div className="team-card team-metric-card team-metric-card-urgent">
-          <SummaryCard title="마감 임박 테스크" count={12} />
+          <SummaryCard title="진행 및 예정 테스크" count={pendingTasksCount} />
         </div>
         <div className="team-card team-metric-card team-metric-card-completed">
-          <SummaryCard title="완료한 테스크" count={18} onHeaderClick={() => openTaskBoard('done')} />
+          <SummaryCard title="완료한 테스크" count={completedTasksCount} onHeaderClick={() => openTaskBoard('DONE')} />
         </div>
 
         <div className="team-calendar">

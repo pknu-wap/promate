@@ -319,7 +319,7 @@
   margin-right: 4px;
   min-width: 52px;
   height: 18px;
-  padding: 0;
+  padding: 10px;
   border: 0;
   background: transparent;
   color: #ff6600;
@@ -334,6 +334,10 @@
 .team-board-write-button svg {
   flex: 0 0 auto;
   stroke-width: 2.4;
+}
+
+.team-board-write-button:hover {
+  background-color: #FFEBDE;
 }
 
 .team-panel-title {

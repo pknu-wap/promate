@@ -128,6 +128,10 @@ function Calendar({ showAddButton = true, projectId, projectTitle: fallbackProje
     }
   };
 
+  const handleDeleteEvent = (deletedEventId) => {
+    setEvents((prevEvents) => prevEvents.filter((event) => event.id !== deletedEventId));
+  };
+
   return (
     <section className="calendar-section">
       <div className="calendar-header-row">
@@ -286,6 +290,7 @@ function Calendar({ showAddButton = true, projectId, projectTitle: fallbackProje
       <EventDetailModal
         event={selectedEvent}
         onClose={() => setSelectedEvent(null)}
+        onDeleteEvent={handleDeleteEvent}
       />
     </section>
   );

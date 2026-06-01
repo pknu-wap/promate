@@ -4,10 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import apiClient from '../../api/apiClient';
 import './EventDetailModal.css';
 
-function EventDetailModal({ event, onClose }) {
+function EventDetailModal({ event, onClose, onDeleteEvent }) {
   const navigate = useNavigate();
   const [detailData, setDetailData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     if (!event) {
@@ -63,10 +64,58 @@ function EventDetailModal({ event, onClose }) {
     }
   };
 
+  const handleDelete = async () => {
+    if (!detailData.projectId || !detailData.id) return;
+
+    const isConfirm = window.confirm('정말 이 일정을 삭제하시겠습니까?');
+    if (!isConfirm) return;
+
+    try {
+      setIsLoading(true);
+      const response = await apiClient.delete(
+        `/projects/${detailData.projectId}/schedules/${detailData.id}`
+      );
+      
+      if (response.data && response.data.isSuccess) {
+        alert(response.data.message || '일정 삭제가 완료되었습니다.');
+        if (onDeleteEvent) {
+          onDeleteEvent(detailData.id);
+        }
+        onClose();
+      }
+    } catch (error) {
+      console.error('일정 삭제 실패:', error);
+      alert(error.message || '일정 삭제에 실패했습니다.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return ReactDOM.createPortal(
     <div className="edm-overlay" onClick={onClose}>
       <div className="edm-container" onClick={(e) => e.stopPropagation()}>
         <div className="edm-header">
+          {detailData.projectId && (
+            <div className="edm-more-container">
+              <button type="button" className="edm-more-btn" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                <span className="edm-more-icon"></span>
+              </button>
+
+              {isMenuOpen && (
+                <div className="edm-dropdown-menu">
+                  <button 
+                    type="button" 
+                    className="edm-dropdown-item" 
+                    onClick={() => {
+                      alert('수정 기능은 준비 중입니다.');
+                      setIsMenuOpen(false);
+                    }}
+                  >수정</button>
+                  <button type="button" className="edm-dropdown-item delete" onClick={handleDelete} disabled={isLoading}>삭제</button>
+                </div>
+              )}
+            </div>
+          )}
           <button type="button" className="edm-close-btn" onClick={onClose} aria-label="닫기">
             ✕
           </button>

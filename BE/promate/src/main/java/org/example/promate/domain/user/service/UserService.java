@@ -37,7 +37,8 @@ public class UserService {
                 .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
 
         user.updateProfile(
-                request.getName()
+                request.getName(),
+                request.getProfileImageBase64()
         );
 
         return UserResponseDTO.from(user);

@@ -31,7 +31,7 @@ public class User extends BaseEntity {
     @Column(name="name", nullable = true)
     private String name;
 
-    @Column(name="profile_image_url", nullable = true)
+    @Column(name="profile_image_url", nullable = true, columnDefinition = "LONGTEXT")
     private String profileImageUrl;
 
     @Column(name="manner_temp", nullable = true)
@@ -68,8 +68,13 @@ public class User extends BaseEntity {
     @Builder.Default
     private List<UserProjectHistory> projectHistories = new ArrayList<>();
 
-    public void updateProfile(String name) {
-        this.name = name;
-        this.isProfileCompleted = true;
+    public void updateProfile(String name, String profileImageBase64
+    ) {
+        if (name != null) {
+            this.name = name;
+        }
+        if (profileImageBase64 != null) {
+            this.profileImageUrl = profileImageBase64;
+        }
     }
 }

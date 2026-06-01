@@ -62,7 +62,7 @@ function Calendar({ showAddButton = true, projectId, projectTitle: fallbackProje
             start: new Date(startYear, startMonth - 1, startDay),
             end: new Date(endYear, endMonth - 1, endDay),
             checked: false,
-            projectId: item.projectId,
+            projectId: item.projectId || projectId,
             projectTitle: item.projectTitle || fallbackProjectTitle,
             content: item.content,
           };
@@ -118,6 +118,9 @@ function Calendar({ showAddButton = true, projectId, projectTitle: fallbackProje
         start: new Date(startYear, startMonth - 1, startDay),
         end: new Date(endYear, endMonth - 1, endDay),
         checked: false,
+        projectId: projectId,
+        projectTitle: fallbackProjectTitle,
+        content: newEventData.content || '',
       };
       setEvents((prevEvents) => [...prevEvents, newEvent]);
       return true;
@@ -126,6 +129,18 @@ function Calendar({ showAddButton = true, projectId, projectTitle: fallbackProje
       alert(error.message || '일정 추가에 실패했습니다.');
       return false;
     }
+  };
+
+  const handleDeleteEvent = (deletedEventId) => {
+    setEvents((prevEvents) => prevEvents.filter((event) => event.id !== deletedEventId));
+  };
+
+  const handleUpdateEvent = (updatedData) => {
+    setEvents((prevEvents) =>
+      prevEvents.map((event) =>
+        event.id === updatedData.id ? { ...event, ...updatedData } : event
+      )
+    );
   };
 
   return (
@@ -286,6 +301,8 @@ function Calendar({ showAddButton = true, projectId, projectTitle: fallbackProje
       <EventDetailModal
         event={selectedEvent}
         onClose={() => setSelectedEvent(null)}
+        onDeleteEvent={handleDeleteEvent}
+        onUpdateEvent={handleUpdateEvent}
       />
     </section>
   );

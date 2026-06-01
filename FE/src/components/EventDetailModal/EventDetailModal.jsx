@@ -1,12 +1,47 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { useNavigate } from 'react-router-dom';
+import apiClient from '../../api/apiClient';
 import './EventDetailModal.css';
 
 function EventDetailModal({ event, onClose }) {
   const navigate = useNavigate();
+  const [detailData, setDetailData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  if (!event) return null;
+  useEffect(() => {
+    if (!event) {
+      setDetailData(null);
+      return;
+    }
+
+    setDetailData(event);
+
+    const fetchEventDetail = async () => {
+      if (!event.projectId || !event.id) return;
+
+      try {
+        setIsLoading(true);
+        const response = await apiClient.get(`/projects/${event.projectId}/schedules/${event.id}`);
+        if (response.data && response.data.isSuccess) {
+          const data = response.data.data;
+          setDetailData((prev) => ({
+            ...prev,
+            text: data.title || prev.text,
+            content: data.content || prev.content,
+          }));
+        }
+      } catch (error) {
+        console.error('일정 상세 정보 조회 실패:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchEventDetail();
+  }, [event]);
+
+  if (!event || !detailData) return null;
 
   const formatEventDate = (date) => {
     if (!date) return '';
@@ -19,11 +54,11 @@ function EventDetailModal({ event, onClose }) {
     return `${year}.${month}.${day} (${weekday})`;
   };
 
-  const dateString = `${formatEventDate(event.start)} ~ ${formatEventDate(event.end)}`;
+  const dateString = `${formatEventDate(detailData.start)} ~ ${formatEventDate(detailData.end)}`;
 
   const handleProjectClick = () => {
-    if (event.projectId) {
-      navigate(`/project/${event.projectId}`, { state: { projectTitle: event.projectTitle } });
+    if (detailData.projectId) {
+      navigate(`/project/${detailData.projectId}`, { state: { projectTitle: detailData.projectTitle } });
       onClose();
     }
   };
@@ -38,17 +73,17 @@ function EventDetailModal({ event, onClose }) {
         </div>
         
         <div className="edm-body">
-          <h2 className="edm-title">{event.text}</h2>
+          <h2 className="edm-title">{detailData.text}</h2>
           
           <div className="edm-info">
-            {event.projectTitle && (
+            {detailData.projectTitle && (
               <div className="edm-info-row">
                 <span className="edm-info-label">프로젝트</span>
                 <span 
-                  className={`edm-info-value ${event.projectId ? 'edm-project-link' : ''}`}
-                  onClick={event.projectId ? handleProjectClick : undefined}
+                  className={`edm-info-value ${detailData.projectId ? 'edm-project-link' : ''}`}
+                  onClick={detailData.projectId ? handleProjectClick : undefined}
                 >
-                  {event.projectTitle}
+                  {detailData.projectTitle}
                 </span>
               </div>
             )}
@@ -60,7 +95,11 @@ function EventDetailModal({ event, onClose }) {
             <div className="edm-divider" />
             
             <div className="edm-content-wrapper">
-              <p className="edm-content">{event.content || '등록된 내용이 없습니다.'}</p>
+              {isLoading ? (
+                <p className="edm-content" style={{ color: '#909090' }}>내용을 불러오는 중입니다...</p>
+              ) : (
+                <p className="edm-content">{detailData.content || '등록된 내용이 없습니다.'}</p>
+              )}
             </div>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ApplicantBox from '../../components/ApplicantBox/ApplicantBox';
+import Pagination from '../../components/Pagination/Pagination';
 import { getMyRecruitments } from '../../api/RecruitApi';
 import './Applicant.css';
 
@@ -12,10 +13,13 @@ const CATEGORY_LABEL = {
   ETC: '기타',
 };
 
+const ITEMS_PER_PAGE = 10;
+
 const ApplicantList = () => {
   const navigate = useNavigate();
   const [recruitments, setRecruitments] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
@@ -35,6 +39,12 @@ const ApplicantList = () => {
       .finally(() => setLoading(false));
   }, [navigate]);
 
+  const totalPages = Math.ceil(recruitments.length / ITEMS_PER_PAGE);
+  const currentRecruitments = recruitments.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
   return (
     <main className="al-page">
       <h1 className="al-title">지원자 검토</h1>
@@ -42,11 +52,12 @@ const ApplicantList = () => {
       {loading && <p style={{ padding: '20px' }}>불러오는 중...</p>}
 
       <section className="al-list">
-        {recruitments.map((recruitment) => {
+        {!loading && currentRecruitments.map((recruitment) => {
           const isClosed = recruitment.status === 'COMPLETED' || recruitment.status === 'CANCELLED';
+          const targetId = recruitment.recruitmentId || recruitment.id || recruitment.postId;
           return (
             <ApplicantBox
-              key={recruitment.postId}
+              key={targetId}
               title={recruitment.title}
               summary={CATEGORY_LABEL[recruitment.category] ?? recruitment.category}
               capacity={recruitment.maxMember}
@@ -54,13 +65,14 @@ const ApplicantList = () => {
               buttonText={isClosed ? '모집 마감' : '지원자 검토'}
               buttonColor={isClosed ? '#D9D9D9' : '#FE9A57'}
               disabled={isClosed}
+              onClick={() => navigate(`/readme/${targetId}`, { state: recruitment })}
               onButtonClick={
                 isClosed
                   ? undefined
                   : () =>
                       navigate('/applicant/detail', {
                         state: {
-                          recruitmentId: recruitment.postId,
+                          recruitmentId: targetId,
                           projectTitle: recruitment.title,
                         },
                       })
@@ -69,6 +81,14 @@ const ApplicantList = () => {
           );
         })}
       </section>
+
+      {!loading && recruitments.length > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+      )}
     </main>
   );
 };

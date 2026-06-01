@@ -162,12 +162,6 @@ public class ApplyService {
         apply.updateObjective(request.objective());
         apply.updateprContent(request.prContent());
 
-        // 과거 프로젝트 매핑 정보 업데이트 로직 (기존 삭제 후 재등록)
-        /*if(request.pastProjectIds() != null) {
-            List<Project> newProjects = projectRepository.findAllById(request.pastProjectIds());
-            apply.updatePastProjects(newProjects);
-        }*/
-
         return new ApplicationUpdateResponse(apply.getId(), apply.getUpdatedAt());
     }
 
@@ -322,7 +316,7 @@ public class ApplyService {
         if (targetStatus == Status.ACCEPTED) {
             handleAccept(recruit, apply);
             //  수락 처리 직후, 현재 프로젝트에 채워진 멤버 수 확인
-            int currentMemberCount = memberRepository.countByProjectId(recruit.getProject().getId());
+            int currentMemberCount = recruit.getJoinedCount();
             int maxMemberCount = recruit.getTotalSlots();
 
             // 목표 인원이 다 찼다면 자동으로 모집글 마감 및 프로젝트 ACTIVE 전환 프로세스 실행
@@ -340,8 +334,7 @@ public class ApplyService {
     private void handleAccept(Recruit recruit, Apply apply) {
         if (apply.getStatus() == Status.ACCEPTED) return; // 이미 합격인 경우 무시
 
-        int current = memberRepository.countByProjectId(recruit.getProject().getId());
-        if (current >= recruit.getTotalSlots()) {
+        if (recruit.getJoinedCount() >= recruit.getTotalSlots()) {
             throw new GeneralException(RecruitErrorCode.RECRUITMENT_FULL);
         }
 
@@ -352,10 +345,12 @@ public class ApplyService {
         Member newMember = Member.builder()
                 .user(apply.getUser())
                 .project(project)
+                .role(apply.getObjective())
                 .position(Position.MEMBER)
                 .build();
 
         memberRepository.save(newMember);
+        memberRepository.flush();
         apply.updateStatus(Status.ACCEPTED); // 상태 변경
     }
 
@@ -369,7 +364,7 @@ public class ApplyService {
             Member member = memberRepository.findByProjectIdAndUserId(recruit.getProject().getId(), apply.getUser().getId())
                     .orElseThrow(() -> new GeneralException(RecruitErrorCode.MEMBER_NOT_FOUND));
 
-            member.delete(); // BaseEntity의 Soft Delete 실행
+            memberRepository.delete(member);
         }
 
         // CASE 2 : 대기중인 지원자 거절, 지원서 status 변경 <- 공통 로직

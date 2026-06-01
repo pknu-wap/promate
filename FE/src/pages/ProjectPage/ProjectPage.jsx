@@ -5,6 +5,7 @@ import ApplicantBox from '../../components/ApplicantBox/ApplicantBox';
 import ApplyModal from '../../components/ApplyModal/ApplyModal';
 import { getAppliedProjects, getBookmarkedProjects, getActiveProjects, getCompletedProjects } from '../../api/Project/projectApi';
 import Pagination from '../../components/Pagination/Pagination';
+import apiClient from '../../api/apiClient';
 import './ProjectPage.css';
 
 const tabs = [
@@ -74,7 +75,7 @@ function ProjectPage() {
       try {
         const response = await getBookmarkedProjects(0, ITEMS_PER_PAGE);
         if (response.data && response.data.isSuccess) {
-          const fetchedData = response.data.data.content.map((item) => {
+          const fetchedData = await Promise.all(response.data.data.content.map(async (item) => {
             let mappedStatus = null;
             switch (item.myApplyStatus) {
               case 'ACCEPTED': mappedStatus = 'accepted'; break;
@@ -86,6 +87,16 @@ function ProjectPage() {
             let projectStatus = 'active';
             if (['COMPLETED', 'CANCELLED', 'EXPIRED'].includes(item.status)) {
               projectStatus = 'completed';
+            }
+
+            let isEvaluated = false;
+            if (projectStatus === 'completed' && item.projectId && item.projectId !== 'null') {
+              try {
+                const statusRes = await apiClient.get(`/projects/${item.projectId}/reviews/status`);
+                isEvaluated = statusRes.data?.data?.reviewed || false;
+              } catch (error) {
+                console.error(`프로젝트 ${item.projectId} 평가 상태 조회 실패:`, error);
+              }
             }
 
             return {
@@ -102,9 +113,9 @@ function ProjectPage() {
               applied: item.myApplyStatus !== null,
               applyStatus: mappedStatus,
               status: projectStatus,
-              isEvaluated: false
+              isEvaluated
             };
-          });
+          }));
           setProjects(fetchedData);
         }
       } catch (error) {
@@ -135,15 +146,27 @@ function ProjectPage() {
       try {
         const response = await getCompletedProjects();
         if (response.data && response.data.isSuccess) {
-          const fetchedData = response.data.data.map((item) => ({
-            id: `completed-${item.projectId}`,
-            projectId: item.projectId,
-            title: item.title,
-            summary: item.description,
-            status: 'completed',
-            applyStatus: 'accepted',
-            bookmarked: false,
-            isEvaluated: false,
+          const fetchedData = await Promise.all(response.data.data.map(async (item) => {
+            let isEvaluated = false;
+            if (item.projectId && item.projectId !== 'null') {
+              try {
+                const statusRes = await apiClient.get(`/projects/${item.projectId}/reviews/status`);
+                isEvaluated = statusRes.data?.data?.reviewed || false;
+              } catch (error) {
+                console.error(`프로젝트 ${item.projectId} 평가 상태 조회 실패:`, error);
+              }
+            }
+
+            return {
+              id: `completed-${item.projectId}`,
+              projectId: item.projectId,
+              title: item.title,
+              summary: item.description,
+              status: 'completed',
+              applyStatus: 'accepted',
+              bookmarked: false,
+              isEvaluated,
+            };
           }));
           setCompletedProjects(fetchedData);
         }

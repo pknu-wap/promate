@@ -30,10 +30,18 @@ function MemberReviewPage() {
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    const fetchReviewTargets = async () => {
+    const fetchReviewData = async () => {
       try {
         setIsLoading(true);
         setErrorMessage("");
+
+        const statusResponse = await apiClient.get(`/projects/${projectId}/reviews/status`);
+        if (statusResponse.data?.data?.reviewed) {
+          setErrorMessage("이미 팀원 평가를 완료한 프로젝트입니다.");
+          setIsLoading(false);
+          return;
+        }
+
         const response = await apiClient.get(`/projects/${projectId}/reviews/targets`);
         if (response.data && response.data.isSuccess) {
           const dataList = response.data.data.content || response.data.data || [];
@@ -54,7 +62,7 @@ function MemberReviewPage() {
           }
         }
       } catch (error) {
-        console.error('평가 대상자 조회 실패:', error);
+        console.error('평가 정보 조회 실패:', error);
         setErrorMessage(error.message || '팀원 목록을 불러오는데 실패했습니다.');
       } finally {
         setIsLoading(false);
@@ -62,7 +70,7 @@ function MemberReviewPage() {
     };
 
     if (projectId) {
-      fetchReviewTargets();
+      fetchReviewData();
     } else {
       setErrorMessage("프로젝트 정보를 찾을 수 없습니다.");
       setIsLoading(false);

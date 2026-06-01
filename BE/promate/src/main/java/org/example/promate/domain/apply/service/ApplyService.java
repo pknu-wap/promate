@@ -95,6 +95,10 @@ public class ApplyService {
         Recruit recruit = recruitRepository.findById(recruitmentId)
                 .orElseThrow(() ->new GeneralException(RecruitErrorCode.RECRUITMENT_NOT_FOUND));
 
+        if (recruit.getUser().getId().equals(userId)) {
+            throw new GeneralException(RecruitErrorCode.SELF_APPLY_NOT_ALLOWED);
+        }
+
         validateRecruitingStatus(recruit);
 
         User user = userRepository.findById(userId)

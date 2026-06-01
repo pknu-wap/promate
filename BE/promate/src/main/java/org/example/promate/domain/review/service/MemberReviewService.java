@@ -11,6 +11,7 @@ import org.example.promate.domain.project.repository.ProjectRepository;
 import org.example.promate.domain.review.dto.MemberReviewDetailResponseDTO;
 import org.example.promate.domain.review.dto.MemberReviewRequestDTO;
 import org.example.promate.domain.review.dto.MemberReviewResponseDTO;
+import org.example.promate.domain.review.dto.ReviewStatusResponseDTO;
 import org.example.promate.domain.review.entity.MemberReview;
 import org.example.promate.domain.review.exception.ReviewErrorCode;
 import org.example.promate.domain.review.exception.ReviewException;
@@ -175,5 +176,35 @@ public class MemberReviewService {
                         member.getUser().getName()
                 ))
                 .toList();
+    }
+
+    // 상호평가 등록 상태 조회
+    @Transactional(readOnly = true)
+    public ReviewStatusResponseDTO getReviewStatus(
+            Long userId,
+            Long projectId
+    ) {
+
+        projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectException(
+                        ProjectErrorCode.ID_NOT_FOUND
+                ));
+
+        if (!memberRepository.existsByUserIdAndProjectId(
+                userId,
+                projectId
+        )) {
+            throw new ReviewException(
+                    ReviewErrorCode.NOT_PROJECT_MEMBER
+            );
+        }
+
+        boolean reviewed =
+                memberReviewRepository.existsByProjectIdAndReviewerId(
+                        projectId,
+                        userId
+                );
+
+        return new ReviewStatusResponseDTO(reviewed);
     }
 }

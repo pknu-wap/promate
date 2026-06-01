@@ -5,6 +5,7 @@ import org.example.promate.domain.review.code.ReviewSuccessCode;
 import org.example.promate.domain.review.dto.MemberReviewDetailResponseDTO;
 import org.example.promate.domain.review.dto.MemberReviewRequestDTO;
 import org.example.promate.domain.review.dto.MemberReviewResponseDTO;
+import org.example.promate.domain.review.dto.ReviewStatusResponseDTO;
 import org.example.promate.domain.review.service.MemberReviewService;
 import org.example.promate.global.ApiPayload.ApiResponse;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -50,6 +51,17 @@ public class MemberReviewController {
         return ApiResponse.onSuccess(
                 ReviewSuccessCode.REVIEW_TARGETS_READ,
                 memberReviewService.getReviewTargets(userId, projectId)
+        );
+    }
+
+    @GetMapping("/{projectId}/reviews/status")
+    public ApiResponse<ReviewStatusResponseDTO> getReviewStatus(
+            @AuthenticationPrincipal Long userId,
+            @PathVariable Long projectId
+    ) {
+        return ApiResponse.onSuccess(
+                ReviewSuccessCode.REVIEW_STATUS_FOUND,
+                memberReviewService.getReviewStatus(userId, projectId)
         );
     }
 }

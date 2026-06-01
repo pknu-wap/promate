@@ -64,15 +64,24 @@ function ProjectReadMePage() {
     else setIsLoading(false);
   }, [postId, navigate]);
 
-  const handleMemberClick = (user, event) => {
+  const handleMemberClick = async (event) => {
     const rect = event.currentTarget.getBoundingClientRect();
     setModalPosition({
       top: rect.top,
       left: rect.left,
       width: rect.width
     });
-    setSelectedUser(user);
-    setIsProfileModalOpen(true);
+
+    try {
+      const response = await apiClient.get(`/recruitments/${postId}/leader-profile`);
+      if (response.data && response.data.isSuccess) {
+        setSelectedUser(response.data.data);
+        setIsProfileModalOpen(true);
+      }
+    } catch (error) {
+      console.error('팀장 프로필 조회 실패:', error);
+      alert('팀장 프로필 정보를 불러오는데 실패했습니다.');
+    }
   };
 
   const handleApplyClick = () => {
@@ -162,7 +171,7 @@ function ProjectReadMePage() {
             <div className="project-readme-team-role">팀장</div>
             <div 
               className="project-readme-team-member-name clickable" 
-              onClick={(e) => handleMemberClick({ name: projectData.author?.nickname, profileImage: projectData.author?.profileImageUrl }, e)}
+              onClick={handleMemberClick}
             >
               {projectData.author?.nickname || "알 수 없음"}
             </div>

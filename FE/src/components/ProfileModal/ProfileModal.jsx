@@ -42,7 +42,7 @@ function ProfileModal({ isOpen, onClose, user, position }) {
   }, [handleMouseMove]);
 
   const handleMouseDown = (e) => {
-    if (isMobile) return; // 모바일에서는 드래그 비활성화
+    if (isMobile) return;
     if (e.target.closest("button") || e.target.closest(".profile-project-list")) return;
 
     setIsDragging(true);
@@ -66,38 +66,7 @@ function ProfileModal({ isOpen, onClose, user, position }) {
 
   if (!isOpen) return null;
 
-  const projects = user?.projects ?? [
-    {
-      title: "동아리 프로젝트",
-      period: "2025 - 03 - 20 ~",
-      status: "진행중",
-      score: null,
-    },
-    {
-      title: "WAP 해커톤",
-      period: "2025 - 03 - 20 ~ 2025 - 07 - 20",
-      status: "완료",
-      score: "4.7",
-    },
-    {
-      title: "WAP 해커톤",
-      period: "2025 - 03 - 20 ~ 2025 - 07 - 20",
-      status: "완료",
-      score: "4.7",
-    },
-    {
-      title: "WAP 해커톤",
-      period: "2025 - 03 - 20 ~ 2025 - 07 - 20",
-      status: "완료",
-      score: "4.7",
-    },
-    {
-      title: "WAP 해커톤",
-      period: "2025 - 03 - 20 ~ 2025 - 07 - 20",
-      status: "완료",
-      score: "4.7",
-    },
-  ];
+  const projects = user?.projects ?? [];
 
   const popoverStyle = isMobile
     ? {
@@ -135,14 +104,14 @@ function ProfileModal({ isOpen, onClose, user, position }) {
 
         <div className="profile-popover-header">
           <div className="profile-user-info">
-            <ProfileAvatar src={user?.profileImage} alt="프로필 이미지" />
+            <ProfileAvatar src={user?.profileImage || user?.profileImageUrl} alt="프로필 이미지" />
 
-            <strong className="profile-name">{user?.name || "김아무개"}</strong>
+            <strong className="profile-name">{user?.name || user?.leaderName || "김아무개"}</strong>
           </div>
 
           <div className="profile-task-count">
-            <span className="completed-task">{user?.completedTaskCount ?? 3}</span>
-            <span className="total-task">/{user?.totalTaskCount ?? 4}</span>
+            <span className="completed-task">{user?.completedTaskCount ?? 0}</span>
+            <span className="total-task">/{user?.totalTaskCount ?? ((user?.completedTaskCount || 0) + (user?.incompleteTaskCount || 0))}</span>
           </div>
         </div>
 
@@ -150,35 +119,42 @@ function ProfileModal({ isOpen, onClose, user, position }) {
           <h3 className="profile-section-title">프로젝트 경험</h3>
 
           <div className="profile-project-list">
-            {projects.map((project, index) => (
-              <div className="profile-project-item" key={index}>
-                <div className="project-main-info">
-                  <span className="project-title">{project.title}</span>
-                  <span className="project-period">{project.period}</span>
-                </div>
+            {projects.map((project, index) => {
+              const title = project.title || project.projectTitle;
+              const period = project.period || (project.startDate && project.endDate ? `${project.startDate} ~ ${project.endDate}` : "");
+              const status = project.status || (project.projectStatus === "DONE" ? "완료" : "진행중");
+              const score = project.score || project.averageReviewScore;
 
-                <div className="project-sub-info">
-                  <span
-                    className={`project-status ${
-                      project.status === "진행중" ? "active" : "done"
-                    }`}
-                  >
-                    {project.status}
-                  </span>
+              return (
+                <div className="profile-project-item" key={index}>
+                  <div className="project-main-info">
+                    <span className="project-title">{title}</span>
+                    <span className="project-period">{period}</span>
+                  </div>
 
-                  <div className="project-score">
-                    {project.score ? (
-                      <>
-                        <span className="score-number">{project.score}</span>
-                        <span className="score-text">점</span>
-                      </>
-                    ) : (
-                      <span className="empty-score"></span>
-                    )}
+                  <div className="project-sub-info">
+                    <span
+                      className={`project-status ${
+                        status === "진행중" ? "active" : "done"
+                      }`}
+                    >
+                      {status}
+                    </span>
+
+                    <div className="project-score">
+                      {score ? (
+                        <>
+                          <span className="score-number">{score}</span>
+                          <span className="score-text">점</span>
+                        </>
+                      ) : (
+                        <span className="empty-score"></span>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

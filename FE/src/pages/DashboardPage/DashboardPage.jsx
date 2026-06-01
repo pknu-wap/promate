@@ -76,6 +76,7 @@ function DashboardPage() {
           newDashboardData.urgentTasks = (urgentTasksRes.data.data || []).map((task) => ({
             id: task.taskId,
             projectId: task.projectId, // 나중에 태스크 클릭 시 해당 프로젝트로 이동하기 위해 추가
+            projectTitle: task.projectTitle,
             title: `${task.projectTitle} - ${task.title}`,
             dueDate: formatDate(task.dueDate),
           }));
@@ -85,6 +86,7 @@ function DashboardPage() {
           newDashboardData.completedTasks = (completedTasksRes.data.data || []).map((task) => ({
             id: task.taskId,
             projectId: task.projectId,
+            projectTitle: task.projectTitle,
             title: `${task.projectTitle} - ${task.title}`,
             dueDate: formatDate(task.dueDate),
           }));
@@ -168,7 +170,7 @@ function DashboardPage() {
               showDot={showDot}
               isError={isError}
             isAllEmpty={isAllEmpty}
-              onItemClick={(item) => navigate(`/project/${item.projectId || item.id}`)}
+            onItemClick={(item) => navigate(`/project/${item.projectId || item.id}`, { state: { projectTitle: item.projectTitle || item.title, dueDate: item.dueDate } })}
             />
           ))}
         </div>
@@ -200,7 +202,7 @@ function DashboardPage() {
                     currentStep={project.currentStep}
                     totalStep={project.totalStep}
                     avatarSize="52px"
-                    onClick={() => navigate(`/project/${project.id}`)}
+                    onClick={() => navigate(`/project/${project.id}`, { state: { projectTitle: project.title, dueDate: project.dueDate } })}
                     hidePcLabel
                   />
                 ))

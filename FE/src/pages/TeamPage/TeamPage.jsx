@@ -6,6 +6,9 @@ import ProgressBar from '../../components/ProgressBar/ProgressBar';
 import SummaryCard from '../../components/SummaryCard/SummaryCard';
 import moreIcon from '../../assets/moreIcon.svg';
 import NewTaskModal from '../../components/NewTaskModal/NewTaskModal.jsx';
+import PostModal from './components/PostModal.jsx';
+import PostDetailModal from './components/PostDetailModal.jsx';
+import TaskDetailModal from './components/TaskDetailModal.jsx';
 import { 
   getProjectMembers, 
   getProjectTasks, 
@@ -50,7 +53,6 @@ function TeamPage() {
   const [selectedPost, setSelectedPost] = useState(null);
   const [isDetailLoading, setIsDetailLoading] = useState(false);
   const [detailError, setDetailError] = useState(null);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const [isTaskExpanded, setIsTaskExpanded] = useState(false);
   const [isBoardExpanded, setIsBoardExpanded] = useState(false);
@@ -187,7 +189,6 @@ function TeamPage() {
     try {
       setIsDetailLoading(true);
       setDetailError(null);
-      setIsMenuOpen(false);
       setSelectedPost({ postId });
       const data = await getPostDetail(idToFetch, postId);
       setSelectedPost(data);
@@ -210,7 +211,6 @@ function TeamPage() {
     setIsEditMode(true);
     setPostTitle(selectedPost.title);
     setPostContent(selectedPost.content);
-    setIsMenuOpen(false);
     setIsPostModalOpen(true);
   };
 
@@ -278,7 +278,6 @@ function TeamPage() {
   const closePostDetailModal = () => {
     setSelectedPost(null);
     setDetailError(null);
-    setIsMenuOpen(false);
   };
 
   const formatDate = (dateString) => {
@@ -455,140 +454,37 @@ function TeamPage() {
         </section>
       </div>
 
-      {isPostModalOpen && (
-        <div className="team-post-modal-backdrop" role="presentation" onMouseDown={closePostModal}>
-          <div
-            className="team-post-modal"
-            role="dialog"
-            aria-modal="true"
-            onMouseDown={(event) => event.stopPropagation()}
-          >
-            <h2>{isEditMode ? '게시글 수정' : '게시글 쓰기'}</h2>
+      <PostModal
+        isOpen={isPostModalOpen}
+        isEditMode={isEditMode}
+        title={postTitle}
+        setTitle={setPostTitle}
+        content={postContent}
+        setContent={setPostContent}
+        onClose={closePostModal}
+        onSubmit={handlePostSubmit}
+        isSubmitting={isPostSubmitting}
+      />
 
-            <label className="team-post-field">
-              <span>제목</span>
-              <input
-                type="text"
-                value={postTitle}
-                onChange={(event) => setPostTitle(event.target.value)}
-                placeholder="제목을 적어주세요."
-                disabled={isPostSubmitting}
-              />
-            </label>
+      <PostDetailModal
+        isOpen={!!selectedPost}
+        post={selectedPost}
+        isLoading={isDetailLoading}
+        error={detailError}
+        onClose={closePostDetailModal}
+        onEdit={handleOpenEditModal}
+        onDelete={handleDeletePost}
+      />
 
-            <label className="team-post-field">
-              <span>내용</span>
-              <textarea
-                value={postContent}
-                onChange={(event) => setPostContent(event.target.value)}
-                placeholder="내용을 적어주세요."
-                disabled={isPostSubmitting}
-              />
-            </label>
-
-            <div className="team-post-modal-actions">
-              <button 
-                type="button" 
-                className="team-post-cancel-button" 
-                onClick={closePostModal}
-                disabled={isPostSubmitting}
-              >
-                취소
-              </button>
-              <button
-                type="button"
-                className="team-post-create-button"
-                onClick={handlePostSubmit}
-                disabled={!postTitle.trim() || !postContent.trim() || isPostSubmitting}
-              >
-                {isPostSubmitting ? '저장 중...' : isEditMode ? '수정 완료' : '게시글 생성'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {selectedPost && (
-        <div className="team-post-detail-backdrop" role="presentation" onMouseDown={closePostDetailModal}>
-          <article
-            className="team-post-detail-modal"
-            role="dialog"
-            aria-modal="true"
-            onMouseDown={(event) => event.stopPropagation()}
-          >
-            <div className="team-post-detail-menu-container" style={{ position: 'absolute', top: '20px', right: '20px' }}>
-              <button
-                type="button"
-                className="team-post-detail-menu"
-                aria-label="게시글 메뉴"
-                onClick={() => setIsMenuOpen((prev) => !prev)}
-              >
-                ...
-              </button>
-              {isMenuOpen && (
-                <div className="team-post-dropdown" style={{ position: 'absolute', right: 0, background: '#fff', border: '1px solid #ccc', borderRadius: '4px', zIndex: 10 }}>
-                  <button type="button" onClick={handleOpenEditModal} style={{ display: 'block', width: '100%', padding: '8px 16px', border: 'none', background: 'none', textAlign: 'left', cursor: 'pointer' }}>수정</button>
-                  <button type="button" onClick={handleDeletePost} style={{ display: 'block', width: '100%', padding: '8px 16px', border: 'none', background: 'none', textAlign: 'left', color: 'red', cursor: 'pointer' }}>삭제</button>
-                </div>
-              )}
-            </div>
-
-            {isDetailLoading && <div className="team-member-status">처리 중...</div>}
-            {detailError && <div className="team-member-status" style={{ color: 'red' }}>{detailError}</div>}
-
-            {!isDetailLoading && !detailError && selectedPost.title && (
-              <>
-                <h2 id="team-post-detail-title">{selectedPost.title}</h2>
-                <dl className="team-post-detail-meta">
-                  <dt>작성자</dt>
-                  <dd>{selectedPost.writerName}</dd>
-                </dl>
-                <p>{selectedPost.content}</p>
-              </>
-            )}
-          </article>
-        </div>
-      )}
-
-      {selectedTask && (
-        <div className="team-post-detail-backdrop" role="presentation" onMouseDown={() => setSelectedTask(null)}>
-          <article className="team-post-detail-modal" role="dialog" aria-modal="true" onMouseDown={(e) => e.stopPropagation()}>
-            {isTaskDetailLoading && <div className="team-member-status">태스크 정보 불러오는 중...</div>}
-            {taskDetailError && <div className="team-member-status" style={{ color: 'red' }}>{taskDetailError}</div>}
-            
-            {!isTaskDetailLoading && !taskDetailError && selectedTask.title && (
-              <>
-                <h2>{selectedTask.title}</h2>
-                <dl className="team-post-detail-meta" style={{ marginTop: '12px' }}>
-                  <dt>담당자</dt>
-                  <dd>{selectedTask.managerName} ({selectedTask.role || '역할 지정 없음'})</dd>
-                  <dt>마감일</dt>
-                  <dd>{selectedTask.dueDate}</dd>
-                  <dt>상태</dt>
-                  <dd>
-                    <select 
-                      value={selectedTask.status} 
-                      onChange={(e) => handleUpdateTaskStatus(selectedTask.taskId, selectedTask, e.target.value)}
-                      style={{ padding: '2px 6px', borderRadius: '4px', border: '1px solid #ccc' }}
-                    >
-                      <option value="TODO">TODO</option>
-                      <option value="IN_PROGRESS">IN_PROGRESS</option>
-                      <option value="DONE">DONE</option>
-                    </select>
-                  </dd>
-                </dl>
-                <div style={{ marginTop: '16px', borderTop: '1px solid #eee', paddingTop: '12px' }}>
-                  <p>{selectedTask.description || '상세 설명이 없습니다.'}</p>
-                </div>
-                <div className="team-post-modal-actions" style={{ marginTop: '24px', display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
-                  <button type="button" onClick={handleDeleteTask} style={{ padding: '8px 16px', border: 'none', background: '#ff4d4f', color: '#fff', borderRadius: '4px', cursor: 'pointer' }}>삭제</button>
-                  <button type="button" className="team-post-cancel-button" onClick={() => setSelectedTask(null)}>닫기</button>
-                </div>
-              </>
-            )}
-          </article>
-        </div>
-      )}
+      <TaskDetailModal
+        isOpen={!!selectedTask}
+        task={selectedTask}
+        isLoading={isTaskDetailLoading}
+        error={taskDetailError}
+        onClose={() => setSelectedTask(null)}
+        onStatusChange={handleUpdateTaskStatus}
+        onDelete={handleDeleteTask}
+      />
 
       <NewTaskModal
         isOpen={isNewTaskModalOpen}

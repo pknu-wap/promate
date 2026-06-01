@@ -231,7 +231,7 @@ function ProjectPage() {
                     dueDate={project.dueDate}
                     currentStep={project.currentStep}
                     totalStep={project.totalStep}
-                    onClick={() => navigate(`/project/${project.projectId}`)}
+                    onClick={() => navigate(`/project/${project.projectId}`, { state: { projectTitle: project.title, dueDate: project.dueDate } })}
                   />
                 );
               }
@@ -277,7 +277,7 @@ function ProjectPage() {
                 }
 
                 if (activeTab === 'completed' || project.status === 'completed') {
-                  navigate(`/project/${project.projectId || targetId}`);
+                  navigate(`/project/${project.projectId || targetId}`, { state: { projectTitle: project.title, dueDate: project.dueDate } });
                   return;
                 }
                 

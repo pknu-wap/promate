@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useSearchParams, useLocation } from 'react-router-dom';
-import { getProjectTasks, updateTaskStatus, deleteProjectTask } from '../../api/TeamPage';
+import { getProjectTasks, updateTaskStatus, deleteProjectTask, getProjectMembers, createProjectTask } from '../../api/TeamPage';
+import NewTaskModal from '../../components/NewTaskModal/NewTaskModal.jsx';
 import './TaskBoard.css';
 
 const taskTabs = [
@@ -21,22 +22,26 @@ function TaskBoard() {
     : 'all';
   const [activeTab, setActiveTab] = useState(initialTab);
   const [tasks, setTasks] = useState([]);
+  const [members, setMembers] = useState([]);
+  const [isNewTaskModalOpen, setIsNewTaskModalOpen] = useState(false);
 
   useEffect(() => {
     setActiveTab(initialTab);
   }, [initialTab]);
 
   useEffect(() => {
-    const fetchTasks = async () => {
+    const fetchData = async () => {
       if (!projectId) return;
       try {
-        const data = await getProjectTasks(projectId);
-        setTasks(data.taskList || []);
+        const taskData = await getProjectTasks(projectId);
+        setTasks(taskData.taskList || []);
+        const memberData = await getProjectMembers(projectId);
+        setMembers(memberData || []);
       } catch (error) {
-        console.error("테스크 목록을 불러오는데 실패했습니다.", error);
+        console.error("데이터를 불러오는데 실패했습니다.", error);
       }
     };
-    fetchTasks();
+    fetchData();
   }, [projectId]);
 
   const filteredTasks = useMemo(() => {
@@ -76,6 +81,24 @@ function TaskBoard() {
     }
   };
 
+  const handleAddTaskSubmit = async (newTaskData) => {
+    try {
+      const formattedDate = newTaskData.dueDate.replace(/\./g, '-');
+      await createProjectTask(projectId, {
+        managerId: newTaskData.managerId,
+        title: newTaskData.title,
+        description: newTaskData.description || '',
+        dueDate: formattedDate,
+      });
+      setIsNewTaskModalOpen(false);
+      
+      const data = await getProjectTasks(projectId);
+      setTasks(data.taskList || []);
+    } catch (err) {
+      alert(`테스크 생성에 실패했습니다: ${err.message}`);
+    }
+  };
+
   const formatDate = (dateStr) => dateStr ? dateStr.replace(/-/g, '.') : '';
 
   const getStatusLabel = (status) => {
@@ -107,7 +130,11 @@ function TaskBoard() {
             ))}
           </nav>
 
-          <button type="button" className="task-board__write-button">
+          <button
+            type="button"
+            className="task-board__write-button"
+            onClick={() => setIsNewTaskModalOpen(true)}
+          >
             <span aria-hidden="true">✎</span>
             태스크 쓰기
           </button>
@@ -147,6 +174,14 @@ function TaskBoard() {
           ))}
         </div>
       </div>
+
+      <NewTaskModal
+        isOpen={isNewTaskModalOpen}
+        onClose={() => setIsNewTaskModalOpen(false)}
+        onSubmit={handleAddTaskSubmit}
+        projectId={projectId}
+        members={members}
+      />
     </section>
   );
 }

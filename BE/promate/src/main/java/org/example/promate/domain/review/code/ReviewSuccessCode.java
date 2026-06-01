@@ -11,7 +11,9 @@ public enum ReviewSuccessCode implements BaseSuccessCode {
 
     REVIEW_READ(HttpStatus.OK,"REVIEW_S002","팀원 평가 조회에 성공했습니다."),
 
-    REVIEW_TARGETS_READ(HttpStatus.OK, "REVIEW_S003", "팀원 평가 대상자 조회에 성공했습니다.");
+    REVIEW_TARGETS_READ(HttpStatus.OK, "REVIEW_S003", "팀원 평가 대상자 조회에 성공했습니다."),
+
+    REVIEW_STATUS_FOUND(HttpStatus.OK, "REVIEW_S004", "상호평가 완료 여부 조회에 성공했습니다.");
 
     private final HttpStatus status;
     private final String code;

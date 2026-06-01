@@ -3,38 +3,71 @@ import './Calendar.css';
 import calendarIcon from '../../assets/CalendarIcon.svg';
 import plusIcon from '../../assets/icons/plusIcon.svg';
 import AddEventModal from '../AddEventModal/AddEventModal';
+import EventDetailModal from '../EventDetailModal/EventDetailModal';
 import apiClient from '../../api/apiClient';
 
 const WEEKDAYS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
-function Calendar({ showAddButton = true }) {
+function Calendar({ showAddButton = true, projectId, projectTitle: fallbackProjectTitle }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [events, setEvents] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
 
   useEffect(() => {
     const fetchEvents = async () => {
       try {
         setHasError(false);
-        const response = await apiClient.get('/dashboard/calendar');
-        const fetchedEvents = (response.data.data || []).map((item) => {
-          const startAt = item.startAt || '';
-          const endAt = item.endAt || '';
-          const [startYear, startMonth, startDay] = startAt.split('-').map(Number);
-          const [endYear, endMonth, endDay] = endAt.split('-').map(Number);
+        let response;
+        
+        if (projectId) {
+          response = await apiClient.get(`/projects/${projectId}/schedules`, {
+            params: { year, month: month + 1, _t: new Date().getTime() },
+          });
+        } else {
+          response = await apiClient.get('/dashboard/calendar', {
+            params: { _t: new Date().getTime() }
+          });
+        }
+
+        const responseData = response.data?.data || response.data;
+        let eventList = [];
+        if (Array.isArray(responseData)) {
+          eventList = responseData;
+        } else if (responseData && typeof responseData === 'object') {
+          const arrays = Object.values(responseData).filter(Array.isArray);
+          eventList = arrays.length > 0 ? arrays[0] : [];
+        }
+
+        const fetchedEvents = eventList.map((item, index) => {
+          const startDateStr = item.startDate || item.startAt || item.start_date || item.date;
+          if (!startDateStr) return null;
+          const endDateStr = item.endDate || item.endAt || item.end_date || startDateStr;
+
+          const cleanStart = String(startDateStr).split('T')[0].replace(/\./g, '-');
+          const cleanEnd = String(endDateStr).split('T')[0].replace(/\./g, '-');
+
+          const [startYear, startMonth, startDay] = cleanStart.split('-').map(Number);
+          const [endYear, endMonth, endDay] = cleanEnd.split('-').map(Number);
+
+          if (isNaN(startYear) || isNaN(startMonth) || isNaN(startDay)) return null;
           
           return {
-            id: item.scheduleId,
-            text: item.title,
+            id: item.scheduleId || item.id || item.taskId || index,
+            text: item.title || item.name || item.content || '(제목 없음)',
             start: new Date(startYear, startMonth - 1, startDay),
             end: new Date(endYear, endMonth - 1, endDay),
             checked: false,
             projectId: item.projectId,
-            projectTitle: item.projectTitle,
+            projectTitle: item.projectTitle || fallbackProjectTitle,
             content: item.content,
           };
-        });
+        }).filter(Boolean);
+
         setEvents(fetchedEvents);
       } catch (error) {
         console.error('캘린더 일정 조회 실패:', error);
@@ -43,10 +76,7 @@ function Calendar({ showAddButton = true }) {
     };
 
     fetchEvents();
-  }, []);
-
-  const year = currentDate.getFullYear();
-  const month = currentDate.getMonth();
+  }, [projectId, year, month]);
 
   const days = useMemo(() => getCalendarDays(year, month), [year, month]);
 
@@ -66,13 +96,36 @@ function Calendar({ showAddButton = true }) {
     setIsModalOpen(false);
   };
 
-  const handleAddEvent = (newEventData) => {
-    const newEvent = {
-      id: Date.now(),
-      ...newEventData,
-      checked: false,
-    };
-    setEvents((prevEvents) => [...prevEvents, newEvent]);
+  const handleAddEvent = async (newEventData) => {
+    if (!projectId) return false;
+
+    try {
+      const response = await apiClient.post(`/projects/${projectId}/schedules`, newEventData);
+      const created = response.data.data;
+      
+      const startDateStr = created.startDate || created.startAt || newEventData.startDate;
+      const endDateStr = created.endDate || created.endAt || newEventData.endDate;
+
+      const cleanStart = startDateStr.split('T')[0].replace(/\./g, '-');
+      const cleanEnd = endDateStr.split('T')[0].replace(/\./g, '-');
+
+      const [startYear, startMonth, startDay] = cleanStart.split('-').map(Number);
+      const [endYear, endMonth, endDay] = cleanEnd.split('-').map(Number);
+      
+      const newEvent = {
+        id: created.scheduleId,
+        text: created.title,
+        start: new Date(startYear, startMonth - 1, startDay),
+        end: new Date(endYear, endMonth - 1, endDay),
+        checked: false,
+      };
+      setEvents((prevEvents) => [...prevEvents, newEvent]);
+      return true;
+    } catch (error) {
+      console.error('일정 추가 실패:', error);
+      alert(error.message || '일정 추가에 실패했습니다.');
+      return false;
+    }
   };
 
   return (
@@ -201,13 +254,17 @@ function Calendar({ showAddButton = true }) {
                         style={
                           isSegmentStart
                             ? {
-                                // 이어지는 일정은 시작 칸에서만 너비를 확장
                                 width: `calc(${eventSpan * 100}% + ${
                                   eventSpan - 1
                                 }px)`,
+                                cursor: 'pointer',
                               }
-                            : undefined
+                            : { cursor: 'pointer' }
                         }
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedEvent(event);
+                        }}
                       >
                         {isSegmentStart ? event.text : ''}
                       </div>
@@ -224,6 +281,11 @@ function Calendar({ showAddButton = true }) {
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         onAddEvent={handleAddEvent}
+      />
+
+      <EventDetailModal
+        event={selectedEvent}
+        onClose={() => setSelectedEvent(null)}
       />
     </section>
   );
@@ -244,7 +306,6 @@ function getCalendarDays(year, month) {
     return days;
   }
 
-  // 마지막 주도 7칸 구조를 유지하도록 빈 칸을 추가
   return [...days, ...Array(7 - remainder).fill(null)];
 }
 
@@ -272,14 +333,13 @@ function getEventsByDay(events, year, month, day) {
         return startDiff;
       }
 
-      return a.id - b.id;
+      return String(a.id).localeCompare(String(b.id));
     });
 }
 
 function isEventSegmentStart(event, year, month, day, index) {
   const currentDate = new Date(year, month, day).getTime();
 
-  // 일정 시작일이 아니어도 월 첫날이나 주 첫날이면 새 구간으로 다시 표시
   return (
     currentDate === event.start.getTime() ||
     day === 1 ||
@@ -308,7 +368,6 @@ function getEventSpan(event, year, month, day, index) {
 
   const remainingEventDays = eventEndDay - day + 1;
 
-  // 일정이 현재 주 안에서 차지할 칸 수만 계산
   return Math.min(daysUntilWeekEnd, remainingEventDays);
 }
 

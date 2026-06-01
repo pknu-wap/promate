@@ -1,43 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import './NewTaskModal.css';
 
-const mockTeammates = [
-  { id: 1, name: '홍길동' },
-  { id: 2, name: '김철수' },
-  { id: 3, name: '이영희' },
-  { id: 4, name: '박민수' },
-];
-
-function NewTaskModal({ isOpen, onClose, onSubmit, projectId }) {
+function NewTaskModal({ isOpen, onClose, onSubmit, projectId, members = [] }) {
   const [title, setTitle] = useState('');
-  const [assigneeId, setAssigneeId] = useState('');
+  const [managerId, setManagerId] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState('');
   
-  const [teammates, setTeammates] = useState([]);
-
   useEffect(() => {
-    if (isOpen) {
-      setTeammates(mockTeammates);
-    } else {
+    if (!isOpen) {
       setTitle('');
-      setAssigneeId('');
+      setManagerId('');
       setDescription('');
       setDueDate('');
     }
-  }, [isOpen, projectId]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
   const handleSubmit = () => {
-    if (!title.trim() || !assigneeId || !dueDate) {
+    if (!title.trim() || !managerId || !dueDate) {
       alert('태스크 제목, 담당자, 마감일은 필수 입력 항목입니다.');
       return;
     }
 
     const newTask = {
       title,
-      assigneeId,
+      managerId,
       description,
       dueDate,
     };
@@ -67,12 +56,12 @@ function NewTaskModal({ isOpen, onClose, onSubmit, projectId }) {
             <label className="task-modal-label">담당자 <span style={{ color: '#E53E3E' }}>*</span></label>
             <select
               className="task-modal-select"
-              value={assigneeId}
-              onChange={(e) => setAssigneeId(e.target.value)}
+              value={managerId}
+              onChange={(e) => setManagerId(e.target.value)}
             >
               <option value="" disabled>담당자를 선택해주세요</option>
-              {teammates.map((member) => (
-                <option key={member.id} value={member.id}>
+              {members.map((member) => (
+                <option key={member.userId} value={member.userId}>
                   {member.name}
                 </option>
               ))}

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./ProfileModal.css";
 import closeIcon from "../../assets/icons/closeIcon.svg";
 import ProfileAvatar from "../ProfileAvatar/ProfileAvatar";
-import { getLeaderProfile } from "../../api/Recruits/recruitmentApi.js";
 
 function ProfileModal({ isOpen, onClose, user, position }) {
   const [modalPos, setModalPos] = useState({ top: 0, left: 0 });

@@ -526,18 +526,19 @@
   display: flex;
   justify-content: flex-end;
   gap: 13px;
-  margin-top: 10px;
+  margin-top: 60px;
 }
 
-.team-post-cancel-button{
+.team-post-cancel-button,
+.team-post-delete-button {
   width: 72px;
   height: 28px;
   border: 0;
   border-radius: 4px;
   color: #ffffff;
   font-family: 'Pretendard', sans-serif;
-  font-size: 12px;
-  font-weight: 800;
+  font-size: 14px;
+  font-weight: 700;
   cursor: pointer;
 }
 .team-post-create-button {
@@ -555,6 +556,10 @@
 
 .team-post-cancel-button {
   background: #d9d9d9;
+}
+
+.team-post-delete-button {
+  background: #ff4d4f;
 }
 
 .team-post-create-button {
@@ -609,8 +614,8 @@
   margin: 0 0 16px;
   color: #000000;
   font-family: 'Pretendard', sans-serif;
-  font-size: 18px;
-  font-weight: 800;
+  font-size: 20px;
+  font-weight: 700;
   line-height: 1.3;
 }
 
@@ -632,11 +637,49 @@
   font-weight: 600;
 }
 
+.task-detail-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 0 0 18px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.task-detail-meta .meta-left {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+}
+
+.task-detail-meta .meta-row {
+  display: flex;
+  align-items: center;
+}
+
+.task-detail-meta dt {
+  width: 60px;
+  margin: 0;
+  color: #909090;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.task-detail-meta dd {
+  margin: 0;
+  color: #1a1a1a;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+}
+
 .team-post-detail-modal p {
   margin: 0;
   color: #000000;
   font-family: 'Pretendard', sans-serif;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 500;
   line-height: 1.65;
   word-break: keep-all;

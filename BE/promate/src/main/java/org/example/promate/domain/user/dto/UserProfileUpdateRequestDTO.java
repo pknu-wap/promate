@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserProfileUpdateRequestDTO {
     private String name;
+    private String profileImageBase64;
 }

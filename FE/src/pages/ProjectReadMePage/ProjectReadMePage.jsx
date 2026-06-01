@@ -71,7 +71,7 @@ function ProjectReadMePage() {
     });
 
     try {
-      const response = await apiClient.get(`/recruits/${postId}/leader-profile`);
+      const response = await apiClient.get(`/recruitments/${postId}/leader-profile`);
       if (response.data && response.data.isSuccess) {
         setSelectedUser(response.data.data);
         setIsProfileModalOpen(true);

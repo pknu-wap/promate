@@ -595,6 +595,7 @@ function TeamPage() {
         onClose={() => setIsNewTaskModalOpen(false)}
         onSubmit={handleAddTaskSubmit}
         projectId={idToFetch}
+        members={members}
       />
     </div>
   );

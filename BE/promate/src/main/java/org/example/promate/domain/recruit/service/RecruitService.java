@@ -150,8 +150,15 @@ public class RecruitService {
             throw new GeneralException(RecruitErrorCode.NOT_RECRUITMENT_AUTHOR);
         }
 
-        // 부모인 Recruit만 삭제하면 Project와 그 안의 Member들까지 DB에서 연쇄 삭제됨
-        recruit.delete();
+        if (recruit.getStatus() == RecruitStatus.RECRUITING) {
+            // CASE 1: 모집 중일 때는 Hard Delete
+            // -> cascade = CascadeType.ALL 설정에 의해 Project, Apply도 DB에서 통째로 지움
+            recruitRepository.delete(recruit);
+        } else {
+            // CASE 2: 이미 마감되었거나 진행 중일 때는 프로젝트 보호를 위해 겉만 숨김 (Soft Delete)
+            // -> 이래야 다른 팀원들이 프로젝트 내역에서 쫓겨나지 않음
+            recruit.delete(); // super.performDelete() 호출하여 is_deleted = true 변경
+        }
     }
 
 
@@ -302,19 +309,9 @@ public class RecruitService {
 
 
     //내가 생성한 모집글들 불러오기
-    public RecruitPageResponse<MyRecruitResponse> getMyRecruitments(Long userId, String status, Pageable pageable) {
-        RecruitStatus recruitStatus = null;
+    public RecruitPageResponse<MyRecruitResponse> getMyRecruitments(Long userId, Pageable pageable) {
 
-        // 쿼리 스트링으로 status가 넘어왔을 경우 대소문자 구분 없이 매핑 (null이면 전체 조회)
-        if (status != null && !status.isBlank()) {
-            try {
-                recruitStatus = RecruitStatus.valueOf(status.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                throw new GeneralException(RecruitErrorCode.INVALID_RECRUIT_STATUS);
-            }
-        }
-
-        Page<Recruit> recruitPage = recruitRepository.findByUserIdAndStatus(userId, recruitStatus, pageable);
+        Page<Recruit> recruitPage = recruitRepository.findActiveRecruitmentsByUserId(userId,pageable);
 
         Page<MyRecruitResponse> mappedPage = recruitPage.map(MyRecruitResponse::from);
 

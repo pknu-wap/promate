@@ -122,14 +122,13 @@ public class RecruitController {
 
     @GetMapping("/me")
     public ApiResponse<RecruitPageResponse<MyRecruitResponse>> getMyRecruitments(
-            @AuthenticationPrincipal Long userId, 
-            @RequestParam(required = false) String status,
+            @AuthenticationPrincipal Long userId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
 
-        RecruitPageResponse<MyRecruitResponse> response = recruitService.getMyRecruitments(userId, status, pageable);
+        RecruitPageResponse<MyRecruitResponse> response = recruitService.getMyRecruitments(userId,pageable);
 
         return ApiResponse.onSuccess(RecruitSuccessCode.RECRUITMENT_BOOKMARKED_LIST_FETCHED,response);
     }

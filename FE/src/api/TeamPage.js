@@ -49,3 +49,8 @@ export const updateProjectTask = async (projectId, taskId, taskData) => {
   const response = await apiClient.put(`/projects/${projectId}/tasks/${taskId}`, taskData);
   return response.data.data;
 };
+
+export const updateTaskStatus = async (projectId, taskId, statusObj) => {
+  const response = await apiClient.patch(`/projects/${projectId}/tasks/${taskId}/status`, statusObj);
+  return response.data.data;
+};

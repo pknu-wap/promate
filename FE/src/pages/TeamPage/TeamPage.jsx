@@ -16,7 +16,8 @@ import {
   deleteProjectPost,
   getTaskDetail,
   createProjectTask,
-  updateProjectTask
+  updateProjectTask,
+  updateTaskStatus
 } from '../../api/TeamPage';
 import './TeamPage.css';
 
@@ -158,14 +159,9 @@ function TeamPage() {
 
   const handleUpdateTaskStatus = async (taskId, currentTask, nextStatus) => {
     try {
-      await updateProjectTask(idToFetch, taskId, {
-        role: currentTask.role,
-        managerId: currentTask.managerId,
-        description: currentTask.description,
-        dueDate: currentTask.dueDate,
-        status: nextStatus
-      });
+      const data = await updateTaskStatus(idToFetch, taskId, { status: nextStatus });
       setSelectedTask((prev) => prev && prev.taskId === taskId ? { ...prev, status: nextStatus } : prev);
+      setProjectProgress(data.projectProgress || 0);
       await fetchTasks();
     } catch (err) {
       alert(`테스크 상태 변경에 실패했습니다: ${err.message}`);

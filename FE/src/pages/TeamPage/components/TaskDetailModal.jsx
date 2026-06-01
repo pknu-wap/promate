@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 function TaskDetailModal({
   isOpen,
@@ -9,45 +9,77 @@ function TaskDetailModal({
   onStatusChange,
   onDelete
 }) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   if (!isOpen || !task) return null;
 
   return (
-    <div className="team-post-detail-backdrop" role="presentation" onMouseDown={onClose}>
-      <article className="team-post-detail-modal" role="dialog" aria-modal="true" onMouseDown={(e) => e.stopPropagation()}>
-        {isLoading && <div className="team-member-status">태스크 정보 불러오는 중...</div>}
-        {error && <div className="team-member-status" style={{ color: 'red' }}>{error}</div>}
-        
-        {!isLoading && !error && task.title && (
-          <>
-            <h2>{task.title}</h2>
-            <div className="task-detail-meta" style={{ marginTop: '12px' }}>
-              <dl className="meta-left">
-                <div className="meta-row">
-                  <dt>담당자</dt>
-                  <dd>{task.managerName} ({task.role || '역할 지정 없음'})</dd>
-                </div>
-                <div className="meta-row">
-                  <dt>마감일</dt>
-                  <dd>{task.dueDate}</dd>
-                </div>
-              </dl>
-              <div className="meta-right">
-                <select value={task.status} onChange={(e) => onStatusChange(task.taskId, task, e.target.value)} style={{ padding: '4px 8px', borderRadius: '4px', border: '1px solid #ccc', fontFamily: 'Pretendard', fontSize: '12px', fontWeight: '600', color: '#333' }}>
-                  <option value="TODO">TODO</option>
-                  <option value="IN_PROGRESS">IN_PROGRESS</option>
-                  <option value="DONE">DONE</option>
-                </select>
+    <div className="team-detail-overlay" role="presentation" onMouseDown={onClose}>
+      <article className="team-detail-container" role="dialog" aria-modal="true" onMouseDown={(e) => e.stopPropagation()}>
+        <div className="team-detail-header">
+          <div className="team-detail-more-container">
+            <button
+              type="button"
+              className="team-detail-more-btn"
+              aria-label="태스크 메뉴"
+              onClick={() => setIsMenuOpen((prev) => !prev)}
+            >
+              <span className="team-detail-more-icon"></span>
+            </button>
+            {isMenuOpen && (
+              <div className="team-detail-dropdown-menu">
+                <button type="button" className="team-detail-dropdown-item delete" onClick={() => { setIsMenuOpen(false); onDelete(); }}>
+                  삭제
+                </button>
               </div>
-            </div>
-            <div style={{ marginTop: '16px' }}>
-              <p>{task.description || '상세 설명이 없습니다.'}</p>
-            </div>
-            <div className="team-post-modal-actions">
-              <button type="button" className="team-post-delete-button" onClick={onDelete}>삭제</button>
-              <button type="button" className="team-post-cancel-button" onClick={onClose}>닫기</button>
-            </div>
-          </>
-        )}
+            )}
+          </div>
+          <button type="button" className="team-detail-close-btn" onClick={onClose} aria-label="닫기">
+            ✕
+          </button>
+        </div>
+
+        <div className="team-detail-body">
+          {isLoading && <p className="team-member-status">태스크 정보 불러오는 중...</p>}
+          {error && <p className="team-member-status" style={{ color: 'red' }}>{error}</p>}
+          
+          {!isLoading && !error && task.title && (
+            <>
+              <h2 className="team-detail-title">{task.title}</h2>
+              
+              <div className="team-detail-info">
+                <div className="team-detail-info-row">
+                  <span className="team-detail-info-label">담당자</span>
+                  <span className="team-detail-info-value" style={{ color: '#1a1a1a' }}>
+                    {task.managerName} ({task.role || '역할 지정 없음'})
+                  </span>
+                </div>
+                <div className="team-detail-info-row">
+                  <span className="team-detail-info-label">마감일</span>
+                  <span className="team-detail-info-value" style={{ color: '#1a1a1a' }}>{task.dueDate}</span>
+                </div>
+                <div className="team-detail-info-row">
+                  <span className="team-detail-info-label">상태</span>
+                  <select
+                    className="team-detail-select"
+                    value={task.status}
+                    onChange={(e) => onStatusChange(task.taskId, task, e.target.value)}
+                  >
+                    <option value="TODO">TODO</option>
+                    <option value="IN_PROGRESS">IN_PROGRESS</option>
+                    <option value="DONE">DONE</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div className="team-detail-divider" />
+              
+              <div className="team-detail-content-wrapper">
+                <p className="team-detail-content">{task.description || '상세 설명이 없습니다.'}</p>
+              </div>
+            </>
+          )}
+        </div>
       </article>
     </div>
   );

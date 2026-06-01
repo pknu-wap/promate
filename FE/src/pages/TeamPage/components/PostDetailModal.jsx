@@ -14,43 +14,62 @@ function PostDetailModal({
   if (!isOpen || !post) return null;
 
   return (
-    <div className="team-post-detail-backdrop" role="presentation" onMouseDown={onClose}>
+    <div className="team-detail-overlay" role="presentation" onMouseDown={onClose}>
       <article
-        className="team-post-detail-modal"
+        className="team-detail-container"
         role="dialog"
         aria-modal="true"
         onMouseDown={(event) => event.stopPropagation()}
       >
-        <div className="team-post-detail-menu-container" style={{ position: 'absolute', top: '20px', right: '20px' }}>
-          <button
-            type="button"
-            className="team-post-detail-menu"
-            aria-label="게시글 메뉴"
-            onClick={() => setIsMenuOpen((prev) => !prev)}
-          >
-            ...
+        <div className="team-detail-header">
+          <div className="team-detail-more-container">
+            <button
+              type="button"
+              className="team-detail-more-btn"
+              aria-label="게시글 메뉴"
+              onClick={() => setIsMenuOpen((prev) => !prev)}
+            >
+              <span className="team-detail-more-icon"></span>
+            </button>
+            {isMenuOpen && (
+              <div className="team-detail-dropdown-menu">
+                <button type="button" className="team-detail-dropdown-item" onClick={() => { setIsMenuOpen(false); onEdit(); }}>
+                  수정
+                </button>
+                <button type="button" className="team-detail-dropdown-item delete" onClick={() => { setIsMenuOpen(false); onDelete(); }}>
+                  삭제
+                </button>
+              </div>
+            )}
+          </div>
+          <button type="button" className="team-detail-close-btn" onClick={onClose} aria-label="닫기">
+            ✕
           </button>
-          {isMenuOpen && (
-            <div className="team-post-dropdown" style={{ position: 'absolute', right: 0, background: '#fff', border: '1px solid #ccc', borderRadius: '4px', zIndex: 10 }}>
-              <button type="button" onClick={() => { setIsMenuOpen(false); onEdit(); }} style={{ display: 'block', width: '100%', padding: '8px 16px', border: 'none', background: 'none', textAlign: 'left', cursor: 'pointer' }}>수정</button>
-              <button type="button" onClick={() => { setIsMenuOpen(false); onDelete(); }} style={{ display: 'block', width: '100%', padding: '8px 16px', border: 'none', background: 'none', textAlign: 'left', color: 'red', cursor: 'pointer' }}>삭제</button>
-            </div>
-          )}
         </div>
 
-        {isLoading && <div className="team-member-status">처리 중...</div>}
-        {error && <div className="team-member-status" style={{ color: 'red' }}>{error}</div>}
+        <div className="team-detail-body">
+          {isLoading && <p className="team-member-status">처리 중...</p>}
+          {error && <p className="team-member-status" style={{ color: 'red' }}>{error}</p>}
 
-        {!isLoading && !error && post.title && (
-          <>
-            <h2 id="team-post-detail-title">{post.title}</h2>
-            <dl className="team-post-detail-meta">
-              <dt>작성자</dt>
-              <dd>{post.writerName}</dd>
-            </dl>
-            <p>{post.content}</p>
-          </>
-        )}
+          {!isLoading && !error && post.title && (
+            <>
+              <h2 className="team-detail-title">{post.title}</h2>
+              
+              <div className="team-detail-info">
+                <div className="team-detail-info-row">
+                  <span className="team-detail-info-label">작성자</span>
+                  <span className="team-detail-info-value">{post.writerName}</span>
+                </div>
+              </div>
+              
+              <div className="team-detail-divider" />
+              
+              <div className="team-detail-content-wrapper">
+                <p className="team-detail-content">{post.content}</p>
+              </div>
+            </>
+          )}
+        </div>
       </article>
     </div>
   );

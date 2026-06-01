@@ -575,118 +575,224 @@
   cursor: not-allowed;
 }
 
-.team-post-detail-backdrop {
+.team-detail-overlay {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
   z-index: 1000;
   display: flex;
-  align-items: flex-start;
   justify-content: center;
-  padding: 138px 24px 24px;
-  background: rgba(0, 0, 0, 0.38);
-}
-
-.team-post-detail-modal {
-  position: relative;
-  width: min(100%, 468px);
-  min-height: 308px;
-  padding: 40px 40px 34px;
-  border-radius: 8px;
-  background: #ffffff;
-  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.16);
-  box-sizing: border-box;
-}
-
-.team-post-detail-menu {
-  position: absolute;
-  top: 12px;
-  right: 14px;
-  width: 24px;
-  height: 18px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: #9c9c9c;
-  font-family: 'Pretendard', sans-serif;
-  font-size: 14px;
-  font-weight: 800;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.team-post-detail-modal h2 {
-  margin: 0 0 16px;
-  color: #000000;
-  font-family: 'Pretendard', sans-serif;
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 1.3;
-}
-
-.team-post-detail-meta {
-  display: flex;
   align-items: center;
-  gap: 18px;
-  margin: 0 0 18px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #eeeeee;
 }
 
-.team-post-detail-meta dt,
-.team-post-detail-meta dd {
-  margin: 0;
-  color: #909090;
-  font-family: 'Pretendard', sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.task-detail-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin: 0 0 18px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #eeeeee;
-}
-
-.task-detail-meta .meta-left {
+.team-detail-container {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin: 0;
+  align-items: center;
+  padding: 0px 47px 30px;
+  gap: 16px;
+  width: 500px;
+  height: 350px;
+  box-sizing: border-box;
+  background: #FFFFFF;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  position: relative;
 }
 
-.task-detail-meta .meta-row {
+.team-detail-header {
+  display: flex;
+  width: 100%;
+  height: 40px;
+  margin-top: 10px;
+}
+
+.team-detail-close-btn {
+  position: absolute;
+  top: 18px;
+  right: 24px;
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  line-height: 1;
+  color: #909090;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+}
+
+.team-detail-more-container {
+  position: absolute;
+  top: 18px;
+  right: 56px;
+  height: 24px;
   display: flex;
   align-items: center;
 }
 
-.task-detail-meta dt {
-  width: 60px;
-  margin: 0;
-  color: #909090;
-  font-family: 'Pretendard', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
+.team-detail-more-btn {
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.task-detail-meta dd {
-  margin: 0;
-  color: #1a1a1a;
-  font-family: 'Pretendard', sans-serif;
-  font-size: 13px;
-  font-weight: 500;
+.team-detail-more-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 4px;
+  height: 4px;
+  background-color: #909090;
+  border-radius: 50%;
+  box-shadow: 0 -8px 0 #909090, 0 8px 0 #909090;
 }
 
-.team-post-detail-modal p {
-  margin: 0;
-  color: #000000;
+.team-detail-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background: #FFFFFF;
+  border: 1px solid #D9D9D9;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  min-width: 60px;
+  z-index: 100;
+  padding: 4px 0;
+}
+
+.team-detail-dropdown-item {
+  padding: 8px 16px;
+  background: transparent;
+  border: none;
   font-family: 'Pretendard', sans-serif;
   font-size: 14px;
-  font-weight: 500;
-  line-height: 1.65;
-  word-break: keep-all;
+  color: #000000;
+  cursor: pointer;
+  text-align: center;
+  width: 100%;
+}
+
+.team-detail-dropdown-item:hover {
+  background: #F5F5F5;
+}
+
+.team-detail-dropdown-item.delete {
+  color: #ff4d4f;
+}
+
+.team-detail-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0px;
+  gap: 16px;
+  width: 100%;
+  flex: 1;
+  overflow: hidden;
+  max-width: 580px;
+}
+
+.team-detail-title {
+  width: 100%;
+  font-family: 'Pretendard', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 29px;
+  color: #000000;
+  margin-bottom: 4px;
+}
+
+.team-detail-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px;
+  gap: 10px;
+  width: 100%;
+}
+
+.team-detail-info-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+}
+
+.team-detail-info-label,
+.team-detail-info-value {
+  font-family: 'Pretendard', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 17px;
+  color: #909090;
+}
+
+.team-detail-info-label {
+  min-width: 60px;
+}
+
+.team-detail-divider {
+  width: 100%;
+  height: 1px;
+  background: #D9D9D9;
+  margin: 10px 0;
+}
+
+.team-detail-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px;
+  gap: 10px;
+  width: 100%;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.team-detail-content {
+  font-family: 'Pretendard', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  color: #000000;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.team-detail-select {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000000;
+  border: 1px solid #D9D9D9;
+  border-radius: 4px;
+  padding: 2px 8px;
+  outline: none;
+}
+
+.team-detail-select:focus {
+  border-color: #FF6600;
 }
 
 @media (max-width: 1180px) {
@@ -733,13 +839,45 @@
     width: min(100%, 468px);
   }
 
-  .team-post-detail-backdrop {
-    align-items: center;
-    padding: 24px 16px;
+  .team-detail-container {
+    width: calc(100% - 40px);
+    padding: 0px 24px 24px;
+    height: auto;
+    min-height: 350px;
+    gap: 20px;
   }
 
-  .team-post-detail-modal {
-    width: min(100%, 468px);
-    padding: 36px 28px 30px;
+  .team-detail-close-btn {
+    right: 16px;
+  }
+
+  .team-detail-more-container {
+    right: 48px;
+  }
+
+  .team-detail-body {
+    max-width: 100%;
+    gap: 16px;
+  }
+
+  .team-detail-title {
+    font-size: 20px;
+    line-height: 24px;
+  }
+
+  .team-detail-info-row {
+    gap: 14px;
+  }
+
+  .team-detail-info-label {
+    min-width: 50px;
+  }
+
+  .team-detail-content-wrapper {
+    min-height: 100px;
+  }
+
+  .team-detail-content {
+    font-size: 13px;
   }
 }

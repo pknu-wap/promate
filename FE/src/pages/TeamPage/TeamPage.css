@@ -609,6 +609,38 @@
   margin-top: 10px;
 }
 
+.team-detail-header-actions {
+  position: absolute;
+  top: 14px;
+  right: 24px;
+  display: flex;
+  gap: 8px;
+}
+
+.team-detail-btn {
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.team-detail-cancel-btn {
+  background: #FFFFFF;
+  color: #909090;
+  border-color: #D9D9D9;
+}
+.team-detail-cancel-btn:hover { background: #F5F5F5; }
+
+.team-detail-save-btn {
+  background: #FE9A57;
+  color: #FFFFFF;
+}
+.team-detail-save-btn:hover { background: #F58B45; }
+
 .team-detail-close-btn {
   position: absolute;
   top: 18px;
@@ -702,11 +734,59 @@
   flex-direction: column;
   align-items: center;
   padding: 0px;
-  gap: 16px;
+  gap: 20px;
   width: 100%;
   flex: 1;
   overflow: hidden;
   max-width: 580px;
+}
+
+.team-detail-edit-title {
+  width: 100%;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  color: #000000;
+  border: 1px solid #D9D9D9;
+  border-radius: 6px;
+  padding: 4px 10px;
+  box-sizing: border-box;
+}
+
+.team-detail-edit-input {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  padding: 4px 6px;
+  border: 1px solid #D9D9D9;
+  border-radius: 6px;
+  color: #000000;
+  flex: 1;
+  max-width: 200px;
+  box-sizing: border-box;
+}
+
+.team-detail-edit-title:focus,
+.team-detail-edit-input:focus,
+.team-detail-edit-content:focus,
+.team-detail-select:focus {
+  outline: none;
+  border-color: #FF6600;
+}
+
+.team-detail-edit-content {
+  width: 100%;
+  flex: 1;
+  min-height: 70px;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  color: #000000;
+  border: 1px solid #D9D9D9;
+  border-radius: 6px;
+  padding: 12px;
+  box-sizing: border-box;
+  resize: none;
 }
 
 .team-detail-title {
@@ -717,7 +797,7 @@
   font-size: 24px;
   line-height: 29px;
   color: #000000;
-  margin-bottom: 4px;
+  margin: 0;
 }
 
 .team-detail-info {

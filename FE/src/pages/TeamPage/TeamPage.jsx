@@ -169,6 +169,21 @@ function TeamPage() {
     }
   };
 
+  const handleUpdateTaskDetails = async (taskId, updatedData) => {
+    try {
+      setIsTaskDetailLoading(true);
+      await updateProjectTask(idToFetch, taskId, updatedData);
+      
+      const data = await getTaskDetail(idToFetch, taskId);
+      setSelectedTask(data);
+      await fetchTasks();
+    } catch (err) {
+      alert(`테스크 수정에 실패했습니다: ${err.message}`);
+    } finally {
+      setIsTaskDetailLoading(false);
+    }
+  };
+
   const handleDeleteTask = async () => {
     if (!selectedTask) return;
     if (!window.confirm('정말로 이 테스크를 삭제하시겠습니까?')) return;
@@ -491,9 +506,11 @@ function TeamPage() {
         task={selectedTask}
         isLoading={isTaskDetailLoading}
         error={taskDetailError}
+        members={members}
         onClose={() => setSelectedTask(null)}
         onStatusChange={handleUpdateTaskStatus}
         onDelete={handleDeleteTask}
+        onUpdate={handleUpdateTaskDetails}
       />
 
       <NewTaskModal

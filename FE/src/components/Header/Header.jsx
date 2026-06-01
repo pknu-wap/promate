@@ -8,12 +8,13 @@ import ProfileAvatar from '../ProfileAvatar/ProfileAvatar';
 import './Header.css';
 
 function Header({ onMenuClick }) {
-  const [userData, setUserData] = useState({ userName: "..." });
+  const [userData, setUserData] = useState({ userName: "...", profileImageUrl: null });
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
       const token = localStorage.getItem("accessToken");
+      
       if (!token) {
         setIsLoggedIn(false);
         return;
@@ -21,12 +22,18 @@ function Header({ onMenuClick }) {
 
       try {
         const response = await getUserInfo();
-        const name = response?.data?.userName || "사용자";
         
-        setUserData({
-          userName: name
-        });
-        setIsLoggedIn(true);
+        if (response?.isSuccess) {
+          const userData = response.data;
+          
+          setUserData({
+            userName: userData?.name || userData?.nickname || userData?.userName || "사용자",
+            profileImageUrl: userData?.profileImageUrl || null
+          });
+          setIsLoggedIn(true);
+        } else {
+          setIsLoggedIn(false);
+        }
       } catch (error) {
         console.error("유저 정보 로드 실패", error);
         setIsLoggedIn(false);
@@ -57,7 +64,7 @@ function Header({ onMenuClick }) {
               <strong>{userData.userName}</strong> 님 안녕하세요 :)
             </Link>
             <Link to="/profile">
-              <ProfileAvatar size="36px" />
+              <ProfileAvatar src={userData.profileImageUrl} size="36px" />
             </Link>
           </>
         ) : (

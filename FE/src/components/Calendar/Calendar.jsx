@@ -20,57 +20,51 @@ function Calendar({ showAddButton = true, projectId }) {
     const fetchEvents = async () => {
       try {
         setHasError(false);
-        let fetchedEvents = [];
+        let response;
         
         if (projectId) {
-          const response = await apiClient.get(`/projects/${projectId}/schedules`, {
-            params: {
-              year,
-              month: month + 1,
-            },
-          });
-          
-          const responseData = response.data?.data;
-          const eventList = Array.isArray(responseData) ? responseData : (responseData?.scheduleList || []);
-          
-          fetchedEvents = eventList.map((item) => {
-            const startDate = item.startDate || '';
-            const endDate = item.endDate || '';
-            const [startYear, startMonth, startDay] = startDate.split('-').map(Number);
-            const [endYear, endMonth, endDay] = endDate.split('-').map(Number);
-            
-            return {
-              id: item.scheduleId,
-              text: item.title,
-              start: new Date(startYear, startMonth - 1, startDay),
-              end: new Date(endYear, endMonth - 1, endDay),
-              checked: false,
-            };
+          response = await apiClient.get(`/projects/${projectId}/schedules`, {
+            params: { year, month: month + 1, _t: new Date().getTime() },
           });
         } else {
-          const response = await apiClient.get('/dashboard/calendar');
-          
-          const responseData = response.data?.data;
-          const eventList = Array.isArray(responseData) ? responseData : (responseData?.scheduleList || []);
-
-          fetchedEvents = eventList.map((item) => {
-            const startAt = item.startAt || '';
-            const endAt = item.endAt || '';
-            const [startYear, startMonth, startDay] = startAt.split('-').map(Number);
-            const [endYear, endMonth, endDay] = endAt.split('-').map(Number);
-            
-            return {
-              id: item.scheduleId,
-              text: item.title,
-              start: new Date(startYear, startMonth - 1, startDay),
-              end: new Date(endYear, endMonth - 1, endDay),
-              checked: false,
-              projectId: item.projectId,
-              projectTitle: item.projectTitle,
-              content: item.content,
-            };
+          response = await apiClient.get('/dashboard/calendar', {
+            params: { _t: new Date().getTime() }
           });
         }
+
+        const responseData = response.data?.data || response.data;
+        let eventList = [];
+        if (Array.isArray(responseData)) {
+          eventList = responseData;
+        } else if (responseData && typeof responseData === 'object') {
+          const arrays = Object.values(responseData).filter(Array.isArray);
+          eventList = arrays.length > 0 ? arrays[0] : [];
+        }
+
+        const fetchedEvents = eventList.map((item, index) => {
+          const startDateStr = item.startDate || item.startAt || item.start_date || item.date;
+          if (!startDateStr) return null;
+          const endDateStr = item.endDate || item.endAt || item.end_date || startDateStr;
+
+          const cleanStart = String(startDateStr).split('T')[0].replace(/\./g, '-');
+          const cleanEnd = String(endDateStr).split('T')[0].replace(/\./g, '-');
+
+          const [startYear, startMonth, startDay] = cleanStart.split('-').map(Number);
+          const [endYear, endMonth, endDay] = cleanEnd.split('-').map(Number);
+
+          if (isNaN(startYear) || isNaN(startMonth) || isNaN(startDay)) return null;
+          
+          return {
+            id: item.scheduleId || item.id || item.taskId || index,
+            text: item.title || item.name || item.content || '(제목 없음)',
+            start: new Date(startYear, startMonth - 1, startDay),
+            end: new Date(endYear, endMonth - 1, endDay),
+            checked: false,
+            projectId: item.projectId,
+            projectTitle: item.projectTitle,
+            content: item.content,
+          };
+        }).filter(Boolean);
 
         setEvents(fetchedEvents);
       } catch (error) {
@@ -107,8 +101,14 @@ function Calendar({ showAddButton = true, projectId }) {
       const response = await apiClient.post(`/projects/${projectId}/schedules`, newEventData);
       const created = response.data.data;
       
-      const [startYear, startMonth, startDay] = created.startDate.split('-').map(Number);
-      const [endYear, endMonth, endDay] = created.endDate.split('-').map(Number);
+      const startDateStr = created.startDate || created.startAt || newEventData.startDate;
+      const endDateStr = created.endDate || created.endAt || newEventData.endDate;
+
+      const cleanStart = startDateStr.split('T')[0].replace(/\./g, '-');
+      const cleanEnd = endDateStr.split('T')[0].replace(/\./g, '-');
+
+      const [startYear, startMonth, startDay] = cleanStart.split('-').map(Number);
+      const [endYear, endMonth, endDay] = cleanEnd.split('-').map(Number);
       
       const newEvent = {
         id: created.scheduleId,
@@ -321,7 +321,7 @@ function getEventsByDay(events, year, month, day) {
         return startDiff;
       }
 
-      return a.id - b.id;
+      return String(a.id).localeCompare(String(b.id));
     });
 }
 

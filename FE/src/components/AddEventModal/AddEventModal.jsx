@@ -2,13 +2,6 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import './AddEventModal.css';
 
-const timeOptions = [];
-for (let i = 0; i < 24; i++) {
-  const hour = String(i).padStart(2, '0');
-  timeOptions.push(`${hour}:00`);
-  timeOptions.push(`${hour}:30`);
-}
-
 const getTodayString = () => {
   const today = new Date();
   const year = today.getFullYear();
@@ -20,11 +13,10 @@ const getTodayString = () => {
 
 function AddEventModal({ isOpen, onClose, onAddEvent }) {
   const [title, setTitle] = useState('');
-  const [isAllDay, setIsAllDay] = useState(false);
+  const [content, setContent] = useState('');
   const [startDate, setStartDate] = useState(getTodayString());
   const [endDate, setEndDate] = useState(getTodayString());
-  const [startTime, setStartTime] = useState('12:00');
-  const [endTime, setEndTime] = useState('13:00');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const formatDateWithDay = (dateString) => {
     const [year, month, day] = dateString.split('-').map(Number);
@@ -40,36 +32,41 @@ function AddEventModal({ isOpen, onClose, onAddEvent }) {
 
   const handleClose = () => {
     setTitle('');
-    setIsAllDay(false);
+    setContent('');
     setStartDate(getTodayString());
     setEndDate(getTodayString());
-    setStartTime('12:00');
-    setEndTime('13:00');
     onClose();
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!title.trim()) {
       alert('제목을 입력해주세요.');
       return;
     }
 
-    const start = new Date(`${startDate}T${isAllDay ? '00:00' : startTime}`);
-    const end = new Date(`${endDate}T${isAllDay ? '23:59' : endTime}`);
+    const start = new Date(startDate);
+    const end = new Date(endDate);
 
     if (start > end) {
-      alert('종료 시간이 시작 시간보다 빠를 수 없습니다.');
+      alert('종료일이 시작일보다 빠를 수 없습니다.');
       return;
     }
 
-    onAddEvent({
-      text: title.trim(),
-      start,
-      end,
-      isAllDay,
-    });
+    try {
+      setIsSubmitting(true);
+      const success = await onAddEvent({
+        title: title.trim(),
+        content: content.trim(),
+        startDate,
+        endDate,
+      });
 
-    handleClose();
+      if (success !== false) {
+        handleClose();
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (!isOpen) {
@@ -77,102 +74,72 @@ function AddEventModal({ isOpen, onClose, onAddEvent }) {
   }
 
   return ReactDOM.createPortal(
-    <div className="modal-overlay" onClick={handleClose}>
-      <div className="add-event-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-content">
-          <h2 className="modal-title">새 일정</h2>
+    <div className="aem-overlay" onClick={handleClose}>
+      <div className="aem-container" onClick={(e) => e.stopPropagation()}>
+        <div className="aem-content">
+          <h2 className="aem-title">새 일정</h2>
 
-          <div className="input-group">
-            <label className="input-label">제목</label>
+          <div className="aem-input-group">
+            <label className="aem-input-label">제목</label>
             <input
               type="text"
-              className="title-input"
+              className="aem-input-field"
               placeholder="제목을 적어주세요."
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
           </div>
 
-          <div className="date-group">
-            <label className="input-label">날짜</label>
+          <div className="aem-input-group aem-content-group">
+            <label className="aem-input-label">내용</label>
+            <textarea
+              className="aem-input-field aem-content-field"
+              placeholder="내용을 적어주세요."
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+            />
+          </div>
 
-            <div className="date-row">
-              <span className="row-label">시작</span>
-              <div className="custom-date-picker">
-                <div className="date-display">
+          <div className="aem-date-group">
+            <label className="aem-input-label">날짜</label>
+
+            <div className="aem-date-row">
+              <span className="aem-row-label">시작</span>
+              <div className="aem-date-picker">
+                <div className="aem-date-display">
                   {formatDateWithDay(startDate)}
                 </div>
                 <input
                   type="date"
-                  className="hidden-date-input"
+                  className="aem-hidden-input"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
                 />
               </div>
-
-              {!isAllDay && (
-                <select
-                  className="time-input"
-                  value={startTime}
-                  onChange={(e) => setStartTime(e.target.value)}
-                >
-                  {timeOptions.map((time) => (
-                    <option key={time} value={time}>
-                      {time}
-                    </option>
-                  ))}
-                </select>
-              )}
             </div>
 
-            <div className="date-row">
-              <span className="row-label">종료</span>
-              <div className="custom-date-picker">
-                <div className="date-display">
+            <div className="aem-date-row">
+              <span className="aem-row-label">종료</span>
+              <div className="aem-date-picker">
+                <div className="aem-date-display">
                   {formatDateWithDay(endDate)}
                 </div>
                 <input
                   type="date"
-                  className="hidden-date-input"
+                  className="aem-hidden-input"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
                 />
               </div>
-
-              {!isAllDay && (
-                <select
-                  className="time-input"
-                  value={endTime}
-                  onChange={(e) => setEndTime(e.target.value)}
-                >
-                  {timeOptions.map((time) => (
-                    <option key={time} value={time}>
-                      {time}
-                    </option>
-                  ))}
-                </select>
-              )}
-            </div>
-
-            <div className="date-row all-day-row">
-              <span className="row-label">종일</span>
-              <label className="switch">
-                <input
-                  type="checkbox"
-                  checked={isAllDay}
-                  onChange={(e) => setIsAllDay(e.target.checked)}
-                />
-                <span className="slider"></span>
-              </label>
             </div>
           </div>
 
-          <div className="modal-actions">
-            <button type="button" className="cancel-btn" onClick={handleClose}>
+          <div className="aem-actions">
+            <button type="button" className="aem-cancel-btn" onClick={handleClose} disabled={isSubmitting}>
               취소
             </button>
-            <button type="button" className="add-btn" onClick={handleSubmit}>
-              일정 추가
+            <button type="button" className="aem-submit-btn" onClick={handleSubmit} disabled={isSubmitting}>
+              {isSubmitting ? '추가 중...' : '일정 추가'}
             </button>
           </div>
         </div>

@@ -100,13 +100,30 @@ function Calendar({ showAddButton = true, projectId }) {
     setIsModalOpen(false);
   };
 
-  const handleAddEvent = (newEventData) => {
-    const newEvent = {
-      id: Date.now(),
-      ...newEventData,
-      checked: false,
-    };
-    setEvents((prevEvents) => [...prevEvents, newEvent]);
+  const handleAddEvent = async (newEventData) => {
+    if (!projectId) return false;
+
+    try {
+      const response = await apiClient.post(`/projects/${projectId}/schedules`, newEventData);
+      const created = response.data.data;
+      
+      const [startYear, startMonth, startDay] = created.startDate.split('-').map(Number);
+      const [endYear, endMonth, endDay] = created.endDate.split('-').map(Number);
+      
+      const newEvent = {
+        id: created.scheduleId,
+        text: created.title,
+        start: new Date(startYear, startMonth - 1, startDay),
+        end: new Date(endYear, endMonth - 1, endDay),
+        checked: false,
+      };
+      setEvents((prevEvents) => [...prevEvents, newEvent]);
+      return true;
+    } catch (error) {
+      console.error('일정 추가 실패:', error);
+      alert(error.message || '일정 추가에 실패했습니다.');
+      return false;
+    }
   };
 
   return (

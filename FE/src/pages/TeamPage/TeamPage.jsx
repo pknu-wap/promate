@@ -385,7 +385,7 @@ function TeamPage() {
         </div>
 
         <div className="team-calendar">
-          <Calendar />
+          <Calendar projectId={idToFetch} />
         </div>
 
         <section className="team-card team-members-card">

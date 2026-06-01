@@ -7,34 +7,71 @@ import apiClient from '../../api/apiClient';
 
 const WEEKDAYS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
-function Calendar({ showAddButton = true }) {
+function Calendar({ showAddButton = true, projectId }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [events, setEvents] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hasError, setHasError] = useState(false);
 
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+
   useEffect(() => {
     const fetchEvents = async () => {
       try {
         setHasError(false);
-        const response = await apiClient.get('/dashboard/calendar');
-        const fetchedEvents = (response.data.data || []).map((item) => {
-          const startAt = item.startAt || '';
-          const endAt = item.endAt || '';
-          const [startYear, startMonth, startDay] = startAt.split('-').map(Number);
-          const [endYear, endMonth, endDay] = endAt.split('-').map(Number);
+        let fetchedEvents = [];
+        
+        if (projectId) {
+          const response = await apiClient.get(`/projects/${projectId}/schedules`, {
+            params: {
+              year,
+              month: month + 1,
+            },
+          });
           
-          return {
-            id: item.scheduleId,
-            text: item.title,
-            start: new Date(startYear, startMonth - 1, startDay),
-            end: new Date(endYear, endMonth - 1, endDay),
-            checked: false,
-            projectId: item.projectId,
-            projectTitle: item.projectTitle,
-            content: item.content,
-          };
-        });
+          const responseData = response.data?.data;
+          const eventList = Array.isArray(responseData) ? responseData : (responseData?.scheduleList || []);
+          
+          fetchedEvents = eventList.map((item) => {
+            const startDate = item.startDate || '';
+            const endDate = item.endDate || '';
+            const [startYear, startMonth, startDay] = startDate.split('-').map(Number);
+            const [endYear, endMonth, endDay] = endDate.split('-').map(Number);
+            
+            return {
+              id: item.scheduleId,
+              text: item.title,
+              start: new Date(startYear, startMonth - 1, startDay),
+              end: new Date(endYear, endMonth - 1, endDay),
+              checked: false,
+            };
+          });
+        } else {
+          const response = await apiClient.get('/dashboard/calendar');
+          
+          const responseData = response.data?.data;
+          const eventList = Array.isArray(responseData) ? responseData : (responseData?.scheduleList || []);
+
+          fetchedEvents = eventList.map((item) => {
+            const startAt = item.startAt || '';
+            const endAt = item.endAt || '';
+            const [startYear, startMonth, startDay] = startAt.split('-').map(Number);
+            const [endYear, endMonth, endDay] = endAt.split('-').map(Number);
+            
+            return {
+              id: item.scheduleId,
+              text: item.title,
+              start: new Date(startYear, startMonth - 1, startDay),
+              end: new Date(endYear, endMonth - 1, endDay),
+              checked: false,
+              projectId: item.projectId,
+              projectTitle: item.projectTitle,
+              content: item.content,
+            };
+          });
+        }
+
         setEvents(fetchedEvents);
       } catch (error) {
         console.error('캘린더 일정 조회 실패:', error);
@@ -43,10 +80,7 @@ function Calendar({ showAddButton = true }) {
     };
 
     fetchEvents();
-  }, []);
-
-  const year = currentDate.getFullYear();
-  const month = currentDate.getMonth();
+  }, [projectId, year, month]);
 
   const days = useMemo(() => getCalendarDays(year, month), [year, month]);
 
@@ -201,7 +235,6 @@ function Calendar({ showAddButton = true }) {
                         style={
                           isSegmentStart
                             ? {
-                                // 이어지는 일정은 시작 칸에서만 너비를 확장
                                 width: `calc(${eventSpan * 100}% + ${
                                   eventSpan - 1
                                 }px)`,
@@ -244,7 +277,6 @@ function getCalendarDays(year, month) {
     return days;
   }
 
-  // 마지막 주도 7칸 구조를 유지하도록 빈 칸을 추가
   return [...days, ...Array(7 - remainder).fill(null)];
 }
 
@@ -279,7 +311,6 @@ function getEventsByDay(events, year, month, day) {
 function isEventSegmentStart(event, year, month, day, index) {
   const currentDate = new Date(year, month, day).getTime();
 
-  // 일정 시작일이 아니어도 월 첫날이나 주 첫날이면 새 구간으로 다시 표시
   return (
     currentDate === event.start.getTime() ||
     day === 1 ||
@@ -308,7 +339,6 @@ function getEventSpan(event, year, month, day, index) {
 
   const remainingEventDays = eventEndDay - day + 1;
 
-  // 일정이 현재 주 안에서 차지할 칸 수만 계산
   return Math.min(daysUntilWeekEnd, remainingEventDays);
 }
 

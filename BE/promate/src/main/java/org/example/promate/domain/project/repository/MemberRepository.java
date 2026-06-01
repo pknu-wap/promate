@@ -38,4 +38,10 @@ public interface MemberRepository extends JpaRepository<Member,Long> {
     boolean existsByProjectIdAndUserIdAndIsDeletedFalse(Long projectId, Long userId);
 
     int countByProjectId(Long projectId);
+
+    // 특정 사용자의 프로젝트 목록 조회 (프로젝트 상태 무관)
+    @Query("select m from Member m " +
+            "join fetch m.project " +
+            "where m.user.id = :userId")
+    List<Member> findByUserIdWithProject(@Param("userId") Long userId);
 }

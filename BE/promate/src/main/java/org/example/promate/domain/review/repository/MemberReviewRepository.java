@@ -25,4 +25,19 @@ public interface MemberReviewRepository extends JpaRepository<MemberReview, Long
     @Query("SELECT r.revieweeId, AVG((r.communicationScore + r.proactivenessScore + r.responsibilityScore + r.problemSolvingScore) / 4.0) " +
             "FROM MemberReview r WHERE r.revieweeId IN :userIds GROUP BY r.revieweeId")
     List<Object[]> findAverageScoresByUserIds(@Param("userIds") List<Long> userIds);
+
+
+    // 특정 사용자가 받은 전체 상호평가 개수 조회
+    Long countByRevieweeId(Long revieweeId);
+
+    // 특정 프로젝트에서 특정 사용자가 받은 평균 상호평가 점수 조회
+    @Query("SELECT AVG((r.communicationScore + r.proactivenessScore + r.responsibilityScore + r.problemSolvingScore) / 4.0) " +
+            "FROM MemberReview r " +
+            "WHERE r.revieweeId = :revieweeId " +
+            "AND r.projectId = :projectId")
+    Double findAverageScoreByRevieweeIdAndProjectId(
+            @Param("revieweeId") Long revieweeId,
+            @Param("projectId") Long projectId
+    );
+
 }

@@ -53,6 +53,8 @@ function ProjectReadMePage() {
         }
       } catch (error) {
         console.error('게시글 상세 정보 조회 실패:', error);
+        alert(error.message || '해당 게시글을 찾을 수 없습니다.');
+        navigate(-1, { replace: true });
       } finally {
         setIsLoading(false);
       }
@@ -60,7 +62,7 @@ function ProjectReadMePage() {
 
     if (postId) fetchProjectDetail();
     else setIsLoading(false);
-  }, [postId]);
+  }, [postId, navigate]);
 
   const handleMemberClick = (user, event) => {
     const rect = event.currentTarget.getBoundingClientRect();

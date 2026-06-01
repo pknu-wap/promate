@@ -46,9 +46,6 @@ public class Recruit extends BaseEntity {
     @Column(name="total_slots", nullable = false)
     private int totalSlots;
 
-    /* 모집글은 마감일 없는 걸로..
-    @Column(name="deadline", nullable = false)
-    private LocalDateTime deadline;*/
 
     //mapping
     @OneToMany(mappedBy = "recruit", fetch = FetchType.LAZY)

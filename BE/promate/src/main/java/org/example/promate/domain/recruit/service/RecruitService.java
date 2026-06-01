@@ -30,6 +30,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -93,6 +94,9 @@ public class RecruitService {
         boolean hasApplied = applyRepository.existsByRecruitIdAndUserId(recruitmentId, currentUserId);
         int applicantCount = applyRepository.countByRecruitId(recruitmentId);
 
+        LocalDate startDate = (recruit.getProject() != null) ? recruit.getProject().getStartDate() : null;
+        LocalDate endDate = (recruit.getProject() != null) ? recruit.getProject().getEndDate() : null;
+
         return new RecruitDetailResponse(
                 recruit.getId(),
                 recruit.getTitle(),
@@ -108,7 +112,12 @@ public class RecruitService {
                 ),
                 isAuthor,
                 hasApplied,
-                applicantCount
+                applicantCount,
+
+                startDate,
+                endDate,
+                recruit.getTotalSlots(),
+                recruit.getJoinedCount()
         );
     }
 
@@ -192,15 +201,6 @@ public class RecruitService {
         recruit.updateStatus(RecruitStatus.COMPLETED);
         project.updateStatus(ProjectStatus.ACTIVE);
 
-        /* 모집글 + 지원서 데이터 청소 (일단 Hard Delete를 채택함) <- 추후 개발 진도에 따라 수정 고려
-        // 두 객체 간 매핑 관계 부터 해제하기
-        project.disconnectRecruit();
-
-        // 해당 모집글에 연결된 모든 지원서 삭제
-        applyRepository.deleteAllByRecruitId(recruit.getId());
-
-        // 모집글 삭제
-        recruitRepository.delete(recruit);*/
 
         return new RecruitStatusResponse(project.getId(), RecruitStatus.COMPLETED);
     }

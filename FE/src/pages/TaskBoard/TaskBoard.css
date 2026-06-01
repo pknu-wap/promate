@@ -122,6 +122,10 @@
   box-sizing: border-box;
 }
 
+.task-board__card:hover {
+  background-color: #f8f9fa;
+}
+
 .task-board__task-info {
   min-width: 0;
   display: flex;
@@ -133,7 +137,7 @@
   margin: 0;
   color: #000000;
   font-family: 'Pretendard', sans-serif;
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 600;
   line-height: 1.25;
   overflow: hidden;

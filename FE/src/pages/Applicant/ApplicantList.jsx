@@ -65,7 +65,6 @@ const ApplicantList = () => {
               buttonText={isClosed ? '모집 마감' : '지원자 검토'}
               buttonColor={isClosed ? '#D9D9D9' : '#FE9A57'}
               disabled={isClosed}
-              onClick={() => navigate(`/readme/${targetId}`, { state: recruitment })}
               onButtonClick={
                 isClosed
                   ? undefined

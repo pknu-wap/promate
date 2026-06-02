@@ -33,8 +33,7 @@ const ApplicantList = () => {
     getMyRecruitments()
       .then((res) => {
         const data = res.data?.data?.content ?? res.data?.data ?? [];
-        const list = Array.isArray(data) ? data : [];
-        setRecruitments(list.filter((r) => r.status !== 'DELETED'));
+        setRecruitments(Array.isArray(data) ? data : []);
       })
       .catch((err) => console.error('모집글 목록 조회 실패', err))
       .finally(() => setLoading(false));
@@ -66,6 +65,7 @@ const ApplicantList = () => {
               buttonText={isClosed ? '모집 마감' : '지원자 검토'}
               buttonColor={isClosed ? '#D9D9D9' : '#FE9A57'}
               disabled={isClosed}
+              onClick={() => navigate(`/readme/${targetId}`, { state: recruitment })}
               onButtonClick={
                 isClosed
                   ? undefined
@@ -74,7 +74,6 @@ const ApplicantList = () => {
                         state: {
                           recruitmentId: targetId,
                           projectTitle: recruitment.title,
-                          maxMember: recruitment.maxMember,
                         },
                       })
               }

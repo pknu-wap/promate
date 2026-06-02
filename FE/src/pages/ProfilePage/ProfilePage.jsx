@@ -63,23 +63,39 @@ const ProfilePage = () => {
     if (isEditing) fileInputRef.current?.click();
   };
 
+  const fileToBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    setProfileImageUrl(URL.createObjectURL(file));
+    if (file.size > 2 * 1024 * 1024) {
+      alert('2MB 이하 이미지만 업로드 가능합니다.');
+      return;
+    }
 
-    const formData = new FormData();
-    formData.append('profileImage', file);
+    const prevUrl = profileImageUrl;
+    const dataUrl = await fileToBase64(file);
+    setProfileImageUrl(dataUrl);
 
     try {
-      const res = await apiClient.patch('/user/me', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      const res = await apiClient.patch('/user/me', { profileImageBase64: dataUrl });
       const updated = res.data.data;
-      if (updated?.profileImageUrl) setProfileImageUrl(updated.profileImageUrl);
+      if (updated?.profileImageUrl?.startsWith('http')) {
+        setProfileImageUrl(updated.profileImageUrl);
+      }
+      // 서버가 base64를 그대로 돌려주는 경우 dataUrl 미리보기 유지
     } catch (error) {
       console.error('프로필 이미지 업로드 실패:', error);
+      console.log('accessToken 존재 여부:', !!localStorage.getItem('accessToken'));
+      console.log('accessToken 값:', localStorage.getItem('accessToken'));
+      setProfileImageUrl(prevUrl);
     }
   };
 

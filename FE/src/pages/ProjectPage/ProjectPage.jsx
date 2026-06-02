@@ -116,7 +116,9 @@ function ProjectPage() {
               isEvaluated
             };
           }));
-          setProjects(fetchedData);
+          
+          const uniqueProjects = Array.from(new Map(fetchedData.map(item => [item.id, item])).values());
+          setProjects(uniqueProjects);
         }
       } catch (error) {
         console.error('북마크 내역 조회 실패:', error);

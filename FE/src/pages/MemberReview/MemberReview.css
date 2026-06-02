@@ -3,15 +3,14 @@
   height: calc(100vh - 56px);
   padding: 19px 50px 20px 30px;
   box-sizing: border-box;
-  overflow-y: hidden;
-  background: linear-gradient(180deg, #F0F0F0 0%, #FFFFFF 100%);
+  background: linear-gradient(180deg, #f0f0f0 0%, #ffffff 100%);
 }
 
 .member-review-title {
   margin: 0 0 20px;
   font-size: 22px;
   font-weight: 500;
-  font-family: 'YSpotlightOTF', 'Pretendard', sans-serif;
+  font-family: "YSpotlightOTF", "Pretendard", sans-serif;
   color: #000000;
 }
 
@@ -25,7 +24,7 @@
   min-height: 599px;
   padding: 20px 40px;
   border-radius: 10px;
-  background: #FFFFFF;
+  background: #ffffff;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
   box-sizing: border-box;
 }
@@ -57,8 +56,8 @@
 }
 
 .domain-tags .common-tag:not(.active) {
-  background: #F1F1F1;
-  color: #ABABAB;
+  background: #f1f1f1;
+  color: #ababab;
   border: none;
 }
 
@@ -187,7 +186,7 @@
   resize: none;
   outline: none;
   background: #f8f8f8;
-  font-family: 'Pretendard', sans-serif;
+  font-family: "Pretendard", sans-serif;
   font-size: 13px;
   color: #000000;
 }
@@ -205,6 +204,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
   width: 110px;
   height: 37px;
   padding: 10px 20px;
@@ -213,7 +213,7 @@
   border-radius: 5px;
   background: #fe9a57;
   color: #ffffff;
-  font-family: 'Pretendard', sans-serif;
+  font-family: "Pretendard", sans-serif;
   font-size: 18px;
   font-weight: 700;
   cursor: pointer;
@@ -226,10 +226,11 @@
 @media (max-width: 768px) {
   .member-review-page {
     min-height: calc(100vh - 56px);
-    height: auto;
+    height: 100vh;
+    width: 100vw;
     padding: 20px 16px 32px;
   }
-  .member-review-question-list{
+  .member-review-question-list {
     gap: 32px;
   }
 

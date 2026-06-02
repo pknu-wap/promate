@@ -1,6 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useSearchParams, useLocation } from 'react-router-dom';
-import { getProjectTasks, updateTaskStatus, deleteProjectTask } from '../../api/TeamPage';
+import { getProjectTasks, updateTaskStatus, deleteProjectTask, getProjectMembers, createProjectTask, getTaskDetail } from '../../api/TeamPage';
+import NewTaskModal from '../../components/NewTaskModal/NewTaskModal.jsx';
+import TaskDetailModal from '../TeamPage/components/TaskDetailModal.jsx';
+import writeIcon from '../../assets/icons/writeIcon.svg';
 import './TaskBoard.css';
 
 const taskTabs = [
@@ -21,22 +24,30 @@ function TaskBoard() {
     : 'all';
   const [activeTab, setActiveTab] = useState(initialTab);
   const [tasks, setTasks] = useState([]);
+  const [members, setMembers] = useState([]);
+  const [isNewTaskModalOpen, setIsNewTaskModalOpen] = useState(false);
+
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [isTaskDetailLoading, setIsTaskDetailLoading] = useState(false);
+  const [taskDetailError, setTaskDetailError] = useState(null);
 
   useEffect(() => {
     setActiveTab(initialTab);
   }, [initialTab]);
 
   useEffect(() => {
-    const fetchTasks = async () => {
+    const fetchData = async () => {
       if (!projectId) return;
       try {
-        const data = await getProjectTasks(projectId);
-        setTasks(data.taskList || []);
+        const taskData = await getProjectTasks(projectId);
+        setTasks(taskData.taskList || []);
+        const memberData = await getProjectMembers(projectId);
+        setMembers(memberData || []);
       } catch (error) {
-        console.error("테스크 목록을 불러오는데 실패했습니다.", error);
+        console.error("데이터를 불러오는데 실패했습니다.", error);
       }
     };
-    fetchTasks();
+    fetchData();
   }, [projectId]);
 
   const filteredTasks = useMemo(() => {
@@ -53,26 +64,79 @@ function TaskBoard() {
     return visibleTasks.filter((task) => task.status === activeTab);
   }, [activeTab, tasks]);
 
-  const handleCompleteTask = async (taskId) => {
+  const handleTaskClick = async (taskId) => {
     try {
-      await updateTaskStatus(projectId, taskId, { status: 'DONE' });
-      setTasks((currentTasks) =>
-        currentTasks.map((task) => (task.taskId === taskId ? { ...task, status: 'DONE' } : task))
-      );
+      setIsTaskDetailLoading(true);
+      setTaskDetailError(null);
+      setSelectedTask({ taskId });
+      const data = await getTaskDetail(projectId, taskId);
+      setSelectedTask(data);
     } catch (err) {
-      alert(`테스크 완료 처리에 실패했습니다: ${err.message}`);
+      setTaskDetailError(err.message);
+    } finally {
+      setIsTaskDetailLoading(false);
     }
   };
 
-  const handleDeleteTask = async (taskId) => {
-    if (!projectId) return alert("프로젝트 ID가 유효하지 않습니다.");
+  const handleUpdateTaskStatus = async (taskId, currentTask, nextStatus) => {
+    try {
+      await updateTaskStatus(projectId, taskId, { status: nextStatus });
+      setTasks((currentTasks) =>
+        currentTasks.map((task) => (task.taskId === taskId ? { ...task, status: nextStatus } : task))
+      );
+      setSelectedTask((prev) => prev && prev.taskId === taskId ? { ...prev, status: nextStatus } : prev);
+    } catch (err) {
+      alert(`테스크 상태 변경에 실패했습니다: ${err.message}`);
+    }
+  };
+
+  const handleUpdateTaskDetails = async (taskId, updatedData) => {
+    try {
+      setIsTaskDetailLoading(true);
+      await updateProjectTask(projectId, taskId, updatedData);
+      
+      const data = await getTaskDetail(projectId, taskId);
+      setSelectedTask(data);
+      
+      const taskData = await getProjectTasks(projectId);
+      setTasks(taskData.taskList || []);
+    } catch (err) {
+      alert(`테스크 수정에 실패했습니다: ${err.message}`);
+    } finally {
+      setIsTaskDetailLoading(false);
+    }
+  };
+
+  const handleDeleteTask = async (taskId = selectedTask?.taskId) => {
+    if (!projectId || !taskId) return alert("프로젝트 ID가 유효하지 않습니다.");
     if (!window.confirm('정말로 이 테스크를 삭제하시겠습니까?')) return;
     
     try {
       await deleteProjectTask(projectId, taskId);
       setTasks((currentTasks) => currentTasks.filter((task) => task.taskId !== taskId));
+      if (selectedTask?.taskId === taskId) {
+        setSelectedTask(null);
+      }
     } catch (error) {
       alert(`테스크 삭제에 실패했습니다: ${error.message}`);
+    }
+  };
+
+  const handleAddTaskSubmit = async (newTaskData) => {
+    try {
+      const formattedDate = newTaskData.dueDate.replace(/\./g, '-');
+      await createProjectTask(projectId, {
+        managerId: newTaskData.managerId,
+        title: newTaskData.title,
+        description: newTaskData.description || '',
+        dueDate: formattedDate,
+      });
+      setIsNewTaskModalOpen(false);
+      
+      const data = await getProjectTasks(projectId);
+      setTasks(data.taskList || []);
+    } catch (err) {
+      alert(`테스크 생성에 실패했습니다: ${err.message}`);
     }
   };
 
@@ -107,15 +171,31 @@ function TaskBoard() {
             ))}
           </nav>
 
-          <button type="button" className="task-board__write-button">
-            <span aria-hidden="true">✎</span>
+          <button
+            type="button"
+            className="task-board__write-button"
+            onClick={() => setIsNewTaskModalOpen(true)}
+          >
+            <img src={writeIcon} alt="" aria-hidden="true" />
             태스크 쓰기
           </button>
         </div>
 
         <div className="task-board__list" aria-label="태스크 목록">
         {filteredTasks.length === 0 ? <p style={{textAlign: 'center', marginTop: '20px'}}>등록된 태스크가 없습니다.</p> : filteredTasks.map((task) => (
-          <article key={task.taskId} className="task-board__card">
+          <article 
+            key={task.taskId} 
+            className="task-board__card"
+            role="button"
+            tabIndex={0}
+            onClick={() => handleTaskClick(task.taskId)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleTaskClick(task.taskId);
+              }
+            }}
+          >
               <div className="task-board__task-info">
                 <h2 className="task-board__task-title">{task.title}</h2>
               <p className="task-board__task-date">마감일: {formatDate(task.dueDate)}</p>
@@ -126,14 +206,20 @@ function TaskBoard() {
                   <button
                     type="button"
                     className="task-board__action-button task-board__action-button--cancel"
-                  onClick={() => handleDeleteTask(task.taskId)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteTask(task.taskId);
+                    }}
                   >
                     삭제하기
                   </button>
                   <button
                     type="button"
                     className="task-board__action-button task-board__action-button--complete"
-                  onClick={() => handleCompleteTask(task.taskId)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleUpdateTaskStatus(task.taskId, task, 'DONE');
+                    }}
                   >
                     완료하기
                   </button>
@@ -147,6 +233,26 @@ function TaskBoard() {
           ))}
         </div>
       </div>
+
+      <NewTaskModal
+        isOpen={isNewTaskModalOpen}
+        onClose={() => setIsNewTaskModalOpen(false)}
+        onSubmit={handleAddTaskSubmit}
+        projectId={projectId}
+        members={members}
+      />
+
+      <TaskDetailModal
+        isOpen={!!selectedTask}
+        task={selectedTask}
+        isLoading={isTaskDetailLoading}
+        error={taskDetailError}
+        members={members}
+        onClose={() => setSelectedTask(null)}
+        onStatusChange={handleUpdateTaskStatus}
+        onDelete={() => handleDeleteTask()}
+        onUpdate={handleUpdateTaskDetails}
+      />
     </section>
   );
 }

@@ -3,7 +3,7 @@ import moreIcon from '../../assets/moreIcon.svg';
 import './SummaryCard.css';
 import { getDiffDays } from '../../pages/DashboardPage/components/DateUtils';
 
-function SummaryCard({ title, count, items = [], showDot, isError, onItemClick, isAllEmpty }) {
+function SummaryCard({ title, count, unit = '개', subtitle, actionButton, items = [], showDot, isError, onItemClick, isAllEmpty }) {
   const [isExpanded, setIsExpanded] = useState(() => window.innerWidth > 768);
   const [visibleCount, setVisibleCount] = useState(3);
 
@@ -40,9 +40,13 @@ function SummaryCard({ title, count, items = [], showDot, isError, onItemClick, 
   return (
     <div className={`summary-card ${effectivelyExpanded ? '' : 'collapsed'}`}>
       <div className="summary-header" onClick={toggleExpand} style={isAllEmpty ? { cursor: 'default' } : undefined}>
-        <h3 className="summary-title">{title}</h3>
+        <div className="summary-title-wrapper">
+          <h3 className="summary-title">{title}</h3>
+          {subtitle && <span className="summary-subtitle">{subtitle}</span>}
+        </div>
         <div className="summary-count">
-          <span className="count-number">{count}</span>개
+          {actionButton && <div className="summary-action">{actionButton}</div>}
+          <span className="count-number">{count}</span>{unit}
         </div>
       </div>
 

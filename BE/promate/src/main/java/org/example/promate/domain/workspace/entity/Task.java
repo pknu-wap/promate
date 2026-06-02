@@ -46,13 +46,10 @@ public class Task extends BaseEntity {
     private Member member;
 
     // 데이터 수정
-    public void modify(TaskReqDto.ModifyTaskDto dto){
+    public void modify(TaskReqDto.ModifyTaskDto dto, Member member){
         this.title = dto.getTitle();
         this.description = dto.getDescription();
         this.dueDate = dto.getDueDate();
-    }
-
-    public void modify(Member member){
         this.member = member;
     }
 

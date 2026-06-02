@@ -20,12 +20,13 @@ const formatDateWithDay = (dateString) => {
   return `${year} - ${formattedMonth} - ${formattedDay} (${weekday})`;
 };
 
-const AddProjectModal = ({ onClose, onAdd }) => {
-  const [projectName, setProjectName] = useState('');
-  const [description, setDescription] = useState('');
-  const [role, setRole] = useState('');
-  const [startDate, setStartDate] = useState(getTodayString());
-  const [endDate, setEndDate] = useState(getTodayString());
+const AddProjectModal = ({ onClose, onAdd, initialValues }) => {
+  const [projectName, setProjectName] = useState(initialValues?.projectName ?? '');
+  const [description, setDescription] = useState(initialValues?.description ?? '');
+  const [role, setRole] = useState(initialValues?.role ?? '');
+  const [startDate, setStartDate] = useState(initialValues?.startDate ?? getTodayString());
+  const [endDate, setEndDate] = useState(initialValues?.endDate ?? getTodayString());
+  const isEditMode = !!initialValues;
 
   const handleClose = () => {
     setProjectName('');
@@ -56,7 +57,7 @@ const AddProjectModal = ({ onClose, onAdd }) => {
       <div className="add-modal-container" onClick={(e) => e.stopPropagation()}>
         <div className="add-modal-inner">
 
-          <h3 className="add-modal-title">프로젝트 추가</h3>
+          <h3 className="add-modal-title">{isEditMode ? '프로젝트 수정' : '프로젝트 추가'}</h3>
 
           <div className="add-modal-field">
             <label className="add-modal-field-label">프로젝트 이름</label>
@@ -116,7 +117,7 @@ const AddProjectModal = ({ onClose, onAdd }) => {
 
           <div className="add-modal-actions">
             <button className="add-modal-btn-cancel" onClick={handleClose}>취소</button>
-            <button className="add-modal-btn-add" onClick={handleAdd}>프로젝트 추가</button>
+            <button className="add-modal-btn-add" onClick={handleAdd}>{isEditMode ? '수정 완료' : '프로젝트 추가'}</button>
           </div>
 
         </div>

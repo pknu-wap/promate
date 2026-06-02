@@ -23,6 +23,7 @@ import org.example.promate.domain.review.entity.MemberReview;
 import org.example.promate.domain.review.repository.MemberReviewRepository;
 import org.example.promate.domain.user.entity.User;
 import org.example.promate.domain.user.exception.UserErrorCode;
+import org.example.promate.domain.user.repository.UserProjectHistoryRepository;
 import org.example.promate.domain.user.repository.UserRepository;
 import org.example.promate.domain.recruit.code.RecruitErrorCode;
 import org.example.promate.domain.workspace.enums.TaskStatus;
@@ -51,6 +52,7 @@ public class RecruitService {
     private final BookmarkRepository bookmarkRepository;
     private final MemberReviewRepository memberReviewRepository;
     private final TaskRepository taskRepository;
+    private final UserProjectHistoryRepository userProjectHistoryRepository; // 팀장 수동입력 이력
 
     @Transactional
     public RecruitCreateResponse createRecruitment(
@@ -363,6 +365,7 @@ public class RecruitService {
                             );
 
                     return RecruitLeaderProfileResponse.ProjectHistoryDTO.builder()
+                            .historyId(null)
                             .projectId(project.getId())
                             .projectTitle(project.getTitle())
                             .role(member.getRole())
@@ -370,6 +373,8 @@ public class RecruitService {
                             .projectStatus(project.getStatus())
                             .startDate(project.getStartDate())
                             .endDate(project.getEndDate())
+                            .description(project.getDescription())
+                            .source("PROMATE")
                             .averageReviewScore(averageReviewScore)
                             .reviewCount((long) reviews.size())
                             .completedTaskCount(completedTaskCount)
@@ -377,6 +382,31 @@ public class RecruitService {
                             .build();
                 })
                 .toList();
+
+        List<RecruitLeaderProfileResponse.ProjectHistoryDTO> manualProjects =
+                userProjectHistoryRepository.findByUserId(leaderId)
+                        .stream()
+                        .map(history -> RecruitLeaderProfileResponse.ProjectHistoryDTO.builder()
+                                .historyId(history.getId())
+                                .projectId(null)
+                                .projectTitle(history.getProjectName())
+                                .role(history.getRole())
+                                .position(null)
+                                .projectStatus(null)
+                                .startDate(history.getStartDate())
+                                .endDate(history.getEndDate())
+                                .description(history.getDescription())
+                                .source("MANUAL")
+                                .averageReviewScore(0.0)
+                                .reviewCount(0L)
+                                .completedTaskCount(0)
+                                .incompleteTaskCount(0)
+                                .build())
+                        .toList();
+
+        List<RecruitLeaderProfileResponse.ProjectHistoryDTO> allProjects = new ArrayList<>();
+        allProjects.addAll(projects);
+        allProjects.addAll(manualProjects);
 
         Double totalAverageReviewScore =
                 memberReviewRepository.getGlobalAverageScoreByUserId(leaderId);
@@ -401,7 +431,9 @@ public class RecruitService {
                 .reviewCount(totalReviewCount)
                 .completedTaskCount(totalCompletedTaskCount)
                 .incompleteTaskCount(totalIncompleteTaskCount)
-                .projects(projects)
+                .projects(allProjects)
                 .build();
+
+
     }
 }

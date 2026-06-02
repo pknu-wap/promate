@@ -7,6 +7,7 @@ import org.example.promate.domain.project.enums.ProjectStatus;
 import org.example.promate.domain.recruit.entity.Recruit;
 import org.example.promate.domain.user.entity.User;
 import org.example.promate.domain.workspace.entity.*;
+import org.example.promate.global.entity.BaseEntity;
 import org.example.promate.global.entity.BaseTimeEntity;
 
 import java.time.LocalDate;

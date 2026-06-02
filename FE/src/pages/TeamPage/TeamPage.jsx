@@ -27,6 +27,13 @@ import './TeamPage.css';
 
 
 const INITIAL_VISIBLE_COUNT = 3;
+const TASK_STATUS_LABELS = {
+  TODO: '진행 전',
+  IN_PROGRESS: '진행 중',
+  DONE: '진행 완료'
+};
+
+const getTaskStatusLabel = (status) => TASK_STATUS_LABELS[status] || status;
 
 function TeamPage() {
   const { projectId } = useParams();
@@ -387,7 +394,7 @@ function TeamPage() {
                       '#D9D9D9'
                   }}
                 >
-                  {task.status}
+                  {getTaskStatusLabel(task.status)}
                 </span>
               </article>
             ))}

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import "./ProfileModal.css";
 import closeIcon from "../../assets/icons/closeIcon.svg";
 import ProfileAvatar from "../ProfileAvatar/ProfileAvatar";
@@ -8,6 +9,7 @@ function ProfileModal({ isOpen, onClose, user, position }) {
   const [isDragging, setIsDragging] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const dragPos = useRef({ startX: 0, startY: 0, initialTop: 0, initialLeft: 0 });
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (position) {
@@ -68,6 +70,14 @@ function ProfileModal({ isOpen, onClose, user, position }) {
 
   const projects = user?.projects ?? [];
 
+  const handleProjectClick = (project) => {
+    const targetId = project.recruitmentId || project.id || project.projectId;
+    if (targetId) {
+      onClose();
+      navigate(`/readme/${targetId}`, { state: project });
+    }
+  };
+
   const popoverStyle = isMobile
     ? {
         position: "fixed",
@@ -126,7 +136,12 @@ function ProfileModal({ isOpen, onClose, user, position }) {
               const score = project.score || project.averageReviewScore;
 
               return (
-                <div className="profile-project-item" key={index}>
+                <div 
+                  className="profile-project-item" 
+                  key={index}
+                  onClick={() => handleProjectClick(project)}
+                  style={{ cursor: "pointer" }}
+                >
                   <div className="project-main-info">
                     <span className="project-title">{title}</span>
                     <span className="project-period">{period}</span>

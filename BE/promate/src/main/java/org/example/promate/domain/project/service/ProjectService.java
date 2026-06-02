@@ -129,6 +129,8 @@ public class ProjectService {
                             .projectId(member.getProject().getId())
                             .title(member.getProject().getTitle())
                             .description(member.getProject().getDescription())
+                            .startDate(member.getProject().getStartDate())
+                            .endDate(member.getProject().getEndDate())
                             .averageReviewScore(averageReviewScore)
                             .build();
                 })

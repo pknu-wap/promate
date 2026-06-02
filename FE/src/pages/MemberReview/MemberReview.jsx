@@ -197,8 +197,8 @@ function MemberReviewPage() {
 
             <label className="member-review-comment">
               <span>
-                협업 과정에서 느낀 의견을 자유롭게 작성해주세요. <strong>*</strong>
-                <em>(150자 제한)</em>
+                협업 과정에서 느낀 의견을 자유롭게 작성해주세요. <strong></strong>
+                
               </span>
               <textarea
                 value={currentComment}
@@ -220,7 +220,12 @@ function MemberReviewPage() {
                   });
                 }}
               />
+                <div className="member-review-char-count">
+    {currentComment.length}/150
+  </div>
             </label>
+
+
 
             <button className="member-review-save" type="button" onClick={handleSave}>
               저장하기

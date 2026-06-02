@@ -17,3 +17,6 @@ export const getApplicationDetail = (recruitmentId, applicationId) =>
 
 export const updateApplicationStatus = (recruitmentId, applicationId, status) =>
   apiClient.patch(`/recruitments/${recruitmentId}/applications/${applicationId}/status`, { status });
+
+export const completeRecruitment = (recruitmentId) =>
+  apiClient.patch(`/recruitments/${recruitmentId}/status`, { status: 'COMPLETED' });

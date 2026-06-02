@@ -8,6 +8,7 @@ import {
   getRejectedApplications,
   getApplicationDetail,
   updateApplicationStatus,
+  completeRecruitment,
 } from '../../api/RecruitApi';
 import './Applicant.css';
 
@@ -21,11 +22,13 @@ const ApplicantDetail = () => {
   const { state } = useLocation();
   const recruitmentId = state?.recruitmentId;
   const projectTitle = state?.projectTitle ?? '프로젝트';
+  const maxMember = state?.maxMember ?? 0;
 
   const [activeTab, setActiveTab] = useState('PENDING');
   const [applicantMap, setApplicantMap] = useState({ PENDING: [], ACCEPTED: [], REJECTED: [] });
   const [selectedApplicant, setSelectedApplicant] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
 
   useEffect(() => {
     if (!recruitmentId) return;
@@ -85,12 +88,39 @@ const ApplicantDetail = () => {
       .finally(() => setSelectedApplicant(null));
   };
 
+  const isCapacityFull = maxMember > 0 && applicantMap.ACCEPTED.length >= maxMember;
+
+  const handleCompleteRecruitment = () => {
+    completeRecruitment(recruitmentId)
+      .then(() => setIsCompleted(true))
+      .catch((err) => console.error('모집 완료 처리 실패', err));
+  };
+
   const filtered = applicantMap[activeTab] ?? [];
   const closePanel = () => setSelectedApplicant(null);
 
   return (
     <div className="ad-page">
-      <h1 className="ad-title">지원자 검토 - {projectTitle}</h1>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <h1 className="ad-title">지원자 검토 - {projectTitle}</h1>
+        <button
+          disabled={isCompleted || !isCapacityFull}
+          onClick={handleCompleteRecruitment}
+          style={{
+            padding: '4px 12px',
+            fontSize: '12px',
+            fontWeight: 600,
+            fontFamily: "'Pretendard Variable', 'Pretendard', sans-serif",
+            color: '#FFFFFF',
+            background: (!isCompleted && isCapacityFull) ? '#FE9A57' : '#D9D9D9',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: (!isCompleted && isCapacityFull) ? 'pointer' : 'default',
+          }}
+        >
+          모집 완료
+        </button>
+      </div>
 
       <div className="ad-card">
         <div className="ad-tab-bar">
@@ -191,6 +221,21 @@ const ApplicantDetail = () => {
                             <span className="app-proj-role">
                               {proj.type === 'PROMATE' ? 'ProMate' : '직접 입력'}
                             </span>
+                          </div>
+                          <div className="app-proj-right">
+                            {proj.status && (
+                              <span className={proj.status === 'ACTIVE' || proj.status === '진행중' ? 'app-status-badge--active' : 'app-status-badge--done'}>
+                                {proj.status === 'ACTIVE' ? '진행중' : proj.status === 'COMPLETED' ? '완료' : proj.status}
+                              </span>
+                            )}
+                            {proj.score != null ? (
+                              <div className="app-score">
+                                <span className="app-score-num">{typeof proj.score === 'number' ? proj.score.toFixed(1) : proj.score}</span>
+                                <span className="app-score-label">점</span>
+                              </div>
+                            ) : (
+                              <div style={{ width: 47 }} />
+                            )}
                           </div>
                         </div>
                         {/* PROMATE: 완료한 태스크 목록 */}

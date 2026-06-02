@@ -169,6 +169,21 @@ function TeamPage() {
     }
   };
 
+  const handleUpdateTaskDetails = async (taskId, updatedData) => {
+    try {
+      setIsTaskDetailLoading(true);
+      await updateProjectTask(idToFetch, taskId, updatedData);
+      
+      const data = await getTaskDetail(idToFetch, taskId);
+      setSelectedTask(data);
+      await fetchTasks();
+    } catch (err) {
+      alert(`테스크 수정에 실패했습니다: ${err.message}`);
+    } finally {
+      setIsTaskDetailLoading(false);
+    }
+  };
+
   const handleDeleteTask = async () => {
     if (!selectedTask) return;
     if (!window.confirm('정말로 이 테스크를 삭제하시겠습니까?')) return;
@@ -306,35 +321,36 @@ function TeamPage() {
             }
           }}
         >
-          <div className="team-progress-header">
-            <div>
-              <h2>프로젝트 현황</h2>
-            <p>마감일: {projectDueDate}</p>
-            </div>
-            <strong>
-              {projectProgress}<span>%</span>
-            </strong>
-          </div>
+        <SummaryCard 
+          title="프로젝트 현황" 
+          count={projectProgress} 
+          unit="%"
+          subtitle={`마감일: ${projectDueDate}`}
+          isAllEmpty={true}
+        />
           <ProgressBar percent={projectProgress} />
         </section>
 
         <section className={`team-card team-task-board ${isTaskExpanded ? 'team-card-expanded' : ''}`}>
-          <div className="team-task-header">
-            <h2>테스크 보드</h2>
-            <div>
-              <strong className="team-task-count">
-                {tasks.length}<span>개</span>
-              </strong>
-              <button
-                type="button"
-                className="team-board-write-button"
-                onClick={() => setIsNewTaskModalOpen(true)}
-              >
-                <SquarePen size={12} />
-                <span>테스크쓰기</span>
-              </button>
-            </div>
-          </div>
+        <SummaryCard 
+          title="테스크 보드" 
+          count={tasks.length}
+          unit="개"
+          isAllEmpty={true}
+          actionButton={
+            <button
+              type="button"
+              className="team-board-write-button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsNewTaskModalOpen(true);
+              }}
+            >
+              <SquarePen size={12} />
+              <span>테스크 쓰기</span>
+            </button>
+          }
+        />
 
           <div className="team-task-list">
             {isTasksLoading && <div className="team-member-status">불러오는 중...</div>}
@@ -363,7 +379,16 @@ function TeamPage() {
                   <h3>{task.title}</h3>
                   <p>마감일: {task.dueDate?.replace(/-/g, '.')}</p>
                 </div>
-                <span>{task.status}</span>
+                <span
+                  style={{
+                    backgroundColor:
+                      task.status === 'TODO' ? '#80D366' :
+                      task.status === 'IN_PROGRESS' ? '#FFD748' :
+                      '#D9D9D9'
+                  }}
+                >
+                  {task.status}
+                </span>
               </article>
             ))}
           </div>
@@ -481,9 +506,11 @@ function TeamPage() {
         task={selectedTask}
         isLoading={isTaskDetailLoading}
         error={taskDetailError}
+        members={members}
         onClose={() => setSelectedTask(null)}
         onStatusChange={handleUpdateTaskStatus}
         onDelete={handleDeleteTask}
+        onUpdate={handleUpdateTaskDetails}
       />
 
       <NewTaskModal

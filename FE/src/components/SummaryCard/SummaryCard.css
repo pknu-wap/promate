@@ -35,6 +35,18 @@
   margin: 0;
 }
 
+.summary-title-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.summary-subtitle {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 12px;
+  color: #909090;
+}
+
 .summary-count {
   font-family: 'Pretendard';
   font-weight: 600;
@@ -50,6 +62,12 @@
   font-size: 29px;
   color: #FF6600;
   margin-right: 4px;
+}
+
+.summary-action {
+  margin-right: 15px;
+  display: inline-flex;
+  align-items: center;
 }
 
 .summary-list {

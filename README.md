@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <a href="https://promate-kappa.vercel.app/"><strong>🔗 PRO:MATE 서비스 이용하기</strong></a>
+  <a href="https://promate-kappa.vercel.app/" style="color: #24292f; text-decoration: none;"><strong>🔗 PRO:MATE 서비스 이용하기</strong></a>
 </p>
 
 ---

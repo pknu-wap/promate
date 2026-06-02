@@ -147,9 +147,9 @@ function TaskDetailModal({
                       value={editStatus}
                       onChange={(e) => setEditStatus(e.target.value)}
                     >
-                      <option value="TODO">TODO</option>
-                      <option value="IN_PROGRESS">IN_PROGRESS</option>
-                      <option value="DONE">DONE</option>
+                      <option value="TODO">진행 전</option>
+                      <option value="IN_PROGRESS">진행 중</option>
+                      <option value="DONE">진행 완료</option>
                     </select>
                   </div>
                 </div>
@@ -187,9 +187,9 @@ function TaskDetailModal({
                       value={task.status}
                       onChange={(e) => onStatusChange(task.taskId, task, e.target.value)}
                     >
-                      <option value="TODO">TODO</option>
-                      <option value="IN_PROGRESS">IN_PROGRESS</option>
-                      <option value="DONE">DONE</option>
+                      <option value="TODO">진행 전</option>
+                      <option value="IN_PROGRESS">진행 중</option>
+                      <option value="DONE">진행 완료</option>
                     </select>
                   </div>
                 </div>

@@ -36,8 +36,7 @@ public class RecruitLeaderProfileResponse {
         private LocalDate endDate;
         private String description;
         private String source; // "PROMATE" 또는 "MANUAL"
-        private Boolean editable;
-
+        
         private Double averageReviewScore;
         private Long reviewCount;
 

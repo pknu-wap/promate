@@ -36,10 +36,11 @@ const ProfilePage = () => {
     }
 
     const fetchProfileData = async () => {
-      const [userRes, taskCountsRes, manualProjectRes, autoProjectRes] = await Promise.allSettled([
+      const [userRes, taskCountsRes, manualProjectRes, ongoingProjectRes, completedProjectRes] = await Promise.allSettled([
         apiClient.get('/user/me'),
         apiClient.get('/user/me/projects/task-counts'),
         apiClient.get('/user/me/projectHistories'),
+        apiClient.get('/projects/me'),
         apiClient.get('/projects/activity/me'),
       ]);
 
@@ -61,11 +62,23 @@ const ProfilePage = () => {
       const manualProjectsData = manualProjectRes.status === 'fulfilled'
         ? (manualProjectRes.value.data?.data || []) : [];
 
-      const autoProjectsData = autoProjectRes.status === 'fulfilled'
-        ? (autoProjectRes.value.data?.data || []) : [];
+      const ongoingProjectsData = ongoingProjectRes.status === 'fulfilled'
+        ? (ongoingProjectRes.value.data?.data ?? ongoingProjectRes.value.data ?? []) : [];
+
+      const completedProjectsData = completedProjectRes.status === 'fulfilled'
+        ? (completedProjectRes.value.data?.data ?? completedProjectRes.value.data ?? []) : [];
 
       setProjects([
-        ...autoProjectsData.map((p) => ({
+        ...ongoingProjectsData.map((p) => ({
+          ...p,
+          title: p.projectName ?? p.title ?? p.name,
+          startDate: p.startDate ?? p.projectStartDate ?? p.createdAt ?? null,
+          endDate: null,
+          score: p.averageReviewScore ?? p.score ?? null,
+          isCompleted: false,
+          isManual: false,
+        })),
+        ...completedProjectsData.map((p) => ({
           ...p,
           title: p.title,
           startDate: p.startDate ?? null,

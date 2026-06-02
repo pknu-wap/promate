@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import apiClient from '../../api/apiClient';
 import MainButton from '../../components/MainButton/MainButton';
 import Avatar from '../../components/Avatar/Avatar';
@@ -11,7 +10,6 @@ const ProfilePage = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [profileImageUrl, setProfileImageUrl] = useState(null);
   const fileInputRef = useRef(null);
-  const navigate = useNavigate();
 
   const [userInfo, setUserInfo] = useState({
     name: '로딩 중...',
@@ -27,15 +25,8 @@ const ProfilePage = () => {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-    if (!token) {
-      alert('로그인이 필요한 서비스입니다.');
-      navigate(-1);
-      return;
-    }
-
     const fetchProfileData = async () => {
-      const [userRes, taskCountsRes, manualProjectRes, autoProjectRes] = await Promise.allSettled([
+      const [userRes, taskRes, manualProjectRes, autoProjectRes] = await Promise.allSettled([
         apiClient.get('/user/me'),
         apiClient.get('/user/me/projects/task-counts'),
         apiClient.get('/user/me/projectHistories'),
@@ -44,15 +35,13 @@ const ProfilePage = () => {
 
       if (userRes.status === 'fulfilled') {
         const userData = userRes.value.data.data;
-        const taskCountsData = taskCountsRes.status === 'fulfilled'
-          ? (taskCountsRes.value.data.data ?? []) : [];
-
-        const completed = taskCountsData.reduce((sum, p) => sum + (p.completedTaskCount ?? 0), 0);
-        const total = taskCountsData.reduce((sum, p) => sum + (p.completedTaskCount ?? 0) + (p.incompleteTaskCount ?? 0), 0);
-
+        const taskData = taskRes.status === 'fulfilled' ? taskRes.value.data.data : null;
         setUserInfo({
           name: userData.name,
-          taskStats: { completed, total },
+          taskStats: {
+            completed: taskData?.completedCount ?? userData.completedTaskCount ?? 0,
+            total: taskData?.totalCount ?? userData.totalTaskCount ?? 0,
+          },
         });
         setProfileImageUrl(userData.profileImageUrl || null);
       }
@@ -63,12 +52,12 @@ const ProfilePage = () => {
         ? (autoProjectRes.value.data.data || []) : [];
 
       setProjects([
-        ...autoProjectsData.map((p) => ({ ...p, title: p.projectName ?? p.title, score: p.averageReviewScore ?? p.score ?? null, isManual: false })),
-        ...manualProjectsData.map((p) => ({ ...p, title: p.projectName ?? p.title, isManual: true })),
+        ...autoProjectsData.map((p) => ({ ...p, isManual: false })),
+        ...manualProjectsData.map((p) => ({ ...p, isManual: true })),
       ]);
     };
     fetchProfileData();
-  }, [navigate]);
+  }, []);
 
   const handleImageClick = () => {
     if (isEditing) fileInputRef.current?.click();
@@ -98,7 +87,7 @@ const ProfilePage = () => {
     try {
       const res = await apiClient.post('/user/me/projectHistories', newProject);
       const added = res.data.data;
-      setProjects((prev) => [...prev, { ...added, title: added.projectName ?? added.title, isManual: true }]);
+      setProjects((prev) => [...prev, { ...added, isManual: true }]);
     } catch (error) {
       console.error('프로젝트 추가 중 오류 발생:', error);
     }
@@ -165,7 +154,7 @@ const ProfilePage = () => {
             {[...projects]
               .sort((a, b) => (a.endDate ? 1 : -1) - (b.endDate ? 1 : -1))
               .map((proj) => (
-                <div key={proj.historyId ?? proj.id ?? proj.projectId} className="project-experience-row">
+                <div key={proj.historyId ?? proj.id} className="project-experience-row">
                   <div className="proj-row-inner">
                     <div className="proj-name-group">
                       <span className="proj-title">{proj.title}</span>

@@ -203,7 +203,7 @@ function ProjectReadMePage() {
                 onClick={() => !isApplied && handleApplyClick()}
                 disabled={isApplied}
               >
-                {isApplied ? '심사중' : '지원하기'}
+                {isApplied ? '지원완료' : '지원하기'}
               </button>
             </div>
           )

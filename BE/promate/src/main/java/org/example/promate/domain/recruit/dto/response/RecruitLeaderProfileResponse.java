@@ -26,6 +26,7 @@ public class RecruitLeaderProfileResponse {
     @Getter
     @Builder
     public static class ProjectHistoryDTO {
+        private Long historyId;
         private Long projectId;
         private String projectTitle;
         private String role;
@@ -33,6 +34,9 @@ public class RecruitLeaderProfileResponse {
         private ProjectStatus projectStatus;
         private LocalDate startDate;
         private LocalDate endDate;
+        private String description;
+        private String source; // "PROMATE" 또는 "MANUAL"
+        private Boolean editable;
 
         private Double averageReviewScore;
         private Long reviewCount;

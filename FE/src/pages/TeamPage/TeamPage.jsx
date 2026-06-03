@@ -432,25 +432,6 @@ const closePostModal = () => {
           <Calendar projectId={idToFetch} projectTitle={projectTitle} />
         </div>
 
-        <section className="team-card team-members-card">
-          <PanelTitle icon={<Users size={18} />} title="프로젝트 팀원" />
-          <div className="team-members-list">
-            {isMembersLoading && <div className="team-member-status">불러오는 중...</div>}
-            {membersError && <div className="team-member-status" style={{ color: 'red' }}>{membersError}</div>}
-            
-            {!isMembersLoading && !membersError && members.length === 0 && (
-              <div className="team-member-status">참여 중인 팀원이 없습니다.</div>
-            )}
-
-            {!isMembersLoading && !membersError && members.map((member) => (
-              <div className="team-member" key={member.userId}>
-                <strong>{member.name}</strong>
-                <span>{member.role || '팀원'}</span>
-              </div>
-            ))}
-          </div>
-        </section>
-
         <section className={`team-card team-board-card ${isBoardExpanded ? 'team-card-expanded' : ''}`}>
           <div className="team-board-header">
             <PanelTitle icon={<ClipboardList size={18} />} title="게시판" />
@@ -496,6 +477,25 @@ const closePostModal = () => {
               onClick={() => setIsBoardExpanded((expanded) => !expanded)}
             />
           )}
+        </section>
+
+        <section className="team-card team-members-card">
+          <PanelTitle icon={<Users size={18} />} title="프로젝트 팀원" />
+          <div className="team-members-list">
+            {isMembersLoading && <div className="team-member-status">불러오는 중...</div>}
+            {membersError && <div className="team-member-status" style={{ color: 'red' }}>{membersError}</div>}
+            
+            {!isMembersLoading && !membersError && members.length === 0 && (
+              <div className="team-member-status">참여 중인 팀원이 없습니다.</div>
+            )}
+
+            {!isMembersLoading && !membersError && members.map((member) => (
+              <div className="team-member" key={member.userId}>
+                <strong>{member.name}</strong>
+                <span>{member.role || '팀원'}</span>
+              </div>
+            ))}
+          </div>
         </section>
       </div>
 

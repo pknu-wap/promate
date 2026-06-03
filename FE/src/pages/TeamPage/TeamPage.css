@@ -25,10 +25,6 @@
   max-width: 1360px;
 }
 
-.team-page-grid.team-task-expanded {
-  grid-template-rows: 86px 58px minmax(340px, auto) auto minmax(190px, 1fr);
-}
-
 .team-card {
   background: #ffffff;
   border-radius: 8px;
@@ -108,11 +104,6 @@
   flex-direction: column;
   padding: 13px 30px 20px;
   min-height: 222px;
-  transition: min-height 0.2s ease;
-}
-
-.team-task-board.team-card-expanded {
-  min-height: 504px;
 }
 
 .team-task-list {
@@ -217,61 +208,6 @@
   min-height: 0;
 }
 
-.team-calendar .calendar-section {
-  min-height: 300px;
-  padding: 22px 34px 24px;
-  border-radius: 8px;
-}
-
-.team-calendar .calendar-title {
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.team-calendar .nav-date {
-  font-size: 14px;
-}
-
-.team-calendar .calendar-body {
-  padding: 12px 0 0;
-}
-
-.team-calendar .calendar-grid {
-  grid-auto-rows: minmax(44px, 1fr);
-}
-
-.team-calendar .weekday {
-  font-size: 10px;
-}
-
-.team-calendar .calendar-cell {
-  min-height: 44px;
-}
-
-.team-calendar .day-number {
-  font-size: 11px;
-}
-
-.team-calendar .calendar-sidebar {
-  width: 132px;
-}
-
-.team-calendar .calendar-todo-list {
-  padding: 0;
-}
-
-.team-calendar .todo-item {
-  min-height: 24px;
-}
-
-.team-calendar .todo-text {
-  font-size: 11px;
-}
-
-.team-calendar .add-event-btn {
-  font-size: 12px;
-}
-
 .team-members-card,
 .team-board-card {
   grid-column: 3;
@@ -279,7 +215,7 @@
 }
 
 .team-members-card {
-  grid-row: 4;
+  grid-row: 5;
   align-self: start;
   min-height: 125px;
   height: auto;
@@ -287,16 +223,12 @@
 }
 
 .team-board-card {
-  grid-row: 5;
+  grid-row: 4;
   align-self: start;
   min-height: 190px;
   padding: 22px 32px 12px;
   display: flex;
   flex-direction: column;
-}
-
-.team-board-card.team-card-expanded {
-  min-height: 270px;
 }
 
 .team-board-header {
@@ -375,6 +307,9 @@
   font-weight: 600;
   color: #000000;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 
 .team-member span,
@@ -383,6 +318,7 @@
   font-size: 12px;
   color: #909090;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .team-board-list {
@@ -584,7 +520,8 @@
   z-index: 1000;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  overflow-y: auto;
 }
 
 .team-detail-container {
@@ -594,7 +531,9 @@
   padding: 0px 47px 30px;
   gap: 16px;
   width: 500px;
-  height: 350px;
+  min-height: 350px;
+  height: auto;
+  margin: 40px auto;
   box-sizing: border-box;
   background: #FFFFFF;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
@@ -737,7 +676,6 @@
   gap: 20px;
   width: 100%;
   flex: 1;
-  overflow: hidden;
   max-width: 580px;
 }
 
@@ -845,7 +783,6 @@
   gap: 10px;
   width: 100%;
   flex: 1;
-  overflow-y: auto;
 }
 
 .team-detail-content {
@@ -899,14 +836,6 @@
   
   .team-board-list {
     margin: 0;
-  }
-  
-  .team-calendar .calendar-body {
-    flex-direction: column;
-  }
-
-  .team-calendar .calendar-sidebar {
-    width: 100%;
   }
 
   .team-post-modal-backdrop {

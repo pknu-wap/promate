@@ -99,7 +99,7 @@
 }
 
 .team-task-board {
-  grid-column: 2 / 4;
+  grid-column: 2 / 3;
   grid-row: 1 / 4;
   display: flex;
   flex-direction: column;

@@ -43,10 +43,9 @@ function FindTeamPage() {
     const fetchRecruitments = async () => {
       try {
         const params = {
-          page: currentPage - 1,
-          size: ITEMS_PER_PAGE,
+          page: 0,
+          size: 1000,
           sort: "createdAt,desc",
-          status: "RECRUITING",
         };
 
         if (selectedCategory) {
@@ -60,7 +59,7 @@ function FindTeamPage() {
         const response = await apiClient.get("/recruitments", { params });
 
         if (response.data && response.data.isSuccess) {
-          const { content, pageInfo } = response.data.data;
+          const { content } = response.data.data;
 
           const mappedData = content
             .filter((item) => item.status === "RECRUITING")
@@ -84,7 +83,7 @@ function FindTeamPage() {
             });
 
           setTeamPosts(mappedData);
-          setTotalPages(pageInfo.totalPages === 0 ? 1 : pageInfo.totalPages);
+          setTotalPages(Math.ceil(mappedData.length / ITEMS_PER_PAGE) || 1);
         }
       } catch (error) {
         console.error("모집글 조회 실패:", error);
@@ -92,7 +91,7 @@ function FindTeamPage() {
     };
 
     fetchRecruitments();
-  }, [selectedCategory, debouncedKeyword, currentPage]);
+  }, [selectedCategory, debouncedKeyword]);
 
   const selectedTeam = teamPosts.find((team) => team.id === selectedTeamId);
   const isApplyModalOpen = selectedTeamId !== null;
@@ -144,6 +143,11 @@ function FindTeamPage() {
     );
   };
 
+  const currentTeamPosts = teamPosts.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
   return (
     <main className="find-team-page">
       <h1 className="find-team-title">팀 찾기</h1>
@@ -173,8 +177,8 @@ function FindTeamPage() {
       </div>
 
       <section className="find-team-list" aria-label="팀 목록">
-        {teamPosts.length > 0 ? (
-          teamPosts.map((team) => {
+        {currentTeamPosts.length > 0 ? (
+          currentTeamPosts.map((team) => {
             let buttonText = "지원하기";
             let buttonColor = "#FE9A57";
             let buttonTextColor = "#FFFFFF";

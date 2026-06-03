@@ -34,6 +34,19 @@ function SummaryCard({ title, count, unit = '개', subtitle, actionButton, items
     return '#80D366';
   };
 
+  const getTaskStatusConfig = (status) => {
+    switch (status) {
+      case 'TODO':
+        return { label: '진행 전', className: 'todo' };
+      case 'IN_PROGRESS':
+        return { label: '진행 중', className: 'in-progress' };
+      case 'DONE':
+        return { label: '진행 완료', className: 'done' };
+      default:
+        return null;
+    }
+  };
+
   const visibleItems = items.slice(0, visibleCount);
   const effectivelyExpanded = isExpanded && !isAllEmpty;
 
@@ -53,25 +66,37 @@ function SummaryCard({ title, count, unit = '개', subtitle, actionButton, items
       {effectivelyExpanded && (
         <>
           <ul className="summary-list">
-            {visibleItems.map((item) => (
-              <li 
-                key={item.id} 
-                className="summary-item"
-                onClick={() => onItemClick?.(item)}
-              >
-                {showDot && (
-                  <span
-                    className="item-dot"
-                    style={{ backgroundColor: getDotColor(item.dueDate) }}
-                  />
-                )}
+            {visibleItems.map((item) => {
+              const statusConfig = item.taskStatus ? getTaskStatusConfig(item.taskStatus) : null;
 
-                <div className="item-text">
-                  <span className="item-name">{item.title}</span>
-                  <span className="item-date">마감일: {item.dueDate}</span>
-                </div>
-              </li>
-            ))}
+              return (
+                <li 
+                  key={item.id} 
+                  className="summary-item"
+                  onClick={() => onItemClick?.(item)}
+                >
+                  {showDot && (
+                    <span
+                      className="item-dot"
+                      style={{ backgroundColor: getDotColor(item.dueDate) }}
+                    />
+                  )}
+
+                  <div className="item-text">
+                    <span className="item-name">{item.title}</span>
+                    <span className="item-date">마감일: {item.dueDate}</span>
+                  </div>
+
+                  {statusConfig && (
+                    <div className="summary-item-status">
+                      <div className={`status-tag status-${statusConfig.className}`}>
+                        {statusConfig.label}
+                      </div>
+                    </div>
+                  )}
+                </li>
+              );
+            })}
           </ul>
 
           {visibleCount < items.length ? (

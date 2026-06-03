@@ -107,6 +107,8 @@
   flex-direction: column;
   gap: 2px;
   margin-left: 10px;
+  flex: 1;
+  min-width: 0;
 }
 
 .item-name {
@@ -114,6 +116,42 @@
   font-weight: 600;
   font-size: 15px;
   color: #000000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.summary-item-status {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.summary-item .status-tag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 65px;
+  height: 26px;
+  border-radius: 20px;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  color: #FFFFFF;
+  box-sizing: border-box;
+}
+
+.summary-item .status-tag.status-todo {
+  background: #80D366;
+}
+
+.summary-item .status-tag.status-in-progress {
+  background: #FFD748;
+}
+
+.summary-item .status-tag.status-done {
+  background: #D9D9D9;
 }
 
 .item-date {

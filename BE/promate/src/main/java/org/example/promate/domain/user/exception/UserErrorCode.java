@@ -13,7 +13,9 @@ public enum UserErrorCode implements BaseErrorCode {
 
     UNAUTHORIZED_USER(HttpStatus.UNAUTHORIZED, "USER_E003", "인증 토큰이 유효하지 않습니다."),
 
-    FORBIDDEN_PROJECT_HISTORY(HttpStatus.FORBIDDEN, "USER_E004", "해당 프로젝트 이력에 접근할 수 없습니다.");
+    FORBIDDEN_PROJECT_HISTORY(HttpStatus.FORBIDDEN, "USER_E004", "해당 프로젝트 이력에 접근할 수 없습니다."),
+
+    INVALID_PROJECT_HISTORY_DATE(HttpStatus.BAD_REQUEST, "USER_E005", "프로젝트 시작일은 종료일보다 늦을 수 없습니다.");
 
     private final HttpStatus status;
     private final String code;

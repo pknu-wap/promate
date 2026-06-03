@@ -3,6 +3,7 @@ package org.example.promate.domain.user.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.example.promate.domain.project.enums.ProjectStatus;
 import org.example.promate.global.entity.BaseEntity;
 
 import java.time.LocalDate;
@@ -24,6 +25,9 @@ public class UserProjectHistory extends BaseEntity {
 
     @Column(name="role", nullable = true)
     private String role;
+
+    @Column(name = "status", nullable = true)
+    private ProjectStatus status;
 
     @Column(name = "start_date", nullable = true)
     private LocalDate startDate;

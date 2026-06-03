@@ -77,7 +77,7 @@ function DashboardPage() {
             id: task.taskId,
             projectId: task.projectId,
             projectTitle: task.projectTitle,
-            title: `${task.title} - ${task.projectTitle}`,
+            title: `${task.title} [${task.projectTitle}]`,
             dueDate: formatDate(task.dueDate),
             taskStatus: task.taskStatus,
           }));
@@ -88,7 +88,7 @@ function DashboardPage() {
             id: task.taskId,
             projectId: task.projectId,
             projectTitle: task.projectTitle,
-            title: `${task.title} - ${task.projectTitle}`,
+            title: `${task.title} [${task.projectTitle}]`,
             dueDate: formatDate(task.dueDate),
             taskStatus: task.taskStatus,
           }));

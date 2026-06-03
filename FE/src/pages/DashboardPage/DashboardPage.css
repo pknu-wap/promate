@@ -101,6 +101,11 @@
   padding: 40px 0;
 }
 
+.more-btn {
+  align-self: center;
+  margin-top: 8px;
+}
+
 @media (max-width: 768px) {
   .dashboard-container {
     width: 100%;

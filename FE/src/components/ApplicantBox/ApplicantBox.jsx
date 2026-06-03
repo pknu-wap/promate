@@ -13,6 +13,12 @@ function ApplicantBox({
   buttonColor = '#FE9A57',
   buttonTextColor = '#FFFFFF',
   onButtonClick,
+  secondaryButtonText,
+  secondaryButtonColor = '#D9D9D9',
+  secondaryButtonTextColor = '#FFFFFF',
+  onSecondaryButtonClick,
+  showSecondaryButton = false,
+  disableSecondaryButton = false,
   showBookmark = true,
   isBookmarked = false,
   onBookmarkClick,
@@ -51,6 +57,20 @@ function ApplicantBox({
               aria-label={isBookmarked ? "즐겨찾기 해제" : "즐겨찾기 추가"}
             >
               <img src={isBookmarked ? bookmarkOrange : bookmarkGray} alt="bookmark icon" />
+            </button>
+          )}
+          {showSecondaryButton && (
+            <button
+              type="button"
+              className={`applicant-action-btn ${secondaryButtonColor === '#FE9A57' && !disableSecondaryButton ? 'hover-active' : ''}`}
+              style={{ backgroundColor: secondaryButtonColor, color: secondaryButtonTextColor, cursor: disableSecondaryButton ? 'default' : 'pointer' }}
+              onClick={(e) => {
+                if (onClick) e.stopPropagation();
+                if (onSecondaryButtonClick) onSecondaryButtonClick(e);
+              }}
+              disabled={disableSecondaryButton}
+            >
+              {secondaryButtonText}
             </button>
           )}
           <button

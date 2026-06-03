@@ -25,10 +25,6 @@
   max-width: 1360px;
 }
 
-.team-page-grid.team-task-expanded {
-  grid-template-rows: 86px 58px minmax(340px, auto) auto minmax(190px, 1fr);
-}
-
 .team-card {
   background: #ffffff;
   border-radius: 8px;
@@ -108,11 +104,6 @@
   flex-direction: column;
   padding: 13px 30px 20px;
   min-height: 222px;
-  transition: min-height 0.2s ease;
-}
-
-.team-task-board.team-card-expanded {
-  min-height: 504px;
 }
 
 .team-task-list {
@@ -238,10 +229,6 @@
   padding: 22px 32px 12px;
   display: flex;
   flex-direction: column;
-}
-
-.team-board-card.team-card-expanded {
-  min-height: 270px;
 }
 
 .team-board-header {

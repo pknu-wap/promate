@@ -320,6 +320,9 @@
   font-weight: 600;
   color: #000000;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 
 .team-member span,
@@ -328,6 +331,7 @@
   font-size: 12px;
   color: #909090;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .team-board-list {

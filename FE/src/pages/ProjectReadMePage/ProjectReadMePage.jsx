@@ -196,8 +196,8 @@ function ProjectReadMePage() {
             </button>
           </div>
         ) : (
-          projectData.status === "RECRUITING" && (
-            <div className="project-readme-apply-container">
+          <div className="project-readme-apply-container">
+            {projectData.status === "RECRUITING" ? (
               <button 
                 className={`project-readme-apply-btn ${isApplied ? 'reviewing' : 'apply'}`}
                 onClick={() => !isApplied && handleApplyClick()}
@@ -205,8 +205,12 @@ function ProjectReadMePage() {
               >
                 {isApplied ? '지원완료' : '지원하기'}
               </button>
-            </div>
-          )
+            ) : (
+              <button className="project-readme-apply-btn reviewing" disabled style={{ cursor: 'default' }}>
+                모집완료
+              </button>
+            )}
+          </div>
         )}
       </div>
 

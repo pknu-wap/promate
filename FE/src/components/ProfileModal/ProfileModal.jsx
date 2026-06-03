@@ -135,7 +135,9 @@ function ProfileModal({ isOpen, onClose, user, position }) {
             {projects.map((project, index) => {
               const title = project.title || project.projectTitle;
               const period = project.period || (project.startDate && project.endDate ? `${project.startDate} ~ ${project.endDate}` : "");
-              const status = project.status || (project.projectStatus === "DONE" ? "완료" : "진행중");
+              
+              const rawStatus = project.status || project.projectStatus;
+              const status = (rawStatus === "COMPLETED" || rawStatus === "DONE" || rawStatus === "완료") ? "완료" : "진행중";
               const score = project.score || project.averageReviewScore;
 
               return (

@@ -91,8 +91,9 @@ const ProfilePage = () => {
         ...manualProjectsData.map((p) => ({
           ...p,
           title: p.projectName ?? p.title,
-          isCompleted: !!p.endDate,
+          isCompleted: p.status ? p.status === 'COMPLETED' : !!p.endDate,
           isManual: true,
+          isEditable: p.editable ?? true,
         })),
       ]);
     };
@@ -144,8 +145,9 @@ const ProfilePage = () => {
       setProjects((prev) => [...prev, {
         ...added,
         title: added.projectName ?? added.title,
-        isCompleted: !!added.endDate,
+        isCompleted: added.status ? added.status === 'COMPLETED' : !!added.endDate,
         isManual: true,
+        isEditable: added.editable ?? true,
       }]);
     } catch (error) {
       console.error('프로젝트 추가 중 오류 발생:', error);
@@ -159,7 +161,14 @@ const ProfilePage = () => {
       const updated = res.data.data;
       setProjects((prev) => prev.map((p) =>
         (p.historyId ?? p.id) === historyId
-          ? { ...p, ...updated, title: updated.projectName ?? updated.title, isCompleted: !!updated.endDate, isManual: true }
+          ? {
+              ...p,
+              ...updated,
+              title: updated.projectName ?? updated.title,
+              isCompleted: updated.status ? updated.status === 'COMPLETED' : !!updated.endDate,
+              isManual: true,
+              isEditable: updated.editable ?? true
+            }
           : p
       ));
     } catch (error) {
@@ -277,7 +286,7 @@ const ProfilePage = () => {
                           <span style={{ width: 47 }} />
                         )}
                       </div>
-                      {isEditing && proj.isManual && (
+                  {isEditing && proj.isManual && proj.isEditable && (
                         <>
                           <button
                             className="proj-delete-btn"

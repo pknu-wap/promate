@@ -1,4 +1,4 @@
-@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css');
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
 
 .profile-avatar-wrap {
   position: relative;
@@ -21,10 +21,10 @@
 }
 
 .page-wrapper {
-  overflow-x: hidden;
+  overflow-y: auto;
   min-height: 100%;
   padding: 19px 50px 20px 30px;
-  background: linear-gradient(180deg, #F0F0F0 0%, #FFFFFF 100%);
+  background: linear-gradient(180deg, #f0f0f0 0%, #ffffff 100%);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -32,7 +32,7 @@
 }
 
 .page-title {
-  font-family: 'YSpotlightOTF', 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-family: "YSpotlightOTF", "Pretendard Variable", "Pretendard", sans-serif;
   font-size: 22px;
   font-weight: 500;
   color: #000;
@@ -41,6 +41,7 @@
 
 .profile-main-card {
   width: 100%;
+  height: 100vh;
   max-width: 1020px;
   min-height: 475px;
   padding: 40px;
@@ -51,6 +52,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  overflow-y: auto;
 }
 
 .profile-header-row {
@@ -76,14 +78,13 @@
   box-sizing: border-box;
   width: 80px;
   height: 80px;
-  background: #F1F1F1;
-  border: 1px solid #ABABAB;
+  background: #f1f1f1;
+  border: 1px solid #ababab;
   border-radius: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  overflow: hidden;
 }
 
 .profile-name-block {
@@ -93,7 +94,7 @@
 }
 
 .user-name-text {
-  font-family: 'Pretendard', sans-serif;
+  font-family: "Pretendard", sans-serif;
   font-weight: 700;
   font-size: 20px;
   line-height: 24px;
@@ -116,32 +117,32 @@
 }
 
 .task-stats-completed {
-  font-family: 'YSpotlightOTF', sans-serif;
+  font-family: "YSpotlightOTF", sans-serif;
   font-weight: 400;
   font-size: 30px;
   line-height: 40px;
-  color: #FF6600;
+  color: #ff6600;
 }
 
 .task-stats-total {
-  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-family: "Pretendard Variable", "Pretendard", sans-serif;
   font-weight: 300;
   font-size: 30px;
   line-height: 36px;
-  color: #ABABAB;
+  color: #ababab;
 }
 
 .task-stats-label {
-  font-family: 'Pretendard', sans-serif;
+  font-family: "Pretendard", sans-serif;
   font-weight: 600;
   font-size: 13px;
   line-height: 16px;
-  color: #ABABAB;
+  color: #ababab;
 }
 
 .profile-divider {
   border: none;
-  border-top: 1px solid #D9D9D9;
+  border-top: 1px solid #d9d9d9;
   margin: 0;
   width: 100%;
 }
@@ -156,7 +157,7 @@
 }
 
 .form-label {
-  font-family: 'Pretendard', sans-serif;
+  font-family: "Pretendard", sans-serif;
   font-weight: 600;
   font-size: 18px;
   line-height: 21px;
@@ -188,10 +189,10 @@
   padding: 12px 10px;
   width: 100%;
   height: 50px;
-  background: #FFFFFF;
+  background: #ffffff;
   border-width: 1px 0;
   border-style: solid;
-  border-color: #D9D9D9;
+  border-color: #d9d9d9;
   box-sizing: border-box;
 }
 
@@ -217,7 +218,7 @@
 }
 
 .proj-title {
-  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-family: "Pretendard Variable", "Pretendard", sans-serif;
   font-weight: 400;
   font-size: 16px;
   line-height: 19px;
@@ -226,11 +227,11 @@
 }
 
 .proj-role {
-  font-family: 'Pretendard', sans-serif;
+  font-family: "Pretendard", sans-serif;
   font-weight: 400;
   font-size: 14px;
   line-height: 17px;
-  color: #ABABAB;
+  color: #ababab;
   white-space: nowrap;
 }
 
@@ -244,11 +245,11 @@
 }
 
 .proj-period {
-  font-family: 'Pretendard', sans-serif;
+  font-family: "Pretendard", sans-serif;
   font-weight: 400;
   font-size: 14px;
   line-height: 17px;
-  color: #ABABAB;
+  color: #ababab;
   white-space: nowrap;
 }
 
@@ -261,20 +262,19 @@
   gap: 10px;
   width: 69px;
   height: 21px;
-  background: #FFEBDE;
+  background: #ffebde;
   border-radius: 20px;
   flex-shrink: 0;
   box-sizing: border-box;
 }
 .badge-ongoing span {
-  font-family: 'Pretendard', sans-serif;
+  font-family: "Pretendard", sans-serif;
   font-weight: 600;
   font-size: 14px;
   line-height: 17px;
-  color: #FE9A57;
+  color: #fe9a57;
   white-space: nowrap;
 }
-
 
 .badge-completed {
   display: flex;
@@ -285,17 +285,17 @@
   gap: 10px;
   width: 69px;
   height: 21px;
-  background: #D9D9D9;
+  background: #d9d9d9;
   border-radius: 20px;
   flex-shrink: 0;
   box-sizing: border-box;
 }
 .badge-completed span {
-  font-family: 'Pretendard', sans-serif;
+  font-family: "Pretendard", sans-serif;
   font-weight: 600;
   font-size: 14px;
   line-height: 17px;
-  color: #FFFFFF;
+  color: #ffffff;
   white-space: nowrap;
 }
 
@@ -310,17 +310,17 @@
 }
 
 .proj-score-num {
-  font-family: 'YSpotlightOTF', 'Pretendard', sans-serif;
+  font-family: "YSpotlightOTF", "Pretendard", sans-serif;
   font-weight: 400;
   font-size: 20px;
   line-height: 26px;
-  color: #FE9A57;
+  color: #fe9a57;
   white-space: nowrap;
   min-width: 34px;
 }
 
 .proj-score-text {
-  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-family: "Pretendard Variable", "Pretendard", sans-serif;
   font-weight: 400;
   font-size: 14px;
   line-height: 17px;
@@ -334,6 +334,7 @@
   align-items: center;
   gap: 12px;
   width: 100%;
+  margin-bottom: 20px;
 }
 
 .btn-edit-cancel {
@@ -342,18 +343,20 @@
   align-items: center;
   padding: 8px 16px;
   height: 36px;
-  background: #D9D9D9;
+  background: #d9d9d9;
   border: none;
   border-radius: 5px;
-  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-family: "Pretendard Variable", "Pretendard", sans-serif;
   font-weight: 700;
   font-size: 14px;
-  color: #FFFFFF;
+  color: #ffffff;
   cursor: pointer;
   transition: background 0.15s;
   white-space: nowrap;
 }
-.btn-edit-cancel:hover { background: #c4c4c4; }
+.btn-edit-cancel:hover {
+  background: #c4c4c4;
+}
 
 .btn-edit-complete {
   display: flex;
@@ -361,18 +364,20 @@
   align-items: center;
   padding: 8px 16px;
   height: 36px;
-  background: #FE9A57;
+  background: #fe9a57;
   border: none;
   border-radius: 5px;
-  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-family: "Pretendard Variable", "Pretendard", sans-serif;
   font-weight: 700;
   font-size: 14px;
-  color: #FFFFFF;
+  color: #ffffff;
   cursor: pointer;
   transition: background 0.15s;
   white-space: nowrap;
 }
-.btn-edit-complete:hover { background: #f08040; }
+.btn-edit-complete:hover {
+  background: #f08040;
+}
 
 .proj-delete-btn {
   display: flex;
@@ -383,13 +388,18 @@
   border: none;
   border-radius: 50%;
   background: #f0f0f0;
-  color: #ABABAB;
+  color: #ababab;
   font-size: 12px;
   cursor: pointer;
   flex-shrink: 0;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
-.proj-delete-btn:hover { background: #ffe0d0; color: #e05a20; }
+.proj-delete-btn:hover {
+  background: #ffe0d0;
+  color: #e05a20;
+}
 
 .proj-edit-btn {
   display: flex;
@@ -400,13 +410,18 @@
   border-radius: 50%;
   border: none;
   background: transparent;
-  color: #ABABAB;
+  color: #ababab;
   font-size: 14px;
   cursor: pointer;
   flex-shrink: 0;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
-.proj-edit-btn:hover { background: #e0edff; color: #3a7bd5; }
+.proj-edit-btn:hover {
+  background: #e0edff;
+  color: #3a7bd5;
+}
 
 .proj-add-row-btn {
   display: flex;
@@ -423,14 +438,16 @@
   cursor: pointer;
   transition: background 0.15s;
 }
-.proj-add-row-btn:hover { background: #f5f5f5; }
+.proj-add-row-btn:hover {
+  background: #f5f5f5;
+}
 
 .proj-add-text {
-  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-family: "Pretendard Variable", "Pretendard", sans-serif;
   font-weight: 700;
   font-size: 16px;
   line-height: 19px;
-  color: #ABABAB;
+  color: #ababab;
 }
 
 .btn-cancel {
@@ -443,10 +460,12 @@
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  font-family: 'Pretendard', sans-serif;
+  font-family: "Pretendard", sans-serif;
   transition: background 0.15s;
 }
-.btn-cancel:hover { background: #d0d0d0; }
+.btn-cancel:hover {
+  background: #d0d0d0;
+}
 
 .profile-edit-header {
   display: flex;
@@ -470,9 +489,11 @@
   justify-content: space-between;
   gap: 24px;
   padding: 20px 0;
-  border-bottom: 1px solid #D9D9D9;
+  border-bottom: 1px solid #d9d9d9;
 }
-.promate-edit-row:last-child { border-bottom: none; }
+.promate-edit-row:last-child {
+  border-bottom: none;
+}
 
 .promate-edit-info {
   display: flex;
@@ -489,7 +510,7 @@
 }
 .promate-edit-info .proj-period {
   font-size: 13px;
-  color: #ABABAB;
+  color: #ababab;
   white-space: nowrap;
 }
 
@@ -504,7 +525,7 @@
   color: #1a1a1a;
   flex-shrink: 0;
   box-sizing: border-box;
-  font-family: 'Pretendard', sans-serif;
+  font-family: "Pretendard", sans-serif;
 }
 
 .project-edit-list {
@@ -536,7 +557,7 @@
   padding: 0 16px;
   min-width: 140px;
   box-sizing: border-box;
-  font-family: 'Pretendard', sans-serif;
+  font-family: "Pretendard", sans-serif;
 }
 .proj-edit-date {
   width: 180px;
@@ -547,9 +568,13 @@
   border-radius: 10px;
   padding: 0 16px;
   box-sizing: border-box;
-  font-family: 'Pretendard', sans-serif;
+  font-family: "Pretendard", sans-serif;
 }
-.proj-edit-sep { font-size: 16px; color: #aaa; flex-shrink: 0; }
+.proj-edit-sep {
+  font-size: 16px;
+  color: #aaa;
+  flex-shrink: 0;
+}
 
 .proj-remove-btn {
   width: 32px;
@@ -561,11 +586,18 @@
   font-size: 18px;
   cursor: pointer;
   flex-shrink: 0;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
-.proj-remove-btn:hover { background: #ffe0d0; color: #e05a20; }
+.proj-remove-btn:hover {
+  background: #ffe0d0;
+  color: #e05a20;
+}
 
-.manual-desc-wrap { position: relative; }
+.manual-desc-wrap {
+  position: relative;
+}
 .manual-desc-input {
   width: 100%;
   min-height: 72px;
@@ -576,7 +608,7 @@
   border-radius: 10px;
   padding: 14px 16px 28px;
   box-sizing: border-box;
-  font-family: 'Pretendard', sans-serif;
+  font-family: "Pretendard", sans-serif;
   color: #333;
 }
 .char-count {
@@ -590,20 +622,25 @@
 .proj-add-btn {
   width: 100%;
   height: 52px;
-  border: 2px dashed #FE9A57;
+  border: 2px dashed #fe9a57;
   border-radius: 10px;
   background: transparent;
-  color: #FE9A57;
+  color: #fe9a57;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  font-family: 'Pretendard', sans-serif;
+  font-family: "Pretendard", sans-serif;
   transition: background 0.15s;
 }
-.proj-add-btn:hover { background: #fff5ee; }
+.proj-add-btn:hover {
+  background: #fff5ee;
+}
 
 @media (max-width: 1060px) {
-  .profile-main-card { width: 100%; min-width: unset; }
+  .profile-main-card {
+    width: 100%;
+    min-width: unset;
+  }
 }
 
 @media (max-width: 768px) {

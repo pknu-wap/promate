@@ -61,24 +61,26 @@ function FindTeamPage() {
         if (response.data && response.data.isSuccess) {
           const { content, pageInfo } = response.data.data;
 
-          const mappedData = content.map((item) => {
-            let mappedStatus = null;
-            if (item.myApplyStatus === "PENDING") mappedStatus = "reviewing";
-            else if (item.myApplyStatus === "ACCEPTED") mappedStatus = "accepted";
-            else if (item.myApplyStatus === "REJECTED") mappedStatus = "rejected";
+          const mappedData = content
+            .filter((item) => item.status === "RECRUITING")
+            .map((item) => {
+              let mappedStatus = null;
+              if (item.myApplyStatus === "PENDING") mappedStatus = "reviewing";
+              else if (item.myApplyStatus === "ACCEPTED") mappedStatus = "accepted";
+              else if (item.myApplyStatus === "REJECTED") mappedStatus = "rejected";
 
-            return {
-              id: item.recruitmentId,
-              title: item.title,
-              summary: item.description || "",
-              capacity: item.maxMember,
-              category: item.category,
-              bookmarked: false,
-              applied: item.myApplyStatus !== null,
-              applyStatus: mappedStatus,
-              status: item.status,
-            };
-          });
+              return {
+                id: item.recruitmentId,
+                title: item.title,
+                summary: item.description || "",
+                capacity: item.maxMember,
+                category: item.category,
+                bookmarked: false,
+                applied: item.myApplyStatus !== null,
+                applyStatus: mappedStatus,
+                status: item.status,
+              };
+            });
 
           setTeamPosts(mappedData);
           setTotalPages(pageInfo.totalPages === 0 ? 1 : pageInfo.totalPages);
@@ -188,10 +190,6 @@ function FindTeamPage() {
               isDisabled = true;
             } else if (team.applied) {
               buttonText = "심사중";
-              buttonColor = "#D9D9D9";
-              isDisabled = true;
-            } else if (team.status && team.status !== "RECRUITING") {
-              buttonText = "모집완료";
               buttonColor = "#D9D9D9";
               isDisabled = true;
             }

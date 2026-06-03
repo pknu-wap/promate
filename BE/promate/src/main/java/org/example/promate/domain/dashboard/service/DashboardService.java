@@ -129,6 +129,7 @@ public class DashboardService {
                 .projectTitle(task.getProject().getTitle())
                 .title(task.getTitle())
                 .dueDate(task.getDueDate())
+                .taskStatus(task.getStatus())
                 .build();
     }
 

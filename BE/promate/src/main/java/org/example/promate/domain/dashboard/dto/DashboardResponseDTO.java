@@ -2,6 +2,7 @@ package org.example.promate.domain.dashboard.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.example.promate.domain.workspace.enums.TaskStatus;
 
 import java.time.LocalDate;
 
@@ -24,6 +25,7 @@ public class DashboardResponseDTO {
         private String projectTitle;
         private String title;
         private LocalDate dueDate;
+        private TaskStatus taskStatus;
     }
 
     @Getter

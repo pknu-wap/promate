@@ -19,14 +19,14 @@
 .team-page-grid {
   display: grid;
   grid-template-columns: minmax(280px, 430px) minmax(360px, 1fr) minmax(260px, 320px);
-  grid-template-rows: 86px 58px 58px auto minmax(190px, 1fr);
+  grid-template-rows: 86px 58px minmax(58px, auto) auto minmax(190px, 1fr);
   gap: 10px 16px;
   width: 100%;
   max-width: 1360px;
 }
 
 .team-page-grid.team-task-expanded {
-  grid-template-rows: 86px 58px 340px auto minmax(190px, 1fr);
+  grid-template-rows: 86px 58px minmax(340px, auto) auto minmax(190px, 1fr);
 }
 
 .team-card {

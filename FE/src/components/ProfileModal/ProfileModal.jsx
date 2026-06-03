@@ -71,10 +71,13 @@ function ProfileModal({ isOpen, onClose, user, position }) {
   const projects = user?.projects ?? [];
 
   const handleProjectClick = (project) => {
-    const targetId = project.recruitmentId || project.id || project.projectId;
-    if (targetId) {
+    const targetId = project.recruitmentId || project.postId;
+    
+    if (targetId && targetId !== "null") {
       onClose();
       navigate(`/readme/${targetId}`, { state: project });
+    } else {
+      alert("해당 프로젝트는 연동된 모집글 상세 페이지가 없습니다.");
     }
   };
 

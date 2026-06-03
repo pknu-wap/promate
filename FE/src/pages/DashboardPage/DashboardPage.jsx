@@ -64,7 +64,7 @@ function DashboardPage() {
           newDashboardData.projects = (projectsRes.data.data || []).map((item) => {
             return {
               id: item.projectId,
-              title: item.title,
+              title: `[${item.title}]`,
               dueDate: formatDate(item.endDate),
               currentStep: 0,
               totalStep: 0,

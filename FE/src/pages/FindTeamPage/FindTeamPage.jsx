@@ -116,7 +116,6 @@ function FindTeamPage() {
     const token = localStorage.getItem('accessToken');
     if (!token || token === 'null' || token === 'undefined') {
       alert('로그인이 필요한 서비스입니다.');
-      navigate(-1);
       return;
     }
 

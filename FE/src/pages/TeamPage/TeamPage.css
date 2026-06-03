@@ -133,7 +133,7 @@
   flex-direction: column;
   gap: 2px;
   margin-left: 10px;
-
+  min-width: 0;
 }
 
 .team-task-item h3 {
@@ -142,6 +142,9 @@
   font-size: 15px;
   font-weight: 600;
   color: #000000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .team-task-item span {
@@ -343,6 +346,13 @@
   cursor: pointer;
   border-radius: 8px;
   transition: background-color 0.18s ease;
+  min-width: 0;
+  gap: 12px;
+}
+
+.team-board-post h3 {
+  flex: 1;
+  text-align: left;
 }
 
 .team-board-post:hover,

@@ -9,6 +9,7 @@ import './ProfilePage.css';
 const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [editName, setEditName] = useState('');
   const [editingProject, setEditingProject] = useState(null);
   const [profileImageUrl, setProfileImageUrl] = useState(null);
   const fileInputRef = useRef(null);
@@ -179,6 +180,20 @@ const ProfilePage = () => {
     }
   };
 
+  const handleEditComplete = async () => {
+    setIsEditing(false);
+    if (editName.trim() && editName !== userInfo.name) {
+      try {
+        const res = await apiClient.patch('/user/me', { name: editName.trim() });
+        const updatedName = res.data?.data?.name || editName.trim();
+        setUserInfo((prev) => ({ ...prev, name: updatedName }));
+      } catch (error) {
+        console.error('이름 수정 실패:', error);
+        alert('이름 수정에 실패했습니다.');
+      }
+    }
+  };
+
   return (
     <div className="page-wrapper">
       <h1 className="page-title">
@@ -210,7 +225,16 @@ const ProfilePage = () => {
               onChange={handleImageChange}
             />
             <div className="profile-name-block">
-              <h2 className="user-name-text">{userInfo.name}</h2>
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  className="edit-name-input"
+                />
+              ) : (
+                <h2 className="user-name-text">{userInfo.name}</h2>
+              )}
             </div>
           </div>
           <div className="user-task-display">
@@ -286,10 +310,10 @@ const ProfilePage = () => {
           {isEditing ? (
             <>
               <button className="btn-edit-cancel" onClick={() => setIsEditing(false)}>취소</button>
-              <button className="btn-edit-complete" onClick={() => setIsEditing(false)}>완료</button>
+              <button className="btn-edit-complete" onClick={handleEditComplete}>완료</button>
             </>
           ) : (
-            <MainButton size="md" onClick={() => setIsEditing(true)}>수정하기</MainButton>
+            <MainButton size="md" onClick={() => { setIsEditing(true); setEditName(userInfo.name); }}>수정하기</MainButton>
           )}
         </div>
       </section>

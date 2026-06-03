@@ -14,7 +14,22 @@ function PostDetailModal({
   if (!isOpen || !post) return null;
 
   return (
-    <div className="team-detail-overlay" role="presentation" onMouseDown={onClose}>
+    <div 
+      className="team-detail-overlay" 
+      role="presentation" 
+      onMouseDown={onClose}
+      style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        zIndex: 1000
+      }}
+    >
       <article
         className="team-detail-container"
         role="dialog"

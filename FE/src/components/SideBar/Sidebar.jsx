@@ -18,7 +18,7 @@ function Sidebar({ isOpen, onClose }) {
   const navigate = useNavigate();
 
   const handleNewProjectClick = () => {
-    navigate('/teammaking');
+    navigate('/teamCreate');
     if (onClose) onClose();
   };
 
@@ -36,7 +36,7 @@ function Sidebar({ isOpen, onClose }) {
             onClick={onClose}
           />
           <SidebarItem
-            to="/find-team"
+            to="/findTeam"
             label="팀 찾기"
             icon={teamFindIcon}
             activeIcon={teamFindOrangeIcon}

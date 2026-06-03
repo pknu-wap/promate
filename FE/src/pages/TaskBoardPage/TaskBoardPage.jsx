@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useSearchParams, useLocation } from 'react-router-dom';
-import { getProjectTasks, updateTaskStatus, deleteProjectTask, getProjectMembers, createProjectTask, getTaskDetail } from '../../api/TeamPage';
+import { getProjectTasks, updateTaskStatus, deleteProjectTask, getProjectMembers, createProjectTask, getTaskDetail } from '../../api/TeamPage.js';
 import NewTaskModal from '../../components/NewTaskModal/NewTaskModal.jsx';
 import TaskDetailModal from '../TeamPage/components/TaskDetailModal.jsx';
 import writeIcon from '../../assets/icons/writeIcon.svg';
-import './TaskBoard.css';
+import './TaskBoardPage.css';
 
 const taskTabs = [
   { key: 'all', label: '전체' },
@@ -12,7 +12,7 @@ const taskTabs = [
   { key: 'DONE', label: '완료된 태스크' }
 ];
 
-function TaskBoard() {
+function TaskBoardPage() {
   const [searchParams] = useSearchParams();
   const location = useLocation();
   const projectId = Number(searchParams.get('projectId'));
@@ -257,4 +257,4 @@ function TaskBoard() {
   );
 }
 
-export default TaskBoard;
+export default TaskBoardPage;

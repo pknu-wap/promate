@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ApplicantBox from '../../components/ApplicantBox/ApplicantBox';
 import Pagination from '../../components/Pagination/Pagination';
 import { getMyRecruitments } from '../../api/RecruitApi';
-import './Applicant.css';
+import './ApplicantPage.css';
 
 const CATEGORY_LABEL = {
   PROJECT: '과제/팀플',

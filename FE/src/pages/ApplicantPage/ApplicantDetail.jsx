@@ -9,7 +9,7 @@ import {
   getApplicationDetail,
   updateApplicationStatus,
 } from '../../api/RecruitApi';
-import './Applicant.css';
+import './ApplicantPage.css';
 
 const tabs = [
   { key: 'PENDING', label: '현재 지원자' },

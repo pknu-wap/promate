@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { requestKakaoLogin } from "../../api/Auth/kakaoAuthApi.js";
 import { useAuthStore } from "../../stores/useAuthStore.js";
 
-export default function AuthCallback() {
+export default function AuthCallbackPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const isRequesting = useRef(false);

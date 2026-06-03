@@ -7,7 +7,7 @@ import ProjectNameField from "./components/ProjectNameField.jsx";
 import ProjectPeriodField from "./components/ProjectPeriodField.jsx";
 import apiClient from "../../api/apiClient.js";
 import Tag from "../../components/Tag/Tag.jsx";
-import "./TeammakingPage.css";
+import "./TeamCreatePage.css";
 
 const domainOptions = [
   { id: "PROJECT", label: "조별과제" },
@@ -24,7 +24,7 @@ const getTodayValue = () => {
   return new Date(today.getTime() - timezoneOffset).toISOString().slice(0, 10);
 };
 
-function TeammakingPage() {
+function TeamCreatePage() {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -148,4 +148,4 @@ function TeammakingPage() {
   );
 }
 
-export default TeammakingPage;
+export default TeamCreatePage;

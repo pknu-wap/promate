@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useLocation, useSearchParams, useNavigate } from 'react-router-dom';
 import checkIcon from '../../assets/icons/checkIcon.svg';
-import './MemberReview.css';
-import apiClient from '../../api/apiClient';
+import './MemberReviewPage.css';
+import apiClient from '../../api/apiClient.js';
 import Tag from "../../components/Tag/Tag.jsx";
 
 const questions = [

@@ -315,7 +315,7 @@ function ProjectPage() {
                   setSelectedProjectForApply(project);
                   setIsApplyModalOpen(true);
                 } else if (buttonText === '상호평가') {
-                  navigate('/member-review', { state: { projectId: project.projectId || project.id } });
+                  navigate('/memberReview', { state: { projectId: project.projectId || project.id } });
                 } else {
                   handleBoxClick();
                 }

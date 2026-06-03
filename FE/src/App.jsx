@@ -5,17 +5,17 @@ import Sidebar from "./components/SideBar/Sidebar";
 import Header from "./components/Header/Header";
 import ComingSoonPage from "./pages/ComingSoonPage.jsx";
 import LoginPage from "./pages/LoginPage/LoginPage.jsx";
-import AuthCallback from "./pages/AuthCallback/AuthCallback.jsx";
-import TeammakingPage from "./pages/Teammaking/TeammakingPage.jsx";
+import AuthCallbackPage from "./pages/AuthCallbackPage/AuthCallbackPage.jsx";
+import TeamCreatePage from "./pages/TeamCreatePage/TeamCreatePage.jsx";
 import DashboardPage from "./pages/DashboardPage/DashboardPage.jsx";
-import ApplicantPage from "./pages/Applicant/ApplicantList.jsx";
-import ApplicantDetail from "./pages/Applicant/ApplicantDetail.jsx";
+import ApplicantPage from "./pages/ApplicantPage/ApplicantList.jsx";
+import ApplicantDetail from "./pages/ApplicantPage/ApplicantDetail.jsx";
 import ProfilePage from "./pages/ProfilePage/ProfilePage.jsx";
-import FindTeamPage from "./pages/FindTeam/FindTeamPage.jsx";
+import FindTeamPage from "./pages/FindTeamPage/FindTeamPage.jsx";
 import ProjectPage from "./pages/ProjectPage/ProjectPage.jsx";
 import TeamPage from "./pages/TeamPage/TeamPage.jsx";
-import TaskBoardPage from "./pages/TaskBoard/TaskBoard.jsx";
-import MemberReviewPage from "./pages/MemberReview/MemberReview.jsx";
+import TaskBoardPage from "./pages/TaskBoardPage/TaskBoardPage.jsx";
+import MemberReviewPage from "./pages/MemberReviewPage/MemberReviewPage.jsx";
 import ProjectReadMePage from "./pages/ProjectReadMePage/ProjectReadMePage.jsx";
 
 function AppLayout({ isMenuOpen, toggleMenu, closeMenu }) {
@@ -49,7 +49,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/auth/kakao/callback" element={<AuthCallback />} />
+        <Route path="/auth/kakao/callback" element={<AuthCallbackPage />} />
 
         <Route
           element={
@@ -62,16 +62,16 @@ function App() {
         >
           <Route path="/" element={<DashboardPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/teammaking" element={<TeammakingPage />} />
+          <Route path="/teamCreate" element={<TeamCreatePage />} />
           <Route path="/readme/:postId" element={<ProjectReadMePage />} />
           <Route path="/applicant" element={<ApplicantPage/>} />
           <Route path="/applicant/detail" element={<ApplicantDetail />} />
           <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/find-team" element={<FindTeamPage />} />
+          <Route path="/findTeam" element={<FindTeamPage />} />
           <Route path="/project" element={<ProjectPage />} />
           <Route path="/project/:projectId" element={<TeamPage />} />
           <Route path="/task-board" element={<TaskBoardPage />} />
-          <Route path="/member-review" element={<MemberReviewPage />} />
+          <Route path="/memberReview" element={<MemberReviewPage />} />
           <Route path="*" element={<ComingSoonPage />} />
         </Route>
       </Routes>

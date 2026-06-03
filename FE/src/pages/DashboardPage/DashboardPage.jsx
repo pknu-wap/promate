@@ -75,9 +75,9 @@ function DashboardPage() {
         if (urgentTasksRes) {
           newDashboardData.urgentTasks = (urgentTasksRes.data.data || []).map((task) => ({
             id: task.taskId,
-            projectId: task.projectId, // 나중에 태스크 클릭 시 해당 프로젝트로 이동하기 위해 추가
+            projectId: task.projectId,
             projectTitle: task.projectTitle,
-            title: `${task.projectTitle} - ${task.title}`,
+            title: `${task.title} - ${task.projectTitle}`,
             dueDate: formatDate(task.dueDate),
             taskStatus: task.taskStatus,
           }));
@@ -88,7 +88,7 @@ function DashboardPage() {
             id: task.taskId,
             projectId: task.projectId,
             projectTitle: task.projectTitle,
-            title: `${task.projectTitle} - ${task.title}`,
+            title: `${task.title} - ${task.projectTitle}`,
             dueDate: formatDate(task.dueDate),
             taskStatus: task.taskStatus,
           }));

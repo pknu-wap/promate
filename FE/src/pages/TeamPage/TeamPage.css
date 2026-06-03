@@ -166,7 +166,7 @@
 }
 
 .team-task-board .team-more-button {
-  margin: auto auto 0;
+  margin: 14px auto 0;
 }
 
 .team-metric-card {
@@ -392,7 +392,7 @@
 }
 
 .team-board-card .team-more-button {
-  margin: auto auto 0;
+  margin: 14px auto 0;
 }
 
 .team-board-post {
@@ -414,7 +414,7 @@
 
 .team-more-button {
   align-self: center;
-  margin: auto auto 0;
+  margin: 14px auto 0;
   min-width: 58px;
   height: 18px;
   padding:  4px;

@@ -347,12 +347,28 @@
   border-radius: 8px;
   transition: background-color 0.18s ease;
   min-width: 0;
+  width: 100%;
   gap: 12px;
 }
 
 .team-board-post h3 {
-  flex: 1;
+  flex: 1 1 0;
+  width: 0;
+  min-width: 0;
+  padding: 5px 0 5px 10px;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #000000;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   text-align: left;
+}
+
+.team-board-post time {
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .team-board-post:hover,
@@ -849,6 +865,23 @@
   
   .team-board-list {
     margin: 0;
+  }
+
+   .team-board-post {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .team-board-post h3 {
+    flex: 1 1 0;
+    width: 0;
+    min-width: 0;
+    padding-left: 0;
+  }
+
+  .team-board-post time {
+    flex-shrink: 0;
+    margin-left: 8px;
   }
 
   .team-post-modal-backdrop {

@@ -1,10 +1,9 @@
 .applicant-box {
   box-sizing: border-box;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
-  align-items: center;
-  gap: 20px;
+  align-items: stretch;
   padding: 14px 20px;
   width: 100%;
   max-width: 100%;
@@ -23,12 +22,12 @@
 .applicant-box-left {
   display: flex;
   flex-direction: row;
+  width: 100%;
   max-width: 100%;
   align-items: flex-start;
   gap: 16px;
   margin-top: 1px;
   box-sizing: border-box;
-  flex: 1;
   min-width: 0;
   overflow: hidden;
 }
@@ -42,6 +41,8 @@
   flex: 1 1 0;
   width: 0;
   min-width: 0;
+  padding-right: 160px;
+  box-sizing: border-box;
 }
 
 .applicant-box-title {
@@ -75,6 +76,7 @@
   align-items: flex-end;
   gap: 6px;
   flex-shrink: 0;
+  margin-top: -25px;
 }
 
 .applicant-box-capacity {
@@ -147,15 +149,16 @@
     padding: 12px 14px;
     width: 100%;
     max-width: 100%;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
   }
 
   .applicant-box-left {
     gap: 13px;
     min-width: 0;
     max-width: 100%;
+  }
+
+  .applicant-box-text {
+    padding-right: 0;
   }
 
   .applicant-box-right {

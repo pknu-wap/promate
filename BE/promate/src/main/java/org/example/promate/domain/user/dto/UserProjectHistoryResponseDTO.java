@@ -28,22 +28,9 @@ public class UserProjectHistoryResponseDTO {
                 .startDate(history.getStartDate())
                 .endDate(history.getEndDate())
                 .description(history.getDescription())
-                .status(calculateStatus(history.getStartDate(), history.getEndDate()))
+                .status(history.getStatus())
                 .editable(true)
                 .build();
     }
 
-    private static ProjectStatus calculateStatus(LocalDate startDate, LocalDate endDate) {
-        LocalDate today = LocalDate.now();
-
-        if (startDate != null && startDate.isAfter(today)) {
-            return ProjectStatus.PREPARING;
-        }
-
-        if (endDate != null && endDate.isBefore(today)) {
-            return ProjectStatus.COMPLETED;
-        }
-
-        return ProjectStatus.ACTIVE;
-    }
 }

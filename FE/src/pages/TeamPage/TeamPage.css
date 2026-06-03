@@ -217,61 +217,6 @@
   min-height: 0;
 }
 
-.team-calendar .calendar-section {
-  min-height: 300px;
-  padding: 22px 34px 24px;
-  border-radius: 8px;
-}
-
-.team-calendar .calendar-title {
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.team-calendar .nav-date {
-  font-size: 14px;
-}
-
-.team-calendar .calendar-body {
-  padding: 12px 0 0;
-}
-
-.team-calendar .calendar-grid {
-  grid-auto-rows: minmax(44px, 1fr);
-}
-
-.team-calendar .weekday {
-  font-size: 10px;
-}
-
-.team-calendar .calendar-cell {
-  min-height: 44px;
-}
-
-.team-calendar .day-number {
-  font-size: 11px;
-}
-
-.team-calendar .calendar-sidebar {
-  width: 132px;
-}
-
-.team-calendar .calendar-todo-list {
-  padding: 0;
-}
-
-.team-calendar .todo-item {
-  min-height: 24px;
-}
-
-.team-calendar .todo-text {
-  font-size: 11px;
-}
-
-.team-calendar .add-event-btn {
-  font-size: 12px;
-}
-
 .team-members-card,
 .team-board-card {
   grid-column: 3;
@@ -899,14 +844,6 @@
   
   .team-board-list {
     margin: 0;
-  }
-  
-  .team-calendar .calendar-body {
-    flex-direction: column;
-  }
-
-  .team-calendar .calendar-sidebar {
-    width: 100%;
   }
 
   .team-post-modal-backdrop {

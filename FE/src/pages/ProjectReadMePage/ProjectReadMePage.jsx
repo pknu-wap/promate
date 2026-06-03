@@ -85,6 +85,12 @@ function ProjectReadMePage() {
   };
 
   const handleApplyClick = () => {
+    const token = localStorage.getItem('accessToken');
+    if (!token || token === 'null' || token === 'undefined') {
+      alert('로그인이 필요한 서비스입니다.');
+      return;
+    }
+
     setIsApplyModalOpen(true);
   };
 

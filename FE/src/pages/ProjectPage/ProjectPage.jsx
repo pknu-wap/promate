@@ -312,6 +312,12 @@ function ProjectPage() {
               const handleButtonClick = () => {
                 if (isButtonDisabled) return;
                 if (buttonText === '지원하기') {
+                  const token = localStorage.getItem('accessToken');
+                  if (!token || token === 'null' || token === 'undefined') {
+                    alert('로그인이 필요한 서비스입니다.');
+                    return;
+                  }
+
                   setSelectedProjectForApply(project);
                   setIsApplyModalOpen(true);
                 } else if (buttonText === '상호평가') {

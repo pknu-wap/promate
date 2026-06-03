@@ -15,6 +15,7 @@ import org.example.promate.domain.workspace.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -59,8 +60,10 @@ public class UserService {
             Long userId,
             UserProjectHistoryRequestDTO request
     ) {
+        validateProjectHistoryDate(request);
+
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND)); // 커스텀에러 추후 추가 예정
+                .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
 
         UserProjectHistory history = UserProjectHistory.builder()
                 .user(user)
@@ -82,8 +85,10 @@ public class UserService {
             Long historyId,
             UserProjectHistoryRequestDTO request
     ) {
+        validateProjectHistoryDate(request);
+
         UserProjectHistory history = userProjectHistoryRepository.findByIdAndUserId(historyId, userId)
-                .orElseThrow(() -> new UserException(UserErrorCode.PROJECT_HISTORY_NOT_FOUND)); // 커스텀에러 추후 추가 예정
+                .orElseThrow(() -> new UserException(UserErrorCode.PROJECT_HISTORY_NOT_FOUND));
 
         history.update(
                 request.getProjectName(),
@@ -99,7 +104,7 @@ public class UserService {
     @Transactional
     public void deleteProjectHistory(Long userId, Long historyId) {
         UserProjectHistory history = userProjectHistoryRepository.findByIdAndUserId(historyId, userId)
-                .orElseThrow(() -> new UserException(UserErrorCode.PROJECT_HISTORY_NOT_FOUND)); // 커스텀에러 추후 추가 예정
+                .orElseThrow(() -> new UserException(UserErrorCode.PROJECT_HISTORY_NOT_FOUND)); 
 
         userProjectHistoryRepository.delete(history);
     }
@@ -133,6 +138,15 @@ public class UserService {
                             .build();
                 })
                 .toList();
+    }
+
+    private void validateProjectHistoryDate(UserProjectHistoryRequestDTO request) {
+        LocalDate startDate = request.getStartDate();
+        LocalDate endDate = request.getEndDate();
+
+        if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
+            throw new UserException(UserErrorCode.INVALID_PROJECT_HISTORY_DATE);
+        }
     }
 
 

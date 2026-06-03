@@ -224,7 +224,7 @@
 }
 
 .team-members-card {
-  grid-row: 4;
+  grid-row: 5;
   align-self: start;
   min-height: 125px;
   height: auto;
@@ -232,7 +232,7 @@
 }
 
 .team-board-card {
-  grid-row: 5;
+  grid-row: 4;
   align-self: start;
   min-height: 190px;
   padding: 22px 32px 12px;

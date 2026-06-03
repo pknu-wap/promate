@@ -46,10 +46,11 @@ public class DashboardService {
         LocalDate sevenDaysLater = now.plusDays(7);
 
         return taskRepository
-                .findByMemberUserIdAndDueDateBetweenAndIsDeletedFalse(
+                .findByMemberUserIdAndDueDateBetweenAndIsDeletedFalseAndStatusNot(
                         userId,
                         now,
-                        sevenDaysLater
+                        sevenDaysLater,
+                        TaskStatus.DONE
                 )
                 .stream()
                 .map(this::toTaskDTO)

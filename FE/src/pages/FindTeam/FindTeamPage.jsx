@@ -76,6 +76,7 @@ function FindTeamPage() {
               bookmarked: false,
               applied: item.myApplyStatus !== null,
               applyStatus: mappedStatus,
+              status: item.status,
             };
           });
 
@@ -187,6 +188,10 @@ function FindTeamPage() {
               isDisabled = true;
             } else if (team.applied) {
               buttonText = "심사중";
+              buttonColor = "#D9D9D9";
+              isDisabled = true;
+            } else if (team.status && team.status !== "RECRUITING") {
+              buttonText = "모집완료";
               buttonColor = "#D9D9D9";
               isDisabled = true;
             }

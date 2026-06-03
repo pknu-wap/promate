@@ -2,6 +2,7 @@ package org.example.promate.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.promate.domain.project.entity.Project;
+import org.example.promate.domain.project.enums.ProjectStatus;
 import org.example.promate.domain.project.repository.MemberRepository;
 import org.example.promate.domain.user.dto.*;
 import org.example.promate.domain.user.entity.User;
@@ -69,6 +70,7 @@ public class UserService {
                 .user(user)
                 .projectName(request.getProjectName())
                 .role(request.getRole())
+                .status(calculateStatus(request.getStartDate(), request.getEndDate()))
                 .startDate(request.getStartDate())
                 .endDate(request.getEndDate())
                 .description(request.getDescription())
@@ -95,7 +97,8 @@ public class UserService {
                 request.getRole(),
                 request.getStartDate(),
                 request.getEndDate(),
-                request.getDescription()
+                request.getDescription(),
+                calculateStatus(request.getStartDate(), request.getEndDate())
         );
 
         return UserProjectHistoryResponseDTO.from(history);
@@ -147,6 +150,20 @@ public class UserService {
         if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
             throw new UserException(UserErrorCode.INVALID_PROJECT_HISTORY_DATE);
         }
+    }
+
+    private static ProjectStatus calculateStatus(LocalDate startDate, LocalDate endDate) {
+        LocalDate today = LocalDate.now();
+
+        if (startDate != null && startDate.isAfter(today)) {
+            return ProjectStatus.PREPARING;
+        }
+
+        if (endDate != null && endDate.isBefore(today)) {
+            return ProjectStatus.COMPLETED;
+        }
+
+        return ProjectStatus.ACTIVE;
     }
 
 

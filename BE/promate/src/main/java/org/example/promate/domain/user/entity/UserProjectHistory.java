@@ -26,6 +26,7 @@ public class UserProjectHistory extends BaseEntity {
     @Column(name="role", nullable = true)
     private String role;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = true)
     private ProjectStatus status;
 
@@ -42,11 +43,13 @@ public class UserProjectHistory extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public void update(String projectName, String role, LocalDate startDate, LocalDate endDate, String description) {
+    public void update(String projectName, String role, LocalDate startDate,
+                       LocalDate endDate, String description, ProjectStatus status) {
         this.projectName = projectName;
         this.role = role;
         this.startDate = startDate;
         this.endDate = endDate;
         this.description = description;
+        this.status = status;
     }
 }

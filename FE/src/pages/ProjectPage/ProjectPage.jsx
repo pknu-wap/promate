@@ -27,7 +27,7 @@ function ProjectPage() {
   const [applyJob, setApplyJob] = useState('');
   const [applyMotivation, setApplyMotivation] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const ITEMS_PER_PAGE = 10;
+  const ITEMS_PER_PAGE = 5;
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');

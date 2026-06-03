@@ -13,7 +13,7 @@ const CATEGORY_LABEL = {
   ETC: '기타',
 };
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 5;
 
 const ApplicantList = () => {
   const navigate = useNavigate();

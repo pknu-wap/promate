@@ -26,7 +26,7 @@ function FindTeamPage() {
   const [motivation, setMotivation] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const ITEMS_PER_PAGE = 10;
+  const ITEMS_PER_PAGE = 5;
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -46,6 +46,7 @@ function FindTeamPage() {
           page: currentPage - 1,
           size: ITEMS_PER_PAGE,
           sort: "createdAt,desc",
+          status: "RECRUITING",
         };
 
         if (selectedCategory) {

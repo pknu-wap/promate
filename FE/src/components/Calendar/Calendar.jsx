@@ -240,6 +240,7 @@ function Calendar({ showAddButton = true, projectId, projectTitle: fallbackProje
                   } ${
                     hasSpanningEventStart ? 'has-spanning-event-start' : ''
                   }`}
+                style={{ zIndex: 100 - index }}
                 >
                   {day && <span className="day-number">{day}</span>}
 

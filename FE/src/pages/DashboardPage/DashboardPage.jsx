@@ -214,7 +214,8 @@ function DashboardPage() {
             {visibleStatusCount < dashboardData.projectStatuses.length ? (
               <button 
                 className="more-btn" 
-                onClick={handleShowMoreStatus}
+                onClick={handleShowMoreStatus} 
+                style={{ alignSelf: 'center', marginTop: '16px' }}
               >
                 더보기
                 <img src={moreIcon} alt="moreIcon" />
@@ -222,7 +223,8 @@ function DashboardPage() {
             ) : dashboardData.projectStatuses.length > 3 ? (
               <button 
                 className="more-btn" 
-                onClick={() => setVisibleStatusCount(3)}
+                onClick={() => setVisibleStatusCount(3)} 
+                style={{ alignSelf: 'center', marginTop: '16px' }}
               >
                 접기
                 <img src={moreIcon} alt="moreIcon" style={{ transform: 'rotate(180deg)' }} />

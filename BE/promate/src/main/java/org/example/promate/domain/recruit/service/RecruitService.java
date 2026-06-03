@@ -392,7 +392,7 @@ public class RecruitService {
                                 .projectTitle(history.getProjectName())
                                 .role(history.getRole())
                                 .position(null)
-                                .projectStatus(null)
+                                .projectStatus(history.getStatus())
                                 .startDate(history.getStartDate())
                                 .endDate(history.getEndDate())
                                 .description(history.getDescription())

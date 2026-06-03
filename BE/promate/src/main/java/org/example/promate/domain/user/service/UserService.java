@@ -104,7 +104,7 @@ public class UserService {
     @Transactional
     public void deleteProjectHistory(Long userId, Long historyId) {
         UserProjectHistory history = userProjectHistoryRepository.findByIdAndUserId(historyId, userId)
-                .orElseThrow(() -> new UserException(UserErrorCode.PROJECT_HISTORY_NOT_FOUND)); 
+                .orElseThrow(() -> new UserException(UserErrorCode.PROJECT_HISTORY_NOT_FOUND));
 
         userProjectHistoryRepository.delete(history);
     }

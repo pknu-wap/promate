@@ -61,8 +61,8 @@ function TeamPage() {
   const [isDetailLoading, setIsDetailLoading] = useState(false);
   const [detailError, setDetailError] = useState(null);
 
-  const [isTaskExpanded, setIsTaskExpanded] = useState(false);
-  const [isBoardExpanded, setIsBoardExpanded] = useState(false);
+  const [visibleTaskCount, setVisibleTaskCount] = useState(INITIAL_VISIBLE_COUNT);
+  const [visiblePostCount, setVisiblePostCount] = useState(INITIAL_VISIBLE_COUNT);
   
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -79,10 +79,13 @@ function TeamPage() {
   const completedTasksCount = tasks.filter(task => task.status === 'DONE').length;
   const pendingTasksCount = tasks.filter(task => task.status !== 'DONE').length;
   
-  const visibleTasks = isTaskExpanded ? tasks : tasks.slice(0, INITIAL_VISIBLE_COUNT);
-  const visiblePosts = isBoardExpanded ? boardPosts : boardPosts.slice(0, INITIAL_VISIBLE_COUNT);
+  const visibleTasks = tasks.slice(0, visibleTaskCount);
+  const visiblePosts = boardPosts.slice(0, visiblePostCount);
   const canToggleTasks = tasks.length > INITIAL_VISIBLE_COUNT;
   const canTogglePosts = boardPosts.length > INITIAL_VISIBLE_COUNT;
+
+  const isTaskExpanded = visibleTaskCount >= tasks.length;
+  const isBoardExpanded = visiblePostCount >= boardPosts.length;
 
   const fetchTasks = async () => {
     try {
@@ -416,7 +419,9 @@ const closePostModal = () => {
           {canToggleTasks && (
             <MoreButton
               isExpanded={isTaskExpanded}
-              onClick={() => setIsTaskExpanded((expanded) => !expanded)}
+              onClick={() => isTaskExpanded 
+                ? setVisibleTaskCount(INITIAL_VISIBLE_COUNT) 
+                : setVisibleTaskCount(prev => prev + 3)}
             />
           )}
         </section>
@@ -474,7 +479,9 @@ const closePostModal = () => {
           {canTogglePosts && (
             <MoreButton
               isExpanded={isBoardExpanded}
-              onClick={() => setIsBoardExpanded((expanded) => !expanded)}
+              onClick={() => isBoardExpanded 
+                ? setVisiblePostCount(INITIAL_VISIBLE_COUNT) 
+                : setVisiblePostCount(prev => prev + 3)}
             />
           )}
         </section>

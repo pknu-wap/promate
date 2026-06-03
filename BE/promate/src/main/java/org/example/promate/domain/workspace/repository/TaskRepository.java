@@ -29,10 +29,11 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
 
     // dashboard에서 사용
-    List<Task> findByMemberUserIdAndDueDateBetweenAndIsDeletedFalse(
+    List<Task> findByMemberUserIdAndDueDateBetweenAndIsDeletedFalseAndStatusNot(
             Long userId,
             LocalDate startDate,
-            LocalDate endDate
+            LocalDate endDate,
+            TaskStatus status
     );
 
     List<Task> findByMemberUserIdAndStatusAndIsDeletedFalse(

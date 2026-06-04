@@ -1,3 +1,5 @@
+
+## ✨ 프로젝트 브랜딩
 <p align="center">
   <img src="./promate_logo.svg" alt="PRO:MATE 로고" width="400" />
 </p>

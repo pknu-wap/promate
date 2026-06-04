@@ -23,6 +23,8 @@
 
 ### 🌟 핵심 기능
 * **대시보드 기능**: 프로젝트별 Task 완료 현황과 캘린더를 통해 전체 일정과 상태를 직관적으로 관리
+  <img width="1893" height="857" alt="image" src="https://github.com/user-attachments/assets/c71f6bb6-044a-4e7e-a8ae-9ac470d38209" />
+
 * **프로젝트 생성 및 팀 찾기**: 개발, 공모전, 스터디 등 도메인에 관계없이 프로젝트를 생성하고 지원
   <img width="1910" height="857" alt="화면 캡처 2026-06-04 155602" src="https://github.com/user-attachments/assets/52b4524d-d698-4531-80ae-79f03fa07cbf" />
 

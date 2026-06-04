@@ -75,7 +75,7 @@ function FindTeamPage() {
                 summary: item.description || "",
                 capacity: item.maxMember,
                 category: item.category,
-                bookmarked: false,
+                bookmarked: item.isBookmarked || false,
                 applied: item.myApplyStatus !== null,
                 applyStatus: mappedStatus,
                 status: item.status,

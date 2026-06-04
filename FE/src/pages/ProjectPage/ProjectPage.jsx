@@ -61,7 +61,7 @@ function ProjectPage() {
               applied: true,
               applyStatus: mappedStatus,
               status: 'active',
-              bookmarked: false,
+              bookmarked: item.isBookmarked || false,
             };
           });
           setAppliedProjects(fetchedData);
@@ -166,7 +166,7 @@ function ProjectPage() {
               summary: item.description,
               status: 'completed',
               applyStatus: 'accepted',
-              bookmarked: false,
+              bookmarked: item.isBookmarked || false,
               isEvaluated,
             };
           }));

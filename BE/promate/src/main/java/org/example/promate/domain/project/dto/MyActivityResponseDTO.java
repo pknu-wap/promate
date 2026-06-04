@@ -14,4 +14,5 @@ public class MyActivityResponseDTO {
     private String description; // 프로젝트 설명
     private LocalDate startDate;
     private LocalDate endDate;
+    private boolean isBookmarked;
 }

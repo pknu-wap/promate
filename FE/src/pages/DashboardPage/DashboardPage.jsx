@@ -24,12 +24,20 @@ function DashboardPage() {
   });
 
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [visibleStatusCount, setVisibleStatusCount] = useState(3);
   const navigate = useNavigate();
 
   const formatDate = (date) => date?.replace(/-/g, '.') ?? '';
 
   useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    if (!token || token === 'null' || token === 'undefined' || token.trim() === '') {
+      setIsLoggedIn(false);
+      setIsLoading(false);
+      return;
+    }
+
     const fetchDashboardData = async () => {
       try {
         setIsLoading(true);
@@ -40,6 +48,20 @@ function DashboardPage() {
           getDashboardCompletedTasks(),
           getDashboardProjectStatuses(),
         ]);
+
+        const hasAuthError = results.some((res) => {
+          if (res.status === 'rejected') {
+            const status = res.reason?.response?.status;
+            return status === 401 || status === 403;
+          }
+          return false;
+        });
+
+        if (hasAuthError) {
+          localStorage.removeItem('accessToken');
+          setIsLoggedIn(false);
+          return;
+        }
 
         const newDashboardData = {
           projects: [],
@@ -171,8 +193,8 @@ function DashboardPage() {
               items={items}
               showDot={showDot}
               isError={isError}
-            isAllEmpty={isAllEmpty}
-            onItemClick={(item) => navigate(`/project/${item.projectId || item.id}`, { state: { projectTitle: item.projectTitle || item.title, dueDate: item.dueDate } })}
+              isAllEmpty={isAllEmpty}
+              onItemClick={(item) => navigate(`/project/${item.projectId || item.id}`, { state: { projectTitle: item.projectTitle || item.title, dueDate: item.dueDate } })}
             />
           ))}
         </div>
@@ -187,10 +209,12 @@ function DashboardPage() {
             </div>
 
             <div className="status-list">
-            {fetchErrors.projectStatuses ? (
-              <div className="empty-state error-state" style={{ color: '#E53E3E' }}>
-                프로젝트 현황을 불러오는 데 실패했습니다.
+            {!isLoggedIn ? (
+              <div className="empty-state" style={{ color: '#888', fontSize: '14px', textAlign: 'center', lineHeight: 1.5 }}>
+                로그인 후<br />대시보드를 이용할 수 있습니다.
               </div>
+            ) : fetchErrors.projectStatuses ? (
+              <div className="empty-state error-state" style={{ color: '#E53E3E' }}>프로젝트 현황을 불러오는 데 실패했습니다.</div>
             ) : dashboardData.projectStatuses.length === 0 ? (
                 <div className="empty-state">
                   진행 중인 프로젝트가 없습니다.

@@ -14,12 +14,20 @@ function Calendar({ showAddButton = true, projectId, projectTitle: fallbackProje
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
 
   useEffect(() => {
     const fetchEvents = async () => {
+      const token = localStorage.getItem('accessToken');
+      if (!token || token === 'null' || token === 'undefined' || token.trim() === '') {
+        setIsLoggedIn(false);
+        return;
+      }
+      setIsLoggedIn(true);
+
       try {
         setHasError(false);
         let response;
@@ -89,6 +97,11 @@ function Calendar({ showAddButton = true, projectId, projectTitle: fallbackProje
   };
 
   const handleOpenModal = () => {
+    const token = localStorage.getItem('accessToken');
+    if (!token || token === 'null' || token === 'undefined' || token.trim() === '') {
+      alert('로그인이 필요한 서비스입니다.');
+      return;
+    }
     setIsModalOpen(true);
   };
 
@@ -173,6 +186,11 @@ function Calendar({ showAddButton = true, projectId, projectTitle: fallbackProje
           {hasError && (
             <span style={{ color: '#E53E3E', fontSize: '14px', fontWeight: '500', marginLeft: '16px', display: 'flex', alignItems: 'center' }}>
               일정을 불러오는 데 실패했습니다.
+            </span>
+          )}
+          {!isLoggedIn && (
+            <span style={{ color: '#888', fontSize: '14px', marginLeft: '16px', display: 'flex', alignItems: 'center' }}>
+              로그인 후 일정을 확인할 수 있습니다.
             </span>
           )}
         </div>

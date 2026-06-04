@@ -37,7 +37,7 @@ PRO:MATE는 프로젝트, 스터디, 공모전 등 다양한 목적의 팀을 �
 * **프로젝트 관리**: 진행 중/완료된 프로젝트와 지원 현황, Task 달성률 및 모집 상태를 직관적으로 파악
     <img width="1887" height="862" alt="화면 캡처 2026-06-04 160251" src="https://github.com/user-attachments/assets/12d1f227-90ad-45b8-889b-b7f688aaa917" />
 
-* **다면 상호 평가**: 협업 종료 후 팀원의 소통 능력, 적극성, 책임감, 문제 해결 능력을 평가하고 후기 기록
+* **상호 평가**: 협업 종료 후 팀원의 소통 능력, 적극성, 책임감, 문제 해결 능력을 평가하고 후기 기록
     <img width="1906" height="855" alt="image" src="https://github.com/user-attachments/assets/cb53d744-5356-47a5-bee4-782a7387a1b4" />
 
 ---

@@ -53,7 +53,7 @@ function Header({ onMenuClick }) {
             <img src={logoImg} alt="ProMate 로고" className="logo-image" />
             <span className="logo-text">PRO:MATE</span>
           </Link>
-          <span className="logo-sub">최고의 팀과 협업하세요.</span>
+          <span className="logo-sub">최고의 팀을 꾸려, 협업하세요.</span>
         </div>
       </div>
 

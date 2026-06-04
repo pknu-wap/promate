@@ -74,6 +74,11 @@ const ApplicantList = () => {
       {loading && <p style={{ padding: '20px' }}>불러오는 중...</p>}
 
       <section className="al-list">
+        {!loading && recruitments.length === 0 && (
+          <div className="al-empty" style={{ padding: '60px 20px', textAlign: 'center', color: '#888' }}>
+            등록된 모집글이 없습니다.
+          </div>
+        )}
         {!loading && currentRecruitments.map((recruitment) => {
           const isClosed = recruitment.status === 'COMPLETED' || recruitment.status === 'CANCELLED';
           const targetId = recruitment.recruitmentId || recruitment.id || recruitment.postId;

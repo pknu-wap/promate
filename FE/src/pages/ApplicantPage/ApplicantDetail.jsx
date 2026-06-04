@@ -115,6 +115,12 @@ const ApplicantDetail = () => {
 
           {loading && <p style={{ padding: '20px' }}>불러오는 중...</p>}
 
+          {!loading && filtered.length === 0 && (
+            <div style={{ padding: '60px 20px', textAlign: 'center', color: '#888' }}>
+              해당하는 지원자가 없습니다.
+            </div>
+          )}
+
           {!loading && filtered.map((person) => (
             <div key={person.applicationId} className="ad-row">
               <div className="ad-name-cell">

@@ -69,7 +69,7 @@ public class RecruitService {
 
         // 임시 Project 객체 생성 (팀장이 팀 결정 OR 팀 빌딩 취소 결정)
         Project project = Project.builder()
-                .title(request.title() + " - 프로젝트") // 일단 모집글 제목을 프로젝트명으로 사용
+                .title(request.title()) // 일단 모집글 제목을 프로젝트명으로 사용
                 .description(request.description())
                 .status(ProjectStatus.PREPARING) // 아직 시작 전 상태
                 .startDate(request.startDate())

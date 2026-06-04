@@ -13,7 +13,7 @@
 
 ---
 
-## 📌 프로젝트 소개
+## 🌟 프로젝트 소개
 <img width="1672" height="940" alt="image" src="https://github.com/user-attachments/assets/fad0a3d1-c421-4206-a633-76312a4a67bc" />
 PRO:MATE는 프로젝트, 스터디, 공모전 등 다양한 목적의 팀을 빌딩하고 성공적인 협업을 완수할 수 있도록 돕는 올인원 플랫폼입니다. 
 
@@ -45,7 +45,7 @@ PRO:MATE는 프로젝트, 스터디, 공모전 등 다양한 목적의 팀을 �
 ## ✨ 기존 협업 툴과의 차별점
 PRO:MATE는 기존의 대표적인 협업 솔루션들이 제공하지 못했던 **팀 빌딩 연동 및 신뢰도 검증 기능**을 결합하여 차별화된 가치를 제공합니다.
 
-### PRO:MATE 🛠 Vs Jira
+### PRO:MATE Vs Jira
 * **포트폴리오 자동화**: 프로젝트별 활동 이력과 역할이 자동으로 정리되어, 팀 빌딩 시 별도의 포트폴리오를 정리할 필요가 없습니다.
 * **협업 성향 확인**: 단순 태스크 추적을 넘어 상호 평가 및 협업 후기를 통해 팀원의 실제 협업 성향을 미리 확인할 수 있습니다.
 * **높은 범용성**: 무거운 개발 프로젝트뿐만 아니라 공모전, 스터디 등 다양한 협업 환경에서도 가볍고 쉽게 사용 가능합니다.
@@ -58,9 +58,9 @@ PRO:MATE는 기존의 대표적인 협업 솔루션들이 제공하지 못했던
 
 ---
 
-## 🛠 기술 스택
+## 🌟 기술 스택
 
-### 🌟 Core Tech Stack
+### Core Tech Stack
 <p>
   <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black"/>
   <img src="https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white"/>
@@ -69,7 +69,7 @@ PRO:MATE는 기존의 대표적인 협업 솔루션들이 제공하지 못했던
   <img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white"/>
 </p>
 
-### ☁️ Infrastructure & Storage
+### Infrastructure & Storage
 <p>
   <img src="https://img.shields.io/badge/Google_Cloud-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white"/>
   <img src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black"/>
@@ -77,7 +77,7 @@ PRO:MATE는 기존의 대표적인 협업 솔루션들이 제공하지 못했던
 
 ---
 
-## 👥 팀원 정보 (Team)
+## 🌟 팀원 정보 (Team)
 
 | 이름 | 역할 | GitHub / Contact |
 | :---: | :---: | :---: |

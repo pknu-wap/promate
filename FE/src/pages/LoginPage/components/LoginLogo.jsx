@@ -9,7 +9,7 @@ function LoginLogo() {
           <span className="logo-title">PRO:MATE</span>
         </div>
       </div>
-      <p className="service-subtitle">최고의 팀과 협업하세요.</p>
+      <p className="service-subtitle">최고의 팀을 꾸려, 협업하세요.</p>
     </header>
   );
 }

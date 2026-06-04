@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class TaskCommandServiceImpl implements TaskCommandService{
+public class TaskCommandServiceImpl implements TaskCommandService {
     private final MemberRepository memberRepository;
     private final ProjectRepository projectRepository;
     private final TaskRepository taskRepository;
@@ -35,7 +35,7 @@ public class TaskCommandServiceImpl implements TaskCommandService{
     @Override
     public TaskResDto.TaskInfoDto addTask(Long userId, Long projectId, TaskReqDto.AddTaskDto dto) {
         // 검증1: 로그인 사용자가 프로젝트 멤버인지
-        if(!memberRepository.existsByUserIdAndProjectId(userId, projectId)){
+        if (!memberRepository.existsByUserIdAndProjectId(userId, projectId)) {
             throw new MemberException(MemberErrorCode.TASK_FORBIDDEN_NOT_PROJECT_MEMBER);
         }
 
@@ -66,7 +66,7 @@ public class TaskCommandServiceImpl implements TaskCommandService{
 
         Member currentTaskManager = task.getMember();
 
-        if(!projectId.equals(task.getProject().getId())){
+        if (!projectId.equals(task.getProject().getId())) {
             throw new TaskException(TaskErrorCode.NOT_PROJECT_TASK);
         }
 
@@ -79,7 +79,13 @@ public class TaskCommandServiceImpl implements TaskCommandService{
 
         // 1. 담당자 변경 여부 체크 및 객체 확보
         Member newTaskManager = currentTaskManager;
-        if (currentTaskManager.getUser() == null || !currentTaskManager.getUser().getId().equals(dto.getManagerId())) {
+        boolean isManagerChanged = currentTaskManager.getUser() == null || !currentTaskManager.getUser().getId().equals(dto.getManagerId());
+
+        if (isManagerChanged) {
+            if (!isLeader) {
+                throw new TaskException(TaskErrorCode.NOT_PROJECT_LEADER);
+            }
+
             newTaskManager = memberRepository.findByUserIdAndProjectId(dto.getManagerId(), projectId)
                     .orElseThrow(() -> new MemberException(MemberErrorCode.TASK_FORBIDDEN_NOT_PROJECT_MEMBER));
         }
@@ -95,7 +101,7 @@ public class TaskCommandServiceImpl implements TaskCommandService{
     // 태스크 상태 변경 : TODO, IN_PROGRESS, DONE
     @Override
     public TaskResDto.UpdatedStatusTaskInfoDto updateTaskStatus(Long userId, Long projectId, Long taskId, TaskReqDto.UpdateTaskStatusDto dto) {
-        if(!memberRepository.existsByUserIdAndProjectId(userId, projectId)){
+        if (!memberRepository.existsByUserIdAndProjectId(userId, projectId)) {
             throw new MemberException(MemberErrorCode.TASK_FORBIDDEN_NOT_PROJECT_MEMBER);
         }
 
@@ -122,25 +128,23 @@ public class TaskCommandServiceImpl implements TaskCommandService{
                 .orElseThrow(() -> new TaskException(TaskErrorCode.ID_NOT_FOUND));
 
         // 해당 프로젝트의 태스크가 맞는가
-        if(!projectId.equals(task.getProject().getId())){
+        if (!projectId.equals(task.getProject().getId())) {
             throw new TaskException(TaskErrorCode.NOT_PROJECT_TASK);
         }
-
-        Member currentTaskManager = task.getMember();
 
         // 로그인 사용자의 프로젝트 멤버 정보
         Member member = memberRepository.findByUserIdAndProjectId(userId, projectId)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.TASK_FORBIDDEN_NOT_PROJECT_MEMBER));
 
-        // 태스크 삭제는 태스크 담당자 본인과 프로젝트 팀장만
-        boolean isAssignee = currentTaskManager.getId().equals(member.getId());
+        // 태스크 삭제는 프로젝트 팀장만
         boolean isLeader = member.getPosition() == Position.LEADER;
-        if(!isAssignee && !isLeader){
-            throw new TaskException(TaskErrorCode.NOT_ASSIGNEE_OR_PROJECT_LEADER);
+        if (isLeader) {
+            task.delete();
+            return TaskConverter.toDeletedTaskInfoDto(task);
+
+        } else {
+            throw new TaskException(TaskErrorCode.NOT_PROJECT_LEADER);
         }
 
-        task.delete();
-
-        return TaskConverter.toDeletedTaskInfoDto(task);
     }
 }

@@ -16,10 +16,11 @@ export async function getKakaoLoginUrl() {
 }
 
 export async function requestKakaoLogin(code, state) {
-  const queryString = new URLSearchParams({
-    code,
-    state,
-  }).toString();
+  const params = { code };
+  if (state) {
+    params.state = state;
+  }
+  const queryString = new URLSearchParams(params).toString();
 
   const response = await fetch(
     `${baseUrl}/api/auth/kakao/callback?${queryString}`,

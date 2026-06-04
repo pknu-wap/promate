@@ -46,6 +46,7 @@ function FindTeamPage() {
           page: 0,
           size: 1000,
           sort: "createdAt,desc",
+          _t: new Date().getTime(),
         };
 
         if (selectedCategory) {
@@ -75,7 +76,7 @@ function FindTeamPage() {
                 summary: item.description || "",
                 capacity: item.maxMember,
                 category: item.category,
-                bookmarked: item.isBookmarked || false,
+                bookmarked: item.isBookmarked ?? item.bookmarked ?? false,
                 applied: item.myApplyStatus !== null,
                 applyStatus: mappedStatus,
                 status: item.status,
@@ -99,11 +100,11 @@ function FindTeamPage() {
   const handleToggleBookmark = async (teamId) => {
     try {
       const response = await apiClient.post(`/recruitments/${teamId}/bookmark`);
-      const { isBookmarked } = response.data.data;
+      const newBookmarkStatus = response.data?.data?.isBookmarked ?? response.data?.data?.bookmarked;
 
       setTeamPosts((prevTeamPosts) =>
         prevTeamPosts.map((team) =>
-          team.id === teamId ? { ...team, bookmarked: isBookmarked } : team,
+          team.id === teamId ? { ...team, bookmarked: newBookmarkStatus !== undefined ? newBookmarkStatus : !team.bookmarked } : team,
         ),
       );
     } catch (error) {

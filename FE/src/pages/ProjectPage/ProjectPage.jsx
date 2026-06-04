@@ -61,7 +61,7 @@ function ProjectPage() {
               applied: true,
               applyStatus: mappedStatus,
               status: 'active',
-              bookmarked: item.isBookmarked || false,
+              bookmarked: item.isBookmarked ?? item.bookmarked ?? false,
             };
           });
           setAppliedProjects(fetchedData);
@@ -166,7 +166,7 @@ function ProjectPage() {
               summary: item.description,
               status: 'completed',
               applyStatus: 'accepted',
-              bookmarked: item.isBookmarked || false,
+              bookmarked: item.isBookmarked ?? item.bookmarked ?? false,
               isEvaluated,
             };
           }));
@@ -183,9 +183,15 @@ function ProjectPage() {
     fetchCompletedProjects();
   }, [navigate]);
 
-  const handleToggleBookmark = (id) => {
-    setProjects((prev) => prev.map((p) => (p.id === id ? { ...p, bookmarked: !p.bookmarked } : p)));
-    setAppliedProjects((prev) => prev.map((p) => (p.id === id ? { ...p, bookmarked: !p.bookmarked } : p)));
+  const handleToggleBookmark = async (id) => {
+    try {
+      await apiClient.post(`/recruitments/${id}/bookmark`);
+      setProjects((prev) => prev.map((p) => (p.id === id ? { ...p, bookmarked: !p.bookmarked } : p)));
+      setAppliedProjects((prev) => prev.map((p) => (p.id === id ? { ...p, bookmarked: !p.bookmarked } : p)));
+      setCompletedProjects((prev) => prev.map((p) => (p.id === id ? { ...p, bookmarked: !p.bookmarked } : p)));
+    } catch (error) {
+      console.error('북마크 처리 실패:', error);
+    }
   };
 
   const filteredProjects = useMemo(() => {

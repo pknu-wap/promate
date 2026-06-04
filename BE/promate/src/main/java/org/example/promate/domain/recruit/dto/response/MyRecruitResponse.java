@@ -12,9 +12,10 @@ public record MyRecruitResponse(
         LocalDateTime createdAt,
         RecruitStatus status,
         int currentMember,
-        int maxMember
+        int maxMember,
+        boolean isBookmarked
 ) {
-    public static MyRecruitResponse from(Recruit recruit) {
+    public static MyRecruitResponse from(Recruit recruit, boolean isBookmarked) {
         return new MyRecruitResponse(
                 recruit.getId(),
                 recruit.getTitle(),
@@ -22,7 +23,8 @@ public record MyRecruitResponse(
                 recruit.getCreatedAt(),
                 recruit.getStatus(),
                 recruit.getJoinedCount(),
-                recruit.getTotalSlots()
+                recruit.getTotalSlots(),
+                isBookmarked
         );
     }
 }

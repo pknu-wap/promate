@@ -19,9 +19,10 @@ public record RecruitResponse(
         int currentMember,
         Long projectId,         // 모집글을 통해 개설된 프로젝트 ID (개설 전이면 null)
         Status myApplyStatus,   // 본인의 지원 상태 (PENDING, ACCEPTED, REJECTED / 지원 안 했으면 null)
-        Long myApplicationId    // 본인의 지원서 ID (지원 안 했으면 null)
+        Long myApplicationId,    // 본인의 지원서 ID (지원 안 했으면 null)
+        boolean isBookmarked    //사용자의 북마크 여부
 ) {
-    public static RecruitResponse of(Recruit recruit, Status myApplyStatus, Long myApplicationId, Long userId) {
+    public static RecruitResponse of(Recruit recruit, Status myApplyStatus, Long myApplicationId, Long userId, boolean isBookmarked) {
 
         Long targetProjectId = null;
 
@@ -48,7 +49,8 @@ public record RecruitResponse(
                 // Project 엔티티 연관관계가 있다면 ID 추출, 없으면 null
                 targetProjectId,
                 myApplyStatus,
-                myApplicationId
+                myApplicationId,
+                isBookmarked
         );
     }
 }

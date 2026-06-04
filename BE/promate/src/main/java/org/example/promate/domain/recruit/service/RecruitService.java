@@ -270,6 +270,7 @@ public class RecruitService {
         if (recruits.isEmpty()) return Collections.emptyList();
 
         Map<Long, Apply> applyMap = new HashMap<>();
+        Set<Long> bookmarkedRecruitIds = new HashSet<>();   // 북마크된 모집글 담을 hashSet
 
         // 로그인한 유저인 경우에만 쿼리로 지원서들을 한 번에 싹 긁어옴
         if (userId != null) {
@@ -277,18 +278,25 @@ public class RecruitService {
             List<Apply> myApplies = applyRepository.findByUserIdAndRecruitIdIn(userId, recruitIds);
             applyMap = myApplies.stream()
                     .collect(Collectors.toMap(apply -> apply.getRecruit().getId(), apply -> apply));
+
+            bookmarkedRecruitIds = bookmarkRepository.findBookmarkedRecruitIds(userId, recruitIds);
         }
 
         Map<Long, Apply> finalApplyMap = applyMap;
+        Set<Long> finalBookmarkedRecruitIds = bookmarkedRecruitIds;
 
         return recruits.stream().map(recruit -> {
             Apply myApply = finalApplyMap.get(recruit.getId());
+
+            // 현재 모집글이 북마크 되어 있다면 true, 아니면 false
+            boolean isBookmarked = finalBookmarkedRecruitIds.contains(recruit.getId());
 
             return RecruitResponse.of(
                     recruit,
                     myApply != null ? myApply.getStatus() : null,
                     myApply != null ? myApply.getId() : null,
-                    userId
+                    userId,
+                    isBookmarked
             );
         }).toList();
     }
@@ -315,7 +323,13 @@ public class RecruitService {
 
         Page<Recruit> recruitPage = recruitRepository.findActiveRecruitmentsByUserId(userId,pageable);
 
-        Page<MyRecruitResponse> mappedPage = recruitPage.map(MyRecruitResponse::from);
+        // 북마크된 모집글 불러오기
+        List<Long> recruitIds = recruitPage.getContent().stream().map(Recruit::getId).toList();
+        Set<Long> bookmarkedRecruitIds = bookmarkRepository.findBookmarkedRecruitIds(userId, recruitIds);
+
+        Page<MyRecruitResponse> mappedPage = recruitPage.map(recruit ->
+                MyRecruitResponse.from(recruit, bookmarkedRecruitIds.contains(recruit.getId()))
+        );
 
         return RecruitPageResponse.of(mappedPage);
     }

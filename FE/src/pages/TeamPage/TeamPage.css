@@ -89,7 +89,7 @@
 .team-progress-card .progress-bar {
   max-width: none;
   height: 7px;
-  margin-top: 14px;
+  margin: 15px 0;
   border: 0;
   background: #eeeeee;
 }
@@ -184,6 +184,7 @@
   border-radius: 8px;
   box-shadow: none;
   justify-content: center;
+  background: transparent;
 }
 
 .team-metric-card > .summary-card .summary-header {

@@ -336,11 +336,11 @@ const closePostModal = () => {
           className="team-card team-progress-card team-card-clickable"
           role="button"
           tabIndex={0}
-          onClick={() => openTaskBoard('IN_PROGRESS')}
+          onClick={() => openTaskBoard('all')}
           onKeyDown={(event) => {
             if (event.key === 'Enter' || event.key === ' ') {
               event.preventDefault();
-              openTaskBoard('IN_PROGRESS');
+              openTaskBoard('all');
             }
           }}
         >
@@ -426,11 +426,33 @@ const closePostModal = () => {
           )}
         </section>
 
-        <div className="team-card team-metric-card team-metric-card-urgent">
-          <SummaryCard title="진행 및 예정 테스크" count={pendingTasksCount} />
+        <div
+          className="team-card team-metric-card team-metric-card-urgent team-card-clickable"
+          role="button"
+          tabIndex={0}
+          onClick={() => openTaskBoard('IN_PROGRESS')}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              openTaskBoard('IN_PROGRESS');
+            }
+          }}
+        >
+          <SummaryCard title="진행 및 예정 테스크" count={pendingTasksCount} isAllEmpty={true} />
         </div>
-        <div className="team-card team-metric-card team-metric-card-completed">
-          <SummaryCard title="완료한 테스크" count={completedTasksCount} onHeaderClick={() => openTaskBoard('DONE')} />
+        <div
+          className="team-card team-metric-card team-metric-card-completed team-card-clickable"
+          role="button"
+          tabIndex={0}
+          onClick={() => openTaskBoard('DONE')}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              openTaskBoard('DONE');
+            }
+          }}
+        >
+          <SummaryCard title="완료한 테스크" count={completedTasksCount} isAllEmpty={true} />
         </div>
 
         <div className="team-calendar">

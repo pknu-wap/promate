@@ -26,8 +26,10 @@ function ApplyModal({
         const fetchApplyData = async () => {
           try {
             const response = await getApplicationForm(recruitmentId);
-            if (response.isSuccess) {
-              setFetchedTitle(response.data.recruitmentTitle);
+            const isSuccess = response?.data?.isSuccess ?? response?.isSuccess;
+            if (isSuccess) {
+              const data = response?.data?.data ?? response?.data;
+              setFetchedTitle(data?.recruitmentTitle);
             }
           } catch (error) {
             console.error("지원서 작성용 데이터 로드 실패:", error);
@@ -57,10 +59,14 @@ function ApplyModal({
 
       const response = await postApplication(recruitmentId, applicationData);
       
-      if (response.isSuccess) {
+      const isSuccess = response?.data?.isSuccess ?? response?.isSuccess;
+      if (isSuccess) {
         alert("지원이 완료되었습니다.");
         onSubmit?.();
         onClose?.();
+      } else {
+        const errorMsg = response?.data?.message ?? response?.message ?? "지원 처리 중 문제가 발생했습니다.";
+        alert(errorMsg);
       }
     } catch (error) {
       console.error("지원서 제출 실패:", error);

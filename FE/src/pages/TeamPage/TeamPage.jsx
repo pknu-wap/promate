@@ -73,7 +73,7 @@ function TeamPage() {
   const [isNewTaskModalOpen, setIsNewTaskModalOpen] = useState(false);
 
   const idToFetch = Number(projectId);
-  const projectTitle = location.state?.projectTitle;
+  const projectTitle = location.state?.projectTitle || '프로젝트';
   const projectDueDate = location.state?.dueDate || '마감일 미정';
 
   const completedTasksCount = tasks.filter(task => task.status === 'DONE').length;

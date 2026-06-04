@@ -24,10 +24,19 @@
 ### 🌟 핵심 기능
 * **대시보드 기능**: 프로젝트별 Task 완료 현황과 캘린더를 통해 전체 일정과 상태를 직관적으로 관리
 * **프로젝트 생성 및 팀 찾기**: 개발, 공모전, 스터디 등 도메인에 관계없이 프로젝트를 생성하고 지원
+  <img width="1910" height="857" alt="화면 캡처 2026-06-04 155602" src="https://github.com/user-attachments/assets/52b4524d-d698-4531-80ae-79f03fa07cbf" />
+
 * **프로필 및 이력 관리**: 프로필 이미지, 수행한 Task 점수, 상호 평가 결과를 한눈에 확인
+  <img width="1385" height="613" alt="image" src="https://github.com/user-attachments/assets/edeca832-d7d5-471b-bfc9-2c1a1b660216" />
+
 * **데이터 기반 지원자 검토**: 지원자가 이전에 참여했던 프로젝트 경험과 수행 Task를 확인하여 신뢰성 높은 팀원 선발
+    <img width="930" height="412" alt="화면 캡처 2026-06-04 160902" src="https://github.com/user-attachments/assets/c74dced5-a7c9-40cd-9782-7d3554c40ccf" />
+
 * **프로젝트 관리**: 진행 중/완료된 프로젝트와 지원 현황, Task 달성률 및 모집 상태를 직관적으로 파악
+    <img width="1887" height="862" alt="화면 캡처 2026-06-04 160251" src="https://github.com/user-attachments/assets/12d1f227-90ad-45b8-889b-b7f688aaa917" />
+
 * **다면 상호 평가**: 협업 종료 후 팀원의 소통 능력, 적극성, 책임감, 문제 해결 능력을 평가하고 후기 기록
+    <img width="1906" height="855" alt="image" src="https://github.com/user-attachments/assets/cb53d744-5356-47a5-bee4-782a7387a1b4" />
 
 ---
 

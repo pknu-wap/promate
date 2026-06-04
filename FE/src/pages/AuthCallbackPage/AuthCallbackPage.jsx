@@ -15,9 +15,11 @@ export default function AuthCallbackPage() {
 
     if (!code) {
       console.error("인가 코드가 없습니다.");
-      navigate("/login");
+      navigate("/login", { replace: true });
       return;
     }
+
+    window.history.replaceState({}, null, window.location.pathname);
 
     const handleLogin = async () => {
       if (isRequesting.current) {
@@ -30,16 +32,16 @@ export default function AuthCallbackPage() {
         if (data) {
           login(data.accessToken, data.refreshToken);
         }
-        navigate("/dashboard");
+        navigate("/dashboard", { replace: true });
       } catch (err) {
         console.error("카카오 로그인 처리 실패:", err);
         alert(err.message || "로그인 처리 중 오류가 발생했습니다.");
-        navigate("/login");
+        navigate("/login", { replace: true });
       }
     };
 
     handleLogin();
-  }, [searchParams, navigate]);
+  }, [searchParams, navigate, login]);
 
   return (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", backgroundColor: "#F8F9FA" }}>

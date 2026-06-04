@@ -13,6 +13,7 @@
   <a href="https://promate-kappa.vercel.app/login"><strong>🔗 PRO:MATE 서비스 이용하기</strong></a>
 </p>
 
+<p align="center">개발 참여 인력</p>
 <table align="center">
   <tr>
     <td align="center">

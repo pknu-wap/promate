@@ -13,9 +13,6 @@
   <a href="https://promate-kappa.vercel.app/login"><strong>🔗 PRO:MATE 서비스 이용하기</strong></a>
 </p>
 
----
-## ✨ 팀원 정보
-
 <table align="center">
   <tr>
     <td align="center">

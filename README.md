@@ -6,7 +6,7 @@
 
 <p align="center">
   <strong>"최고의 팀을 꾸려, 협업하세요"</strong><br />
-  신뢰 기반 올인원 팀 빌딩 및 프로젝트 관리 플랫폼 <strong>PRO:MATE</strong>
+  상호 평가 기반 올인원 팀 빌딩 및 프로젝트 관리 플랫폼 <strong>PRO:MATE</strong>
 </p>
 
 <p align="center">

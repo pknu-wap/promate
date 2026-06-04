@@ -13,7 +13,7 @@
 
 ---
 
-## 🌟 프로젝트 소개
+## ✨ 프로젝트 소개
 <img width="1672" height="940" alt="image" src="https://github.com/user-attachments/assets/fad0a3d1-c421-4206-a633-76312a4a67bc" />
 PRO:MATE는 프로젝트, 스터디, 공모전 등 다양한 목적의 팀을 빌딩하고 성공적인 협업을 완수할 수 있도록 돕는 올인원 플랫폼입니다. 
 
@@ -21,7 +21,7 @@ PRO:MATE는 프로젝트, 스터디, 공모전 등 다양한 목적의 팀을 �
 
 
 
-## 🌟 핵심 기능
+## ✨ 핵심 기능
 * **대시보드 기능**: 프로젝트별 Task 완료 현황과 캘린더를 통해 전체 일정과 상태를 직관적으로 관리
   <img width="1893" height="857" alt="image" src="https://github.com/user-attachments/assets/c71f6bb6-044a-4e7e-a8ae-9ac470d38209" />
 
@@ -58,7 +58,7 @@ PRO:MATE는 기존의 대표적인 협업 솔루션들이 제공하지 못했던
 
 ---
 
-## 🌟 기술 스택
+## ✨ 기술 스택
 
 ### Core Tech Stack
 <p>
@@ -77,7 +77,7 @@ PRO:MATE는 기존의 대표적인 협업 솔루션들이 제공하지 못했던
 
 ---
 
-## 🌟 팀원 정보 (Team)
+## ✨ 팀원 정보 (Team)
 
 | 이름 | 역할 | GitHub / Contact |
 | :---: | :---: | :---: |

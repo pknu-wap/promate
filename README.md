@@ -30,8 +30,7 @@
       <a href="https://github.com/jeon9-aa">@jeon9-aa</a>
     </td>
     <td align="center">
-      <img src="https://github.com/
-202413104.png" width="100px;" alt="김수민"/><br>
+      <img src="https://github.com/202413104.png" width="100px;" alt="김수민"/><br>
       <b>김수민</b><br>
       ─────<br>
       FE<br>

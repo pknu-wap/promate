@@ -17,7 +17,7 @@
 <img width="1672" height="940" alt="image" src="https://github.com/user-attachments/assets/fad0a3d1-c421-4206-a633-76312a4a67bc" />
 PRO:MATE는 프로젝트, 스터디, 공모전 등 다양한 목적의 팀을 빌딩하고 성공적인 협업을 완수할 수 있도록 돕는 올인원 플랫폼입니다. 
 
-
+---
 
 
 

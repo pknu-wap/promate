@@ -79,15 +79,68 @@ PRO:MATE는 기존의 대표적인 협업 솔루션들이 제공하지 못했던
 
 ---
 
-## ✨ 팀원 정보 (Team)
+## ✨ 팀원 정보
 
-| 이름 | 역할 | GitHub / Contact |
-| :---: | :---: | :---: |
-| **이찬이** | PM | [@chanxami](https://github.com/chanxami) |
-| **구정아** | FE | [@jeon9-aa](https://github.com/jeon9-aa) |
-| **김수민** | FE | [@sumin-kim-00](https://github.com/sumin-kim-00) |
-| **김재민** | FE | [@kjm070909](https://github.com/kjm070909) |
-| **김원빈** | BE | [@plmokn044330-ship-it](https://github.com/plmokn044330-ship-it) |
-| **백진선** | BE | [@blrlk](https://github.com/blrlk) |
-| **최하진** | BE | [@hajin0829](https://github.com/hajin0829) |
-| **이은서** | Designer | - |
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="https://github.com/chanxami.png" width="100px;" alt="이찬이"/><br>
+      <b>이찬이</b><br>
+      ─────<br>
+      PM<br>
+      <a href="https://github.com/chanxami">@chanxami</a>
+    </td>
+    <td align="center">
+      <img src="https://github.com/jeon9-aa.png" width="100px;" alt="구정아"/><br>
+      <b>구정아</b><br>
+      ─────<br>
+      FE<br>
+      <a href="https://github.com/jeon9-aa">@jeon9-aa</a>
+    </td>
+    <td align="center">
+      <img src="https://github.com/sumin-kim-00.png" width="100px;" alt="김수민"/><br>
+      <b>김수민</b><br>
+      ─────<br>
+      FE<br>
+      <a href="https://github.com/sumin-kim-00">@sumin-kim-00</a>
+    </td>
+    <td align="center">
+      <img src="https://github.com/kjm070909.png" width="100px;" alt="김재민"/><br>
+      <b>김재민</b><br>
+      ─────<br>
+      FE<br>
+      <a href="https://github.com/kjm070909">@kjm070909</a>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="center">
+      <img src="https://github.com/plmokn044330-ship-it.png" width="100px;" alt="김원빈"/><br>
+      <b>김원빈</b><br>
+      ─────<br>
+      BE<br>
+      <a href="https://github.com/plmokn044330-ship-it">@plmokn044330-ship-it</a>
+    </td>
+    <td align="center">
+      <img src="https://github.com/blrlk.png" width="100px;" alt="백진선"/><br>
+      <b>백진선</b><br>
+      ─────<br>
+      BE<br>
+      <a href="https://github.com/blrlk">@blrlk</a>
+    </td>
+    <td align="center">
+      <img src="https://github.com/hajin0829.png" width="100px;" alt="최하진"/><br>
+      <b>최하진</b><br>
+      ─────<br>
+      BE<br>
+      <a href="https://github.com/hajin0829">@hajin0829</a>
+    </td>
+    <td align="center">
+      <img src="https://avatars.githubusercontent.com/u/0?v=4" width="100px;" alt="이은서"/><br>
+      <b>이은서</b><br>
+      ─────<br>
+      Designer<br>
+      -
+    </td>
+  </tr>
+</table>

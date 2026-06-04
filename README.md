@@ -36,7 +36,8 @@
       ─────<br>
       FE<br>
       <a href="https://github.com/
-202413104">@sumin-kim-00</a>
+202413104">@
+202413104</a>
     </td>
     <td align="center">
       <img src="https://github.com/kjm070909.png" width="100px;" alt="김재민"/><br>

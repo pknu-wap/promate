@@ -150,13 +150,13 @@ function DashboardPage() {
       },
       {
         id: 2,
-        title: '마감 임박 테스크',
+        title: '마감 임박 태스크',
         items: dashboardData.urgentTasks,
         isError: fetchErrors.urgentTasks,
       },
       {
         id: 3,
-        title: '완료한 테스크',
+        title: '완료한 태스크',
         items: dashboardData.completedTasks,
         isError: fetchErrors.completedTasks,
       },

@@ -86,7 +86,7 @@ function TaskBoardPage() {
       );
       setSelectedTask((prev) => prev && prev.taskId === taskId ? { ...prev, status: nextStatus } : prev);
     } catch (err) {
-      alert(`테스크 상태 변경에 실패했습니다: ${err.message}`);
+      alert(`태스크 상태 변경에 실패했습니다: ${err.message}`);
     }
   };
 
@@ -101,7 +101,7 @@ function TaskBoardPage() {
       const taskData = await getProjectTasks(projectId);
       setTasks(taskData.taskList || []);
     } catch (err) {
-      alert(`테스크 수정에 실패했습니다: ${err.message}`);
+      alert(`태스크 수정에 실패했습니다: ${err.message}`);
     } finally {
       setIsTaskDetailLoading(false);
     }
@@ -109,7 +109,7 @@ function TaskBoardPage() {
 
   const handleDeleteTask = async (taskId = selectedTask?.taskId) => {
     if (!projectId || !taskId) return alert("프로젝트 ID가 유효하지 않습니다.");
-    if (!window.confirm('정말로 이 테스크를 삭제하시겠습니까?')) return;
+    if (!window.confirm('정말로 이 태스크를 삭제하시겠습니까?')) return;
     
     try {
       await deleteProjectTask(projectId, taskId);
@@ -118,7 +118,7 @@ function TaskBoardPage() {
         setSelectedTask(null);
       }
     } catch (error) {
-      alert(`테스크 삭제에 실패했습니다: ${error.message}`);
+      alert(`태스크 삭제에 실패했습니다: ${error.message}`);
     }
   };
 
@@ -136,7 +136,7 @@ function TaskBoardPage() {
       const data = await getProjectTasks(projectId);
       setTasks(data.taskList || []);
     } catch (err) {
-      alert(`테스크 생성에 실패했습니다: ${err.message}`);
+      alert(`태스크 생성에 실패했습니다: ${err.message}`);
     }
   };
 

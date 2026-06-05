@@ -165,7 +165,7 @@ function TeamPage() {
       setIsNewTaskModalOpen(false);
       await fetchTasks();
     } catch (err) {
-      alert(`테스크 생성에 실패했습니다: ${err.message}`);
+      alert(`태스크 생성에 실패했습니다: ${err.message}`);
     }
   };
 
@@ -176,7 +176,7 @@ function TeamPage() {
       setProjectProgress(data.projectProgress || 0);
       await fetchTasks();
     } catch (err) {
-      alert(`테스크 상태 변경에 실패했습니다: ${err.message}`);
+      alert(`태스크 상태 변경에 실패했습니다: ${err.message}`);
     }
   };
 
@@ -189,7 +189,7 @@ function TeamPage() {
       setSelectedTask(data);
       await fetchTasks();
     } catch (err) {
-      alert(`테스크 수정에 실패했습니다: ${err.message}`);
+      alert(`태스크 수정에 실패했습니다: ${err.message}`);
     } finally {
       setIsTaskDetailLoading(false);
     }
@@ -197,7 +197,7 @@ function TeamPage() {
 
   const handleDeleteTask = async () => {
     if (!selectedTask) return;
-    if (!window.confirm('정말로 이 테스크를 삭제하시겠습니까?')) return;
+    if (!window.confirm('정말로 이 태스크를 삭제하시겠습니까?')) return;
 
     try {
       setIsTaskDetailLoading(true);
@@ -205,7 +205,7 @@ function TeamPage() {
       setSelectedTask(null);
       await fetchTasks();
     } catch (err) {
-      alert(`테스크 삭제에 실패했습니다: ${err.message}`);
+      alert(`태스크 삭제에 실패했습니다: ${err.message}`);
     } finally {
       setIsTaskDetailLoading(false);
     }
@@ -356,7 +356,7 @@ const closePostModal = () => {
 
         <section className={`team-card team-task-board ${isTaskExpanded ? 'team-card-expanded' : ''}`}>
         <SummaryCard 
-          title="테스크 보드" 
+          title="태스크 보드" 
           count={tasks.length}
           unit="개"
           isAllEmpty={true}
@@ -370,7 +370,7 @@ const closePostModal = () => {
               }}
             >
               <SquarePen size={12} />
-              <span>테스크 쓰기</span>
+              <span>태스크 쓰기</span>
             </button>
           }
         />
@@ -380,7 +380,7 @@ const closePostModal = () => {
             {tasksError && <div className="team-member-status" style={{ color: 'red' }}>{tasksError}</div>}
             
             {!isTasksLoading && !tasksError && tasks.length === 0 && (
-              <div className="team-member-status">등록된 테스크가 없습니다.</div>
+              <div className="team-member-status">등록된 태스크가 없습니다.</div>
             )}
 
             {!isTasksLoading && !tasksError && visibleTasks.map((task) => (
@@ -438,7 +438,7 @@ const closePostModal = () => {
             }
           }}
         >
-          <SummaryCard title="진행 및 예정 테스크" count={pendingTasksCount} isAllEmpty={true} />
+          <SummaryCard title="진행 및 예정 태스크" count={pendingTasksCount} isAllEmpty={true} />
         </div>
         <div
           className="team-card team-metric-card team-metric-card-completed team-card-clickable"
@@ -452,7 +452,7 @@ const closePostModal = () => {
             }
           }}
         >
-          <SummaryCard title="완료한 테스크" count={completedTasksCount} isAllEmpty={true} />
+          <SummaryCard title="완료한 태스크" count={completedTasksCount} isAllEmpty={true} />
         </div>
 
         <div className="team-calendar">

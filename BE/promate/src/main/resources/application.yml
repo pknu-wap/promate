@@ -45,7 +45,7 @@ springdoc:
 
 jwt:
   secret: ${JWT_SECRET}
-  access-token-expiration: 3600000
+  access-token-expiration: 10800000
   refresh-token-expiration: 1209600000
 
 logging:

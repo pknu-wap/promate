@@ -40,6 +40,11 @@ function Header({ onMenuClick }) {
       }
     };
     fetchUserData();
+
+    window.addEventListener('userProfileUpdated', fetchUserData);
+    return () => {
+      window.removeEventListener('userProfileUpdated', fetchUserData);
+    };
   }, []);
 
   return (

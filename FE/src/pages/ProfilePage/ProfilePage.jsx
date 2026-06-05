@@ -136,6 +136,7 @@ const ProfilePage = () => {
       if (updated?.profileImageUrl?.startsWith('http')) {
         setProfileImageUrl(updated.profileImageUrl);
       }
+      window.dispatchEvent(new Event('userProfileUpdated'));
     } catch (error) {
       console.error('프로필 이미지 업로드 실패:', error);
       setProfileImageUrl(prevUrl);
@@ -200,6 +201,7 @@ const ProfilePage = () => {
         const res = await apiClient.patch('/user/me', { name: editName.trim() });
         const updatedName = res.data?.data?.name || editName.trim();
         setUserInfo((prev) => ({ ...prev, name: updatedName }));
+        window.dispatchEvent(new Event('userProfileUpdated'));
       } catch (error) {
         console.error('이름 수정 실패:', error);
         alert('이름 수정에 실패했습니다.');

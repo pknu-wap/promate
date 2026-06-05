@@ -1,4 +1,6 @@
 import axios from "axios";
+import { reissueKakaoToken } from "./Auth/kakaoAuthApi.js";
+import { useAuthStore } from "../stores/useAuthStore.js";
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, "");
 
@@ -34,13 +36,37 @@ apiClient.interceptors.response.use(
     }
     return response;
   },
-  (error) => {
-    if (error.response && error.response.status === 401) {
-      if (!isAuthErrorAlerted) {
-        isAuthErrorAlerted = true;
-        localStorage.removeItem("accessToken");
-        alert("로그인이 만료되었습니다. 다시 로그인해주세요.");
-        window.location.href = "/login";
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      try {
+        const { accessToken, refreshToken, login } = useAuthStore.getState();
+
+        if (!refreshToken) {
+          throw new Error("리프레시 토큰이 없습니다.");
+        }
+
+        const newTokens = await reissueKakaoToken(refreshToken, accessToken);
+
+        if (login) login(newTokens.accessToken, newTokens.refreshToken);
+        localStorage.setItem("accessToken", newTokens.accessToken); // 기존 request interceptor 호환용
+
+        originalRequest.headers.Authorization = `Bearer ${newTokens.accessToken}`;
+        return apiClient(originalRequest);
+      } catch (reissueError) {
+        console.error("토큰 재발급 실패:", reissueError);
+        if (!isAuthErrorAlerted) {
+          isAuthErrorAlerted = true;
+          localStorage.removeItem("accessToken");
+          const { logout } = useAuthStore.getState();
+          if (logout) logout();
+          alert("로그인이 만료되었습니다. 다시 로그인해주세요.");
+          window.location.href = "/login";
+        }
+        return Promise.reject(reissueError);
       }
     } else if (error.response && error.response.status === 403) {
       console.warn("API 접근 권한이 없습니다 (403 Forbidden). 요청 url:", error.config?.url);

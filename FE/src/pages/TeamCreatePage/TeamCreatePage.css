@@ -429,11 +429,6 @@ body {
   background: #f08040;
 }
 
-.teammaking-btn-submit:disabled {
-  background: #d9d9d9;
-  cursor: not-allowed;
-}
-
 @media (max-width: 768px) {
   .page-wrapper {
     padding: 16px 14px 0;

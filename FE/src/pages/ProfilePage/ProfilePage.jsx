@@ -8,6 +8,7 @@ import './ProfilePage.css';
 
 const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editName, setEditName] = useState('');
   const [editingProject, setEditingProject] = useState(null);
@@ -36,33 +37,44 @@ const ProfilePage = () => {
       return;
     }
 
-    const fetchProfileData = async () => {
-      const [userRes, taskCountsRes, manualProjectRes, ongoingProjectRes, completedProjectRes] = await Promise.allSettled([
-        apiClient.get('/user/me'),
-        apiClient.get('/user/me/projects/task-counts'),
+    const fetchUserData = async () => {
+      try {
+        const [userRes, taskCountsRes] = await Promise.allSettled([
+          apiClient.get('/user/me'),
+          apiClient.get('/user/me/projects/task-counts'),
+        ]);
+
+        if (userRes.status === 'rejected') {
+          console.error('유저 정보 조회 실패 (인증 에러로 인해 로그아웃 처리되었을 수 있습니다):', userRes.reason);
+        }
+
+        if (userRes.status === 'fulfilled') {
+          const userData = userRes.value.data.data;
+          const taskCountsData = taskCountsRes.status === 'fulfilled'
+            ? (taskCountsRes.value.data?.data ?? []) : [];
+
+          const completed = taskCountsData.reduce((sum, p) => sum + (p.completedTaskCount ?? 0), 0);
+          const total = taskCountsData.reduce((sum, p) => sum + (p.completedTaskCount ?? 0) + (p.incompleteTaskCount ?? 0), 0);
+
+          setUserInfo({
+            name: userData.name,
+            taskStats: { completed, total },
+          });
+          setProfileImageUrl(userData.profileImageUrl || null);
+        }
+      } catch (error) {
+        console.error('유저 정보 조회 중 예기치 않은 오류 발생:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    const fetchProjectsData = async () => {
+      const [manualProjectRes, ongoingProjectRes, completedProjectRes] = await Promise.allSettled([
         apiClient.get('/user/me/projectHistories'),
         apiClient.get('/projects/me'),
         apiClient.get('/projects/activity/me'),
       ]);
-
-      if (userRes.status === 'rejected') {
-        console.error('유저 정보 조회 실패 (인증 에러로 인해 로그아웃 처리되었을 수 있습니다):', userRes.reason);
-      }
-
-      if (userRes.status === 'fulfilled') {
-        const userData = userRes.value.data.data;
-        const taskCountsData = taskCountsRes.status === 'fulfilled'
-          ? (taskCountsRes.value.data?.data ?? []) : [];
-
-        const completed = taskCountsData.reduce((sum, p) => sum + (p.completedTaskCount ?? 0), 0);
-        const total = taskCountsData.reduce((sum, p) => sum + (p.completedTaskCount ?? 0) + (p.incompleteTaskCount ?? 0), 0);
-
-        setUserInfo({
-          name: userData.name,
-          taskStats: { completed, total },
-        });
-        setProfileImageUrl(userData.profileImageUrl || null);
-      }
 
       const manualProjectsData = manualProjectRes.status === 'fulfilled'
         ? (manualProjectRes.value.data?.data || []) : [];
@@ -102,7 +114,8 @@ const ProfilePage = () => {
       ]);
     };
 
-    fetchProfileData();
+    fetchUserData();
+    fetchProjectsData();
   }, [navigate]);
 
   const handleImageClick = () => {
@@ -212,7 +225,7 @@ const ProfilePage = () => {
   return (
     <div className="page-wrapper">
       <h1 className="page-title">
-        <span style={{ color: '#FF6600' }}>{userInfo.name}</span> 님 프로필
+        <span style={{ color: '#FF6600' }}>{isLoading ? '로딩중...' : userInfo.name}</span> 님 프로필
       </h1>
 
       <section className="profile-main-card">
@@ -248,7 +261,7 @@ const ProfilePage = () => {
                   className="edit-name-input"
                 />
               ) : (
-                <h2 className="user-name-text">{userInfo.name}</h2>
+                <h2 className="user-name-text">{isLoading ? '로딩중...' : userInfo.name}</h2>
               )}
             </div>
           </div>

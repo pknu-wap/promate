@@ -140,7 +140,7 @@ function MemberReviewPage() {
 
   return (
     <div className="member-review-page">
-      <h1 className="member-review-title">상호 평가 - 캡스톤 디자인</h1>
+      <h1 className="member-review-title">상호 평가 </h1>
 
       <section className="member-review-card" aria-label="상호 평가 작성 폼">
         <div className="form-field">

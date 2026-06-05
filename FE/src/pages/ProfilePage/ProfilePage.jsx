@@ -16,7 +16,7 @@ const ProfilePage = () => {
   const navigate = useNavigate();
 
   const [userInfo, setUserInfo] = useState({
-    name: '미지의 유저',
+    name: '게스트',
     taskStats: { completed: 0, total: 0 },
   });
 

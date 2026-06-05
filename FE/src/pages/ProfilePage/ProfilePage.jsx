@@ -30,7 +30,7 @@ const ProfilePage = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
-    if (!token) {
+    if (!token || token === 'null' || token === 'undefined' || token.trim() === '') {
       alert('로그인이 필요한 서비스입니다.');
       navigate(-1);
       return;
@@ -44,6 +44,10 @@ const ProfilePage = () => {
         apiClient.get('/projects/me'),
         apiClient.get('/projects/activity/me'),
       ]);
+
+      if (userRes.status === 'rejected') {
+        console.error('유저 정보 조회 실패 (인증 에러로 인해 로그아웃 처리되었을 수 있습니다):', userRes.reason);
+      }
 
       if (userRes.status === 'fulfilled') {
         const userData = userRes.value.data.data;

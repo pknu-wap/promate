@@ -1,0 +1,360 @@
+.edm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.edm-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0px 47px 30px;
+  gap: 16px;
+  width: 500px;
+  height: 350px;
+  box-sizing: border-box;
+  background: #FFFFFF;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  position: relative;
+}
+
+.edm-header {
+  display: flex;
+  width: 100%;
+  height: 40px;
+  margin-top: 10px;
+}
+
+.edm-header-actions {
+  position: absolute;
+  top: 14px;
+  right: 24px;
+  display: flex;
+  gap: 8px;
+}
+
+.edm-btn {
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.edm-cancel-btn {
+  background: #FFFFFF;
+  color: #909090;
+  border-color: #D9D9D9;
+}
+.edm-cancel-btn:hover {
+  background: #F5F5F5;
+}
+
+.edm-save-btn {
+  background: #FE9A57;
+  color: #FFFFFF;
+}
+.edm-save-btn:hover {
+  background: #F58B45;
+}
+
+.edm-save-btn:disabled, .edm-cancel-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.edm-edit-title {
+  width: 100%;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  color: #000000;
+  border: 1px solid #D9D9D9;
+  border-radius: 6px;
+  padding: 4px 10px;
+  margin-bottom: 8px;
+  box-sizing: border-box;
+}
+
+.edm-edit-title:focus, .edm-edit-date:focus, .edm-edit-content:focus {
+  outline: none;
+  border-color: #FF6600;
+}
+
+.edm-edit-date-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.edm-edit-date {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  padding: 4px 6px;
+  border: 1px solid #D9D9D9;
+  border-radius: 6px;
+  color: #000000;
+  width: 100px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.edm-edit-date::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
+
+.edm-edit-content {
+  width: 100%;
+  flex: 1;
+  min-height: 95px;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  color: #000000;
+  border: 1px solid #D9D9D9;
+  border-radius: 6px;
+  padding: 12px;
+  box-sizing: border-box;
+  resize: none;
+}
+
+.edm-close-btn {
+  position: absolute;
+  top: 18px;
+  right: 24px;
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  line-height: 1;
+  color: #909090;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+}
+
+.edm-more-container {
+  position: absolute;
+  top: 18px;
+  right: 56px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.edm-more-btn {
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.edm-more-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 4px;
+  height: 4px;
+  background-color: #909090;
+  border-radius: 50%;
+  box-shadow: 0 -8px 0 #909090, 0 8px 0 #909090;
+}
+
+.edm-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background: #FFFFFF;
+  border: 1px solid #D9D9D9;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  min-width: 60px;
+  z-index: 100;
+  padding: 4px 0;
+}
+
+.edm-dropdown-item {
+  padding: 8px 16px;
+  background: transparent;
+  border: none;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  color: #000000;
+  cursor: pointer;
+  text-align: center;
+}
+
+.edm-dropdown-item:hover {
+  background: #F5F5F5;
+}
+
+.edm-dropdown-item.delete {
+  color: #ff4d4f;
+}
+
+.edm-dropdown-item:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.edm-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0px;
+  gap: 20px;
+  width: 100%;
+  flex: 1;
+  overflow: hidden;
+  max-width: 580px;
+}
+
+.edm-title {
+  width: 100%;
+  font-family: 'Pretendard', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 29px;
+  color: #000000;
+  margin: 0;
+}
+
+.edm-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px;
+  gap: 10px;
+  width: 100%;
+}
+
+.edm-info-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+}
+
+.edm-info-label {
+  min-width: 60px;
+}
+
+.edm-info-label,
+.edm-info-value {
+  font-family: 'Pretendard', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 17px;
+  color: #909090;
+}
+
+.edm-project-link {
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.2s ease-in-out;
+}
+
+.edm-project-link:hover {
+  color: #000000;
+}
+
+.edm-divider {
+  width: 100%;
+  height: 1px;
+  background: #D9D9D9;
+  margin: 10px 0;
+}
+
+.edm-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px;
+  gap: 10px;
+  width: 100%;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.edm-content {
+  font-family: 'Pretendard', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  color: #000000;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+@media (max-width: 768px) {
+  .edm-container {
+    width: calc(100% - 40px);
+    padding: 0px 24px 24px;
+    height: auto;
+    min-height: 350px;
+    gap: 20px;
+  }
+
+  .edm-close-btn {
+    right: 16px;
+  }
+
+  .edm-more-container {
+    right: 48px;
+  }
+
+  .edm-body {
+    max-width: 100%;
+    gap: 16px;
+  }
+
+  .edm-title {
+    font-size: 20px;
+    line-height: 24px;
+  }
+
+  .edm-info-row {
+    gap: 14px;
+  }
+
+  .edm-info-label {
+    min-width: 50px;
+  }
+
+  .edm-content-wrapper {
+    min-height: 100px;
+  }
+
+  .edm-content {
+    font-size: 13px;
+  }
+}

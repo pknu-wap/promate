@@ -1,0 +1,130 @@
+.apply-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.apply-modal {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  min-width: 300px;
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 30px 30px 24px;
+  box-sizing: border-box;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
+  gap: 20px;
+}
+
+.apply-modal-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 24px;
+  color: #000000;
+}
+
+.apply-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.apply-modal-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.apply-modal-label {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 19px;
+  color: #000000;
+}
+
+.apply-modal-input,
+.apply-modal-textarea {
+  width: 100%;
+  border: 1px solid #ABABAB;
+  border-radius: 5px;
+  background: #F1F1F1;
+  font-size: 16px;
+  line-height: 19px;
+  color: #000000;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.apply-modal-input::placeholder,
+.apply-modal-textarea::placeholder {
+  color: #ABABAB;
+  font-weight: 400;
+}
+
+.apply-modal-input {
+  height: 33px;
+  padding: 10px 12px;
+}
+
+.apply-modal-textarea {
+  height: 200px;
+  padding: 10px 12px;
+  resize: none;
+}
+
+.apply-modal-input:focus,
+.apply-modal-textarea:focus {
+  border-color: #f59a57;
+}
+
+.apply-modal-button-wrap {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.apply-modal-cancel-btn,
+.apply-modal-submit-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 21px;
+  color: #FFFFFF;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.apply-modal-cancel-btn {
+  padding: 10px 30px;
+  background: #D9D9D9;
+}
+
+.apply-modal-cancel-btn:hover {
+  background: #CFCFCF;
+}
+
+.apply-modal-submit-btn {
+  flex: 1;
+  padding: 10px 20px;
+  background: #FE9A57;
+}
+
+.apply-modal-submit-btn:hover {
+  background: #F07F3C;
+}
+
+.apply-modal-cancel-btn:active,
+.apply-modal-submit-btn:active {
+  transform: scale(0.98);
+}

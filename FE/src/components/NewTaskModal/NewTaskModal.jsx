@@ -1,0 +1,102 @@
+import React, { useState, useEffect } from 'react';
+import './NewTaskModal.css';
+
+function NewTaskModal({ isOpen, onClose, onSubmit, projectId, members = [] }) {
+  const [title, setTitle] = useState('');
+  const [managerId, setManagerId] = useState('');
+  const [description, setDescription] = useState('');
+  const [dueDate, setDueDate] = useState('');
+  
+  useEffect(() => {
+    if (!isOpen) {
+      setTitle('');
+      setManagerId('');
+      setDescription('');
+      setDueDate('');
+    }
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
+  const handleSubmit = () => {
+    if (!title.trim() || !managerId || !dueDate) {
+      alert('태스크 제목, 담당자, 마감일은 필수 입력 항목입니다.');
+      return;
+    }
+
+    const newTask = {
+      title,
+      managerId,
+      description,
+      dueDate,
+    };
+    
+    if (onSubmit) onSubmit(newTask);
+    onClose();
+  };
+
+  return (
+    <div className="task-modal-overlay" onClick={onClose}>
+      <div className="task-modal-container" onClick={(e) => e.stopPropagation()}>
+        <h2 className="task-modal-header">새 태스크 추가</h2>
+
+        <div className="task-modal-form">
+          <div className="task-modal-field">
+            <label className="task-modal-label">태스크 제목 <span style={{ color: '#E53E3E' }}>*</span></label>
+            <input
+              type="text"
+              className="task-modal-input"
+              placeholder="태스크 제목을 입력해주세요"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </div>
+
+          <div className="task-modal-field">
+            <label className="task-modal-label">담당자 <span style={{ color: '#E53E3E' }}>*</span></label>
+            <select
+              className="task-modal-select"
+              value={managerId}
+              onChange={(e) => setManagerId(e.target.value)}
+            >
+              <option value="" disabled>담당자를 선택해주세요</option>
+              {members.map((member) => (
+                <option key={member.userId} value={member.userId}>
+                  {member.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="task-modal-field">
+            <label className="task-modal-label">태스크 설명 (50자 제한)</label>
+            <textarea
+              className="task-modal-textarea"
+              placeholder="설명을 간단히 적어주세요."
+              maxLength={50}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
+
+          <div className="task-modal-field">
+            <label className="task-modal-label">마감일 <span style={{ color: '#E53E3E' }}>*</span></label>
+            <input
+              type="date"
+              className="task-modal-input"
+              value={dueDate}
+              onChange={(e) => setDueDate(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className="task-modal-actions">
+          <button className="task-btn-cancel" onClick={onClose}>취소</button>
+          <button className="task-btn-submit" onClick={handleSubmit}>태스크 추가</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default NewTaskModal;

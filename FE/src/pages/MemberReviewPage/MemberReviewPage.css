@@ -1,0 +1,271 @@
+.member-review-page {
+  width: 100%;
+  height: calc(100vh - 56px);
+  padding: 19px 50px 20px 30px;
+  box-sizing: border-box;
+  background: linear-gradient(180deg, #f0f0f0 0%, #ffffff 100%);
+}
+
+.member-review-title {
+  margin: 0 0 20px;
+  font-size: 22px;
+  font-weight: 500;
+  font-family: "YSpotlightOTF", "Pretendard", sans-serif;
+  color: #000000;
+}
+
+.member-review-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 864px;
+  max-width: 100%;
+  height: auto;
+  min-height: 599px;
+  padding: 20px 40px;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+}
+
+.member-review-question-list {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  margin-top: 20px;
+}
+
+.member-review-question {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.domain-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+}
+
+.domain-tags .common-tag {
+  height: 26px;
+  padding: 0 12px;
+  font-size: 14px;
+}
+
+.domain-tags .common-tag:not(.active) {
+  background: #f1f1f1;
+  color: #ababab;
+  border: none;
+}
+
+.member-review-question legend {
+  margin: 0 1px 15px;
+  padding: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #000000;
+}
+
+.member-review-question legend span,
+.member-review-comment strong {
+  color: #ff6600;
+  font-weight: 800;
+}
+
+.member-review-scale {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.member-review-scale > span {
+  min-width: 54px;
+  font-size: 13px;
+  color: #909090;
+  white-space: nowrap;
+}
+
+.member-review-options {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.member-review-option {
+  position: relative;
+  display: inline-flex;
+  cursor: pointer;
+}
+
+.member-review-option:nth-child(1),
+.member-review-option:nth-child(5) {
+  width: 30px;
+  height: 30px;
+}
+
+.member-review-option:nth-child(2),
+.member-review-option:nth-child(4) {
+  width: 24px;
+  height: 24px;
+}
+
+.member-review-option:nth-child(3) {
+  width: 18px;
+  height: 18px;
+}
+
+.member-review-option input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.member-review-option span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border: 1px solid #ababab;
+  border-radius: 50%;
+  background: #f8f8f8;
+  box-sizing: border-box;
+}
+
+.member-review-option input:checked + span {
+  border-color: #fe9a57;
+  background: #fe9a57;
+}
+
+.member-review-option img {
+  width: 11px;
+  height: 11px;
+  object-fit: contain;
+  display: block;
+}
+
+.member-review-divider {
+  width: 100%;
+  height: 1px;
+  margin: 24px 0 20px;
+  background: #d9d9d9;
+}
+
+.member-review-comment {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.member-review-comment > span {
+  font-size: 16px;
+  font-weight: 600;
+  color: #000000;
+}
+
+.member-review-comment em {
+  margin-left: 4px;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 300;
+  color: #ababab;
+}
+
+.member-review-comment textarea {
+  width: 665px;
+  height: 86px;
+  padding: 10px;
+  border: 1px solid #ababab;
+  border-radius: 2px;
+  box-sizing: border-box;
+  resize: none;
+  outline: none;
+  background: #f8f8f8;
+  font-family: "Pretendard", sans-serif;
+  font-size: 12.5px;
+  color: #000000;
+}
+
+.member-review-comment textarea::placeholder {
+  color: #ababab;
+}
+
+.member-review-comment textarea:focus {
+  border-color: #fe9a57;
+  background: #ffffff;
+}
+
+.member-review-save {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  width: 110px;
+  height: 37px;
+  padding: 10px 20px;
+  margin: 20px 0 0 auto;
+  border: 0;
+  border-radius: 5px;
+  background: #fe9a57;
+  color: #ffffff;
+  font-family: "Pretendard", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.member-review-save:hover {
+  background: #f58b45;
+}
+
+.member-review-char-count {
+  margin-top: 8px;
+  text-align: right;
+  color: #999;
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  .member-review-page {
+    min-height: calc(100vh - 56px);
+    height: 100vh;
+    width: 100vw;
+    padding: 20px 16px 32px;
+  }
+  .member-review-question-list {
+    gap: 32px;
+  }
+
+  .member-review-card {
+    width: 100%;
+    height: auto;
+    padding: 22px 18px;
+  }
+
+  .member-review-scale {
+    gap: 8px;
+  }
+
+  .member-review-scale > span {
+    min-width: auto;
+    white-space: normal;
+    word-break: keep-all;
+  }
+
+  .member-review-options {
+    gap: 8px;
+  }
+
+  .member-review-comment textarea {
+    width: 100%;
+  }
+
+  .member-review-save {
+    margin-top: 26px;
+  }
+}
